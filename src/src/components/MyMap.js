@@ -28,7 +28,7 @@ class MyMap extends Component{
     onEachState = (state, layer) => {
         const stateName = state.properties.STNAME;
         layer.bindPopup(stateName)
-        console.log(state)
+        // console.log(state)
         layer.on({
             click: this.stateClick,
             mouseover: (event) => {

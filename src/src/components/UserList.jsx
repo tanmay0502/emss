@@ -32,7 +32,7 @@ function UserList() {
 							Type
 						</p>
 					</div>
-					<div className="tableBody" style={{ overflow: "auto", maxHeight: "55vh" }}>
+					<div className="tableBody hide-scroll-bar" style={{ overflow: "auto", maxHeight: "50vh" }}>
 						{data.map((value) => (
 							<div className="row flex justify-between w-full bg-f2 p-3 px-10 mt-2" style={{ background: "var(--background-gray)", borderRadius: "var(--border-radius)" }}>
 								<p className="text-black text-sm" style={f1}>
@@ -54,7 +54,7 @@ function UserList() {
 			</div>
 			<div className="w-full flex justify-end mt-2">
 				<button onClick={ ()=>{
-					window.location.href = "/usermanagement/createuser"
+					window.location.href = "/session/usermanagement/createuser"
 				} }>
 					Add User
 				</button>
