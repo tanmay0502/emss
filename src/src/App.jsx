@@ -66,7 +66,7 @@ function App() {
 					<div className="content">
 						<BrowserRouter>
 							<Routes>
-								<Route path="/" element={<Home />} /> {/* Dashboard Component goes here */}
+								<Route path="/" element={<Home />} /> 
 								<Route path="/usermanagement/" element={<ManageUsers />} />
 								<Route path="/usermanagement/createuser" element={<CreateUser />} />
 							</Routes>
