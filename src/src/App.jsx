@@ -15,6 +15,7 @@ import {ReactComponent as LogoutIcon} from './assets/Logout.svg';
 import CreateUser from './pages/user_management/CreateUser';
 import Home from './pages/home/Home';
 import ManageUsers from './pages/user_management/ManageUsers';
+import Login from './pages/login/Login';
 
 function App() {
 	return (
@@ -66,7 +67,8 @@ function App() {
 					<div className="content">
 						<BrowserRouter>
 							<Routes>
-								<Route path="/" element={<Home />} /> 
+								<Route path="/login" element={<Login />} /> 
+								<Route path="/" element={<Home />} /> {/* Dashboard Component goes here */}
 								<Route path="/usermanagement/" element={<ManageUsers />} />
 								<Route path="/usermanagement/createuser" element={<CreateUser />} />
 							</Routes>
