@@ -49,7 +49,7 @@ function CreateUser() {
 	return (
 		<div className='create-user-container'>
 			<div className="content-path">
-				<UserManagementIcon /><span>User Management</span><ChevronRightIcon /><span>Create User</span>
+				<UserManagementIcon /><a href='/usermanagement'>User Management</a><ChevronRightIcon /><span>Create User</span>
 			</div>
 			<h4>User Details</h4>
 			<div >
