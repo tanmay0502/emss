@@ -10,7 +10,7 @@ function UserList() {
 	return (
 		<div className="">
 			<div
-				className="table h-full w-full p-10  w-3/5 right-16 bg-white box-border"
+				className="table h-full w-full p-10 right-16 bg-white box-border"
 				style={{ marginTop: "10px", borderRadius: "var(--border-radius)" }}
 			>
 				<div className="flex justify-between">
