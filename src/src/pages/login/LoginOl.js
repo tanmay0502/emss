@@ -4,10 +4,23 @@ import Footer from "../../components/Footer";
 import Otp from "../../components/Otp";
 import Password from "../../components/Password";
 import SelectUser from "../../components/SelectUser";
-var sha256 = require('js-sha256')
+
+var sha256 = require('js-sha256');
 
 
-const Login = () => {
+const Login = (props) => {
+
+  useEffect(() => {
+    if( sessionStorage.getItem('sessionToken') !== null ){
+      window.location.href = '/session/home'
+      }
+  
+    return () => {
+      
+    }
+  }, [])
+  
+
   const myFont = {
     fontFamily: "Nunito Sans",
     fontStyle: "normal",
@@ -48,55 +61,6 @@ const Login = () => {
   const [roles, setRoles] = useState([]);
   const [rolesCode, setRolesCode] = useState([]);
 
-  useEffect(() => {
-    if (userID.length >= 2) {
-      const statecode = userID.substring(0, 2)
-      if (statesCode.indexOf(statecode) !== -1) {
-        document.getElementById('stateDropdown').value = states[statesCode.indexOf(statecode)]
-        setStateFunc(states[statesCode.indexOf(statecode)], false)
-      }
-      else {
-        document.getElementById('stateDropdown').value = "Select:"
-      }
-    }
-    if (userID.length >= 4) {
-      const pccode = (parseInt(userID.substring(2, 4))).toString()
-      if (PCsCode.indexOf(pccode) !== -1) {
-        document.getElementById('pcDropdown').value = PCs[PCsCode.indexOf(pccode)]
-        setPCFunc(PCs[PCsCode.indexOf(pccode)], false)
-      }
-      else {
-        document.getElementById('pcDropdown').value = "Select:"
-      }
-    }
-
-    if (userID.length >= 7) {
-      const accode = userID.substring(4, 7)
-      if (ACsCode.indexOf(accode) !== -1) {
-        document.getElementById('acDropdown').value = ACs[ACsCode.indexOf(accode)]
-        setACFunc(ACs[ACsCode.indexOf(accode)], false)
-      }
-      else {
-        document.getElementById('acDropdown').value = "Select:"
-      }
-
-      const role = userID.substring(7)
-      console.log(role)
-      console.log(rolesCode.indexOf(role))
-      if(rolesCode.indexOf(role) !== -1){
-        console.log("Readable Role:")
-        console.log(roles[rolesCode.indexOf(role)])
-        document.getElementById('roleDropdown').value = roles[rolesCode.indexOf(role)]
-        setRoleFunc(roles[rolesCode.indexOf(role)], false)
-      }
-    }
-
-    return () => {
-
-    }
-  }, [userID])
-
-
   async function getState() {
     try {
       const response = await fetch(
@@ -120,76 +84,72 @@ const Login = () => {
   }
   // getState(); 
   useEffect(() => {
-    if (window.sessionStorage.getItem("sessionToken") !== null) {
-      window.location.pathname = '/session/home'
-    }
+
 
     getState();
   }, []);
 
-  async function setStateFunc(st, changeUserID=true) {
-    if (st !== "Select:") {
-      setState(statesCode[states.indexOf(st)]);
-      // console.log(statesCode[states.indexOf(st)]);
-      if (
-        statesCode[states.indexOf(st)] == "IN" ||
-        statesCode[states.indexOf(st)] == "EL" ||
-        statesCode[states.indexOf(st)] == "BL"
-      ) {
-      } else {
-        try {
-          const response = await fetch(
-            `http://evm.iitbhilai.ac.in:8000/getPCListbyState/${statesCode[states.indexOf(st)]}`,
-            {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          );
-          const data2 = await response.json();
-          // console.log(data2);
-          setPCs(data2["list of PC names"]);
-          setPCsCode(data2["list of PC Codes"]);
-        } catch (err) {
-          console.log(err);
-        }
+  async function setStateFunc(st) {
+    setState(statesCode[states.indexOf(st)]);
+    console.log(statesCode[states.indexOf(st)]);
+    if (
+      statesCode[states.indexOf(st)] == "IN" ||
+      statesCode[states.indexOf(st)] == "EL" ||
+      statesCode[states.indexOf(st)] == "BL"
+    ) {
+    } else {
+      try {
+        const response = await fetch(
+          `http://evm.iitbhilai.ac.in:8000/getPCListbyState/${statesCode[states.indexOf(st)]
+          }`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const data2 = await response.json();
+        console.log(data2);
+        setPCs(data2["list of PC names"]);
+        setPCsCode(data2["list of PC Codes"]);
+      } catch (err) {
+        console.log(err);
       }
-      if(changeUserID){setUserID(statesCode[states.indexOf(st)] + ("00" + PC).slice(-2) + AC + role);}
-      setInvalidUser("");
     }
+    setUserID(state + PC + AC + role);
+    setInvalidUser("");
   }
-  async function setPCFunc(st, changeUserID=true) {
+  async function setPCFunc(st) {
     console.log(state, PCsCode[PCs.indexOf(st)]);
     setPC(PCsCode[PCs.indexOf(st)]);
-    if(state !== "Select:"){
-      if (state == "IN" || state == "EL" || state == "BL") {
-      }
-      else {
-        try {
-          const response = await fetch(
-            `http://evm.iitbhilai.ac.in:8000/getACListbyStatePC/${state}`,
-            {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          );
-          const data2 = await response.json();
-          console.log("ACs");
-          console.log(data2);
-          setACs(data2["list of AC names"]);
-          setACsCode(data2["list of AC Codes"]);
-        } catch (err) {
-          console.log(err);
-        }
-      }
-      if(changeUserID){setUserID(state + ("00" + PCsCode[PCs.indexOf(st)]).slice(-2) + AC + role);}
-      setInvalidUser("");
+    if (state == "IN" || state == "EL" || state == "BL") {
     }
+    else {
+
+      try {
+        const response = await fetch(
+          `http://evm.iitbhilai.ac.in:8000/getACListbyStatePC/"${state}/${PCsCode[PCs.indexOf(st)]
+          }`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        const data2 = await response.json();
+        console.log(data2);
+        // setPCs(data2["list of PCs"]);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    setUserID(state + PC + AC + role);
+    setInvalidUser("");
+
   }
-  async function setACFunc(st, changeUserID=true) {
+  async function setACFunc(st) {
     setAC(ACsCode[ACs.indexOf(st)]);
     console.log(ACsCode[ACs.indexOf(st)]);
     try {
@@ -203,26 +163,24 @@ const Login = () => {
         }
       );
       const data2 = await response.json();
-      // console.log(data2);
+      console.log(data2);
       setRoles(data2["Human Readable Role Name"]);
       setRolesCode(data2["String Code to be used as a part of User ID"]);
     } catch (err) {
       console.log(err);
     }
-     if(changeUserID) {setUserID(state + ("00" + PC).slice(-2) + ("000" + ACsCode[ACs.indexOf(st)]).slice(-3) + role);}
+    setUserID(state + PC + AC + role);
     setInvalidUser("");
 
   }
-  async function setRoleFunc(st, changeUserID=true) {
-    if(st !== "Select:"){
-      setRole(rolesCode[roles.indexOf(st)]);
-      console.log(rolesCode[roles.indexOf(st)]);
-  
-      if(changeUserID) {setUserID(state + ("00" + PC).slice(-2) + AC + rolesCode[roles.indexOf(st)]);}
-      setInvalidUser("");
-  
-      console.log(userID);
-    }
+  async function setRoleFunc(st) {
+    setRole(rolesCode[roles.indexOf(st)]);
+    console.log(rolesCode[roles.indexOf(st)]);
+
+    setUserID(state + PC + AC + role);
+    setInvalidUser("");
+
+    console.log(userID);
   }
 
 
@@ -397,22 +355,24 @@ const Login = () => {
       );
       const data2 = await response.json();
       console.log(data2);
-      if (data2["message"] === "Password does not match") {
+      if (data2["message"] == "Password does not match") {
         setInvalidPassword("Password does not match");
         setPassword("");
       } else {
-        alert("You are logged In");
+        // alert("You are logged In");
         setIsOTPSent(0);
         setPasswordBlock(0);
         setSelectUserBlock(0);
-        window.sessionStorage.setItem('sessionToken', userID)
+
+        sessionStorage.setItem('sessionToken', userID)
+
         // setMobile("");
         // setUserID("");
         // setState("");
         // setPC("");
         // setAC("");
         // setRole("");
-        window.location.replace("/session/home");
+        window.location.href ="/session/home";
       }
     } catch (err) {
       console.log(err);
@@ -421,17 +381,17 @@ const Login = () => {
 
 
   return (
-    <div>
+    <div style={{fontFamily: "Nunito Sans"}}>
       <div className="nav flex">
         <div className="logo m-3 p-1">
-          <a href="/">
-            <img src="logo.png" className="h-4/5" />
+          <a href="/2">
+            <img src="logo.png" className="h-4/5"></img>
           </a>
         </div>
         <div className="absolute right-3 top-3 w-5 flex">
           <div className="flex justify-between place-content-end  w-full">
             <a href="">
-              <img src="Vector.png" />
+              <img src="Vector.png"></img>
             </a>
           </div>
         </div>
@@ -458,7 +418,7 @@ const Login = () => {
               <h3
                 className="text-center "
                 style={{
-                  fontFamily: "nunito sans",
+                  fontFamily: "Nunito sans",
                   color: "rgba(0, 0, 0, 0.8)",
                   fontSize: "14px",
                 }}
@@ -472,20 +432,20 @@ const Login = () => {
                 <>
                   <p
                     className="text-black pl-1 text-sm font-semibold"
-                    style={{ fontFamily: "nunito sans" }}
+                    style={{ fontFamily: "Nunito Sans" }}
                   >
                     Mobile Number / User ID
                   </p>
 
                   <input
                     type="text"
-                    className="pl-3 pr-3 mt-1 mb-4 h-13 text-black outline-none rounded-md w-full"
+                    className="pl-3 pr-3 mt-1 mb-4 h-10 text-black outline-none rounded-md w-full"
                     placeholder="Enter Mobile Number/User ID"
                     value={userID}
                     onChange={(e) => setUserID(e.target.value)}
                     style={{
                       backgroundColor: " rgba(30, 76, 247, 0.1)",
-                      fontFamily: "nunito sans",
+                      fontFamily: "Nunito Sans",
                     }}
                   ></input>
                   {invaliduser != "" && (
@@ -496,7 +456,7 @@ const Login = () => {
                   )}
                   <p
                     className="  text-center text-black text-sm font-semibold"
-                    style={{ fontFamily: "nunito sans" }}
+                    style={{ fontFamily: "Nunito Sans" }}
                   >
                     OR
                   </p>
@@ -508,19 +468,18 @@ const Login = () => {
                       <p
                         for="position"
                         className="text-black ml-2 -mb-6 text-sm font-semibold"
-                        style={{ fontFamily: "nunito sans" }}
+                        style={{ fontFamily: "Nunito Sans" }}
                       >
                         State
                       </p>
                       <select
-                        className="pl-3 pr-3 mt-7 h-13 text-black outline-none rounded-md w-full mb-5"
-                        style={{ fontFamily: "nunito sans" }}
-                        id="stateDropdown"
+                        className="pl-3 pr-3 mt-7 h-10 text-black outline-none rounded-md w-full mb-5"
+                        style={{ fontFamily: "Nunito Sans" }}
                         name="position"
                         // value={state}
                         onChange={(e) => setStateFunc(e.target.value)}
                       >
-                        <option value="0" className="text-black" >
+                        <option value="0" className="text-black">
                           Select:
                         </option>
 
@@ -535,14 +494,13 @@ const Login = () => {
                       <p
                         for="position"
                         className="text-black ml-2 -mb-6 text-sm font-semibold"
-                        style={{ fontFamily: "nunito sans" }}
+                        style={{ fontFamily: "Nunito Sans" }}
                       >
                         PC
                       </p>
                       <select
-                        className="pl-3 pr-3 mt-7 h-13 text-black outline-none rounded-md w-full mb-5"
-                        style={{ fontFamily: "nunito sans" }}
-                        id="pcDropdown"
+                        className="pl-3 pr-3 mt-7 h-10 text-black outline-none rounded-md w-full mb-5"
+                        style={{ fontFamily: "Nunito Sans" }}
                         name="position"
                         // value={PC}
                         onChange={(e) => setPCFunc(e.target.value)}
@@ -561,15 +519,14 @@ const Login = () => {
                       <p
                         for="position"
                         className="text-black ml-2 -mb-6 text-sm font-semibold"
-                        style={{ fontFamily: "nunito sans" }}
+                        style={{ fontFamily: "Nunito Sans" }}
                       >
                         AC
                       </p>
                       <select
-                        className="pl-3 pr-3  mt-7 h-13 text-black outline-none rounded-md w-full mb-5"
-                        style={{ fontFamily: "nunito sans" }}
+                        className="pl-3 pr-3  mt-7 h-10 text-black outline-none rounded-md w-full mb-5"
+                        style={{ fontFamily: "Nunito Sans" }}
                         name="position"
-                        id="acDropdown"
                         // value={AC}
                         onChange={(e) => setACFunc(e.target.value)}
                       >
@@ -587,15 +544,14 @@ const Login = () => {
                       <p
                         for="position"
                         className="text-black ml-2 -mb-6 text-sm font-semibold"
-                        style={{ fontFamily: "nunito sans" }}
+                        style={{ fontFamily: "Nunito Sans" }}
                       >
                         Role
                       </p>
                       <select
-                        className="pl-3 pr-3 mt-7 h-13 text-black outline-none rounded-md w-full mb-3"
-                        style={{ fontFamily: "nunito sans" }}
+                        className="pl-3 pr-3 mt-7 h-10 text-black outline-none rounded-md w-full mb-3"
+                        style={{ fontFamily: "Nunito Sans" }}
                         name="position"
-                        id="roleDropdown"
                         // value={role}
                         onChange={(e) => setRoleFunc(e.target.value)}
                       >
