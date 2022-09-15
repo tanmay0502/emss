@@ -28,6 +28,9 @@ const Otp = (props) => {
         >
           Verify OTP
         </button>
+        <div className="w-full flex justify-center mt-6">
+          <a href="#">Resend OTP</a>
+        </div>
       </div>
     );
 }

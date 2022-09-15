@@ -17,8 +17,8 @@ const SelectUser = (props) => {
           className="pl-3 pr-3 mt-7 h-12 text-black outline-none rounded-md w-full mb-5"
           style={{ fontFamily: "Nunito sans" }}
           name="position"
-          value={props.userID}
-          onChange={(e) => props.user(e.target.value)}
+          // value={props.userID}
+          onChange={(e) => props.user("e.target.value")}
         >
           <option value="0" className="text-black">
             Select:
