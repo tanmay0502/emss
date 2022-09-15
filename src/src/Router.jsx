@@ -42,6 +42,7 @@ function Routed(props) {
 
 	  fetchUserData(sessionStorage.getItem('sessionToken')).then((val)=> {
 		setUserData({
+			userId: sessionStorage.getItem('sessionToken'),
 			username: val
 		})
 	  })
@@ -62,6 +63,7 @@ function Routed(props) {
 			<main>
 				<div className="nav-panel">
 					<div className="nav-panel-top">
+						<span>Logged in as: {userData.userId}</span>
 						<span>Welcome, {userData.username}</span>
 						<button className='nav-button' onClick={()=>{
 							window.location.href = "/session/home" 

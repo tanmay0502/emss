@@ -7,7 +7,7 @@ const Password = (props) => {
         User ID:&nbsp; {props.user}
       </p>
       <input
-        type="text"
+        type="password"
         className="pl-3 pr-3 mt-7 h-12 text-black outline-none rounded-md w-full"
         placeholder="Enter password"
         value={props.Password}
@@ -16,7 +16,7 @@ const Password = (props) => {
         }}
         style={{
           backgroundColor: " rgba(30, 76, 247, 0.1)",
-          fontFamily: "Open sans",
+          fontFamily: "Nunito sans",
         }}
       ></input>
       {props.invalidPassword != "" && (
@@ -29,7 +29,7 @@ const Password = (props) => {
         className="pl-3 pr-3 mt-7 h-12 outline-none rounded-md w-full text-white"
         style={{
           backgroundColor: "#F58220",
-          fontFamily: "Open sans",
+          fontFamily: "Nunito sans",
         }}
       >
         Log In

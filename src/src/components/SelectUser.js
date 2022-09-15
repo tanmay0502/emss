@@ -9,13 +9,13 @@ const SelectUser = (props) => {
         <p
           for="position"
           className="text-black ml-2 -mb-6"
-          style={{ fontFamily: "Open sans" }}
+          style={{ fontFamily: "Nunito sans" }}
         >
           Select UserID
         </p>
         <select
           className="pl-3 pr-3 mt-7 h-12 text-black outline-none rounded-md w-full mb-5"
-          style={{ fontFamily: "Open sans" }}
+          style={{ fontFamily: "Nunito sans" }}
           name="position"
           value={props.userID}
           onChange={(e) => props.user(e.target.value)}

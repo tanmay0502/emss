@@ -3,7 +3,7 @@ import { useState } from 'react'
 import './styles/createuser.css'
 import { ReactComponent as UserManagementIcon } from '../../assets/Users.svg';
 import { ReactComponent as ChevronRightIcon } from '../../assets/ChevronRight.svg';
-var sha256 = require('js-sha256');
+
 
 
 function CreateUser() {
@@ -11,7 +11,7 @@ function CreateUser() {
   const [frs, setFrs] = useState();
   const [UserId,setUserId] = useState("")
   const [UserName,setUserName] = useState("")
-  const [UserPassword,setUserPassword] = useState("")
+  // const [UserPassword,setUserPassword] = useState("")
   const [UserEmail,setUserEmail] = useState("")
   const [UserMobile,setUserMobile] = useState("")
   const [UserAddress,setUserAddress] = useState("")
@@ -19,8 +19,8 @@ function CreateUser() {
   const [UserAltContact2,setUserAltContact2] = useState("")
   const [UserImage,setUserImage] = useState("")
 
-  const [PasswordHash,setPasswordHash] = useState("")
-  const onFormSubmit = async(e) => {
+  // const [PasswordHash,setPasswordHash] = useState("")
+  const onFormSubmit = (e) => {
     e.preventDefault();
 
     setUserId(document.getElementById("formUserID").value);
@@ -35,31 +35,31 @@ function CreateUser() {
 
     // setPasswordHash(UserPassword); // Generate Password hash here
     var fr = new FileReader();
-    // fr.onload = () => {
-    //   setFrs(fr.name);
-    //   const ReqJSON = {
-    //     userID: UserId,
-    //     email: UserEmail,
-    //     name: UserName,
-    //     mobilenumber: UserMobile,
-    //     address: UserAddress,
-    //     othercontactnum1: UserAltContact1,
-    //     othercontactnum2: UserAltContact2,
-    //     active: "string",
-    //     // "activationtime": "2022-09-13T18:43:47.135Z",
-    //     photofilename: fr.result,
-    //     // "createdby": "string",
-    //     // "creationtime": "2022-09-13T18:43:47.135Z",
-    //     passwordhash: PasswordHash,
-    //   };
-      addUser(); // Perform API Call here
-      // console.log(ReqJSON);
-      // document.getElementById("createUserForm").reset();
-    // };
-    // await fr.readAsDataURL(UserImage);
+    fr.onload = () => {
+      setFrs(fr.result);
+      const ReqJSON = {
+        userID: UserId,
+        email: UserEmail,
+        name: UserName,
+        mobilenumber: UserMobile,
+        address: UserAddress,
+        othercontactnum1: UserAltContact1,
+        othercontactnum2: UserAltContact2,
+        active: "string",
+        // "activationtime": "2022-09-13T18:43:47.135Z",
+        photofilename: fr.result,
+        // "createdby": "string",
+        // "creationtime": "2022-09-13T18:43:47.135Z",
+        // passwordhash: PasswordHash,
+      };
+      addUser(ReqJSON); // Perform API Call here
+      console.log(ReqJSON);
+      document.getElementById("createUserForm").reset();
+    };
+    fr.readAsDataURL(UserImage);
   };
 
-  async function addUser() {
+  async function addUser(ReqJSON) {
     try {
       const response = await fetch(
         "http://evm.iitbhilai.ac.in:8000/createUser",
@@ -76,25 +76,17 @@ function CreateUser() {
             address: UserAddress,
             othercontactnum1: UserAltContact1,
             othercontactnum2: UserAltContact2,
-            active: "A",
+            active: "string",
             activationtime: "2022-09-14T17:14:33.658Z",
-            photofilename: "imagefile",
-            createdby: "AP00000CEO",
+            photofilename: frs,
+            createdby: "string",
             creationtime: "2022-09-14T17:14:33.658Z",
-            passwordhash: sha256(""),
+            // passwordhash: PasswordHash,
           }),
         }
       );
       const data2 = await response.json();
       console.log(data2);
-      if(data2["message"]==="User created successfully"){
-          document.getElementById("createUserForm").reset();
-          alert("User Created Successfully")
-          window.location.pathname  = "/session/usermanagement";
-      }
-      else{
-        alert("User cannot be created");
-      }
     } catch (err) {
       console.log(err);
     }
@@ -103,7 +95,7 @@ function CreateUser() {
     <div className="create-user-container">
       <div className="content-path">
         <UserManagementIcon />
-        <a href="/session/usermanagement">User Management</a>
+        <a href="/usermanagement">User Management</a>
         <ChevronRightIcon />
         <span>Create User</span>
       </div>
@@ -118,13 +110,13 @@ function CreateUser() {
             <input type={"submit"} value="Submit" />
           </div>
           <div className="div3 label">Type:</div>
-          <div className="div4 label">Name<span className='mandatory-indicator' hidden={false}>*</span>:</div>
-          <div className="div5 label">Email Address<span className='mandatory-indicator' hidden={false}>*</span>:</div>
-          <div className="label">Address<span className='mandatory-indicator' hidden={false}>*</span>:</div>
-          <div className="div6 label">User Image<span className='mandatory-indicator' hidden={!isTemporary}>*</span>:</div>
-          <div className="div12 label"  >User ID<span className='mandatory-indicator' hidden={isTemporary}>*</span>:</div>
+          <div className="div4 label">Name:</div>
+          <div className="div5 label">Email Address:</div>
+          <div className=" label">Address:</div>
+          <div className="div6 label">User Image:</div>
+          <div className="div12 label">User ID:</div>
           {/* <div className="div13 label">Password:</div> */}
-          <div className="div13 label">Mobile Number<span className='mandatory-indicator' hidden={false}>*</span>:</div>
+          <div className="div13 label">Mobile Number:</div>
           <div className="div14 label">Alt Contact 1:</div>
           <div className="div15 label">Alt Contact 2:</div>
 
@@ -161,6 +153,10 @@ function CreateUser() {
             />
           </div>
 
+          {/* <div className="div18">
+
+          </div> */}
+
           <div className="div9">
             <input
               id="formUserEmail"
@@ -169,7 +165,7 @@ function CreateUser() {
             />
           </div>
 
-          <div className="div19">
+          <div className="div18">
             <input
               id="formUserMobileNumber"
               required={true}
@@ -188,7 +184,7 @@ function CreateUser() {
             />
           </div>
 
-          <div className="div20">
+          <div className="div19">
             <input
               id="formUserAltNumber1"
               type={"tel"}
@@ -206,7 +202,7 @@ function CreateUser() {
             />
           </div>
 
-          <div className="div18">
+          <div className="div20">
             <input
               id="formUserAltNumber2"
               type={"tel"}
