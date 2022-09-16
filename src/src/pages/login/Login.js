@@ -56,7 +56,7 @@ const Login = () => {
         setStateFunc(states[statesCode.indexOf(statecode)], false)
       }
       else {
-        document.getElementById('stateDropdown').value = "Select:"
+        if(document.getElementById('stateDropdown'))document.getElementById("stateDropdown").value = "Select:";
       }
     }
     if (userID.length >= 4) {
@@ -66,7 +66,8 @@ const Login = () => {
         setPCFunc(PCs[PCsCode.indexOf(pccode)], false)
       }
       else {
-        document.getElementById('pcDropdown').value = "Select:"
+        if (document.getElementById("pcDropdown"))
+          document.getElementById("pcDropdown").value = "Select:";
       }
     }
 
@@ -77,7 +78,8 @@ const Login = () => {
         setACFunc(ACs[ACsCode.indexOf(accode)], false)
       }
       else {
-        document.getElementById('acDropdown').value = "Select:"
+        if (document.getElementById("acDropdown"))
+          document.getElementById("acDropdown").value = "Select:";
       }
 
       const role = userID.substring(7)

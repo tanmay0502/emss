@@ -1,5 +1,5 @@
 import React from 'react'
-import { useState } from 'react'
+import { useState,useEffect } from 'react'
 import './styles/createuser.css'
 import { ReactComponent as UserManagementIcon } from '../../assets/Users.svg';
 import { ReactComponent as ChevronRightIcon } from '../../assets/ChevronRight.svg';
@@ -69,9 +69,9 @@ function CreateUser() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            userID: UserId,
+            userID: document.getElementById("formUserID").value,
             email: UserEmail,
-            name: UserName,
+            name: document.getElementById("formUserName").value,
             mobilenumber: UserMobile,
             address: UserAddress,
             othercontactnum1: UserAltContact1,
@@ -99,6 +99,13 @@ function CreateUser() {
       console.log(err);
     }
   }
+  useEffect(() => {
+      if(isTemporary){
+        document.getElementById("formUserID").value="";
+      }
+    return () => {};
+  }, [isTemporary]);
+
   return (
     <div className="create-user-container">
       <div className="content-path">
@@ -169,7 +176,7 @@ function CreateUser() {
             />
           </div>
 
-          <div className="div19">
+          <div className="div18">
             <input
               id="formUserMobileNumber"
               required={true}
@@ -188,11 +195,11 @@ function CreateUser() {
             />
           </div>
 
-          <div className="div20">
+          <div className="div19">
             <input
               id="formUserAltNumber1"
               type={"tel"}
-              pattern="^\d{10}"
+              // pattern="^\d{10}"
               placeholder="00000 00000"
             />
           </div>
@@ -206,11 +213,11 @@ function CreateUser() {
             />
           </div>
 
-          <div className="div18">
+          <div className="div20">
             <input
               id="formUserAltNumber2"
               type={"tel"}
-              pattern="^\d{10}"
+              // pattern="^\d{10}"
               placeholder="00000 00000"
             />
           </div>
