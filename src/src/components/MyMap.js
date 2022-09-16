@@ -31,6 +31,14 @@ class MyMap extends Component{
         // console.log(state)
         layer.on({
             click: this.stateClick,
+            mouseout: (event) => {
+                event.target.setStyle(
+                    {   
+                        fillColor: "",
+                        fillOpacity: 0.2,
+                    }
+                )
+            },
             mouseover: (event) => {
                 event.target.setStyle(
                     {      
