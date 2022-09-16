@@ -52,7 +52,9 @@ const Login = () => {
     if (userID.length >= 2) {
       const statecode = userID.substring(0, 2)
       if (statesCode.indexOf(statecode) !== -1) {
-        document.getElementById('stateDropdown').value = states[statesCode.indexOf(statecode)]
+        if (document.getElementById("stateDropdown")){
+          document.getElementById("stateDropdown").value =states[statesCode.indexOf(statecode)];
+        }
         setStateFunc(states[statesCode.indexOf(statecode)], false)
       }
       else {
@@ -62,7 +64,10 @@ const Login = () => {
     if (userID.length >= 4) {
       const pccode = (parseInt(userID.substring(2, 4))).toString()
       if (PCsCode.indexOf(pccode) !== -1) {
-        document.getElementById('pcDropdown').value = PCs[PCsCode.indexOf(pccode)]
+        if (document.getElementById("pcDropdown")){
+          document.getElementById("pcDropdown").value =
+            PCs[PCsCode.indexOf(pccode)];
+        }
         setPCFunc(PCs[PCsCode.indexOf(pccode)], false)
       }
       else {
@@ -74,7 +79,10 @@ const Login = () => {
     if (userID.length >= 7) {
       const accode = userID.substring(4, 7)
       if (ACsCode.indexOf(accode) !== -1) {
-        document.getElementById('acDropdown').value = ACs[ACsCode.indexOf(accode)]
+         if (document.getElementById("acDropdown")){
+           document.getElementById("acDropdown").value =
+             ACs[ACsCode.indexOf(accode)];
+         }
         setACFunc(ACs[ACsCode.indexOf(accode)], false)
       }
       else {
