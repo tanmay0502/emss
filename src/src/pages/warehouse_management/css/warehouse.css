@@ -1,0 +1,164 @@
+.PageTitle{
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+    /* background: #36D1DC; */
+    /* background: -webkit-linear-gradient(to right, #5B86E5, #36D1DC);  */
+    /* background: linear-gradient(to right, #5B86E5, #36D1DC);*/
+    padding: 0 15px;
+    /* border-radius: 15px;
+    box-shadow: 5px 5px 10px rgba(0,0,0,0.6); */
+}
+
+.PageTitle h4{
+    letter-spacing: 0px;
+    display: flex;
+    /* color: var(--foreground-secondary) !important; */
+}
+.PageTitle h4 span{
+    margin-left: 15px;
+}
+button{
+   
+    font-weight: bold;
+}
+.btn_details,.btn_edit,.btn_delete{
+    position: relative;
+    font-weight: bold;  
+    height: 35px;
+    width: 125px;
+    margin-left: auto;
+    margin-right: auto;
+    color: #fff !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 1.1em;
+}
+.btn_details span, .btn_delete span ,.btn_edit span{
+    margin-left: 5px;
+}
+.btn_details:hover, .btn_edit:hover, .btn_delete:hover{
+    transform: scale(1.05);
+    transition: 0.2s;
+}
+.btn_details{
+    background-color: #6184D8;
+}
+.btn_edit{
+    background-color: #44AF69;
+}
+.btn_delete{
+    background-color: #FE6D73;
+}
+.btn_group{
+    width: 125px !important;
+}
+.tableHeading{
+    position: relative;
+    background: #36D1DC;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #5B86E5, #36D1DC);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #5B86E5, #36D1DC); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    
+    color: #fff !important;
+}
+.tableHeading th{
+    text-align: center !important;
+}
+
+#table_id{
+    border-bottom: none !important;
+}
+
+#table_id thead th:first-child{  
+    /* border-radius: var(--border-radius-primary) 0 0 var(--border-radius-primary); */
+    border-radius: var(--border-radius-primary) 0 0 0;
+}
+
+#table_id thead th:last-child{  
+    /* border-radius: 0 var(--border-radius-primary) var(--border-radius-primary) 0; */
+    border-radius: 0 var(--border-radius-primary) 0 0;
+}
+
+#table_id tbody{
+    font-size: 0.85em;
+    box-shadow: var(--dropshadow-card-or-button);
+    border-radius: 0 0 var(--border-radius-primary) var(--border-radius-primary);
+    overflow: hidden;
+}
+#table_id tbody tr td{
+    text-align: center;
+}
+
+/* #table_id tbody tr:first-child td:first-child{
+    border-radius: var(--border-radius-primary) 0 0 0;
+}
+#table_id tbody tr:first-child td:last-child{
+    border-radius: 0 var(--border-radius-primary) 0 0;
+} */
+
+#table_id tbody tr:last-child td:first-child{
+    border-radius: 0 0 0 var(--border-radius-primary);
+}
+#table_id tbody tr:last-child td:last-child{
+    border-radius: 0 0 var(--border-radius-primary) 0;
+}
+
+.myAddbtn{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    /* background-color: #36D1DC; */
+    background-color: transparent;
+    color: var(--foreground-secondary);
+    position: absolute;
+    left: 15px;
+    transform: translateY(-15px);
+    font-size: small;
+    font-weight: 400;
+    cursor: pointer;
+    z-index: 5000;
+    /* border: 2px solid transparent; */
+}
+
+.myAddbtn > svg{
+    width: 6.5vh;
+    height: 5vh;
+    padding: 5px;
+    aspect-ratio: 1;
+}
+
+.myAddbtn:hover{
+    color: var(--foreground-primary);
+    background-color:  var(--background-gray);
+}
+
+.dataTables_length{
+    display: none;
+}
+
+.dataTables_filter{
+    margin-bottom: 40px;
+}
+.dataTables_filter input{
+    width: 400px;
+    border: 2px solid #36D1DC !important;
+    outline: none !important;
+    padding: 5px 15px !important;
+    border-radius: var(--border-radius) !important;
+}
+
+.myWrapper{
+    position: relative;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: var(--dropshadow-card-or-button);
+    padding: 30px;
+    margin-top: 25px;
+  }
