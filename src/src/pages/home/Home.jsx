@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 // import CeoDashboard from './CeoDash'
 import MyMap from "../../components/MyMap"
 import { ReactComponent as HomeIcon } from '../../assets/Home.svg';
@@ -7,6 +7,15 @@ import './styles/Home.css'
 import './styles/Dashboard.css'
 
 function Home() {
+    const [content, setContent] = useState("");
+    if (typeof content === 'undefined') {
+	setContent(",232389,236266,894373");
+    }
+    const compost=(typeof content==='undefined')? ",232389,236266,894373":content;
+    const st = compost.split(',')[0];
+    const bu = Number(compost.split(',')[1]).toLocaleString();
+    const cu = Number(compost.split(',')[2]).toLocaleString();
+    const vvpat = Number(compost.split(',')[3]).toLocaleString();
   return (
     <div className='home-dashboard-container'>
       <div className="content-path">
@@ -101,15 +110,15 @@ function Home() {
 
               <div className="grid grid-cols-3 text-center pt-8">
                 <div>
-                  <p className="count2"> 40,087</p>
+                    <p className="count2"> {bu}</p>
                   <p> Ballot Units</p>
                 </div>
                 <div>
-                  <p className="count2"> 36,080</p>
+                    <p className="count2"> {cu}</p>
                   <p> Control Units</p>
                 </div>
                 <div>
-                  <p className="count2"> 52,107</p>
+                    <p className="count2"> {vvpat}</p>
                   <p> VVPAT</p>
                 </div>
               </div>
@@ -120,12 +129,12 @@ function Home() {
           <div className="blocks hide-scroll-bar row-span-2 rounded-xl">
             <div className="">
               <div className="card_header">
-                <p className="heading" >India</p>
+                  <p className="heading" >{st}, India</p>
               </div>
 
 
               <div className=" flex justify-center items-center">
-                <MyMap />
+                  <MyMap showInfo={setContent}/>
               </div>
             </div>
           </div>

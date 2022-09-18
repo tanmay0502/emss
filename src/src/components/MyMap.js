@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import IndiaStates from "./india-states.json"
 import "leaflet/dist/leaflet.css"
 import mapData from "./india-states.json"
+import unitData from "./units.json"
 import { MapContainer, TileLayer, useMap, GeoJSON } from 'react-leaflet'
 
 //const url = "https://raw.githubusercontent.com/atul-mane01/India-Coordinates/main/INDIA/INDIA_STATES.geojson" 
@@ -24,21 +25,15 @@ class MyMap extends Component{
     stateClick = (event) => {
         console.log("clicked")
     }
+    showInfo(state) {
+        this.props.showInfo(unitData[state])
+    }
 
     onEachState = (state, layer) => {
         const stateName = state.properties.STNAME;
-        layer.bindPopup(stateName)
+        //layer.bindPopup(stateName)
         // console.log(state)
         layer.on({
-            click: this.stateClick,
-            mouseout: (event) => {
-                event.target.setStyle(
-                    {   
-                        fillColor: "",
-                        fillOpacity: 0.2,
-                    }
-                )
-            },
             mouseover: (event) => {
                 event.target.setStyle(
                     {      
@@ -46,7 +41,16 @@ class MyMap extends Component{
                         fillOpacity: 0.2,
                     }
                 );
-            
+		this.showInfo(stateName);
+            },
+            mouseout: (event) => {
+                event.target.setStyle(
+                    {      
+                        fillColor:"#3388ff",
+                        fillOpacity: 0.2,
+                    }
+                );
+		this.showInfo("India,274724,894843,43984");
             }
         })
     }

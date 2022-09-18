@@ -81,7 +81,9 @@ function Routed(props) {
 						<button className='nav-button'>
 						 	<UnitManagementIcon />Unit Management
 						</button>
-						<button className='nav-button'>
+						<button className='nav-button' onClick={()=>{
+							window.location.href = "/session/warehousemanagement" 
+						}}>
 						 	<WarehouseManagementIcon />Warehouse Management
 						</button>
 						<button className='nav-button'>
