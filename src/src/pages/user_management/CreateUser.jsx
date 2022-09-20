@@ -284,9 +284,6 @@ function CreateUser() {
     setUserAddress(document.getElementById("formUserAddress").value);
     setUserAltContact1(document.getElementById("formUserAltNumber1").value);
     setUserAltContact2(document.getElementById("formUserAltNumber2").value);
-    setUserAddress(document.getElementById("formUserAddress").value);
-    setUserAltContact1(document.getElementById("formUserAltNumber1").value);
-    setUserAltContact2(document.getElementById("formUserAltNumber2").value);
     setUserImage(document.getElementById("formUserImage").files[0]);
 
     console.log(state);
