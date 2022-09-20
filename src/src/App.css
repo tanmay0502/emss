@@ -56,6 +56,13 @@ h4{
   text-align: left;
   color: var(--foreground-primary);
 }
+h5{
+  font-size: 18px;
+  line-height: 120%;
+  font-weight: bold;
+  text-align: left;
+  color: var(--foreground-primary);
+}
 
 button.nav-button{
 	padding: 0 5px;
@@ -228,7 +235,7 @@ main{
   box-shadow: var(--dropshadow-card);
   position: relative;
   z-index: 9990;
-  padding: 40px 0 10px 0;
+  padding: 25px 0 10px 0;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -298,7 +305,7 @@ main{
   height: 100%;
   max-height: 100%;
   overflow: auto;
-  padding: 30px 50px 30px 50px;
+  padding: 25px 40px 25px 40px;
   box-sizing: border-box;
 }
 
@@ -308,35 +315,53 @@ main{
   position: relative;
   width: 100%;
 }
+
+.myForm h5{
+  padding: 0 25px;
+  color: var(--foreground-secondary);
+  margin-top: 15px;
+  margin-bottom: 0px;
+}
+
 .input_group{
   position: relative;
-  width: 85%;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-gap : 25px;
+  width: 87.5%;
+  /* display: grid;
+  grid-template-columns: 1fr 1fr;*/
+  grid-gap : 5px 15px; 
   margin-left: auto;
   margin-right: auto;
-  margin-top: 25px ;
-  margin-bottom: 25px;
+  margin-top: 0px;
+  margin-bottom: 10px;
 }
 .form_group{
   position: relative;
   display: flex;
-  margin: 10px 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 5px 0;
   overflow: hidden !important;
 }
 .form_group .form_label{
   position: relative;
-  width: 35%;  
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  margin-right: 25px;
+  width: 100%;  
   font-size: 0.85em !important;
+  text-align: left;
+  margin-bottom: 5px;
 }
 .form_group .form_select,.form_group .form_input{
-  width: 50%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 }
+
+.form_group .form_select select{
+  cursor: pointer;
+}
+
 .form_group .form_select select,.form_group .form_input input{
     padding: 5px 15px !important;
     height: 40px !important;
@@ -353,6 +378,7 @@ main{
 .form_group .input_icon{
   position: relative;
   width: 40px;
+  min-width: 40px;
   height: 40px !important;
   background: #36D1DC;  /* fallback for old browsers */
   background: -webkit-linear-gradient(to right, #5B86E5, #36D1DC);  /* Chrome 10-25, Safari 5.1-6 */
@@ -379,7 +405,8 @@ main{
   justify-content: center;
   align-items: center;
   border-radius: 25px;
-  margin-bottom: 30px;
+  margin-top: 5px;
+  margin-bottom: 10px;
 }
 .mySubmit span{
   margin-left: 5px;
@@ -414,5 +441,10 @@ main{
 .paginate_button.current{
   color: var(--foreground-primary) !important;
   border-bottom: 2px solid var(--foreground-primary) !important;
+}
+
+.three-column-grid{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
 }
 /* Code by Rohit end*/

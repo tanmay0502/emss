@@ -27,15 +27,18 @@ export default function AddWarehouse() {
 					<h4><FaWarehouse /><span>Add New Warehouse</span></h4>
 				</div>
 				<form className="myForm">
-					<div className="input_group">
+					<h5>
+						Warehouse Details
+					</h5>
+					<div className="input_group three-column-grid">
 
 						<div className="form_group">
 							<div className="form_label">
-								<label htmlFor="">Warehouse Type : </label>
+								<label htmlFor="">Type : </label>
 							</div>
 							<div className="form_select">
 								<select name="" id="">
-									<option value="-1" className="FirstOption">---Select---</option>
+									<option value="-1" className="FirstOption">--Select--</option>
 									<option value="01">National Reserve Warehouse</option>
 									<option value="02">State Central Warehouse</option>
 									<option value="03">District Warehouse</option>
@@ -56,42 +59,58 @@ export default function AddWarehouse() {
 									<option value="15">Virtual Strong Room</option>
 									<option value="16">Manufacturer Warehouse</option>
 								</select>
+								<div className="input_icon">
+									<FaWarehouse size="1em" />
+								</div>
+							</div>
 
-							</div>
-							<div className="input_icon">
-								<FaWarehouse size="1em" />
-							</div>
 						</div>
 
 						<div className="form_group">
 							<div className="form_label">
-								<label htmlFor="">Warehouse Building Type : </label>
+								<label htmlFor="">Building Type : </label>
 							</div>
 							<div className="form_select">
 								<select name="" id="">
-									<option value="-1" className="FirstOption">---Select---</option>
+									<option value="-1" className="FirstOption">--Select--</option>
 
 									<option value="Temporary">Temporary</option>
-									<option value="Permenant">Permenant</option>
+									<option value="Permenant">Permanent</option>
 								</select>
-
-							</div>
-							<div className="input_icon">
-								<FaRegBuilding size="1em" />
+								<div className="input_icon">
+									<FaRegBuilding size="1em" />
+								</div>
 							</div>
 						</div>
 
 						<div className="form_group">
 							<div className="form_label">
-								<label htmlFor="">Warehouse Address : </label>
+								<label htmlFor="">Sealed: </label>
+							</div>
+							<div className="form_select">
+								<select name="" id="">
+									<option value="-1" className="FirstOption">--Select--</option>
+									<option value="Yes">Yes</option>
+									<option value="No">No</option>
+								</select>
+								<div className="input_icon">
+									<BsShieldLockFill size="1em" />
+								</div>
+							</div>
+
+						</div>
+
+						<div className="form_group">
+							<div className="form_label">
+								<label htmlFor="">Address : </label>
 							</div>
 							<div className="form_input">
-								<input id="" name="" className="" placeholder="Address" />
+								<input id="" name="" className="" placeholder="Warehouse Address" />
+								<div className="input_icon">
+									<FaMapMarkedAlt size="1em" />
+								</div>
+							</div>
 
-							</div>
-							<div className="input_icon">
-								<FaMapMarkedAlt size="1em" />
-							</div>
 						</div>
 
 						<div className="form_group">
@@ -100,28 +119,23 @@ export default function AddWarehouse() {
 							</div>
 							<div className="form_input">
 								<input id="" name="" className="" placeholder="Warehouse Code" />
-							</div>
-							<div className="input_icon">
-								<FaLaptopHouse size="1em" />
+								<div className="input_icon">
+									<FaLaptopHouse size="1em" />
+								</div>
 							</div>
 						</div>
 
 						<div className="form_group">
 							<div className="form_label">
-								<label htmlFor="">Warehouse Location : </label>
+								<label htmlFor="">Location : </label>
 							</div>
 							<div className="form_input">
-								<input id="" name="" className="" placeholder="Lat, Long" />
-
-							</div>
-							<div className="input_icon">
-								<FaMapMarkerAlt size="1em" />
+								<input id="" name="" className="" placeholder="Warehouse Location (Lat, Long)" />
+								<div className="input_icon">
+									<FaMapMarkerAlt size="1em" />
+								</div>
 							</div>
 						</div>
-
-					</div>
-
-					<div className="input_group">
 
 						<div className="form_group">
 							<div className="form_label">
@@ -129,118 +143,99 @@ export default function AddWarehouse() {
 							</div>
 							<div className="form_select">
 								<select name="" id="">
-									<option value="-1" className="FirstOption">---Select---</option>
+									<option value="-1" className="FirstOption">--Select--</option>
 									<option value="Yes">Yes</option>
 									<option value="No">No</option>
 								</select>
-							</div>
-							<div className="input_icon">
-								<FaLock size="1em" />
-							</div>
-						</div>
-
-						<div className="form_group">
-							<div className="form_label">
-								<label htmlFor="">Warehouse Sealed : </label>
-							</div>
-							<div className="form_select">
-								<select name="" id="">
-									<option value="-1" className="FirstOption">---Select---</option>
-									<option value="Yes">Yes</option>
-									<option value="No">No</option>
-								</select>
-
-							</div>
-							<div className="input_icon">
-								<BsShieldLockFill size="1em" />
+								<div className="input_icon">
+									<FaLock size="1em" />
+								</div>
 							</div>
 						</div>
-
 					</div>
 
-					<div className="input_group">
+					<h5>
+						Warehouse Personnel Details
+					</h5>
+					<div className="input_group three-column-grid">
 
 						<div className="form_group">
 							<div className="form_label">
-								<label htmlFor="">Person Name (First Key) : </label>
+								<label htmlFor="">Person Name: </label>
 							</div>
 							<div className="form_input">
-								<input placeholder="Name" id="" name="" />
-							</div>
-							<div className="input_icon">
-								<BsFillPersonFill size="1em" />
+								<input placeholder="Person 1 Name" id="" name="" />
+								<div className="input_icon">
+									<BsFillPersonFill size="1em" />
+								</div>
 							</div>
 						</div>
 
 						<div className="form_group">
 							<div className="form_label">
-								<label htmlFor="">Person Moblie (First Key) : </label>
+								<label htmlFor="">Person Mobile: </label>
 							</div>
 							<div className="form_input">
-								<input placeholder="Name" id="" name="" />
-							</div>
-							<div className="input_icon">
-								<BsFillTelephoneFill size="1em" />
+								<input type={"tel"} placeholder="Mobile" id="" name="" />
+								<div className="input_icon">
+									<BsFillTelephoneFill size="1em" />
+								</div>
 							</div>
 						</div>
 
 						<div className="form_group">
 							<div className="form_label">
-								<label htmlFor="">Person Designation (First Key) : </label>
+								<label htmlFor="">Person Designation: </label>
 							</div>
 							<div className="form_select">
 								<select name="" id="">
-									<option value="-1" className="FirstOption">---Select---</option>
+									<option value="-1" className="FirstOption">--Select--</option>
 									<option value="Yes">Yes</option>
 									<option value="No">No</option>
 								</select>
-							</div>
-							<div className="input_icon">
-								<MdWork size="1em" />
+								<div className="input_icon">
+									<MdWork size="1em" />
+								</div>
 							</div>
 						</div>
 
-					</div>
-
-					<div className="input_group">
-
 						<div className="form_group">
 							<div className="form_label">
-								<label htmlFor="">Person Name (Second Key) : </label>
+								<label htmlFor="">Person Name: </label>
 							</div>
 							<div className="form_input">
-								<input placeholder="Name" id="" name="" />
-							</div>
-							<div className="input_icon">
-								<BsFillPersonFill size="1em" />
+								<input placeholder="Person 2 Name" id="" name="" />
+								<div className="input_icon">
+									<BsFillPersonFill size="1em" />
+								</div>
 							</div>
 						</div>
 
 						<div className="form_group">
 							<div className="form_label">
-								<label htmlFor="">Person Moblie (Second Key) : </label>
+								<label htmlFor="">Person Mobile: </label>
 							</div>
 							<div className="form_input">
-								<input placeholder="Name" id="" name="" />
-							</div>
-							<div className="input_icon">
-								<BsFillTelephoneFill size="1em" />
+								<input type={"tel"} placeholder="Mobile" id="" name="" />
+								<div className="input_icon">
+									<BsFillTelephoneFill size="1em" />
+								</div>
 							</div>
 						</div>
 
 						<div className="form_group">
 							<div className="form_label">
-								<label htmlFor="">Person Designation (Second Key) : </label>
+								<label htmlFor="">Person Designation: </label>
 							</div>
 							<div className="form_select">
 								<select name="" id="">
-									<option value="-1" className="FirstOption">---Select---</option>
+									<option value="-1" className="FirstOption">--Select--</option>
 									<option value="Yes">Yes</option>
 									<option value="No">No</option>
 								</select>
-							</div>
-							<div className="input_icon">
-								<MdWork size="1em" />
+								<div className="input_icon">
+									<MdWork size="1em" />
+								</div>
 							</div>
 						</div>
 

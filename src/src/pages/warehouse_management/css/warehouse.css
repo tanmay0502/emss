@@ -2,7 +2,8 @@
     position: relative;
     display: flex;
     justify-content: space-between;
-    margin: 10px 0;
+    /* margin: 10px 0; */
+    margin-bottom: 10px;
     /* background: #36D1DC; */
     /* background: -webkit-linear-gradient(to right, #5B86E5, #36D1DC);  */
     /* background: linear-gradient(to right, #5B86E5, #36D1DC);*/
@@ -72,22 +73,27 @@ button{
 
 #table_id{
     border-bottom: none !important;
+    width: 100%;
+}
+
+#table_id_wrapper{
+    margin-top: 25px !important;
 }
 
 #table_id thead th:first-child{  
     /* border-radius: var(--border-radius-primary) 0 0 var(--border-radius-primary); */
-    border-radius: var(--border-radius-primary) 0 0 0;
+    border-radius: var(--border-radius) 0 0 0;
 }
 
 #table_id thead th:last-child{  
     /* border-radius: 0 var(--border-radius-primary) var(--border-radius-primary) 0; */
-    border-radius: 0 var(--border-radius-primary) 0 0;
+    border-radius: 0 var(--border-radius) 0 0;
 }
 
 #table_id tbody{
     font-size: 0.85em;
     box-shadow: var(--dropshadow-card-or-button);
-    border-radius: 0 0 var(--border-radius-primary) var(--border-radius-primary);
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
     overflow: hidden;
 }
 #table_id tbody tr td{
@@ -102,10 +108,10 @@ button{
 } */
 
 #table_id tbody tr:last-child td:first-child{
-    border-radius: 0 0 0 var(--border-radius-primary);
+    border-radius: 0 0 0 var(--border-radius);
 }
 #table_id tbody tr:last-child td:last-child{
-    border-radius: 0 0 var(--border-radius-primary) 0;
+    border-radius: 0 0 var(--border-radius) 0;
 }
 
 .myAddbtn{
@@ -118,8 +124,8 @@ button{
     background-color: transparent;
     color: var(--foreground-secondary);
     position: absolute;
-    left: 15px;
-    transform: translateY(-15px);
+    left: 30px;
+    transform: translateY();
     font-size: small;
     font-weight: 400;
     cursor: pointer;
@@ -148,10 +154,17 @@ button{
 }
 .dataTables_filter input{
     width: 400px;
-    border: 2px solid #36D1DC !important;
+    border: 2px solid var(--border-default) !important;
     outline: none !important;
     padding: 5px 15px !important;
     border-radius: var(--border-radius) !important;
+}
+.table_id_filter label > *:first-child{
+    padding-right: 20px;
+}
+
+.dataTables_filter input:focus-within{
+    border: 2px solid #36D1DC !important;
 }
 
 .myWrapper{
@@ -160,5 +173,6 @@ button{
     border-radius: 15px;
     box-shadow: var(--dropshadow-card-or-button);
     padding: 30px;
-    margin-top: 25px;
+    padding-bottom: 10px !important;
+    /* margin-top: 25px; */
   }
