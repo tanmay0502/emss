@@ -4,6 +4,8 @@ import { HiDocumentDuplicate } from "react-icons/hi";
 import { FaEdit } from "react-icons/fa";
 import { FaTrashAlt } from "react-icons/fa";
 import { AiOutlinePlus } from "react-icons/ai";
+import {FaClipboardList} from 'react-icons/fa';
+import './css/warehouse.css'
 
 
 const $ = require('jquery')
@@ -16,6 +18,9 @@ $(document).ready(function () {
 export default function WarehouseList() {
     return (
         <div className="myWrapper" style={{position: "relative"}}>
+            <div className='PageTitle'>
+				<h4><FaClipboardList/> <span>List of Warehouses</span></h4>
+		    </div>
             <button className='myAddbtn' onClick={() => {
                 window.location.href = "/session/warehousemanagement/addwarehouse"
             }}><AiOutlinePlus />Add</button>
