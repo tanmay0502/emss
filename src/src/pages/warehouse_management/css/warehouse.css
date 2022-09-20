@@ -16,6 +16,7 @@
     letter-spacing: 0px;
     display: flex;
     /* color: var(--foreground-secondary) !important; */
+    margin-bottom: 10px;
 }
 .PageTitle h4 span{
     margin-left: 15px;
