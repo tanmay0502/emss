@@ -75,6 +75,8 @@ button{
 #table_id{
     border-bottom: none !important;
     width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
 }
 
 #table_id_wrapper{
@@ -101,12 +103,6 @@ button{
     text-align: center;
 }
 
-/* #table_id tbody tr:first-child td:first-child{
-    border-radius: var(--border-radius-primary) 0 0 0;
-}
-#table_id tbody tr:first-child td:last-child{
-    border-radius: 0 var(--border-radius-primary) 0 0;
-} */
 
 #table_id tbody tr:last-child td:first-child{
     border-radius: 0 0 0 var(--border-radius);
@@ -121,7 +117,6 @@ button{
     align-items: center;
     justify-content: center;
     padding: 5px;
-    /* background-color: #36D1DC; */
     background-color: transparent;
     color: var(--foreground-secondary);
     position: absolute;
@@ -131,7 +126,6 @@ button{
     font-weight: 400;
     cursor: pointer;
     z-index: 5000;
-    /* border: 2px solid transparent; */
 }
 
 .myAddbtn > svg{
@@ -174,6 +168,5 @@ button{
     border-radius: 15px;
     box-shadow: var(--dropshadow-card-or-button);
     padding: 30px;
-    padding-bottom: 10px !important;
-    /* margin-top: 25px; */
+    padding-bottom: 15px !important;
   }

@@ -27,7 +27,11 @@ export default function WarehouseList() {
             <table id="table_id" className="display">
                 <thead className="tableHeading">
                     <tr>
-                        <th>Warehouse Name</th>
+                        <th>ID</th>
+                        <th>Type</th>
+                        <th>Double Lock</th>
+                        <th>Building Type</th>
+                        <th>Sealed</th>
                         <th className="btn_group">Details</th>
                         <th className="btn_group">Edit</th>
                         <th className="btn_group">Delete</th>
@@ -35,86 +39,151 @@ export default function WarehouseList() {
                 </thead>
                 <tbody>
                     <tr>
-                        <td>WareHouse 1</td>
+                        <td>MH12A1</td>
+                        <th>National Reserve Warehouse</th>
+                        <th>Yes</th>
+                        <th>Temporary</th>
+                        <th>Yes</th>
                         <td><div className="btn_details"><HiDocumentDuplicate size="1em" />  <span>  Details </span></div> </td>
                         <td><div className="btn_edit"><FaEdit /> <span> Edit </span></div> </td>
                         <td><div className="btn_delete"><FaTrashAlt /> <span> Delete</span></div> </td>
                     </tr>
                     <tr>
-                        <td>WareHouse 2</td>
+                        <td>UP12B1</td>
+                        <th>State Central Warehouse</th>
+                        <th>Yes</th>
+                        <th>Temporary</th>
+                        <th>Yes</th>
                         <td><div className="btn_details"><HiDocumentDuplicate size="1em" />  <span>  Details </span></div> </td>
                         <td><div className="btn_edit"><FaEdit /> <span> Edit </span></div> </td>
                         <td><div className="btn_delete"><FaTrashAlt /> <span> Delete</span></div> </td>
                     </tr>
                     <tr>
-                        <td>WareHouse 3</td>
+                        <td>DL05C2</td>
+                        <th>District Warehouse</th>
+                        <th>Yes</th>
+                        <th>Temporary</th>
+                        <th>Yes</th>
                         <td><div className="btn_details"><HiDocumentDuplicate size="1em" />  <span>  Details </span></div> </td>
                         <td><div className="btn_edit"><FaEdit /> <span> Edit </span></div> </td>
                         <td><div className="btn_delete"><FaTrashAlt /> <span> Delete</span></div> </td>
                     </tr>
                     <tr>
-                        <td>WareHouse 4</td>
+                        <td>MH12A1</td>
+                        <th>National Reserve Warehouse</th>
+                        <th>Yes</th>
+                        <th>Temporary</th>
+                        <th>Yes</th>
                         <td><div className="btn_details"><HiDocumentDuplicate size="1em" />  <span>  Details </span></div> </td>
                         <td><div className="btn_edit"><FaEdit /> <span> Edit </span></div> </td>
                         <td><div className="btn_delete"><FaTrashAlt /> <span> Delete</span></div> </td>
                     </tr>
                     <tr>
-                        <td>WareHouse 5</td>
+                        <td>UP12B1</td>
+                        <th>State Central Warehouse</th>
+                        <th>Yes</th>
+                        <th>Temporary</th>
+                        <th>Yes</th>
                         <td><div className="btn_details"><HiDocumentDuplicate size="1em" />  <span>  Details </span></div> </td>
                         <td><div className="btn_edit"><FaEdit /> <span> Edit </span></div> </td>
                         <td><div className="btn_delete"><FaTrashAlt /> <span> Delete</span></div> </td>
                     </tr>
                     <tr>
-                        <td>WareHouse 6</td>
+                        <td>DL05C2</td>
+                        <th>District Warehouse</th>
+                        <th>Yes</th>
+                        <th>Temporary</th>
+                        <th>Yes</th>
                         <td><div className="btn_details"><HiDocumentDuplicate size="1em" />  <span>  Details </span></div> </td>
                         <td><div className="btn_edit"><FaEdit /> <span> Edit </span></div> </td>
                         <td><div className="btn_delete"><FaTrashAlt /> <span> Delete</span></div> </td>
                     </tr>
                     <tr>
-                        <td>WareHouse 7</td>
+                        <td>MH12A1</td>
+                        <th>National Reserve Warehouse</th>
+                        <th>Yes</th>
+                        <th>Temporary</th>
+                        <th>Yes</th>
                         <td><div className="btn_details"><HiDocumentDuplicate size="1em" />  <span>  Details </span></div> </td>
                         <td><div className="btn_edit"><FaEdit /> <span> Edit </span></div> </td>
                         <td><div className="btn_delete"><FaTrashAlt /> <span> Delete</span></div> </td>
                     </tr>
                     <tr>
-                        <td>WareHouse 8</td>
+                        <td>UP12B1</td>
+                        <th>State Central Warehouse</th>
+                        <th>Yes</th>
+                        <th>Temporary</th>
+                        <th>Yes</th>
                         <td><div className="btn_details"><HiDocumentDuplicate size="1em" />  <span>  Details </span></div> </td>
                         <td><div className="btn_edit"><FaEdit /> <span> Edit </span></div> </td>
                         <td><div className="btn_delete"><FaTrashAlt /> <span> Delete</span></div> </td>
                     </tr>
                     <tr>
-                        <td>WareHouse 9</td>
+                        <td>DL05C2</td>
+                        <th>District Warehouse</th>
+                        <th>Yes</th>
+                        <th>Temporary</th>
+                        <th>Yes</th>
                         <td><div className="btn_details"><HiDocumentDuplicate size="1em" />  <span>  Details </span></div> </td>
                         <td><div className="btn_edit"><FaEdit /> <span> Edit </span></div> </td>
                         <td><div className="btn_delete"><FaTrashAlt /> <span> Delete</span></div> </td>
                     </tr>
                     <tr>
-                        <td>WareHouse 10</td>
+                        <td>MH12A1</td>
+                        <th>National Reserve Warehouse</th>
+                        <th>Yes</th>
+                        <th>Temporary</th>
+                        <th>Yes</th>
                         <td><div className="btn_details"><HiDocumentDuplicate size="1em" />  <span>  Details </span></div> </td>
                         <td><div className="btn_edit"><FaEdit /> <span> Edit </span></div> </td>
                         <td><div className="btn_delete"><FaTrashAlt /> <span> Delete</span></div> </td>
                     </tr>
                     <tr>
-                        <td>WareHouse 11</td>
-                        <td><div className="btn_details"><HiDocumentDuplicate size="1em" />  <span>  Details </span></div> </td>
-                        <td><div className="btn_edit"><FaEdit /> <span> Edit </span></div> </td>
-                        <td><div className="btn_delete"><FaTrashAlt /> <span> Delete</span></div> </td>
-                    </tr>
-
-                    <tr>
-                        <td>WareHouse 12</td>
-                        <td><div className="btn_details"><HiDocumentDuplicate size="1em" />  <span>  Details </span></div> </td>
-                        <td><div className="btn_edit"><FaEdit /> <span> Edit </span></div> </td>
-                        <td><div className="btn_delete"><FaTrashAlt /> <span> Delete</span></div> </td>
-                    </tr>
-                    <tr>
-                        <td>WareHouse 13</td>
+                        <td>UP12B1</td>
+                        <th>State Central Warehouse</th>
+                        <th>Yes</th>
+                        <th>Temporary</th>
+                        <th>Yes</th>
                         <td><div className="btn_details"><HiDocumentDuplicate size="1em" />  <span>  Details </span></div> </td>
                         <td><div className="btn_edit"><FaEdit /> <span> Edit </span></div> </td>
                         <td><div className="btn_delete"><FaTrashAlt /> <span> Delete</span></div> </td>
                     </tr>
                     <tr>
-                        <td>WareHouse 14</td>
+                        <td>DL05C2</td>
+                        <th>District Warehouse</th>
+                        <th>Yes</th>
+                        <th>Temporary</th>
+                        <th>Yes</th>
+                        <td><div className="btn_details"><HiDocumentDuplicate size="1em" />  <span>  Details </span></div> </td>
+                        <td><div className="btn_edit"><FaEdit /> <span> Edit </span></div> </td>
+                        <td><div className="btn_delete"><FaTrashAlt /> <span> Delete</span></div> </td>
+                    </tr>
+                    <tr>
+                        <td>MH12A1</td>
+                        <th>National Reserve Warehouse</th>
+                        <th>Yes</th>
+                        <th>Temporary</th>
+                        <th>Yes</th>
+                        <td><div className="btn_details"><HiDocumentDuplicate size="1em" />  <span>  Details </span></div> </td>
+                        <td><div className="btn_edit"><FaEdit /> <span> Edit </span></div> </td>
+                        <td><div className="btn_delete"><FaTrashAlt /> <span> Delete</span></div> </td>
+                    </tr>
+                    <tr>
+                        <td>UP12B1</td>
+                        <th>State Central Warehouse</th>
+                        <th>Yes</th>
+                        <th>Temporary</th>
+                        <th>Yes</th>
+                        <td><div className="btn_details"><HiDocumentDuplicate size="1em" />  <span>  Details </span></div> </td>
+                        <td><div className="btn_edit"><FaEdit /> <span> Edit </span></div> </td>
+                        <td><div className="btn_delete"><FaTrashAlt /> <span> Delete</span></div> </td>
+                    </tr>
+                    <tr>
+                        <td>DL05C2</td>
+                        <th>District Warehouse</th>
+                        <th>Yes</th>
+                        <th>Temporary</th>
+                        <th>Yes</th>
                         <td><div className="btn_details"><HiDocumentDuplicate size="1em" />  <span>  Details </span></div> </td>
                         <td><div className="btn_edit"><FaEdit /> <span> Edit </span></div> </td>
                         <td><div className="btn_delete"><FaTrashAlt /> <span> Delete</span></div> </td>

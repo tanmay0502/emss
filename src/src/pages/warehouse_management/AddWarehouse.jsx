@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { ReactComponent as ChevronRightIcon } from '../../assets/ChevronRight.svg';
 import { ReactComponent as WarehouseManagementIcon } from '../../assets/WarehouseManagement.svg';
 import { FaWarehouse } from 'react-icons/fa';
@@ -17,8 +17,176 @@ import { useState } from "react";
 
 export default function AddWarehouse() {
 
-	const [doubleLockSystem, setDoubleLockSystem] = useState(true)
+	const [doubleLockSystem, setDoubleLockSystem] = useState(false);
+	
+	const [states,setStates] = useState([]);
+	const [statesCode,setStatesCode] = useState([]);
+	const [PCs,setPCs] = useState([]);
+	const [PCcodes,setPCcodes] = useState([]);
+	const [WarehouseId,setWarehouseId] = useState("");
 
+	//Form filed states....
+	const [myState,setmyState] = useState("");
+	const [myPCcode,setmyPCcode] = useState("");
+	const [WarehouseState,setWarehouseState] = useState("");
+	const [WarehousePC,setWarehousePC] = useState("");
+	const [WarehouseType,setWarehouseType] = useState("");
+	const [BuildingType,setBuildingType] = useState("");
+	const [isSealed,setisSealed] = useState("");
+	const [Address,setAddress] = useState("");
+	const [WarhouseCode,setWarehouseCode] = useState("");
+	const [Lat,setLat] = useState("");	
+	const [Lng,setLng] = useState("");	
+	const [PersonName1,setPersonName1] = useState("");	
+	const [PersonName2,setPersonName2] = useState("");	
+	const [PersonMobile1,setPersonMobile1] = useState("");
+	const [PersonMobile2,setPersonMobile2] = useState("");
+	const [PersonDesignation1,setPersonDesignation1] = useState("");
+	const [PersonDesignation2,setPersonDesignation2] = useState("");
+	//Form filed states end....
+
+
+	const onFormSubmit = async(e)=>{
+		e.preventDefault();
+
+		// console.log(BuildingType);
+		// console.log(isSealed);
+		// console.log(Address);
+		// console.log(WarhouseCode);
+		// console.log(Lat);
+		// console.log(Lng);
+		// console.log(myState);
+		// console.log(myPCcode);
+		// console.log(PersonName1);
+		// console.log(PersonMobile1);
+		// console.log(PersonDesignation1);
+		// console.log(PersonName2);
+		// console.log(PersonMobile2);
+		// console.log(PersonDesignation2);
+
+		//fetching userId using Mobile Number....
+		// const userId1 = getUserID(PersonMobile1);
+		// if(doubleLockSystem === true){
+		// 	const userId2 = getUserID(PersonMobile2);			
+		// }
+
+		const whId = generateWarehouseId();
+		console.log(whId);
+
+	}
+
+
+async function getUserID(mobile){
+	try {
+		const response = fetch(
+			`http://evm.iitbhilai.ac.in:8100/usermgt/getUserIDsByMobileNumber`,
+			{
+				method: "POST",
+				headers: {
+				"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					"mobileNumber": mobile
+				}),
+		});
+		const userId = await response.json();
+		console.log(userId);
+		return userId["userids"];
+	} catch (error) {
+		console.log(error)
+	}
+}
+
+
+	//Get state list
+
+	async function getState(){
+		try {
+			
+			const response = await fetch(
+				"http://evm.iitbhilai.ac.in:8000/getStateList",{
+					method : "GET",
+					headers : {
+						"Content-Type": "application/json",
+					}
+				}
+			);
+
+			const StateData = await response.json();
+			setStates(StateData["list of states"]);
+			setStatesCode(StateData["list of Codes"]);
+			
+
+		} catch (error) {
+			console.log(error);
+		}
+	}
+
+	useEffect(()=>{
+		getState();	
+	},[])
+
+	async function generateWarehouseId(){
+		
+			try {
+				const response = await fetch(
+					'http://evm.iitbhilai.ac.in:8100/warehouse/listWarehouses',
+					{
+						method : "POST",
+						headers: {
+							"Content-Type": "application/json",
+							},
+							body: JSON.stringify({
+								"stateCode": myState,
+								"pcCode": myPCcode
+							}),
+					}
+				)
+				
+			} catch (error) {
+				console.log(error);
+			}
+
+			return myState + myPCcode + WarehouseType;
+	}
+	async function setStateFunc(st){
+		if(st!=="-1"){
+			const selectedCode = statesCode[states.indexOf(st)];
+			setmyState(selectedCode);
+			 if(selectedCode == "IN" || 
+			 	selectedCode == "EL" ||
+				 selectedCode == "BL"
+			 ){}
+			 else{
+				 try {
+					 const response = await fetch(
+						`http://evm.iitbhilai.ac.in:8000/getPCListbyState/${selectedCode}`,{
+							method : "GET",
+							headers: {
+								"Content-Type": "application/json",
+							  },
+						}
+					 );
+
+					const data = await response.json(); 
+					setPCs(data["list of PC names"]);
+					setPCcodes(data["list of PC Codes"]);
+
+				 } catch (error) {
+					 console.log(error);
+				 }
+			 }
+		}
+	}
+
+	async function setPcFunc(pc){
+		if(pc!== "-1"){
+			const pcCode = PCcodes[PCs.indexOf(pc)];
+			setmyPCcode(pcCode);
+		}
+	}
+
+	
 	return (
 		<div className="flex-col justify-center align-middle">
 			<div className="content-path">
@@ -29,7 +197,7 @@ export default function AddWarehouse() {
 				<div className='PageTitle'>
 					<h4><FaWarehouse /><span>Add New Warehouse</span></h4>
 				</div>
-				<form className="myForm">
+				<form className="myForm"  onSubmit={onFormSubmit}> 
 					<div className="formGrid">
 						<div class="warehouse-type">
 							<h5>
@@ -41,27 +209,27 @@ export default function AddWarehouse() {
 										<label htmlFor="">Type : </label>
 									</div>
 									<div className="form_select">
-										<select name="" id="">
+										<select name="" id="input_warehousetype" onChange={(e) => setWarehouseType(e.target.value)}>
 											<option value="-1" className="FirstOption">--Select--</option>
-											<option value="01">National Reserve Warehouse</option>
-											<option value="02">State Central Warehouse</option>
-											<option value="03">District Warehouse</option>
-											<option value="04">District Strong Room</option>
+											<option value="A">National Reserve Warehouse</option>
+											<option value="B">State Central Warehouse</option>
+											<option value="C">District Warehouse</option>
+											<option value="D">District Strong Room</option>
 
-											<option value="05">Strong Room for AC</option>
-											<option value="06">Strong Room for AS (PC)</option>
-											<option value="07">Strong Room for Polled Units</option>
-											<option value="08">Strong Room for Units under Counting</option>
+											<option value="E">Strong Room for AC</option>
+											<option value="F">Strong Room for AS (PC)</option>
+											<option value="G">Strong Room for Polled Units</option>
+											<option value="H">Strong Room for Units under Counting</option>
 
-											<option value="09">Strong Room for units under EP Period</option>
-											<option value="10">Strong Room for EP Marked units</option>
-											<option value="11">Defective EVM Warehouse</option>
-											<option value="12">Reserve Units Strong Room</option>
+											<option value="I">Strong Room for units under EP Period</option>
+											<option value="J">Strong Room for EP Marked units</option>
+											<option value="K">Defective EVM Warehouse</option>
+											<option value="L">Reserve Units Strong Room</option>
 
-											<option value="13">T&A Warehouse</option>
-											<option value="14">Virtual Warehouse</option>
-											<option value="15">Virtual Strong Room</option>
-											<option value="16">Manufacturer Warehouse</option>
+											<option value="M">T&A Warehouse</option>
+											<option value="N">Virtual Warehouse</option>
+											<option value="O">Virtual Strong Room</option>
+											<option value="P">Manufacturer Warehouse</option>
 										</select>
 										<div className="input_icon">
 											<FaWarehouse size="1em" />
@@ -75,7 +243,7 @@ export default function AddWarehouse() {
 										<label htmlFor="">Building Type : </label>
 									</div>
 									<div className="form_select">
-										<select name="" id="">
+										<select name="" id="input_buildingtype" onChange={(e) => setBuildingType(e.target.value)} >
 											<option value="-1" className="FirstOption">--Select--</option>
 
 											<option value="Temporary">Temporary</option>
@@ -92,7 +260,7 @@ export default function AddWarehouse() {
 										<label htmlFor="">Sealed: </label>
 									</div>
 									<div className="form_select">
-										<select name="" id="">
+										<select name="" id="input_isSealed" onChange={(e) => setisSealed(e.target.value)}>
 											<option value="-1" className="FirstOption">--Select--</option>
 											<option value="Yes">Yes</option>
 											<option value="No">No</option>
@@ -114,7 +282,7 @@ export default function AddWarehouse() {
 										<label htmlFor="">Address : </label>
 									</div>
 									<div className="form_input">
-										<input id="" name="" className="" placeholder="Warehouse Address" />
+										<input id="input_address" name="" className="" placeholder="Warehouse Address" onChange={(e) => setAddress(e.target.value)} />
 										<div className="input_icon">
 											<FaMapMarkedAlt size="1em" />
 										</div>
@@ -127,7 +295,7 @@ export default function AddWarehouse() {
 										<label htmlFor="">Warehouse Code : </label>
 									</div>
 									<div className="form_input">
-										<input id="" name="" className="" placeholder="Warehouse Code" />
+										<input id="input_code" name="code" className="" placeholder="Warehouse Code" onChange={(e) => setWarehouseCode(e.target.value)} />
 										<div className="input_icon">
 											<FaLaptopHouse size="1em" />
 										</div>
@@ -136,20 +304,63 @@ export default function AddWarehouse() {
 
 								<div className="form_group">
 									<div className="form_label">
-										<label htmlFor="">Location : </label>
+										<label htmlFor="">State : </label>
 									</div>
-									<div className="form_input_group_horizontal">
-										<div className="form_input">
-											<input id="" name="" className="" placeholder="Latitude" />
-											<div className="input_icon">
-												<FaMapMarkerAlt size="1em" />
-											</div>
+									<div className="form_select">
+										<select name="" id="input_state" onChange={(e) => setStateFunc(e.target.value)}>
+											<option value="-1">--Select--</option>
+											{states.map((st) => (
+											<option value={st} className="text-black">
+												{st}
+											</option>
+											))}
+										</select>
+										<div className="input_icon">
+											<FaMapMarkedAlt size="1em" />
 										</div>
-										<div className="form_input">
-											<input id="" name="" className="" placeholder="Longitude" />
-											<div className="input_icon">
-												<FaMapMarkerAlt size="1em" />
-											</div>
+									</div>
+
+								</div>
+
+								<div className="form_group">
+									<div className="form_label">
+										<label htmlFor="">PC Code : </label>
+									</div>
+									<div className="form_select">
+										<select name="" id="input_PC" onChange={(e) => setPcFunc(e.target.value)}>
+											<option value="-1">--Select--</option>
+											{PCs.map((pc) => (
+												<option value={pc} className="text-black">
+													{pc}
+												</option>
+                       						 ))}
+										</select>
+										<div className="input_icon">
+											<FaLaptopHouse size="1em" />
+										</div>
+									</div>
+								</div>
+
+								<div className="form_group">
+									<div className="form_label">
+										<label htmlFor="">Latitude : </label>
+									</div>
+									<div className="form_input">
+										<input id="input_lat" name="" className="" placeholder="Latitude" onChange={(e) => setLat(e.target.value)} />
+										<div className="input_icon">
+											<FaLaptopHouse size="1em" />
+										</div>
+									</div>
+								</div>
+
+								<div className="form_group">
+									<div className="form_label">
+										<label htmlFor="">Longitude : </label>
+									</div>
+									<div className="form_input">
+										<input id="input_lng" name="" className="" placeholder="Longitude" onChange={(e) => setLng(e.target.value)} />
+										<div className="input_icon">
+											<FaLaptopHouse size="1em" />
 										</div>
 									</div>
 								</div>
@@ -164,13 +375,13 @@ export default function AddWarehouse() {
 									<div className="form_radio">
 										<label htmlFor="double_lock_yes">Double Lock System: </label>
 										<label htmlFor="double_lock_yes">Yes </label>
-										<input type={"radio"} name="double_lock" id="double_lock_yes" value="1" defaultChecked={true} onChange={(e) => {
-											console.log("Yes")
+										<input type={"radio"} name="double_lock" id="double_lock_yes" value="1" onChange={(e) => {
+											// console.log("Yes")
 											// console.log(e.target.checked)
 											setDoubleLockSystem(true)
 										}} />
 										<label htmlFor="double_lock_no">No </label>
-										<input type={"radio"} name="double_lock" id="double_lock_no" value="0" onChange={(e) => {
+										<input type={"radio"} name="double_lock" id="double_lock_no" value="0" defaultChecked={true} onChange={(e) => {
 											console.log("No")
 											// console.log(e.target.checked)
 											setDoubleLockSystem(false)
@@ -182,7 +393,7 @@ export default function AddWarehouse() {
 										<label htmlFor="">Person Name: </label>
 									</div>
 									<div className="form_input">
-										<input placeholder="Person 1 Name" id="" name="" />
+										<input placeholder="Person 1 Name" id="input_personName_1" name="" onChange={(e) => setPersonName1(e.target.value)} />
 										<div className="input_icon">
 											<BsFillPersonFill size="1em" />
 										</div>
@@ -194,7 +405,7 @@ export default function AddWarehouse() {
 										<label htmlFor="">Person Mobile: </label>
 									</div>
 									<div className="form_input">
-										<input type={"tel"} placeholder="Mobile" id="" name="" />
+										<input type={"tel"} placeholder="Mobile" id="input_personMobile_1" name="" onChange={(e) => setPersonMobile1(e.target.value) } />
 										<div className="input_icon">
 											<BsFillTelephoneFill size="1em" />
 										</div>
@@ -205,12 +416,8 @@ export default function AddWarehouse() {
 									<div className="form_label">
 										<label htmlFor="">Person Designation: </label>
 									</div>
-									<div className="form_select">
-										<select name="" id="">
-											<option value="-1" className="FirstOption">--Select--</option>
-											<option value="Yes">Yes</option>
-											<option value="No">No</option>
-										</select>
+									<div className="form_input">
+										<input type="text" id="input_personDesignation_1" placeholder="Enter Designation" onChange={(e) => setPersonDesignation1(e.target.value)}/>
 										<div className="input_icon">
 											<MdWork size="1em" />
 										</div>
@@ -222,7 +429,7 @@ export default function AddWarehouse() {
 										<label htmlFor="">Person Name: </label>
 									</div>
 									<div className="form_input">
-										<input placeholder="Person 2 Name" id="" name="" />
+										<input placeholder="Person 2 Name" id="input_personName_2" name="" onChange={(e) => setPersonName2(e.target.value)} />
 										<div className="input_icon">
 											<BsFillPersonFill size="1em" />
 										</div>
@@ -234,7 +441,7 @@ export default function AddWarehouse() {
 										<label htmlFor="">Person Mobile: </label>
 									</div>
 									<div className="form_input">
-										<input type={"tel"} placeholder="Mobile" id="" name="" />
+										<input type={"tel"} placeholder="Mobile" id="input_personMobile_2" name="" onChange={(e) => setPersonMobile2(e.target.value)} />
 										<div className="input_icon">
 											<BsFillTelephoneFill size="1em" />
 										</div>
@@ -245,12 +452,8 @@ export default function AddWarehouse() {
 									<div className="form_label">
 										<label htmlFor="">Person Designation: </label>
 									</div>
-									<div className="form_select">
-										<select name="" id="">
-											<option value="-1" className="FirstOption">--Select--</option>
-											<option value="Yes">Yes</option>
-											<option value="No">No</option>
-										</select>
+									<div className="form_input">
+										<input type="text" id="input_personDesignation_2" placeholder="Enter Designation" onChange={(e) => setPersonDesignation2(e.target.value)}/>
 										<div className="input_icon">
 											<MdWork size="1em" />
 										</div>
