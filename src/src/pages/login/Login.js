@@ -43,8 +43,8 @@ const Login = () => {
   const [statesCode, setStatesCode] = useState([]);
   const [PCs, setPCs] = useState(["00"]);
   const [PCsCode, setPCsCode] = useState(["00"]);
-  const [ACs, setACs] = useState(["00"]);
-  const [ACsCode, setACsCode] = useState(["00"]);
+  const [ACs, setACs] = useState(["000"]);
+  const [ACsCode, setACsCode] = useState(["000"]);
   const [roles, setRoles] = useState([]);
   const [rolesCode, setRolesCode] = useState([]);
 
@@ -63,10 +63,17 @@ const Login = () => {
     }
     if (userID.length >= 4) {
       const pccode = (parseInt(userID.substring(2, 4))).toString()
-      if (PCsCode.indexOf(pccode) !== -1) {
+      console.log(PCsCode,pccode, PCsCode.indexOf(pccode));
+      if(pccode=="0"){
+        console.log("kk")
+        setPCs(["00"])
+        setPCsCode(["00"])
+        document.getElementById("pcDropdown").value ="00";
+      }
+      else if (PCsCode.indexOf(pccode) !== -1) {
         if (document.getElementById("pcDropdown")){
-          document.getElementById("pcDropdown").value =
-            PCs[PCsCode.indexOf(pccode)];
+          console.log("l",PCs[PCsCode.indexOf(pccode)]);
+          document.getElementById("pcDropdown").value =PCs[PCsCode.indexOf(pccode)];
         }
         setPCFunc(PCs[PCsCode.indexOf(pccode)], false)
       }
@@ -77,8 +84,15 @@ const Login = () => {
     }
 
     if (userID.length >= 7) {
-      const accode = userID.substring(4, 7)
-      if (ACsCode.indexOf(accode) !== -1) {
+      const accode = (userID.substring(4, 7));
+      console.log(accode)
+      if(accode=="000"){
+        console.log("pp")
+        setACs(["000"]);
+        setACsCode(["000"]);
+        document.getElementById("acDropdown").value ="000";
+      }
+      else if (ACsCode.indexOf(accode) !== -1) {
          if (document.getElementById("acDropdown")){
            document.getElementById("acDropdown").value =
              ACs[ACsCode.indexOf(accode)];
@@ -96,6 +110,7 @@ const Login = () => {
       if(rolesCode.indexOf(role) !== -1){
         console.log("Readable Role:")
         console.log(roles[rolesCode.indexOf(role)])
+        if(document.getElementById("roleDropdown"))
         document.getElementById('roleDropdown').value = roles[rolesCode.indexOf(role)]
         setRoleFunc(roles[rolesCode.indexOf(role)], false)
       }
@@ -110,7 +125,7 @@ const Login = () => {
   async function getState() {
     try {
       const response = await fetch(
-        "http://evm.iitbhilai.ac.in:8000/getStateList",
+        "http://evm.iitbhilai.ac.in:8005/getStateList",
         {
           method: "GET",
           headers: {
@@ -139,17 +154,18 @@ const Login = () => {
 
   async function setStateFunc(st, changeUserID=true) {
     if (st !== "Select:") {
+      console.log(st)
       setState(statesCode[states.indexOf(st)]);
       // console.log(statesCode[states.indexOf(st)]);
       if (
-        statesCode[states.indexOf(st)] == "IN" ||
-        statesCode[states.indexOf(st)] == "EL" ||
-        statesCode[states.indexOf(st)] == "BL"
+        statesCode[states.indexOf(st)] == "EC" ||
+        statesCode[states.indexOf(st)] == "ME" ||
+        statesCode[states.indexOf(st)] == "MB"
       ) {
       } else {
         try {
           const response = await fetch(
-            `http://evm.iitbhilai.ac.in:8000/getPCListbyState/${statesCode[states.indexOf(st)]}`,
+            `http://evm.iitbhilai.ac.in:8005/getPCListbyState/${statesCode[states.indexOf(st)]}`,
             {
               method: "GET",
               headers: {
@@ -158,7 +174,7 @@ const Login = () => {
             }
           );
           const data2 = await response.json();
-          // console.log(data2);
+          console.log(data2);
           setPCs(data2["list of PC names"]);
           setPCsCode(data2["list of PC Codes"]);
         } catch (err) {
@@ -173,12 +189,12 @@ const Login = () => {
     console.log(state, PCsCode[PCs.indexOf(st)]);
     setPC(PCsCode[PCs.indexOf(st)]);
     if(state !== "Select:"){
-      if (state == "IN" || state == "EL" || state == "BL") {
+      if (state == "EC" || state == "ME" || state == "MB") {
       }
       else {
         try {
           const response = await fetch(
-            `http://evm.iitbhilai.ac.in:8000/getACListbyStatePC/${state}`,
+            `http://evm.iitbhilai.ac.in:8005/getACListbyStatePC/${state}`,
             {
               method: "GET",
               headers: {
@@ -204,7 +220,7 @@ const Login = () => {
     console.log(ACsCode[ACs.indexOf(st)]);
     try {
       const response = await fetch(
-        `http://evm.iitbhilai.ac.in:8000/getRoleList/`,
+        `http://evm.iitbhilai.ac.in:8005/getRoleList/`,
         {
           method: "GET",
           headers: {
@@ -213,7 +229,7 @@ const Login = () => {
         }
       );
       const data2 = await response.json();
-      // console.log(data2);
+      console.log(data2);
       setRoles(data2["Human Readable Role Name"]);
       setRolesCode(data2["String Code to be used as a part of User ID"]);
     } catch (err) {
@@ -249,7 +265,7 @@ const Login = () => {
         setMobile(userID);
         try {
           const response = await fetch(
-            "http://evm.iitbhilai.ac.in:8000/getUserIDsByMobileNumber",
+            "http://evm.iitbhilai.ac.in:8005/getUserIDsByMobileNumber",
             {
               method: "POST",
               headers: {
@@ -275,7 +291,7 @@ const Login = () => {
             setInvalidUser("");
             try {
               const response = await fetch(
-                "http://evm.iitbhilai.ac.in:8000/sendOTP",
+                "http://evm.iitbhilai.ac.in:8005/sendOTP",
                 {
                   method: "POST",
                   headers: {
@@ -302,7 +318,7 @@ const Login = () => {
       } else {
         try {
           const response = await fetch(
-            "http://evm.iitbhilai.ac.in:8000/getMobileFromUserID",
+            "http://evm.iitbhilai.ac.in:8005/getMobileFromUserID",
             {
               method: "POST",
               headers: {
@@ -320,7 +336,7 @@ const Login = () => {
             setMobile(data[0][0]);
             try {
               const response = await fetch(
-                "http://evm.iitbhilai.ac.in:8000/sendOTP",
+                "http://evm.iitbhilai.ac.in:8005/sendOTP",
                 {
                   method: "POST",
                   headers: {
@@ -359,7 +375,7 @@ const Login = () => {
   async function requestPasswordBlock() {
     try {
       const response = await fetch(
-        "http://evm.iitbhilai.ac.in:8000/verifyOTP",
+        "http://evm.iitbhilai.ac.in:8005/verifyOTP",
         {
           method: "POST",
           headers: {
@@ -391,9 +407,10 @@ const Login = () => {
     }
   }
   async function requestDashboard() {
+    console.log(userID,password)
     try {
       const response = await fetch(
-        "http://evm.iitbhilai.ac.in:8000/verifyPasswordByUserID",
+        "http://evm.iitbhilai.ac.in:8005/verifyPasswordByUserID",
         {
           method: "POST",
           headers: {
@@ -534,7 +551,7 @@ const Login = () => {
                           Select:
                         </option>
 
-                        {states.map((st) => (
+                        {states && states.map((st) => (
                           <option value={st} className="text-black">
                             {st}
                           </option>
@@ -560,7 +577,7 @@ const Login = () => {
                         <option value="0" className="text-black">
                           Select:
                         </option>
-                        {PCs.map((st) => (
+                        {PCs && PCs.map((st) => (
                           <option value={st} className="text-black">
                             {st}
                           </option>
@@ -586,7 +603,7 @@ const Login = () => {
                         <option value="0" className="text-black">
                           Select:
                         </option>
-                        {ACs.map((st) => (
+                        {ACs && ACs.map((st) => (
                           <option value={st} className="text-black">
                             {st}
                           </option>
@@ -612,7 +629,7 @@ const Login = () => {
                         <option value="0" className="text-black">
                           Select:
                         </option>
-                        {roles.map((st) => (
+                        {roles && roles.map((st) => (
                           <option value={st} className="text-black">
                             {st}
                           </option>
