@@ -287,8 +287,19 @@ export default function AddWarehouse() {
 
 								{/* <div className="form_group">
 									<div className="form_label">
-										<label htmlFor="">Warehouse Code : </label>
+										<label htmlFor="">PC Code : </label>
 									</div>
+<<<<<<< HEAD
+									<div className="form_select">
+										<select required name="" id="input_PC" onChange={(e) => setPcFunc(e.target.value)}>
+											<option value="">--Select--</option>
+											{PCs.map((pc) => (
+												<option value={pc} className="text-black">
+													{pc}
+												</option>
+											))}
+										</select>
+=======
 									<div className="form_input">
 										<input required id="input_code" name="code" className="" placeholder="Warehouse Code" onChange={(e) => setWarehouseCode(e.target.value)} />
 										<div className="input_icon">
@@ -376,7 +387,7 @@ export default function AddWarehouse() {
 											setDoubleLockSystem(true)
 										}} />
 										<label htmlFor="double_lock_no">No </label>
-										<input type={"radio"} name="double_lock" id="double_lock_no" value="0" onChange={(e) => {
+										<input type={"radio"} name="double_lock" id="double_lock_no" value="0" defaultChecked={true} onChange={(e) => {
 											console.log("No")
 											// console.log(e.target.checked)
 											setDoubleLockSystem(false)

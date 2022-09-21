@@ -89,6 +89,8 @@ button {
 #table_id {
     border-bottom: none !important;
     width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
 }
 
 #table_id_wrapper {
