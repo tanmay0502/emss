@@ -14,31 +14,31 @@
 	box-sizing: border-box;
 }
 
-.div1 {
+.divh1 {
 	grid-area: 2 / 2 / 4 / 3;
 }
 
-.div1 .blocks{
+.divh1 .blocks{
 	padding-top: 60px;
 	max-height: calc(50vh + 20px);
 }
 
-.div2 {
+.divh2 {
 	grid-area: 1 / 2 / 2 / 3;
 }
 
-.div3 {
+.divh3 {
 	grid-area: 1 / 1 / 2 / 2;
 }
 
-.div4 {
+.divh4 {
 	grid-area: 2 / 1 / 3 / 2;
 }
 
-.div5 .blocks{
+.divh5 .blocks{
 	padding-top: 60px;
 }
 
-.div5 {
+.divh5 {
 	grid-area: 3 / 1 / 4 / 2;
 }
