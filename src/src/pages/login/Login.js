@@ -68,7 +68,8 @@ const Login = () => {
         console.log("kk")
         setPCs(["00"])
         setPCsCode(["00"])
-        document.getElementById("pcDropdown").value ="00";
+        if (document.getElementById("pcDropdown"))
+          document.getElementById("pcDropdown").value = "00";
       }
       else if (PCsCode.indexOf(pccode) !== -1) {
         if (document.getElementById("pcDropdown")){
@@ -90,7 +91,8 @@ const Login = () => {
         console.log("pp")
         setACs(["000"]);
         setACsCode(["000"]);
-        document.getElementById("acDropdown").value ="000";
+        if (document.getElementById("acDropdown"))
+          document.getElementById("acDropdown").value = "000";
       }
       else if (ACsCode.indexOf(accode) !== -1) {
          if (document.getElementById("acDropdown")){

@@ -119,8 +119,8 @@ function CreateUser() {
       setLoggedUser(window.sessionStorage.getItem("sessionToken"));
 
       if (
-        window.sessionStorage.getItem("sessionToken").substring(0, 2) in
-        ["EC", "ME", "MB"]
+        ["EC", "ME", "MB"].includes( window.sessionStorage.getItem("sessionToken").substring(0, 2))
+       
       ) {
         setIsFaded({
           state: null,
@@ -184,8 +184,9 @@ function CreateUser() {
   useEffect(() => {
       console.log(PCs,PCsCode)
       if (
-        window.sessionStorage.getItem("sessionToken").substring(0, 2) in
-        ["EC", "ME", "MB"]
+        ["EC", "ME", "MB"].includes(
+          window.sessionStorage.getItem("sessionToken").substring(0, 2)
+        )
       ) {
         setIsFaded({
           state: null,
@@ -201,35 +202,22 @@ function CreateUser() {
         if (window.sessionStorage.getItem("sessionToken")) {
           // console.log(window.sessionStorage.getItem("sessionToken"));
 
-          const ppcode = parseInt(window.sessionStorage
-            .getItem("sessionToken")
-            .substring(2, 4)).toString();
-          console.log("pc",ppcode);
-          if (
-            1
-          ) {
-            console.log("pp",
-              ppcode
-            );
+          const ppcode = parseInt(
+            window.sessionStorage.getItem("sessionToken").substring(2, 4)
+          ).toString();
+          console.log("pc", ppcode);
+          if (1) {
+            console.log("pp", ppcode);
             if (1) {
               document.getElementById("pcDropdown").value =
                 PCs[PCsCode.indexOf(ppcode)];
             }
-            setPCFunc(
-              PCs[
-                PCsCode.indexOf(
-                  ppcode
-                )
-              ],
-              false
-            );
+            setPCFunc(PCs[PCsCode.indexOf(ppcode)], false);
           } else {
             if (document.getElementById("pcDropdown"))
               document.getElementById("pcDropdown").value = "Select:";
           }
         }
-
-
       }
      
    
@@ -238,8 +226,9 @@ function CreateUser() {
   useEffect(() => {
       console.log(ACs,ACsCode)
       if (
-        window.sessionStorage.getItem("sessionToken").substring(0, 2) in
-        ["EC", "ME", "MB"]
+        ["EC", "ME", "MB"].includes(
+          window.sessionStorage.getItem("sessionToken").substring(0, 2)
+        )
       ) {
         setIsFaded({
           state: null,
@@ -255,16 +244,13 @@ function CreateUser() {
         if (window.sessionStorage.getItem("sessionToken") && ACs && ACsCode) {
           // console.log(window.sessionStorage.getItem("sessionToken").substring(7));
 
-          const accode = (window.sessionStorage
+          const accode = window.sessionStorage
             .getItem("sessionToken")
-            .substring(4, 7)).toString();
-          console.log("pc",accode);
-          if (
-            1
-          ) {
-            console.log("pp",
-              accode
-            );
+            .substring(4, 7)
+            .toString();
+          console.log("pc", accode);
+          if (1) {
+            console.log("pp", accode);
             if (1) {
               document.getElementById("acDropdown").value =
                 ACs[ACsCode.indexOf(accode)];
@@ -279,8 +265,6 @@ function CreateUser() {
               document.getElementById("acDropdown").value = "Select:";
           }
         }
-
-
       }
      
    
@@ -422,6 +406,16 @@ function CreateUser() {
       );
       const data2 = await response.json();
       console.log(data2);
+       if( ["EC", "ME", "MB"].includes(
+          window.sessionStorage.getItem("sessionToken").substring(0, 2)
+        )){
+          setRoles(data2["Human Readable Role Name"]);
+          setRolesCode(data2["String Code to be used as a part of User ID"]);
+
+
+        }
+        else{
+
       let rcode=[];
       //
       // here is the function for filtering the role for which new user can be created by the logged in user
@@ -482,6 +476,7 @@ function CreateUser() {
       console.log(rname,rc)
       setRoles(rname);
       setRolesCode(rc);
+    }
     } catch (err) {
       console.log(err);
     }
