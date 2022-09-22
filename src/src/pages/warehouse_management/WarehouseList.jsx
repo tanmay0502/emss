@@ -23,19 +23,12 @@ $(document).ready(function () {
 });
 
 export default function WarehouseList() {
-<<<<<<< src/src/pages/warehouse_management/WarehouseList.jsx
-
-    
     const [Details,setDetails] = React.useState([]);
     const [isLoaded,setisLoaded] = React.useState(false);
     
     async function getList(){
         let userId = sessionStorage.getItem('sessionToken');
         const code =  userId.slice(0, 2);
-=======
-    const [Details,setDetails] = React.useState([]);
-    async function getList(){
->>>>>>> src/src/pages/warehouse_management/WarehouseList.jsx
         try {
             const response = await fetch(
                 `http://evm.iitbhilai.ac.in:8100/warehouse/listWarehouses`,
@@ -45,49 +38,21 @@ export default function WarehouseList() {
                       "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
-<<<<<<< src/src/pages/warehouse_management/WarehouseList.jsx
                         "stateCode": code
-=======
-                        "stateCode": "MH",
-                        "pcCode": "13"
->>>>>>> src/src/pages/warehouse_management/WarehouseList.jsx
                     }),
                 })
 
                 const data = await response.json();
-<<<<<<< src/src/pages/warehouse_management/WarehouseList.jsx
                 MapWarehouseTypes(data);
-           
-=======
-                   data.map((val)=>{
-                        fetch(
-                            `http://evm.iitbhilai.ac.in:8100/warehouse/warehouseDetails/${val[0]}`,
-                            {
-                                method: "GET",
-                                headers: {
-                                "Content-Type": "application/json",
-                                }
-                            }
-                        ).then((res) => res.json())
-                        .then((json) => {
-                            setDetails(current => [...current, json]);
-                        })
-                })
->>>>>>> src/src/pages/warehouse_management/WarehouseList.jsx
         } catch (error) {
             console.log(error)
         }
 
     }
-<<<<<<< src/src/pages/warehouse_management/WarehouseList.jsx
-=======
-
->>>>>>> src/src/pages/warehouse_management/WarehouseList.jsx
     useEffect(()=>{
         getList();
     },[])
 
-<<<<<<< src/src/pages/warehouse_management/WarehouseList.jsx
     const  MapWarehouseTypes = async (data) => {
         try{
             const response = await fetch(
@@ -112,9 +77,6 @@ export default function WarehouseList() {
             console.log(error);
         }
     }
-
-=======
->>>>>>> src/src/pages/warehouse_management/WarehouseList.jsx
     return (
         <div className="myWrapper" style={{position: "relative"}}>
             <div className='PageTitle'>
@@ -137,28 +99,18 @@ export default function WarehouseList() {
                         <th>WarehouseId</th>
                         <th>Warehouse Type</th>
                         <th>Double Lock</th>
-<<<<<<< src/src/pages/warehouse_management/WarehouseList.jsx
                         <th>Warehouse Building Type</th>
-=======
-                        <th>Building Type</th>
-                        {/* <th>Sealed</th> */}
->>>>>>> src/src/pages/warehouse_management/WarehouseList.jsx
                         <th className="btn_group">Details</th>
                         <th className="btn_group">Edit</th>
                         <th className="btn_group">Delete</th>
                     </tr>
                 </thead>
                 <tbody>
-<<<<<<< src/src/pages/warehouse_management/WarehouseList.jsx
                     {Details.length && Details.map((value) =>(
-=======
-                {Details.length && Details.map((value) =>(
->>>>>>> src/src/pages/warehouse_management/WarehouseList.jsx
                         <tr>
                             <td>
                                 {value[0]}
                             </td>
-<<<<<<< src/src/pages/warehouse_management/WarehouseList.jsx
                             <td>
                                 {value[1]}
                             </td>
@@ -168,17 +120,6 @@ export default function WarehouseList() {
                             <td>
                                <center> {value[2] === "T" ? <FaWarehouse size='1.5em' className="tempWarehouse"/> : <FaWarehouse size='1.5em' className="perWarehouse"/>}</center>
                             </td>
-=======
-                            <th>
-                                {value[1]}
-                            </th>
-                            <th>
-                                {value[7] === true ? "Yes" : "No"}
-                            </th>
-                            <th>
-                                {value[2] === "T" ? "Temporary" : "Permanaet"}
-                            </th>
->>>>>>> src/src/pages/warehouse_management/WarehouseList.jsx
                             <td><div className="btn_details"><HiDocumentDuplicate size="1em" />  <span>  Details </span></div> </td>
                             <td><div className="btn_edit"><FaEdit /> <span> Edit </span></div> </td>
                             <td><div className="btn_delete"><FaTrashAlt /> <span> Delete</span></div> </td>
