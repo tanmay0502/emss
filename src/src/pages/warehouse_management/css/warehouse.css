@@ -1,4 +1,4 @@
-.PageTitle{
+.PageTitle {
     position: relative;
     display: flex;
     justify-content: space-between;
@@ -12,22 +12,25 @@
     box-shadow: 5px 5px 10px rgba(0,0,0,0.6); */
 }
 
-.PageTitle h4{
+.PageTitle h4 {
     letter-spacing: 0px;
     display: flex;
     /* color: var(--foreground-secondary) !important; */
     margin-bottom: 10px;
 }
-.PageTitle h4 span{
+
+.PageTitle h4 span {
     margin-left: 15px;
 }
-button{
-   
+
+button {
+
     font-weight: bold;
 }
-.btn_details,.btn_edit,.btn_delete{
+
+.btn_details, .btn_edit, .btn_delete {
     position: relative;
-    font-weight: bold;  
+    font-weight: bold;
     height: 35px;
     width: 125px;
     margin-left: auto;
@@ -41,77 +44,93 @@ button{
     transition: 0.2s;
     font-size: 1.1em;
 }
-.btn_details span, .btn_delete span ,.btn_edit span{
+
+.btn_details span, .btn_delete span, .btn_edit span {
     margin-left: 5px;
 }
-.btn_details:hover, .btn_edit:hover, .btn_delete:hover{
+
+.btn_details:hover, .btn_edit:hover, .btn_delete:hover {
     transform: scale(1.05);
     transition: 0.2s;
 }
-.btn_details{
+
+.btn_details {
     background-color: #6184D8;
 }
-.btn_edit{
+
+.btn_edit {
     background-color: #44AF69;
 }
-.btn_delete{
+
+.btn_delete {
     background-color: #FE6D73;
 }
-.btn_group{
+
+.btn_group {
     width: 125px !important;
 }
-.tableHeading{
+
+.tableHeading {
     position: relative;
-    background: #36D1DC;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #5B86E5, #36D1DC);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #5B86E5, #36D1DC); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-    
+    background: #36D1DC;
+    /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #5B86E5, #36D1DC);
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #5B86E5, #36D1DC);
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
     color: #fff !important;
 }
-.tableHeading th{
+
+.tableHeading th {
     text-align: center !important;
 }
 
-#table_id{
+#table_id {
     border-bottom: none !important;
     width: 100%;
     max-width: 100%;
-    overflow-x: auto;
+    min-width: 100%;
 }
 
-#table_id_wrapper{
-    margin-top: 25px !important;
+#table_id {
+    margin-top: 100px !important;
 }
-
-#table_id thead th:first-child{  
+#table_id thead tr > *{
+    padding: 10px 20px;
+}
+#table_id thead th:first-child {
     /* border-radius: var(--border-radius-primary) 0 0 var(--border-radius-primary); */
     border-radius: var(--border-radius) 0 0 0;
 }
 
-#table_id thead th:last-child{  
+#table_id thead th:last-child {
     /* border-radius: 0 var(--border-radius-primary) var(--border-radius-primary) 0; */
     border-radius: 0 var(--border-radius) 0 0;
 }
 
-#table_id tbody{
+#table_id tbody {
     font-size: 0.85em;
     box-shadow: var(--dropshadow-card-or-button);
     border-radius: 0 0 var(--border-radius) var(--border-radius);
     overflow: hidden;
 }
-#table_id tbody tr td{
+
+#table_id tbody tr td {
     text-align: center;
+    padding: 10px 20px;
 }
 
 
-#table_id tbody tr:last-child td:first-child{
+#table_id tbody tr:last-child td:first-child {
     border-radius: 0 0 0 var(--border-radius);
 }
-#table_id tbody tr:last-child td:last-child{
+
+#table_id tbody tr:last-child td:last-child {
     border-radius: 0 0 var(--border-radius) 0;
 }
 
-.myAddbtn{
+.myAddbtn {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -128,45 +147,51 @@ button{
     z-index: 5000;
 }
 
-.myAddbtn > svg{
+.myAddbtn>svg {
     width: 6.5vh;
     height: 5vh;
     padding: 5px;
     aspect-ratio: 1;
 }
 
-.myAddbtn:hover{
+.myAddbtn:hover {
     color: var(--foreground-primary);
-    background-color:  var(--background-gray);
+    background-color: var(--background-gray);
 }
 
-.dataTables_length{
+.dataTables_length {
     display: none;
 }
 
-.dataTables_filter{
+.dataTables_filter {
     margin-bottom: 40px;
 }
-.dataTables_filter input{
+
+.dataTables_filter input {
     width: 400px;
     border: 2px solid var(--border-default) !important;
     outline: none !important;
     padding: 5px 15px !important;
     border-radius: var(--border-radius) !important;
 }
-.table_id_filter label > *:first-child{
+
+.table_id_filter label>*:first-child {
     padding-right: 20px;
 }
 
-.dataTables_filter input:focus-within{
+.dataTables_filter input:focus-within {
     border: 2px solid #36D1DC !important;
 }
 
-.myWrapper{
+.myWrapper {
     position: relative;
     background-color: #fff;
     border-radius: 15px;
     box-shadow: var(--dropshadow-card-or-button);
     padding: 30px;
-    padding-bottom: 15px !important;
-  }
+    padding-bottom: 20px !important;
+}
+
+.dataTables_info, .paginate_button {
+    display: none !important;
+}
