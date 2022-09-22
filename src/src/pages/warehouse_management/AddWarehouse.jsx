@@ -104,7 +104,11 @@ export default function AddWarehouse() {
 	async function getState() {
 		try {
 			const response = await fetch(
+<<<<<<< src/src/pages/warehouse_management/AddWarehouse.jsx
+				"http://evm.iitbhilai.ac.in:8100/usermgt/getStateList", {
+=======
 				"http://evm.iitbhilai.ac.in:8000/getStateList", {
+>>>>>>> src/src/pages/warehouse_management/AddWarehouse.jsx
 				method: "GET",
 				headers: {
 					"Content-Type": "application/json",
@@ -157,7 +161,11 @@ export default function AddWarehouse() {
 			else {
 				try {
 					const response = await fetch(
+<<<<<<< src/src/pages/warehouse_management/AddWarehouse.jsx
+						`http://evm.iitbhilai.ac.in:8100/usermgt/getPCListbyState/${selectedCode}`, {
+=======
 						`http://evm.iitbhilai.ac.in:8000/getPCListbyState/${selectedCode}`, {
+>>>>>>> src/src/pages/warehouse_management/AddWarehouse.jsx
 						method: "GET",
 						headers: {
 							"Content-Type": "application/json",
