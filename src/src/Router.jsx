@@ -21,7 +21,7 @@ function Routed(props) {
 
 	const fetchUserData = async (userid) => {
 		const response = await fetch(
-			`http://evm.iitbhilai.ac.in:8000/getNameFromUserID/${userid}`,
+			`http://evm.iitbhilai.ac.in:8100/usermgt/getNameFromUserID/${userid}`,
 			{
 				method: "GET",
 				headers: {
