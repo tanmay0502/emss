@@ -497,7 +497,7 @@ main {
   padding: 10px 25px;
   box-sizing: border-box;
   min-width: fit-content;
-  /* min-width: min-content; */
+  min-width: min-content;
   /* margin-right: 40px; */
   max-width: 100%;
   overflow-x: auto;
@@ -525,7 +525,7 @@ main {
 
 .three-column-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
 }
 
 /* Code by Rohit end*/

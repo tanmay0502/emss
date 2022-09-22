@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import './css/Datatable.css';
 import { HiDocumentDuplicate } from "react-icons/hi";
 import { FaEdit } from "react-icons/fa";

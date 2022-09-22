@@ -345,11 +345,7 @@ async function getUserID(mobile){
 				<div className='PageTitle'>
 					<h4><FaWarehouse /><span>Add New Warehouse</span></h4>
 				</div>
-<<<<<<< src/src/pages/warehouse_management/AddWarehouse.jsx
-				<form id="create-warehouse-form" className="myForm" onSubmit={onFormSubmit}>
-=======
 				<form className="myForm"  onSubmit={onFormSubmit}> 
->>>>>>> src/src/pages/warehouse_management/AddWarehouse.jsx
 					<div className="formGrid">
 						<div class="warehouse-type">
 							<h5>
@@ -361,13 +357,8 @@ async function getUserID(mobile){
 										<label htmlFor="">Type : </label>
 									</div>
 									<div className="form_select">
-<<<<<<< src/src/pages/warehouse_management/AddWarehouse.jsx
-										<select required={true} name="" id="input_warehousetype" onChange={(e) => setWarehouseType(e.target.value)}>
-											<option value="" className="FirstOption" disabled selected >--Select--</option>
-=======
 										<select name="" id="input_warehousetype" onChange={(e) => setWarehouseType(e.target.value)}>
 											<option value="-1" className="FirstOption">--Select--</option>
->>>>>>> src/src/pages/warehouse_management/AddWarehouse.jsx
 											<option value="A">National Reserve Warehouse</option>
 											<option value="B">State Central Warehouse</option>
 											<option value="C">District Warehouse</option>
@@ -400,18 +391,11 @@ async function getUserID(mobile){
 										<label htmlFor="">Building Type : </label>
 									</div>
 									<div className="form_select">
-<<<<<<< src/src/pages/warehouse_management/AddWarehouse.jsx
-										<select required name="" id="input_buildingtype" onChange={(e) => setBuildingType(e.target.value)} >
-											<option value="" className="FirstOption" disabled selected >--Select--</option>
-											<option value="P">Permanent</option>
-											<option value="T">Temporary</option>
-=======
 										<select name="" id="input_buildingtype" onChange={(e) => setBuildingType(e.target.value)} >
 											<option value="-1" className="FirstOption">--Select--</option>
 
 											<option value="Temporary">Temporary</option>
 											<option value="Permenant">Permanent</option>
->>>>>>> src/src/pages/warehouse_management/AddWarehouse.jsx
 										</select>
 										<div className="input_icon">
 											<FaRegBuilding size="1em" />
@@ -424,24 +408,17 @@ async function getUserID(mobile){
 										<label htmlFor="">Sealed  : </label>
 									</div>
 									<div className="form_select">
-<<<<<<< src/src/pages/warehouse_management/AddWarehouse.jsx
-										<select required name="" id="input_sealed" onChange={(e) => setisSealed(e.target.value)}>
-											<option value="" className="FirstOption">--Select--</option>
-											<option value="I">Yes</option>
-											<option value="A">No</option>
-=======
 										<select name="" id="input_isSealed" onChange={(e) => setisSealed(e.target.value)}>
 											<option value="-1" className="FirstOption">--Select--</option>
 											<option value="Yes">Yes</option>
 											<option value="No">No</option>
->>>>>>> src/src/pages/warehouse_management/AddWarehouse.jsx
 										</select>
 										<div className="input_icon">
 											<BsShieldLockFill size="1em" />
 										</div>
 									</div>
-								</div>
-							</div>
+
+								</div> </div>
 						</div>
 						<div class="warehouse-location">
 							<h5>
@@ -453,11 +430,7 @@ async function getUserID(mobile){
 										<label htmlFor="">Address : </label>
 									</div>
 									<div className="form_input">
-<<<<<<< src/src/pages/warehouse_management/AddWarehouse.jsx
-										<input required id="input_address" name="" className="" placeholder="Warehouse Address" onChange={(e) => setAddress(e.target.value)} />
-=======
 										<input id="input_address" name="" className="" placeholder="Warehouse Address" onChange={(e) => setAddress(e.target.value)} />
->>>>>>> src/src/pages/warehouse_management/AddWarehouse.jsx
 										<div className="input_icon">
 											<FaMapMarkedAlt size="1em" />
 										</div>
@@ -512,10 +485,12 @@ async function getUserID(mobile){
 								</div>
 
 								<div className="form_group">
+>>>>>>> ed7d1f8 (Revert "Merge branch 'dev' into 'dev'")
 									<div className="form_label">
 <<<<<<< src/src/pages/warehouse_management/AddWarehouse.jsx
 										<label htmlFor="">PC Code : </label>
 									</div>
+<<<<<<< HEAD
 									<div className="form_select">
 										<select required name="" id="input_PC" onChange={(e) => setPcFunc(e.target.value)}>
 											<option value="">--Select--</option>
@@ -602,7 +577,6 @@ async function getUserID(mobile){
 									</div>
 									<div className="form_input">
 										<input id="input_lng" name="" className="" placeholder="Longitude" onChange={(e) => setLng(e.target.value)} />
->>>>>>> src/src/pages/warehouse_management/AddWarehouse.jsx
 										<div className="input_icon">
 											<FaLaptopHouse size="1em" />
 										</div>
@@ -619,11 +593,7 @@ async function getUserID(mobile){
 									<div className="form_radio">
 										<label htmlFor="double_lock_yes">Double Lock System: </label>
 										<label htmlFor="double_lock_yes">Yes </label>
-<<<<<<< src/src/pages/warehouse_management/AddWarehouse.jsx
-										<input type={"radio"} name="double_lock" id="double_lock_yes" defaultChecked={true} value="1" onChange={(e) => {
-=======
 										<input type={"radio"} name="double_lock" id="double_lock_yes" value="1" onChange={(e) => {
->>>>>>> src/src/pages/warehouse_management/AddWarehouse.jsx
 											// console.log("Yes")
 											// console.log(e.target.checked)
 											setDoubleLockSystem(true)
@@ -638,14 +608,10 @@ async function getUserID(mobile){
 								</div>
 								<div className="form_group">
 									<div className="form_label">
-										<label htmlFor="">Personnel 1 User ID : </label>
+										<label htmlFor="">Person Name: </label>
 									</div>
 									<div className="form_input">
-<<<<<<< src/src/pages/warehouse_management/AddWarehouse.jsx
-										<input required placeholder="AA000000RRRRR" id="input_personName_1" name="" onChange={(e) => setPersonName1(e.target.value)} />
-=======
 										<input placeholder="Person 1 Name" id="input_personName_1" name="" onChange={(e) => setPersonName1(e.target.value)} />
->>>>>>> src/src/pages/warehouse_management/AddWarehouse.jsx
 										<div className="input_icon">
 											<BsFillPersonFill size="1em" />
 										</div>
@@ -678,14 +644,10 @@ async function getUserID(mobile){
 
 								<div className="form_group" hidden={!doubleLockSystem}>
 									<div className="form_label">
-										<label htmlFor="">Personnel 2 User ID : </label>
+										<label htmlFor="">Person Name: </label>
 									</div>
 									<div className="form_input">
-<<<<<<< src/src/pages/warehouse_management/AddWarehouse.jsx
-										<input required={doubleLockSystem} placeholder="AA000000RRRRR" id="input_personName_2" name="" onChange={(e) => setPersonName2(e.target.value)} />
-=======
 										<input placeholder="Person 2 Name" id="input_personName_2" name="" onChange={(e) => setPersonName2(e.target.value)} />
->>>>>>> src/src/pages/warehouse_management/AddWarehouse.jsx
 										<div className="input_icon">
 											<BsFillPersonFill size="1em" />
 										</div>
