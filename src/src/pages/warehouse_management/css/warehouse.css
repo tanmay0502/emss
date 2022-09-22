@@ -25,10 +25,6 @@
 }
 
 button {
-<<<<<<< src/src/pages/warehouse_management/css/warehouse.css
-=======
-
->>>>>>> src/src/pages/warehouse_management/css/warehouse.css
     font-weight: bold;
 }
 
@@ -62,7 +58,6 @@ button {
 }
 
 .btn_details {
-<<<<<<< src/src/pages/warehouse_management/css/warehouse.css
     background-image: url('../../../assets/tricolor_bg.jpg');
 }
 
@@ -75,41 +70,19 @@ button {
 .btn_delete {
     background-image: url('../../../assets/tricolor_bg.jpg');
     background-position: bottom right;
-=======
-    background-color: #6184D8;
 }
 
-.btn_edit {
-    background-color: #44AF69;
-}
-
-.btn_delete {
-    background-color: #FE6D73;
->>>>>>> src/src/pages/warehouse_management/css/warehouse.css
-}
-
-
-.btn_group  {
+.btn_group {
     width: 125px !important;
 }
 
 
 .tableHeading  {
     position: relative;
-<<<<<<< src/src/pages/warehouse_management/css/warehouse.css
     /* background: #36D1DC;  
     background: -webkit-linear-gradient(to right, #5B86E5, #36D1DC);  
     background: linear-gradient(to right, #5B86E5, #36D1DC);  */
     background-image: url('../../../assets/tricolor_bg.jpg');
-=======
-    background: #36D1DC;
-    /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #5B86E5, #36D1DC);
-    /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #5B86E5, #36D1DC);
-    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
->>>>>>> src/src/pages/warehouse_management/css/warehouse.css
     color: #fff !important;
 }
 
@@ -121,25 +94,12 @@ button {
 #table_id  {
     border-bottom: none !important;
     width: 100%;
-<<<<<<< src/src/pages/warehouse_management/css/warehouse.css
 }
 
 #table_id_wrapper {
     margin-top: 25px !important;
 }
 
-=======
-    max-width: 100%;
-    min-width: 100%;
-}
-
-#table_id_wrapper  {
-    margin-top: 25px !important;
-}
-#table_id thead tr > *{
-    padding: 10px 20px;
-}
->>>>>>> src/src/pages/warehouse_management/css/warehouse.css
 #table_id thead th:first-child {
     /* border-radius: var(--border-radius-primary) 0 0 var(--border-radius-primary); */
     border-radius: var(--border-radius) 0 0 0;
@@ -211,11 +171,7 @@ button {
 }
 
 .dataTables_filter input {
-<<<<<<< src/src/pages/warehouse_management/css/warehouse.css
     /* width: 400px; */
-=======
-    width: 400px;
->>>>>>> src/src/pages/warehouse_management/css/warehouse.css
     border: 2px solid var(--border-default) !important;
     outline: none !important;
     padding: 5px 15px !important;
@@ -236,14 +192,49 @@ button {
     border-radius: 15px;
     box-shadow: var(--dropshadow-card-or-button);
     padding: 30px;
-<<<<<<< src/src/pages/warehouse_management/css/warehouse.css
-    padding-bottom: 20px !important;
+    padding-bottom: 10px !important;
+
 }
 
-.dataTables_info, .paginate_button {
-    display: none !important;
+.text-center {
+    text-align: center !important;
+    color: #5B86E5 !important;
 }
-=======
-    padding-bottom: 15px !important;
-  }
->>>>>>> src/src/pages/warehouse_management/css/warehouse.css
+
+.tempWarehouse {
+    color: #FF5D00 !important;
+}
+
+.perWarehouse {
+    color: #44AF69 !important;
+}
+
+.myIconLabels ul {
+    padding: 0 !important;
+    list-style: none;
+    display: flex;
+}
+
+.myIconLabels ul li {
+    display: flex;
+    margin: 0 10px;
+    align-items: center;
+    font-size: 0.85em;
+}
+
+.myIconLabels ul li span {
+    margin-left: 8px;
+}
+
+input[type=radio] {
+    accent-color: #FF5D00;
+}
+
+select option:hover {
+    box-shadow: 0 0 10px 100px #FF5D00 inset !important;
+}
+
+/* .dataTables_info,.paginate_button{
+      display: none !important;
+      
+  } */

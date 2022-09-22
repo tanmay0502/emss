@@ -23,9 +23,6 @@ $(document).ready(function () {
 });
 
 export default function WarehouseList() {
-<<<<<<< src/src/pages/warehouse_management/WarehouseList.jsx
-
-    
     const [Details,setDetails] = React.useState([]);
     const [isLoaded,setisLoaded] = React.useState(false);
     
