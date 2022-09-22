@@ -1,4 +1,4 @@
-.PageTitle {
+.PageTitle  {
     position: relative;
     display: flex;
     justify-content: space-between;
@@ -12,22 +12,25 @@
     box-shadow: 5px 5px 10px rgba(0,0,0,0.6); */
 }
 
-.PageTitle h4 {
+.PageTitle h4  {
     letter-spacing: 0px;
     display: flex;
     /* color: var(--foreground-secondary) !important; */
     margin-bottom: 10px;
 }
 
-.PageTitle h4 span {
+
+.PageTitle h4 span  {
     margin-left: 15px;
 }
 
 button {
+
     font-weight: bold;
 }
 
-.btn_details, .btn_edit, .btn_delete {
+
+.btn_details,  .btn_edit,  .btn_delete  {
     position: relative;
     font-weight: bold;
     height: 35px;
@@ -49,51 +52,59 @@ button {
     margin-left: 5px;
 }
 
-.btn_details:hover, .btn_edit:hover, .btn_delete:hover {
+
+.btn_details:hover, .btn_edit:hover, .btn_delete:hover  {
     transform: scale(1.05);
     transition: 0.2s;
 }
 
 .btn_details {
-    background-image: url('../../../assets/tricolor_bg.jpg');
+    background-color: #6184D8;
 }
 
 .btn_edit {
-    background-image: url('../../../assets/tricolor_bg.jpg');
-    background-position: center;
-    color: #111 !important;
+    background-color: #44AF69;
 }
 
 .btn_delete {
-    background-image: url('../../../assets/tricolor_bg.jpg');
-    background-position: bottom right;
+    background-color: #FE6D73;
 }
 
-.btn_group {
+
+.btn_group  {
     width: 125px !important;
 }
 
-.tableHeading {
+
+.tableHeading  {
     position: relative;
-    /* background: #36D1DC;  
-    background: -webkit-linear-gradient(to right, #5B86E5, #36D1DC);  
-    background: linear-gradient(to right, #5B86E5, #36D1DC);  */
-    background-image: url('../../../assets/tricolor_bg.jpg');
+    background: #36D1DC;
+    /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #5B86E5, #36D1DC);
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #5B86E5, #36D1DC);
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
     color: #fff !important;
 }
 
-.tableHeading th {
+
+.tableHeading th  {
     text-align: center !important;
 }
 
-#table_id {
+#table_id  {
     border-bottom: none !important;
     width: 100%;
     max-width: 100%;
+<<<<<<< src/src/pages/warehouse_management/css/warehouse.css
+    min-width: 100%;
+=======
     overflow-x: auto;
+>>>>>>> src/src/pages/warehouse_management/css/warehouse.css
 }
 
-#table_id_wrapper {
+#table_id_wrapper  {
     margin-top: 25px !important;
 }
 
@@ -107,28 +118,30 @@ button {
     border-radius: 0 var(--border-radius) 0 0;
 }
 
-#table_id tbody {
+#table_id tbody  {
     font-size: 0.85em;
     box-shadow: var(--dropshadow-card-or-button);
     border-radius: 0 0 var(--border-radius) var(--border-radius);
     overflow: hidden;
 }
 
-#table_id tbody tr td {
+
+#table_id tbody tr td  {
     text-align: center;
     padding: 10px 20px;
 }
 
 
-#table_id tbody tr:last-child td:first-child {
+#table_id tbody tr:last-child td:first-child  {
     border-radius: 0 0 0 var(--border-radius);
 }
 
-#table_id tbody tr:last-child td:last-child {
+
+#table_id tbody tr:last-child td:last-child  {
     border-radius: 0 0 var(--border-radius) 0;
 }
 
-.myAddbtn {
+.myAddbtn  {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -152,21 +165,21 @@ button {
     aspect-ratio: 1;
 }
 
-.myAddbtn:hover {
+.myAddbtn:hover  {
     color: var(--foreground-primary);
     background-color: var(--background-gray);
 }
 
-.dataTables_length {
+.dataTables_length  {
     display: none;
 }
 
-.dataTables_filter {
+.dataTables_filter  {
     margin-bottom: 40px;
 }
 
 .dataTables_filter input {
-    /* width: 400px; */
+    width: 400px;
     border: 2px solid var(--border-default) !important;
     outline: none !important;
     padding: 5px 15px !important;
@@ -177,59 +190,24 @@ button {
     padding-right: 20px;
 }
 
-.dataTables_filter input:focus-within {
+.dataTables_filter input:focus-within  {
     border: 2px solid #36D1DC !important;
 }
 
-.myWrapper {
+.myWrapper  {
     position: relative;
     background-color: #fff;
     border-radius: 15px;
     box-shadow: var(--dropshadow-card-or-button);
     padding: 30px;
-    padding-bottom: 10px !important;
-
+<<<<<<< src/src/pages/warehouse_management/css/warehouse.css
+    padding-bottom: 20px !important;
 }
 
-.text-center {
-    text-align: center !important;
-    color: #5B86E5 !important;
+.dataTables_info, .paginate_button {
+    display: none !important;
 }
-
-.tempWarehouse {
-    color: #FF5D00 !important;
-}
-
-.perWarehouse {
-    color: #44AF69 !important;
-}
-
-.myIconLabels ul {
-    padding: 0 !important;
-    list-style: none;
-    display: flex;
-}
-
-.myIconLabels ul li {
-    display: flex;
-    margin: 0 10px;
-    align-items: center;
-    font-size: 0.85em;
-}
-
-.myIconLabels ul li span {
-    margin-left: 8px;
-}
-
-input[type=radio] {
-    accent-color: #FF5D00;
-}
-
-select option:hover {
-    box-shadow: 0 0 10px 100px #FF5D00 inset !important;
-}
-
-/* .dataTables_info,.paginate_button{
-      display: none !important;
-      
-  } */
+=======
+    padding-bottom: 15px !important;
+  }
+>>>>>>> src/src/pages/warehouse_management/css/warehouse.css
