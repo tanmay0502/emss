@@ -202,10 +202,15 @@ function CreateUser() {
         if (window.sessionStorage.getItem("sessionToken")) {
           // console.log(window.sessionStorage.getItem("sessionToken"));
 
-          const ppcode = parseInt(
+          var ppcode = parseInt(
             window.sessionStorage.getItem("sessionToken").substring(2, 4)
           ).toString();
-          console.log("pc", ppcode);
+            const pwpcode = window.sessionStorage
+              .getItem("sessionToken")
+              .substring(2, 4);
+            if (PCs[PCsCode.indexOf(pwpcode)]!=-1){
+                ppcode=pwpcode
+            } console.log("pc", ppcode);
           if (1) {
             console.log("pp", ppcode);
             if (1) {
@@ -528,7 +533,8 @@ function CreateUser() {
             address: document.getElementById("formUserAddress").value,
             othercontactnum1:
               document.getElementById("formUserAltNumber1").value,
-            othercontactnum2: document.getElementById("formUserAltNumber2").value,
+            othercontactnum2:
+              document.getElementById("formUserAltNumber2").value,
             state: state,
             Pc: PC,
             AC: AC,
@@ -536,7 +542,7 @@ function CreateUser() {
             active: "A",
             activationtime: "2022-09-14T17:14:33.658Z",
             photofilename: "imagefile",
-            createdby: "AP00000CEO",
+            createdby: window.sessionStorage.getItem("sessionToken"),
             creationtime: "2022-09-14T17:14:33.658Z",
             passwordhash: sha256(""),
           }),

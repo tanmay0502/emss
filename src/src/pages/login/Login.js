@@ -4,8 +4,7 @@ import Footer from "../../components/Footer";
 import Otp from "../../components/Otp";
 import Password from "../../components/Password";
 import SelectUser from "../../components/SelectUser";
-var sha256 = require('js-sha256')
-
+var sha256 = require("js-sha256");
 
 const Login = () => {
   const myFont = {
@@ -50,79 +49,79 @@ const Login = () => {
 
   useEffect(() => {
     if (userID.length >= 2) {
-      const statecode = userID.substring(0, 2)
+      const statecode = userID.substring(0, 2);
       if (statesCode.indexOf(statecode) !== -1) {
-        if (document.getElementById("stateDropdown")){
-          document.getElementById("stateDropdown").value =states[statesCode.indexOf(statecode)];
+        if (document.getElementById("stateDropdown")) {
+          document.getElementById("stateDropdown").value =
+            states[statesCode.indexOf(statecode)];
         }
-        setStateFunc(states[statesCode.indexOf(statecode)], false)
-      }
-      else {
-        if(document.getElementById('stateDropdown'))document.getElementById("stateDropdown").value = "Select:";
+        setStateFunc(states[statesCode.indexOf(statecode)], false);
+      } else {
+        if (document.getElementById("stateDropdown"))
+          document.getElementById("stateDropdown").value = "Select:";
       }
     }
     if (userID.length >= 4) {
-      const pccode = (parseInt(userID.substring(2, 4))).toString()
-      console.log(PCsCode,pccode, PCsCode.indexOf(pccode));
-      if(pccode=="0"){
-        console.log("kk")
-        setPCs(["00"])
-        setPCsCode(["00"])
+      var pccode = parseInt(userID.substring(2, 4)).toString();
+        const pwpcode = userID.substring(2, 4);
+        if (PCs[PCsCode.indexOf(pwpcode)] != -1) {
+          pccode = pwpcode;
+        } 
+      console.log(PCsCode, pccode, PCsCode.indexOf(pccode));
+      if (pccode == "0") {
+        console.log("kk");
+        setPCs(["00"]);
+        setPCsCode(["00"]);
         if (document.getElementById("pcDropdown"))
           document.getElementById("pcDropdown").value = "00";
-      }
-      else if (PCsCode.indexOf(pccode) !== -1) {
-        if (document.getElementById("pcDropdown")){
-          console.log("l",PCs[PCsCode.indexOf(pccode)]);
-          document.getElementById("pcDropdown").value =PCs[PCsCode.indexOf(pccode)];
+      } else if (PCsCode.indexOf(pccode) !== -1) {
+        if (document.getElementById("pcDropdown")) {
+          console.log("l", PCs[PCsCode.indexOf(pccode)]);
+          document.getElementById("pcDropdown").value =
+            PCs[PCsCode.indexOf(pccode)];
         }
-        setPCFunc(PCs[PCsCode.indexOf(pccode)], false)
-      }
-      else {
+        setPCFunc(PCs[PCsCode.indexOf(pccode)], false);
+      } else {
         if (document.getElementById("pcDropdown"))
           document.getElementById("pcDropdown").value = "Select:";
       }
     }
 
     if (userID.length >= 7) {
-      const accode = (userID.substring(4, 7));
-      console.log(accode)
-      if(accode=="000"){
-        console.log("pp")
+      const accode = userID.substring(4, 7);
+      console.log(accode);
+      if (accode == "000") {
+        console.log("pp");
         setACs(["000"]);
         setACsCode(["000"]);
         if (document.getElementById("acDropdown"))
           document.getElementById("acDropdown").value = "000";
-      }
-      else if (ACsCode.indexOf(accode) !== -1) {
-         if (document.getElementById("acDropdown")){
-           document.getElementById("acDropdown").value =
-             ACs[ACsCode.indexOf(accode)];
-         }
-        setACFunc(ACs[ACsCode.indexOf(accode)], false)
-      }
-      else {
+      } else if (ACsCode.indexOf(accode) !== -1) {
+        if (document.getElementById("acDropdown")) {
+          document.getElementById("acDropdown").value =
+            ACs[ACsCode.indexOf(accode)];
+        }
+        setACFunc(ACs[ACsCode.indexOf(accode)], false);
+      } else {
         if (document.getElementById("acDropdown"))
           document.getElementById("acDropdown").value = "Select:";
       }
 
-      const role = userID.substring(7)
-      console.log(role)
-      console.log(rolesCode.indexOf(role))
-      if(rolesCode.indexOf(role) !== -1){
-        console.log("Readable Role:")
-        console.log(roles[rolesCode.indexOf(role)])
-        if(document.getElementById("roleDropdown"))
-        document.getElementById('roleDropdown').value = roles[rolesCode.indexOf(role)]
-        setRoleFunc(roles[rolesCode.indexOf(role)], false)
+      const role = userID.substring(7);
+      console.log(role);
+      console.log(rolesCode.indexOf(role));
+      if (rolesCode.indexOf(role) !== -1) {
+        console.log("Readable Role:");
+        console.log(roles[rolesCode.indexOf(role)]);
+        if (document.getElementById("roleDropdown"))
+          document.getElementById("roleDropdown").value =
+            roles[rolesCode.indexOf(role)];
+        setRoleFunc(roles[rolesCode.indexOf(role)], false);
       }
     }
 
-    return () => {
-
-    }
-  }, [userID])
-
+    return () => {};
+  }, [userID]);
 
   async function getState() {
     try {
@@ -133,30 +132,28 @@ const Login = () => {
           headers: {
             "Content-Type": "application/json",
           },
-
         }
       );
       const data2 = await response.json();
       console.log(data2);
       setStates(data2["list of states"]);
       setStatesCode(data2["list of Codes"]);
-
     } catch (err) {
       console.log(err);
     }
   }
-  // getState(); 
+  // getState();
   useEffect(() => {
     if (window.sessionStorage.getItem("sessionToken") !== null) {
-      window.location.pathname = '/session/home'
+      window.location.pathname = "/session/home";
     }
 
     getState();
   }, []);
 
-  async function setStateFunc(st, changeUserID=true) {
+  async function setStateFunc(st, changeUserID = true) {
     if (st !== "Select:") {
-      console.log(st)
+      console.log(st);
       setState(statesCode[states.indexOf(st)]);
       // console.log(statesCode[states.indexOf(st)]);
       if (
@@ -167,7 +164,9 @@ const Login = () => {
       } else {
         try {
           const response = await fetch(
-            `http://evm.iitbhilai.ac.in:8100/usermgt/getPCListbyState/${statesCode[states.indexOf(st)]}`,
+            `http://evm.iitbhilai.ac.in:8100/usermgt/getPCListbyState/${
+              statesCode[states.indexOf(st)]
+            }`,
             {
               method: "GET",
               headers: {
@@ -183,17 +182,20 @@ const Login = () => {
           console.log(err);
         }
       }
-      if(changeUserID){setUserID(statesCode[states.indexOf(st)] + ("00" + PC).slice(-2) + AC + role);}
+      if (changeUserID) {
+        setUserID(
+          statesCode[states.indexOf(st)]
+        );
+      }
       setInvalidUser("");
     }
   }
-  async function setPCFunc(st, changeUserID=true) {
+  async function setPCFunc(st, changeUserID = true) {
     console.log(state, PCsCode[PCs.indexOf(st)]);
     setPC(PCsCode[PCs.indexOf(st)]);
-    if(state !== "Select:"){
+    if (state !== "Select:") {
       if (state == "EC" || state == "ME" || state == "MB") {
-      }
-      else {
+      } else {
         try {
           const response = await fetch(
             `http://evm.iitbhilai.ac.in:8100/usermgt/getACListbyStatePC/${state}`,
@@ -213,11 +215,15 @@ const Login = () => {
           console.log(err);
         }
       }
-      if(changeUserID){setUserID(state + ("00" + PCsCode[PCs.indexOf(st)]).slice(-2) + AC + role);}
+      if (changeUserID) {
+        setUserID(
+          state + ("00" + PCsCode[PCs.indexOf(st)]).slice(-2) 
+        );
+      }
       setInvalidUser("");
     }
   }
-  async function setACFunc(st, changeUserID=true) {
+  async function setACFunc(st, changeUserID = true) {
     setAC(ACsCode[ACs.indexOf(st)]);
     console.log(ACsCode[ACs.indexOf(st)]);
     try {
@@ -237,32 +243,36 @@ const Login = () => {
     } catch (err) {
       console.log(err);
     }
-     if(changeUserID) {setUserID(state + ("00" + PC).slice(-2) + ("000" + ACsCode[ACs.indexOf(st)]).slice(-3) + role);}
+    if (changeUserID) {
+      setUserID(
+        state +
+          ("00" + PC).slice(-2) +
+          ("000" + ACsCode[ACs.indexOf(st)]).slice(-3)
+      );
+    }
     setInvalidUser("");
-
   }
-  async function setRoleFunc(st, changeUserID=true) {
-    if(st !== "Select:"){
+  async function setRoleFunc(st, changeUserID = true) {
+    if (st !== "Select:") {
       setRole(rolesCode[roles.indexOf(st)]);
       console.log(rolesCode[roles.indexOf(st)]);
-  
-      if(changeUserID) {setUserID(state + ("00" + PC).slice(-2) + AC + rolesCode[roles.indexOf(st)]);}
+
+      if (changeUserID) {
+        setUserID(
+          state + ("00" + PC).slice(-2) + AC + rolesCode[roles.indexOf(st)]
+        );
+      }
       setInvalidUser("");
-  
+
       console.log(userID);
     }
   }
 
-
-
-
   async function requestOTP() {
     if (userID == "") {
       setInvalidUser("Invalid User ID");
-      console.log("none")
-    }
-    else {
-
+      console.log("none");
+    } else {
       if (Number(userID)) {
         setMobile(userID);
         try {
@@ -274,7 +284,7 @@ const Login = () => {
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({
-                mobileNumber: userID
+                mobileNumber: userID,
               }),
             }
           );
@@ -395,9 +405,7 @@ const Login = () => {
         setInvalidOTP("OTP does not match");
         setOTP("");
       } else if (data2["message"] == "Mobile number or OTP not provided") {
-
         setInvalidOTP("User ID or OTP is incorrect");
-
       } else {
         setSelectUserBlock(0);
         setIsOTPSent(0);
@@ -409,7 +417,7 @@ const Login = () => {
     }
   }
   async function requestDashboard() {
-    console.log(userID,password)
+    console.log(userID, password);
     try {
       const response = await fetch(
         "http://evm.iitbhilai.ac.in:8100/usermgt/verifyPasswordByUserID",
@@ -434,7 +442,7 @@ const Login = () => {
         setIsOTPSent(0);
         setPasswordBlock(0);
         setSelectUserBlock(0);
-        window.sessionStorage.setItem('sessionToken', userID)
+        window.sessionStorage.setItem("sessionToken", userID);
         // setMobile("");
         // setUserID("");
         // setState("");
@@ -447,7 +455,6 @@ const Login = () => {
       console.log(err);
     }
   }
-
 
   return (
     <div>
@@ -549,15 +556,16 @@ const Login = () => {
                         // value={state}
                         onChange={(e) => setStateFunc(e.target.value)}
                       >
-                        <option value="0" className="text-black" >
+                        <option value="0" className="text-black">
                           Select:
                         </option>
 
-                        {states && states.map((st) => (
-                          <option value={st} className="text-black">
-                            {st}
-                          </option>
-                        ))}
+                        {states &&
+                          states.map((st) => (
+                            <option value={st} className="text-black">
+                              {st}
+                            </option>
+                          ))}
                       </select>
                     </div>
                     <div className="dropdown">
@@ -579,11 +587,12 @@ const Login = () => {
                         <option value="0" className="text-black">
                           Select:
                         </option>
-                        {PCs && PCs.map((st) => (
-                          <option value={st} className="text-black">
-                            {st}
-                          </option>
-                        ))}
+                        {PCs &&
+                          PCs.map((st) => (
+                            <option value={st} className="text-black">
+                              {st}
+                            </option>
+                          ))}
                       </select>
                     </div>
                     <div className="dropdown">
@@ -605,11 +614,12 @@ const Login = () => {
                         <option value="0" className="text-black">
                           Select:
                         </option>
-                        {ACs && ACs.map((st) => (
-                          <option value={st} className="text-black">
-                            {st}
-                          </option>
-                        ))}
+                        {ACs &&
+                          ACs.map((st) => (
+                            <option value={st} className="text-black">
+                              {st}
+                            </option>
+                          ))}
                       </select>
                     </div>
                     <div className="dropdown">
@@ -631,11 +641,12 @@ const Login = () => {
                         <option value="0" className="text-black">
                           Select:
                         </option>
-                        {roles && roles.map((st) => (
-                          <option value={st} className="text-black">
-                            {st}
-                          </option>
-                        ))}
+                        {roles &&
+                          roles.map((st) => (
+                            <option value={st} className="text-black">
+                              {st}
+                            </option>
+                          ))}
                       </select>
                     </div>
                     <button
