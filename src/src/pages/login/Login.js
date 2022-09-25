@@ -68,13 +68,16 @@ const Login = () => {
           pccode = pwpcode;
         } 
       console.log(PCsCode, pccode, PCsCode.indexOf(pccode));
-      if (pccode == "0") {
+      console.log(PCsCode);
+
+      if (pccode == "0" || !PCsCode || PCsCode.length==0) {
         console.log("kk");
         setPCs(["00"]);
         setPCsCode(["00"]);
         if (document.getElementById("pcDropdown"))
           document.getElementById("pcDropdown").value = "00";
       } else if (PCsCode.indexOf(pccode) !== -1) {
+        console.log("lkk");
         if (document.getElementById("pcDropdown")) {
           console.log("l", PCs[PCsCode.indexOf(pccode)]);
           document.getElementById("pcDropdown").value =
@@ -82,6 +85,7 @@ const Login = () => {
         }
         setPCFunc(PCs[PCsCode.indexOf(pccode)], false);
       } else {
+        console.log("lkk")
         if (document.getElementById("pcDropdown"))
           document.getElementById("pcDropdown").value = "Select:";
       }
@@ -96,6 +100,8 @@ const Login = () => {
         setACsCode(["000"]);
         if (document.getElementById("acDropdown"))
           document.getElementById("acDropdown").value = "000";
+
+          setACFunc(ACs[ACsCode.indexOf(accode)], false);
       } else if (ACsCode.indexOf(accode) !== -1) {
         if (document.getElementById("acDropdown")) {
           document.getElementById("acDropdown").value =
@@ -108,6 +114,10 @@ const Login = () => {
       }
 
       const role = userID.substring(7);
+      if(Number(role)){
+        setRoles([]);
+      }
+      console.log(roles);
       console.log(role);
       console.log(rolesCode.indexOf(role));
       if (rolesCode.indexOf(role) !== -1) {
@@ -136,8 +146,8 @@ const Login = () => {
       );
       const data2 = await response.json();
       console.log(data2);
-      setStates(data2["list of states"]);
-      setStatesCode(data2["list of Codes"]);
+      setStates(data2["states"]);
+      setStatesCode(data2["stcodes"]);
     } catch (err) {
       console.log(err);
     }
@@ -156,12 +166,7 @@ const Login = () => {
       console.log(st);
       setState(statesCode[states.indexOf(st)]);
       // console.log(statesCode[states.indexOf(st)]);
-      if (
-        statesCode[states.indexOf(st)] == "EC" ||
-        statesCode[states.indexOf(st)] == "ME" ||
-        statesCode[states.indexOf(st)] == "MB"
-      ) {
-      } else {
+     
         try {
           const response = await fetch(
             `http://evm.iitbhilai.ac.in:8100/usermgt/getPCListbyState/${
@@ -176,12 +181,14 @@ const Login = () => {
           );
           const data2 = await response.json();
           console.log(data2);
-          setPCs(data2["list of PC names"]);
-          setPCsCode(data2["list of PC Codes"]);
+          setPCs(data2["pcname"]);
+          setPCsCode(data2["pccode"]);
         } catch (err) {
           console.log(err);
+          setPCs(["00"]);
+          setPCsCode(["00"]);
         }
-      }
+      
       if (changeUserID) {
         setUserID(
           statesCode[states.indexOf(st)]
@@ -194,7 +201,7 @@ const Login = () => {
     console.log(state, PCsCode[PCs.indexOf(st)]);
     setPC(PCsCode[PCs.indexOf(st)]);
     if (state !== "Select:") {
-      if (state == "EC" || state == "ME" || state == "MB") {
+      if (0) {
       } else {
         try {
           const response = await fetch(
@@ -209,10 +216,12 @@ const Login = () => {
           const data2 = await response.json();
           console.log("ACs");
           console.log(data2);
-          setACs(data2["list of AC names"]);
-          setACsCode(data2["list of AC Codes"]);
+          setACs(data2["acname"]);
+          setACsCode(data2["accode"]);
         } catch (err) {
           console.log(err);
+          setACs(["000"])
+          setACsCode(["000"])
         }
       }
       if (changeUserID) {
@@ -238,8 +247,8 @@ const Login = () => {
       );
       const data2 = await response.json();
       console.log(data2);
-      setRoles(data2["Human Readable Role Name"]);
-      setRolesCode(data2["String Code to be used as a part of User ID"]);
+      setRoles(data2["roleName"]);
+      setRolesCode(data2["roleCode"]);
     } catch (err) {
       console.log(err);
     }
@@ -289,11 +298,11 @@ const Login = () => {
             }
           );
           const data2 = await response.json();
+          console.log(data2)
           console.log(data2["userids"]);
           setUserIds(data2["userids"]);
           if (
-            data2["message"] == "Mobile number not provided" ||
-            data2["message"] == "User IDs not found"
+            data2["status"]==404
           ) {
             setInvalidMobile("Mobile Number is not provided");
             setInvalidUser("");
@@ -328,6 +337,7 @@ const Login = () => {
           console.log(err);
         }
       } else {
+        console.log(userID)
         try {
           const response = await fetch(
             "http://evm.iitbhilai.ac.in:8100/usermgt/getMobileFromUserID",
@@ -342,10 +352,10 @@ const Login = () => {
             }
           );
           const data = await response.json();
-          console.log(data[0]);
+          console.log(data);
 
-          if (data[0]) {
-            setMobile(data[0][0]);
+          if (data["status"]==200) {
+            setMobile(data["mobile"][0]);
             try {
               const response = await fetch(
                 "http://evm.iitbhilai.ac.in:8100/usermgt/sendOTP",
@@ -355,13 +365,13 @@ const Login = () => {
                     "Content-Type": "application/json",
                   },
                   body: JSON.stringify({
-                    mobileNumber: data[0][0],
+                    mobileNumber: data["mobile"][0],
                   }),
                 }
               );
               const data2 = await response.json();
               console.log(data2);
-
+              if(data2["status"]==200)
               setIsOTPSent(1);
             } catch (err) {
               console.log(err);
@@ -401,10 +411,10 @@ const Login = () => {
       );
       const data2 = await response.json();
       console.log(data2);
-      if (data2["message"] == "OTP does not match") {
+      if (data2["status"] == 404) {
         setInvalidOTP("OTP does not match");
         setOTP("");
-      } else if (data2["message"] == "Mobile number or OTP not provided") {
+     
         setInvalidOTP("User ID or OTP is incorrect");
       } else {
         setSelectUserBlock(0);
@@ -434,7 +444,7 @@ const Login = () => {
       );
       const data2 = await response.json();
       console.log(data2);
-      if (data2["message"] === "Password does not match") {
+      if (data2["status"] === 404) {
         setInvalidPassword("Password does not match");
         setPassword("");
       } else {

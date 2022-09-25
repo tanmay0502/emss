@@ -43,7 +43,7 @@ function UserList() {
       );
       const data2 = await response.json();
       console.log(data2);
-      setUsers(data2)
+      setUsers(data2["data"])
     } catch (err) {
       console.log(err);
     }
