@@ -10,7 +10,7 @@ const Password = (props) => {
         type="password"
         className="pl-3 pr-3 mt-7 h-12 text-black outline-none rounded-md w-full"
         placeholder="Enter password"
-        value={props.Password}
+        value={props.password}
         onChange={(e) => {
           props.setPassword(e.target.value);
         }}

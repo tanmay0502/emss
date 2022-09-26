@@ -96,8 +96,8 @@ function CreateUser() {
 
       const data2 = await response.json();
       console.log(data2);
-      setStates(data2["list of states"]);
-      setStatesCode(data2["list of Codes"]);
+      setStates(data2["states"]);
+      setStatesCode(data2["stcodes"]);
     } catch (err) {
       console.log(err);
     }
@@ -202,10 +202,15 @@ function CreateUser() {
         if (window.sessionStorage.getItem("sessionToken")) {
           // console.log(window.sessionStorage.getItem("sessionToken"));
 
-          const ppcode = parseInt(
+          var ppcode = parseInt(
             window.sessionStorage.getItem("sessionToken").substring(2, 4)
           ).toString();
-          console.log("pc", ppcode);
+            const pwpcode = window.sessionStorage
+              .getItem("sessionToken")
+              .substring(2, 4);
+            if (PCs[PCsCode.indexOf(pwpcode)]!=-1){
+                ppcode=pwpcode
+            } console.log("pc", ppcode);
           if (1) {
             console.log("pp", ppcode);
             if (1) {
@@ -335,9 +340,9 @@ function CreateUser() {
             }
           );
           const data2 = await response.json();
-          if (data2["list of PC Codes"] && data2["list of PC names"]) {
-            setPCs(data2["list of PC names"]);
-            setPCsCode(data2["list of PC Codes"]);
+          if (data2["pccode"] && data2["pcname"]) {
+            setPCs(data2["pcname"]);
+            setPCsCode(data2["pccode"]);
           }
         } catch (err) {
           console.log(err);
@@ -372,8 +377,8 @@ function CreateUser() {
           const data2 = await response.json();
           console.log("ACs");
           console.log(data2);
-          setACs(data2["list of AC names"]);
-          setACsCode(data2["list of AC Codes"]);
+          setACs(data2["acname"]);
+          setACsCode(data2["accode"]);
         } catch (err) {
           console.log(err);
         }
@@ -409,8 +414,8 @@ function CreateUser() {
        if( ["EC", "ME", "MB"].includes(
           window.sessionStorage.getItem("sessionToken").substring(0, 2)
         )){
-          setRoles(data2["Human Readable Role Name"]);
-          setRolesCode(data2["String Code to be used as a part of User ID"]);
+          setRoles(data2["roleName"]);
+          setRolesCode(data2["roleCode"]);
 
 
         }
@@ -463,12 +468,12 @@ function CreateUser() {
       console.log(rcode);
       let rc=[];
       let rname=[]
-      for(let i=0;i<data2["String Code to be used as a part of User ID"].length;i++){
-        console.log(data2["String Code to be used as a part of User ID"][i]);
-        if(rcode.includes(data2["String Code to be used as a part of User ID"][i])){
+      for(let i=0;i<data2["roleCode"].length;i++){
+        console.log(data2["roleCode"][i]);
+        if(rcode.includes(data2["roleCode"][i])){
           console.log("hh");
-          rc.push(data2["String Code to be used as a part of User ID"][i]);
-          rname.push(data2["Human Readable Role Name"][i]);
+          rc.push(data2["roleCode"][i]);
+          rname.push(data2["roleName"][i]);
         }
       }
 
@@ -528,7 +533,8 @@ function CreateUser() {
             address: document.getElementById("formUserAddress").value,
             othercontactnum1:
               document.getElementById("formUserAltNumber1").value,
-            othercontactnum2: document.getElementById("formUserAltNumber2").value,
+            othercontactnum2:
+              document.getElementById("formUserAltNumber2").value,
             state: state,
             Pc: PC,
             AC: AC,
@@ -536,7 +542,7 @@ function CreateUser() {
             active: "A",
             activationtime: "2022-09-14T17:14:33.658Z",
             photofilename: "imagefile",
-            createdby: "AP00000CEO",
+            createdby: window.sessionStorage.getItem("sessionToken"),
             creationtime: "2022-09-14T17:14:33.658Z",
             passwordhash: sha256(""),
           }),
