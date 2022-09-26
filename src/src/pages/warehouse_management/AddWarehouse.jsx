@@ -115,8 +115,9 @@ export default function AddWarehouse() {
         }
       );
       const StateData = await response.json();
-      setStates(StateData["list of states"]);
-      setStatesCode(StateData["list of Codes"]);
+      console.log(StateData)
+      setStates(StateData["states"]);
+      setStatesCode(StateData["stcodes"]);
     } catch (error) {
       console.log(error);
     }
@@ -149,14 +150,11 @@ export default function AddWarehouse() {
   }
   async function setStateFunc(st) {
     if (st !== "-1") {
+      console.log(st,states,statesCode);
       const selectedCode = statesCode[states.indexOf(st)];
       setmyState(selectedCode);
-      if (
-        selectedCode == "IN" ||
-        selectedCode == "EL" ||
-        selectedCode == "BL"
-      ) {
-      } else {
+      console.log(selectedCode)
+      
         try {
           const response = await fetch(
             `http://evm.iitbhilai.ac.in:8100/usermgt/getPCListbyState/${selectedCode}`,
@@ -169,12 +167,14 @@ export default function AddWarehouse() {
           );
 
           const data = await response.json();
-          setPCs(data["list of PC names"]);
-          setPCcodes(data["list of PC Codes"]);
+          setPCs(data["pcname"]);
+          setPCcodes(data["pccode"]);
         } catch (error) {
           console.log(error);
+          setPCs(["00"]);
+          setPCcodes(["00"]);
         }
-      }
+      
     }
   }
 
@@ -371,7 +371,7 @@ export default function AddWarehouse() {
                       <option value="" disabled selected>
                         --Select--
                       </option>
-                      {states.map((st) => (
+                      {states && states.map((st) => (
                         <option value={st} className="text-black">
                           {st}
                         </option>
