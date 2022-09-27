@@ -238,3 +238,19 @@ select option:hover {
       display: none !important;
       
   } */
+
+.mySelect{
+    background-image: url('../../../assets/tricolor_bg.jpg');
+    background-position: bottom right;
+    position: relative;
+    font-weight: bold;
+    color : #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 7px ;
+    padding-bottom: 7px;
+}
+.mySelect option{
+    color : #000 !important;
+}
