@@ -23,30 +23,90 @@ $(document).ready(function () {
 });
 
 export default function WarehouseList() {
+
+
+    
+  
+
+
     const [Details,setDetails] = React.useState([]);
     const [isLoaded,setisLoaded] = React.useState(false);
     
     async function getList(){
         let userId = sessionStorage.getItem('sessionToken');
         const code =  userId.slice(0, 2);
+        const pccode =  userId.slice(2, 4);
         console.log(code);
-        try {
-            const response = await fetch(
-                `http://evm.iitbhilai.ac.in:8100/warehouse/listWarehouses`,
-                {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        "stateCode": code
-                    }),
-                })
+        const role=userId.slice(7);
+        if(role=="ECI-Admin"){
+             try {
+               const response = await fetch(
+                 `http://evm.iitbhilai.ac.in:8100/warehouse/listWarehouses`,
+                 {
+                   method: "POST",
+                   headers: {
+                     "Content-Type": "application/json",
+                   },
 
-                const data = await response.json();
-                MapWarehouseTypes(data["data"]);
-        } catch (error) {
-            console.log(error)
+                   body: JSON.stringify({
+                     // "stateCode": code
+                   }),
+                 }
+               );
+
+               const data = await response.json();
+               console.log(data);
+               MapWarehouseTypes(data["data"]);
+             } catch (error) {
+               console.log(error);
+             }
+        }
+        else if(role=="CEO"){
+             try {
+               const response = await fetch(
+                 `http://evm.iitbhilai.ac.in:8100/warehouse/listWarehouses`,
+                 {
+                   method: "POST",
+                   headers: {
+                     "Content-Type": "application/json",
+                   },
+
+                   body: JSON.stringify({
+                     "stateCode": code
+                   }),
+                 }
+               );
+
+               const data = await response.json();
+               console.log(data);
+               MapWarehouseTypes(data["data"]);
+             } catch (error) {
+               console.log(error);
+             }
+        }
+        else{
+
+            try {
+                const response = await fetch(
+                    `http://evm.iitbhilai.ac.in:8100/warehouse/listWarehouses`,
+                    {
+                        method: "POST",
+                        headers: {
+                        "Content-Type": "application/json",
+                        },
+                        
+                        body: JSON.stringify({
+                            "stateCode": code,
+                            "pcCode": pccode,
+                        }),
+                    })
+
+                    const data = await response.json();
+                    console.log(data)
+                    MapWarehouseTypes(data["data"]);
+            } catch (error) {
+                console.log(error)
+            }
         }
 
     }

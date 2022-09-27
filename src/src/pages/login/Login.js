@@ -295,6 +295,7 @@ const Login = () => {
               body: JSON.stringify({
                 mobileNumber: userID,
               }),
+              mode: "cors",
             }
           );
           const data2 = await response.json();
