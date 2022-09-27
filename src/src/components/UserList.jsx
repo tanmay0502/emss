@@ -38,6 +38,7 @@ function UserList() {
           headers: {
             "Content-Type": "application/json",
           },
+          mode:"cors"
         }
       );
       const data2 = await response.json();
