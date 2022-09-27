@@ -150,4 +150,12 @@ select{
 }
 
 
+.activateBtn{
+	position: relative;
+	background-color: #058E3F;
+}
+.deactivateBtn{
+	position: relative;
+	background-color: #D74E09;
+}
 
