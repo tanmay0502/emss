@@ -71,7 +71,7 @@ function UserList() {
         const status =  response;
         if(status.status == 200){
           alert("User Activated Successfully");
-          window.location.href = 'http://localhost:3000/session/usermanagement';
+          window.location.href = '/session/usermanagement';
         }
         else{
           alert("Activation Failed");
@@ -100,7 +100,7 @@ function UserList() {
           const status = response;
           if(status.status == 200){
             alert("User Deactivated Successfully");
-            window.location.href = 'http://localhost:3000/session/usermanagement';
+            window.location.href = '/session/usermanagement';
           }
           else{
             alert("Deactivation Failed");
