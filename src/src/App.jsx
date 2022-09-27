@@ -35,6 +35,8 @@ function App() {
 						<Route path="/session/usermanagement/createuser" element={<CreateUser />} />
 						<Route path="/session/warehousemanagement/" element={<WarehouseManagement />} />
 						<Route path="/session/warehousemanagement/addwarehouse" element={<AddWarehouse />} />
+						<Route path="/session/warehousemanagement/warehousedetails/:id" element={<WarehouseDetails />} />
+
 					</Route>
 				</Routes>
 			</BrowserRouter>
