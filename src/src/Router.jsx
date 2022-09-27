@@ -27,6 +27,7 @@ function Routed(props) {
 				headers: {
 					"Content-Type": "application/json",
 				},
+				mode:"cors"
 
 			}
 		);
