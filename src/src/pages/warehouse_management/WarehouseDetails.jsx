@@ -2,13 +2,12 @@ import React, { useEffect, useState } from "react";
 import { ReactComponent as ChevronRightIcon } from '../../assets/ChevronRight.svg';
 import { ReactComponent as WarehouseManagementIcon } from '../../assets/WarehouseManagement.svg';
 import { FaWarehouse } from 'react-icons/fa';
-
 export default function WarehouseDetails(){
 
 	const [doubleLockSystem, setDoubleLockSystem] = useState(true);
     const [WarehouseDetails,setWarehousDetails] = useState([]);
 
-    const getDetails = async () =>{
+   const getDetails = async () =>{
     //fetching the WarehouseId
     const URL = window.location.href;
     const arr = URL.split("/");
@@ -34,6 +33,7 @@ export default function WarehouseDetails(){
             const lng = myArr[1].slice(0,-1);
             data.push(lat);
             data.push(lng);
+            
             getWarehouseType(data[1]).then((val)=>{
                 console.log(val);
                 data[1] = val;
@@ -145,30 +145,30 @@ export default function WarehouseDetails(){
                             Warehouse Type
                         </h5>
                         <div className="input_group" style={{display: "grid", gridTemplateColumns: "1fr", gridGap: "5px 15px"}}>
-                            <div className="form_group">
-                                <div className="form_label1">
+                            <div className="form_group customGrid" >
+                                <div className="form_label1" >
                                     <label htmlFor="">Type : </label>
                                 </div>
-                                <div className="form_input">
+                                <div className="form_input1" > 
                                     {WarehouseDetails[1]}
                                 </div>
 
                             </div>
 
-                            <div className="form_group">
+                            <div className="form_group customGrid">
                                 <div className="form_label1">
                                     <label htmlFor="">Building Type : </label>
                                 </div>
-                                <div className="form_input">
+                                <div className="form_input1">
                                    {WarehouseDetails[2] === "T" ? "Temporary" : "Permenant"}
                                  </div>
                             </div>
 
-                            <div className="form_group">
+                            <div className="form_group customGrid">
                                 <div className="form_label1">
                                     <label htmlFor="">Sealed : </label>
                                 </div>
-                                <div className="form_input">
+                                <div className="form_input1">
                                         Yes
                                 </div>
                             </div>
@@ -179,48 +179,48 @@ export default function WarehouseDetails(){
                             Warehouse Location
                         </h5>
                         <div className="input_group">
-                            <div className="form_group" style={{gridArea : "1 / 1 / 2 / 3" }}>
+                            <div className="form_group customGrid" style={{gridArea : "1 / 1 / 2 / 3" }}>
                                 <div className="form_label1">
                                     <label htmlFor="">Address : </label>
                                 </div>
-                                <div className="form_input">
+                                <div className="form_input1">
                                         {WarehouseDetails[6]}
                                 </div>
                             </div>
 
-                            <div className="form_group">
+                            <div className="form_group customGrid">
                                 <div className="form_label1">
                                     <label htmlFor="">State : </label>
                                 </div>
-                                <div className="form_input">
+                                <div className="form_input1">
                                     {WarehouseDetails[3]}
                                 </div>
 
                             </div>
 
-                            <div className="form_group">
+                            <div className="form_group customGrid">
                                 <div className="form_label1">
                                     <label htmlFor="">PC Code : </label>
                                 </div>
-                                <div className="form_input">
+                                <div className="form_input1">
                                         {WarehouseDetails[4]}
                                 </div>
                             </div>
 
-                            <div className="form_group">
+                            <div className="form_group customGrid">
                                 <div className="form_label1">
                                     <label htmlFor="">Latitude : </label>
                                 </div>
-                                <div className="form_input">
+                                <div className="form_input1">
                                            {WarehouseDetails[WarehouseDetails.length - 2]}                    
                                 </div>
                             </div>
 
-                            <div className="form_group">
+                            <div className="form_group customGrid">
                                 <div className="form_label1">
                                     <label htmlFor="">Longitude : </label>
                                 </div>
-                                <div className="form_input">
+                                <div className="form_input1">
                                 {WarehouseDetails[WarehouseDetails.length - 1]}                                                       
                                 </div>
                             </div>
@@ -231,39 +231,31 @@ export default function WarehouseDetails(){
                             Warehouse Personnel Details
                         </h5>
                         <div className="input_group three-column-grid">
-                            <div className="form_group" style={{ gridArea: "1 / 1 / 2 / 4" }}>
+                            <div className="form_group customGrid" style={{ gridArea: "1 / 1 / 2 / 4" }}>
                                 <div className="form_radio">
                                     <label htmlFor="double_lock_yes">Double Lock System: </label>
-                                    <label htmlFor="double_lock_yes">Yes </label>
-                                    <input type={"radio"} name="double_lock" id="double_lock_yes" defaultChecked={true} value="1" onChange={(e) => {
-                                        // console.log("Yes")
-                                        // console.log(e.target.checked)
-                                        setDoubleLockSystem(true)
-                                    }} />
-                                    <label htmlFor="double_lock_no">No </label>
-                                    <input type={"radio"} name="double_lock" id="double_lock_no" value="0" onChange={(e) => {
-                                        console.log("No")
-                                        // console.log(e.target.checked)
-                                        setDoubleLockSystem(false)
-                                    }} />
+                                    <label htmlFor="double_lock_yes" style={WarehouseDetails[7] == true ? {display : 'block'} : {display : 'none'}}>Yes </label>
+                                  
+                                    <label htmlFor="double_lock_no" style={WarehouseDetails[7] == false ? {display : 'block'} : {display : 'none'}}>No </label>
+                                  
                                 </div>
                             </div>
-                            <div className="form_group">
+                            <div className="form_group customGrid">
                                 <div className="form_label1">
                                     <label htmlFor="">Personnel 1 User ID : </label>
                                 </div>
-                                <div className="form_input">
+                                <div className="form_input1">
                                     {WarehouseDetails[8]}
                                 </div>
                             </div>
 
                           
 
-                            <div className="form_group" hidden={!doubleLockSystem}>
+                            <div className="form_group customGrid" hidden={!doubleLockSystem}>
                                 <div className="form_label1">
                                     <label htmlFor="">Personnel 2 User ID : </label>
                                 </div>
-                                <div className="form_input">
+                                <div className="form_input1">
                                 {WarehouseDetails[9]}                                    
                                 </div>
                             </div>
@@ -283,3 +275,4 @@ export default function WarehouseDetails(){
     </div>
     )
 }
+
