@@ -149,7 +149,6 @@ select{
 	grid-area: 6 / 4 / 7 / 5;
 }
 
-
 .activateBtn{
 	position: relative;
 	background-color: #058E3F;
@@ -158,4 +157,36 @@ select{
 	position: relative;
 	background-color: #D74E09;
 }
+.activeCircle{
+    position: relative;
+    color : #44AF69;
+}
+.inactiveCircle{
+    color : #E71D36;
+}
 
+.myIconLabels{
+    position: relative;
+    width: 60%;
+	margin-left: auto;
+	margin-bottom: 8px;
+}
+
+.myIconLabels ul {
+    padding: 0 !important;
+    list-style: none;
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
+
+.myIconLabels ul li {
+    display: flex;
+    margin: 2px 10px;
+    align-items: center;
+    font-size: 0.85em;
+}
+
+.myIconLabels ul li span {
+    margin-left: 8px;
+}
