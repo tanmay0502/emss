@@ -46,6 +46,22 @@
 	/* display: block; */
 }
 
+.userDetailsBtn{
+	color: var(--foreground-theme-overlay) !important;
+	background-image: url('../../assets/tricolor_bg.jpg') !important;
+}
+
+.table-content button{
+	background: white;
+	color: var(--foreground-primary);
+	box-shadow: var(--dropshadow-button);
+	transition: all linear 0.1s;
+}
+
+.table-content button:hover{
+	transform: scale(1.15);
+}
+
 .table-container table tr{
 	border-radius: var(--border-radius) !important;
 }

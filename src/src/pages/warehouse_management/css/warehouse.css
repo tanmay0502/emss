@@ -2,14 +2,8 @@
     position: relative;
     display: flex;
     justify-content: space-between;
-    /* margin: 10px 0; */
     margin-bottom: 10px;
-    /* background: #36D1DC; */
-    /* background: -webkit-linear-gradient(to right, #5B86E5, #36D1DC);  */
-    /* background: linear-gradient(to right, #5B86E5, #36D1DC);*/
     padding: 0 15px;
-    /* border-radius: 15px;
-    box-shadow: 5px 5px 10px rgba(0,0,0,0.6); */
 }
 
 .PageTitle h4  {
@@ -33,11 +27,13 @@ button {
     position: relative;
     font-weight: bold;
     height: 35px;
-    width: 125px;
+    aspect-ratio: 1;
+    /* width: 125px; */
     margin-left: auto;
     margin-right: auto;
     color: #fff !important;
     display: flex;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
     border-radius: 10px;
@@ -45,10 +41,15 @@ button {
     transition: 0.2s;
     font-size: 1.1em;
     box-shadow: var(--dropshadow-button);
+    box-sizing: border-box;
 }
 
-.btn_details span, .btn_delete span, .btn_edit span {
-    margin-left: 5px;
+.btn_edit svg {
+    transform: translateX(1px);
+}
+
+.btn_details svg, .btn_delete svg, .btn_edit svg {
+    /* margin-left: 5px; */
 }
 
 
@@ -73,7 +74,7 @@ button {
 }
 
 .btn_group {
-    width: 125px !important;
+    max-width: 125px !important;
 }
 
 
@@ -196,11 +197,23 @@ button {
 
 }
 
-.text-center {
-    text-align: center !important;
+.text_center {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center !important;
+    height: 38.4px !important;
+}
+.text_center span{
+    margin: 0 5px;
+}
+.text_center .twoKeys{
+    display: flex;
     color: #5B86E5 !important;
 }
-
+.myBlue{
+    color: #5B86E5 !important;   
+}
 .tempWarehouse {
     color: #FF5D00 !important;
 }
@@ -209,15 +222,23 @@ button {
     color: #44AF69 !important;
 }
 
+.myIconLabels{
+    position: relative;
+    /* border: 2px solid red; */
+    width: 60%;
+}
+
 .myIconLabels ul {
     padding: 0 !important;
     list-style: none;
     display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
 }
 
 .myIconLabels ul li {
     display: flex;
-    margin: 0 10px;
+    margin: 2px 10px;
     align-items: center;
     font-size: 0.85em;
 }
@@ -233,12 +254,6 @@ input[type=radio] {
 select option:hover {
     box-shadow: 0 0 10px 100px #FF5D00 inset !important;
 }
-
-/* .dataTables_info,.paginate_button{
-      display: none !important;
-      
-  } */
-
 .mySelect{
     background-image: url('../../../assets/tricolor_bg.jpg');
     background-position: bottom right;
@@ -254,3 +269,19 @@ select option:hover {
 .mySelect option{
     color : #000 !important;
 }
+
+.customGrid {
+    display:grid;
+    grid-template-columns: 35% 65%;
+}
+.form_label1{
+    text-align: right !important;
+}
+.activeCircle{
+    position: relative;
+    color : #44AF69;
+}
+.inactiveCircle{
+    color : #E71D36;
+}
+

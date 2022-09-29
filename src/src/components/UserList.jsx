@@ -2,7 +2,10 @@ import React from 'react'
 import { useState, useEffect } from "react";
 import './styles/UserList.css'
 import UserDetail from './UserDetail';
-
+import {FaCircle} from 'react-icons/fa';
+import { FaUserEdit } from "react-icons/fa";
+import { FaUserAlt } from "react-icons/fa";
+import ToggleSwitch from './ToggleSwitch';
 function UserList() {
 
   const [isDetail, setIsDetail] = useState(0);
@@ -112,7 +115,14 @@ function UserList() {
   }
   // console.log(users);
   return (
+    
     <div className="">
+      <div className="myIconLabels">
+                    <ul>
+                        <li><FaCircle className="activeCircle"/> <span>Active User</span></li>
+                        <li><FaCircle className="inactiveCircle"/> <span>Inactive User</span></li>
+                    </ul>
+      </div>
       {isDetail == 1 && <UserDetail detail={user} close={close} />}
       {isDetail == 0 && (
         <>
@@ -125,69 +135,45 @@ function UserList() {
                     borderRadius: "var(--border-radius)",
                   }}
                 >
-                  <th>Details</th>
+                  <th>Active</th>
                   <th>User ID</th>
                   <th>User Name</th>
-                  <th>Active Status</th>
+                  <th>User Profile</th>
                   <th>Modify</th>
-                  <th>Activate</th>
-                  <th>Deavtivate</th>
+                  <th>Activate/Deactivate</th>
                 </tr>
               </thead>
               <tbody className="table-content">
                 {users.length > 0 &&
                   users.map((value) => (
                     <tr>
+                      <td className="text-black text-sm">
+                          <center>{value[7] == "A" ? <FaCircle className="activeCircle"/> : <FaCircle className="inactiveCircle"/>}</center>
+                      </td>
+                      <td className="text-black text-sm">{value[0]}</td>
+                      <td className="text-black text-sm">{value[2]}</td>
                       <td>
                         <button
-                          className="bg-blue-500 p-2 text-white"
+                          className="userDetailsBtn p-2 text-white"
                           onClick={(e) => {
                             details(value);
                           }}
                         >
-                          Detail
+                          <FaUserAlt />
                         </button>
                       </td>
-
-                      <td className="text-black text-sm">{value[0]}</td>
-                      <td className="text-black text-sm">{value[2]}</td>
                       <td className="text-black text-sm">
-                        {value[7] === "A" ? "Active" : "Inactive"}
-                      </td>
-                      <td className="text-black text-sm">
-                        <button className="modifyBtn" disabled={true}>
-                          Modify
+                        <button className="modifyBtn p-2 text-white" disabled={true}>
+                          <FaUserEdit style={{transform: "translateX(1px)"}} />
                         </button>
                       </td>
                       <td>
-                        <button
-                          style={
-                            value[7] == "A"
-                              ? { opacity: "0.5", cursor: "not-allowed" }
-                              : { opacity: "1" }
-                          }
-                          className="activateBtn"
-                          id={value[0]}
-                          onClick={(e) => activateUser(e.target.id)}
-                          disabled={value[7] == "A" ? true : false}
-                        >
-                          Activate
-                        </button>
-                      </td>
-                      <td>
-                        <button
-                          style={
-                            value[7] == "I"
-                              ? { opacity: "0.5", cursor: "not-allowed" }
-                              : { opacity: "1" }
-                          }
-                          className="deactivateBtn"
-                          id={value[0]}
-                          onClick={(e) => deactivateUser(e.target.id)}
-                          disabled={value[7] == "I" ? true : false}
-                        >
-                          Deactivate
-                        </button>
+                        <ToggleSwitch key={value[0]} 
+                        warehouseID={value[0]}  
+                        label={value[7] == "A" ? "Deactivate" : "Activate"} 
+                        checked={value[7] == "A"} 
+                        onToggle={() => value[7] == "A" ?  deactivateUser(value[0]) : activateUser(value[0])}
+                        />
                       </td>
                     </tr>
                   ))}
