@@ -2,7 +2,7 @@ import React from 'react'
 import { useState, useEffect } from "react";
 import './styles/UserList.css'
 import UserDetail from './UserDetail';
-import {FaCircle} from 'react-icons/fa';
+import { FaCircle } from 'react-icons/fa';
 import { FaUserEdit } from "react-icons/fa";
 import { FaUserAlt } from "react-icons/fa";
 import ToggleSwitch from './ToggleSwitch';
@@ -14,22 +14,22 @@ function UserList() {
   const [user, setUser] = useState();
 
 
-   useEffect(() => {
-     console.log(user);
-     if (user) {
-       console.log(user);
-       setIsDetail(1);
-     }
-   }, [user]);
+  useEffect(() => {
+    console.log(user);
+    if (user) {
+      console.log(user);
+      setIsDetail(1);
+    }
+  }, [user]);
 
-   function details(value) {
-     console.log(value);
-     setUser(value);
-   }
+  function details(value) {
+    console.log(value);
+    setUser(value);
+  }
 
-   function close() {
-     setIsDetail(0);
-   }
+  function close() {
+    setIsDetail(0);
+  }
 
 
   async function getUser() {
@@ -41,7 +41,7 @@ function UserList() {
           headers: {
             "Content-Type": "application/json",
           },
-          mode:"cors"
+          mode: "cors"
         }
       );
       const data2 = await response.json();
@@ -57,7 +57,7 @@ function UserList() {
   }, []);
 
   const activateUser = async (myId) => {
-    if(window.confirm(`Are you sure you want to Activate user ${myId} ?`)){
+    if (window.confirm(`Are you sure you want to Activate user ${myId} ?`)) {
       try {
         const response = await fetch(
           `http://evm.iitbhilai.ac.in:8100/usermgt/activateUser`,
@@ -71,12 +71,12 @@ function UserList() {
             })
           }
         );
-        const status =  response;
-        if(status.status == 200){
+        const status = response;
+        if (status.status == 200) {
           alert("User Activated Successfully");
           window.location.href = '/session/usermanagement';
         }
-        else{
+        else {
           alert("Activation Failed");
         }
       } catch (error) {
@@ -86,42 +86,42 @@ function UserList() {
   }
 
   const deactivateUser = async (myId) => {
-      if(window.confirm(`Are you sure you want to Dectivate user ${myId} ?`)){
-        try {
-          const response = await fetch(
-            `http://evm.iitbhilai.ac.in:8100/usermgt/deactivateUser`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                "userID": myId
-              })
-            }
-          );
-          const status = response;
-          if(status.status == 200){
-            alert("User Deactivated Successfully");
-            window.location.href = '/session/usermanagement';
+    if (window.confirm(`Are you sure you want to Dectivate user ${myId} ?`)) {
+      try {
+        const response = await fetch(
+          `http://evm.iitbhilai.ac.in:8100/usermgt/deactivateUser`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              "userID": myId
+            })
           }
-          else{
-            alert("Deactivation Failed");
-          }
-        } catch (error) {
-          console.log(error)
+        );
+        const status = response;
+        if (status.status == 200) {
+          alert("User Deactivated Successfully");
+          window.location.href = '/session/usermanagement';
         }
+        else {
+          alert("Deactivation Failed");
+        }
+      } catch (error) {
+        console.log(error)
+      }
     }
   }
   // console.log(users);
   return (
-    
+
     <div className="">
       <div className="myIconLabels">
-                    <ul>
-                        <li><FaCircle className="activeCircle"/> <span>Active User</span></li>
-                        <li><FaCircle className="inactiveCircle"/> <span>Inactive User</span></li>
-                    </ul>
+        <ul>
+          <li><FaCircle className="activeCircle" /> <span>Active User</span></li>
+          <li><FaCircle className="inactiveCircle" /> <span>Inactive User</span></li>
+        </ul>
       </div>
       {isDetail == 1 && <UserDetail detail={user} close={close} />}
       {isDetail == 0 && (
@@ -148,7 +148,7 @@ function UserList() {
                   users.map((value) => (
                     <tr>
                       <td className="text-black text-sm">
-                          <center>{value[7] == "A" ? <FaCircle className="activeCircle"/> : <FaCircle className="inactiveCircle"/>}</center>
+                        <center>{value[7] == "A" ? <FaCircle className="activeCircle" /> : <FaCircle className="inactiveCircle" />}</center>
                       </td>
                       <td className="text-black text-sm">{value[0]}</td>
                       <td className="text-black text-sm">{value[2]}</td>
@@ -164,15 +164,23 @@ function UserList() {
                       </td>
                       <td className="text-black text-sm">
                         <button className="modifyBtn p-2 text-white" disabled={true}>
-                          <FaUserEdit style={{transform: "translateX(1px)"}} />
+                          <FaUserEdit style={{ transform: "translateX(1px)" }} />
                         </button>
                       </td>
                       <td>
-                        <ToggleSwitch key={value[0]} 
-                        warehouseID={value[0]}  
-                        label={value[7] == "A" ? "Deactivate" : "Activate"} 
-                        checked={value[7] == "A"} 
-                        onToggle={() => value[7] == "A" ?  deactivateUser(value[0]) : activateUser(value[0])}
+                        <ToggleSwitch key={value[0]}
+                          warehouseID={value[0]}
+                          label={value[7] == "A" ? "Deactivate" : "Activate"}
+                          checked={value[7] == "A"}
+                          onToggle={(e) => {
+                            if (value[7] == "A") {
+                              deactivateUser(e)
+                            }
+                            else {
+                              activateUser(e)
+                            }
+                          }
+                          }
                         />
                       </td>
                     </tr>
