@@ -158,7 +158,7 @@ useEffect(()=>{
         <div className="PageTitle">
           <h4>
             <FaWarehouse />
-            <span>Modify Warehouse Details :- {WarehouseId}</span>
+            <span>Modify Warehouse Details - {WarehouseId}</span>
           </h4>
         </div>
         <form

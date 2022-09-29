@@ -8,6 +8,7 @@ import Home from './pages/home/Home';
 import ManageUsers from './pages/user_management/ManageUsers';
 import WarehouseManagement from './pages/warehouse_management/WarehouseManagement'
 import AddWarehouse from './pages/warehouse_management/AddWarehouse';
+import ModifyWarehouse from './pages/warehouse_management/ModifyWarehouse';
 
 import Login from './pages/login/Login';
 import Routed from './Router';
@@ -54,6 +55,10 @@ function App() {
             <Route
               path="/session/warehousemanagement/warehousedetails/:id"
               element={<WarehouseDetails />}
+            />
+            <Route
+              path="/session/warehousemanagement/modifywarehouse/:id"
+              element={<ModifyWarehouse />}
             />
           </Route>
         </Routes>
