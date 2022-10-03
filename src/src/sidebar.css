@@ -1,0 +1,103 @@
+.App-Icon {
+	max-height: 70%;
+	aspect-ratio: 1;
+	object-fit: contain;
+	margin-right: 15px;
+  }
+  
+  .app-info {
+	background-color: var(--background-secondary);
+	/* min-height: 70px; */
+	width: 95%;
+	height: 9vh;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: flex-start;
+	/* font-size: calc(10px + 2vmin); */
+	color: rgba(0, 0, 0, 0.7);
+	font-size: 1em;
+	/* padding: 0 40px; */
+	margin-bottom: 25px;
+	position: relative;
+	font-weight: 500;
+	text-align: left;
+	line-height: 1.2em;
+	box-sizing: content-box;
+	border-bottom: 2px solid rgba(0, 0, 0, 0.05);
+  }
+  
+  .app-info>img{
+	margin-bottom: 5px;
+  }
+
+button.nav-button {
+	padding: 0 10px;
+	font-size: 16px;
+	height: 55px;
+	width: 95%;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	background: none;
+	border: none;
+	margin-bottom: 5px;
+	transition: all linear 0.1s;
+	border-radius: 10px !important;
+	color: black !important;
+	font-family: 'Poppins' !important;
+	font-weight: 400 !important;
+}
+
+button.nav-button svg > * {
+	fill: black !important;
+}
+
+button.nav-button:hover {
+	background: #84587C !important;
+	color: white !important;
+}
+
+button.nav-button.active {
+	background: #84587C !important;
+	color: white !important;
+}
+
+button.nav-button:hover svg > * {
+	fill: white !important;
+}
+
+button.nav-button.active svg > * {
+	fill: white !important;
+}
+
+button.nav-button.active .chevron{
+	display: block;
+}
+
+button.nav-button .chevron *{
+	fill: white !important;
+}
+
+button.nav-button div{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: flex-start;
+}
+
+button.nav-button svg {
+	max-height: 30px;
+	max-width: 30px;
+	min-width: 30px;
+	margin-right: 10px;
+	padding: 2.5px;
+}
+
+button.nav-button .chevron {
+	height: 20px;
+	max-width: 20px;
+	display: none;
+	margin-right: 0px !important;
+}

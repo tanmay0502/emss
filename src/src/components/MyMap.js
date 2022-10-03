@@ -13,8 +13,8 @@ class MyMap extends Component{
     
     mapStyle = {
         fillColor: "red",
-        height: "37.5vh",
-        width: "75vh"
+        height: "30vh",
+        width: "100%"
     }
 
      innerStyle = {
@@ -57,8 +57,8 @@ class MyMap extends Component{
 
     render(){
         return(
-            <div className="map-container p-4 border rounded-2xl m-4">
-                <MapContainer style={this.mapStyle} zoom={3.5} center={[23,83]}>
+            <div className="map-container">
+                <MapContainer style={this.mapStyle} zoom={2.5} center={[23,83]}>
                     <GeoJSON style= {this.innerStyle} data={IndiaStates.features} onEachFeature={this.onEachState}/>
                 </MapContainer>
             </div>

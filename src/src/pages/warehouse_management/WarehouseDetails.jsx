@@ -131,9 +131,9 @@ export default function WarehouseDetails(){
 
     return (
         <div className="flex-col justify-center align-middle">
-        <div className="content-path">
+        {/* <div className="content-path">
             <WarehouseManagementIcon /><a href='/session/warehousemanagement'><span>Warehouse Management</span></a><ChevronRightIcon /><span>Warehouse Details</span>
-        </div>
+        </div> */}
 
         <div className="myWrapper">
             <div className='PageTitle'>
