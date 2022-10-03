@@ -1,5 +1,6 @@
-import React from "react";
+import React, {ReactComponent} from "react";
 import { useState, useEffect } from "react";
+import {AiOutlineArrowLeft, AiOutlineEdit} from 'react-icons/ai'
 
 function UserDetail(props) {
     const myFont = {
@@ -19,11 +20,25 @@ function UserDetail(props) {
     };
     console.log(props.detail)
     return (
-      <div className="bg-white w-full p-6">
+      <div className="user-details">
+        <div className="flex justify-between">
+              <button
+                className="flex justify-center rounded-full aspect-square "
+                onClick={props.close}
+              >
+                <AiOutlineArrowLeft />
+              </button>
+              <button
+                className="flex justify-center rounded-full aspect-square "
+                // onClick={props.close}
+              >
+                <AiOutlineEdit />
+              </button>
+            </div>
         <div className="rounded-full  justify-center flex ">
           <img
             src="/template_0.webp"
-            className="w-1/5"
+            className="w-1/6"
             style={{ borderRadius: "50%" }}
           ></img>
         </div>
@@ -88,14 +103,6 @@ function UserDetail(props) {
                   </p>
                 </div>
               </div>
-            </div>
-            <div className="flex justify-end">
-              <button
-                className="flex justify-end  rounded-full "
-                onClick={props.close}
-              >
-                Close
-              </button>
             </div>
           </div>
         )}

@@ -10,7 +10,7 @@ body {
 }
 
 :root {
-  --background-gray: #F2F2F2;
+  --background-gray: #F9F9F9;
   --background-secondary: #FFFFFF;
   --theme-color-blue: #086AED;
   --theme-color-light-blue: #4B98EF;
@@ -62,7 +62,7 @@ h3 {
 h4 {
   font-size: 24px;
   line-height: 120%;
-  font-weight: bold;
+  font-weight: 500;
   text-align: left;
   color: var(--foreground-primary);
 }
@@ -147,7 +147,7 @@ input[type="file"]::file-selector-button {
 }
 
 button, input[type="submit"] {
-  font-family: 'Nunito Sans';
+  font-family: 'Poppins';
   background-color: var(--theme-color-blue);
   color: var(--foreground-theme-overlay);
   padding: 12.5px 15px;
@@ -440,8 +440,11 @@ main {
   position: relative;
   background-color: #fff;
   border-radius: 15px;
-  box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.6);
+  /* box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.6); */
+  box-shadow: 0px 10px 60px rgba(226, 236, 249, 0.5) !important;
   padding: 10px 25px;
+  max-height: 100%;
+  overflow: hidden;
 }
 
 .dataTables_info {

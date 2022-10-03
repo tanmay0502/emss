@@ -120,7 +120,7 @@
 }
 
 .li_noti li > span > span:first-child{
-  text-align: justify;
+  text-align: left;
 }
 
 .li_noti li > span > span:first-child > span::before{

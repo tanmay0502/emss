@@ -4,6 +4,7 @@
   "private": true,
   "proxy": "http://evm.iitbhilai.ac.in:8100",
   "dependencies": {
+    "@langleyfoxall/react-dynamic-data-table": "^7.18.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -20,7 +21,10 @@
     "react-leaflet": "^4.0.2",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
+    "react-simple-maps": "^3.0.0",
     "react-table": "^7.8.0",
+    "react-tooltip": "^4.2.21",
+    "react-tooltips": "^0.4.6",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
