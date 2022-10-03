@@ -161,7 +161,7 @@ function WarehouseList() {
 		return () => {
 
 		}
-	}, [details, tableFilter, sortBy, sortOrder])
+	}, [Details, tableFilter, sortBy, sortOrder])
 
 	
     const ActivateWarehouse = async (myId) => {
@@ -262,16 +262,12 @@ function WarehouseList() {
 					fieldsToExclude={["Details", "Edit", "BuildingType"]}
 					orderByField={sortMapping[sortBy]}
 					orderByDirection={sortOrder}
-					columnWidths={{
-						"": "50px"
-					}}
 					onClick={(event, row) => {
 						details(row["Details"])
-						// console.log(row)
 					}}
 					buttons={[]}
 					allowOrderingBy={[
-						'Warehouse ID', 'Room Type'
+						'Warehouse ID', 'Room Type', 'BuildingType'
 					]} />
 					:
 					<WarehouseDetail detail={user} close={close} />
