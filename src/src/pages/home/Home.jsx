@@ -1,5 +1,4 @@
 import React, { useState, useEffect, ReactComponent } from 'react'
-import MyMap from "../../components/MyMap";
 import "./styles/Home.css"
 import "./styles/Newversion.css";
 import Chart from "react-google-charts";
@@ -7,17 +6,34 @@ import SomeStats from '../../assets/someStats.svg'
 import WarehouseStats from '../../assets/warehouseStats.svg'
 import { ReactComponent as ArrowLeft } from '../../assets/ArrowLeft.svg'
 import { ReactComponent as ArrowRight } from '../../assets/ArrowRight.svg'
+import MapDialog from '../../components/MapDialog';
+import MapChart from "../../components/MapChart"
 
 function Home() {
-  const [content, setContent] = useState("");
+  const [content, setContent] = useState();
+
   if (typeof content === 'undefined') {
-    setContent(",232389,236266,894373");
+      setContent(",232389,236266,894373");
   }
-  const compost = (typeof content === 'undefined') ? ",232389,236266,894373" : content;
-  const st = compost.split(',')[0];
+  const compost=(typeof content==='undefined')? ",232389,236266,894373":content;
+  // const st = compost.split(',')[0];
   const bu = Number(compost.split(',')[1]).toLocaleString();
   const cu = Number(compost.split(',')[2]).toLocaleString();
   const vvpat = Number(compost.split(',')[3]).toLocaleString();
+  console.log("compost: " + compost);
+
+    
+  const [content2, setContent2] = useState("");
+  const [STName, setSTName] = useState("")
+  const [show, setShow] = useState(false);
+  const [show2, setShow2] = useState(true);
+  
+
+  const handleClose = () => setIndiaMap(1);
+  const handleOpen = () => setIndiaMap(0);
+
+
+  const [indiaMap, setIndiaMap] = useState(1);
 
   return (
     <div className='dashboard-grid'>
@@ -27,7 +43,7 @@ function Home() {
           <li>
             <span>
               <span>
-                First Randomisation completed in districts- Bhind, Gwalior, Indore, Bhopal
+                First Randomisation completed in districts - Bhind, Gwalior, Indore, Bhopal
               </span>
               <span>3hrs ago</span>
             </span>
@@ -53,7 +69,7 @@ function Home() {
           <li>
             <span>
               <span>
-                First Randomisation completed in districts- Bhind, Gwalior, Indore, Bhopal
+                First Randomisation completed in districts - Bhind, Gwalior, Indore, Bhopal
               </span>
               <span>3hrs ago</span>
             </span>
@@ -61,7 +77,7 @@ function Home() {
           <li>
             <span>
               <span>
-                First Randomisation completed in districts- Bhind, Gwalior, Indore, Bhopal
+                First Randomisation completed in districts - Bhind, Gwalior, Indore, Bhopal
               </span>
               <span>3hrs ago</span>
             </span>
@@ -69,7 +85,7 @@ function Home() {
           <li>
             <span>
               <span>
-                First Randomisation completed in districts- Bhind, Gwalior, Indore, Bhopal
+                First Randomisation completed in districts - Bhind, Gwalior, Indore, Bhopal
               </span>
               <span>3hrs ago</span>
             </span>
@@ -123,45 +139,20 @@ function Home() {
             legend: "none"
           }}
         />
-        {/* <BarChart className="bargraph" ylabel='Units' margin={{top: 20, right: 0, bottom: 20, left: 60}} height="250" width="250" data={compost ? [
-          {
-            text: "Ballot Units",
-            value: parseInt(bu.replace(",", ""))
-          },
-          {
-            text: "Control Units",
-            value: parseInt(cu.replace(",", ""))
-          },
-          {
-            text: "VVPAT",
-            value: parseInt(vvpat.replace(",", ""))
-          }
-        ] : []} /> */}
-        {/* <div className="grid grid-cols-3 text-center pt-8">
-          <div>
-            <p className="count5"> {bu}</p>
-            <p> Ballot Units</p>
-          </div>
-          <div>
-            <p className="count6"> {cu}</p>
-            <p> Control Units</p>
-          </div>
-          <div>
-            <p className="count7"> {vvpat}</p>
-            <p> VVPAT</p>
-          </div>
-        </div> */}
       </div>
       <div className="card_header_warehouse">
         <div className="heading">Warehouse</div>
         <img style={{ height: "calc(100% - 36px)", width: "100%", "objectPosition": "center" }} src={WarehouseStats} />
       </div>
+
       <div className="card_header_district">
-        <div className="heading">States</div>
-        <div>
-          <MyMap showInfo={setContent} />
+        <span className="heading" style={{maxWidth: "100%", display: "block", "textOverflow" : "ellipsis", "whiteSpace" :"nowrap" }}> India: {content2}</span>
+        <div className='flex justify-center map'>
+            {indiaMap == 0 && <MapDialog show={show} StateName={STName} closeModal={handleClose} />}
+            {indiaMap == 1 && <MapChart show2={show2} closeModal2={handleOpen} setTooltipContent={setContent2} setStateName={setSTName} setShowDistrict={setShow} showInfo={setContent}/>}
         </div>
       </div>
+
       <div className="card_header_somestat">
         <div className="heading">Some Stat</div>
         <img style={{ height: "calc(100% - 36px)", width: "100%", "objectPosition": "center" }} src={SomeStats} />
