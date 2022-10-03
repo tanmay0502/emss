@@ -26,41 +26,25 @@ function Routed(props) {
 	})
 
 	const getNav = () => {
-		switch (location.pathname) {
-			case '/session/home':
-				return (<>
-					<DashboardIcon />
-					<span>Dashboard</span>
-				</>);
-			case '/session/usermanagement':
-				return (<>
-					<UserManagementIcon />
-					<span>User Management</span>
-				</>);
-			case '/session/usermanagement/createUser':
-				return (<>
-					<UserManagementIcon />
-					<span>Create New User</span>
-				</>);
-			case '/session/warehousemanagement':
-				return (<>
-					<WarehouseManagementIcon />
-					<span>Warehouse Management</span>
-				</>);
-			case '/session/warehousemanagement/addwarehouse':
-				return (<>
-					<WarehouseManagementIcon />
-					<span>Create New Warehouse</span>
-				</>);
-			default:
-				if(location.pathname.startsWith('/session/warehousemanagement/warehousedetails')){
-					return (<>
-						<WarehouseManagementIcon />
-						<span>Warehouse Details</span>
-					</>);
-				}
-				return <></>;
+		if (location.pathname.startsWith('/session/home')) {
+			return (<>
+				<DashboardIcon />
+				<span>Dashboard</span>
+			</>);
 		}
+		if (location.pathname.startsWith('/session/warehousemanagement')) {
+			return (<>
+				<WarehouseManagementIcon />
+				<span>Warehouse Management</span>
+			</>);
+		}
+		if (location.pathname.startsWith('/session/usermanagement')) {
+			return (<>
+				<UserManagementIcon />
+				<span>User Management</span>
+			</>);
+		}
+		return <></>;
 	}
 
 	const fetchUserData = async (userid) => {
@@ -72,7 +56,6 @@ function Routed(props) {
 					"Content-Type": "application/json",
 				},
 				mode: "cors"
-
 			}
 		);
 		return await response.json().then(val => val.name);
@@ -172,14 +155,14 @@ function Routed(props) {
 				<div className="content-area">
 					<div className='divnav'>
 						<div className="nav-left">
-							{ getNav() }
+							{getNav()}
 						</div>
 						<div className="nav-right">
 							<div className="userImage">
 
 							</div>
-							<div style={{display: "flex", "flexDirection": "column", alignItems: "center", "justifyContent": "center"}}>
-								<span>Position: {userData.userId ? userData.userId.slice(7) : ""} <ChevronRight style={{transform: "rotateZ(90deg)", maxWidth: "1.2em", marginLeft: "10px"}} /></span>
+							<div style={{ display: "flex", "flexDirection": "column", alignItems: "center", "justifyContent": "center" }}>
+								<span>Position: {userData.userId ? userData.userId.slice(7) : ""} <ChevronRight style={{ transform: "rotateZ(90deg)", maxWidth: "1.2em", marginLeft: "10px" }} /></span>
 								<span>{userData.username}</span>
 							</div>
 						</div>

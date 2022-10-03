@@ -8,6 +8,7 @@ import { ReactComponent as ArrowLeft } from '../../assets/ArrowLeft.svg'
 import { ReactComponent as ArrowRight } from '../../assets/ArrowRight.svg'
 import MapDialog from '../../components/MapDialog';
 import MapChart from "../../components/MapChart"
+import MapIndia from '../../components/MapIndia';
 
 function Home() {
   const [content, setContent] = useState();
@@ -147,9 +148,9 @@ function Home() {
 
       <div className="card_header_district">
         <span className="heading" style={{maxWidth: "100%", display: "block", "textOverflow" : "ellipsis", "whiteSpace" :"nowrap" }}> India: {content2}</span>
-        <div className='flex justify-center map'>
+        <div className='map'>
             {indiaMap == 0 && <MapDialog show={show} StateName={STName} closeModal={handleClose} />}
-            {indiaMap == 1 && <MapChart show2={show2} closeModal2={handleOpen} setTooltipContent={setContent2} setStateName={setSTName} setShowDistrict={setShow} showInfo={setContent}/>}
+            {indiaMap == 1 && <MapIndia show2={show2} closeModal2={handleOpen} setTooltipContent={setContent2} setStateName={setSTName} setShowDistrict={setShow} showInfo={setContent}/>}
         </div>
       </div>
 
