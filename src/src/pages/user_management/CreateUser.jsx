@@ -573,12 +573,12 @@ function CreateUser() {
   console.log(isTemporary);
   return (
     <div className="create-user-container">
-      <div className="content-path">
+      {/* <div className="content-path">
         <UserManagementIcon />
         <a href="/session/usermanagement">User Management</a>
         <ChevronRightIcon />
         <span>Create User</span>
-      </div>
+      </div> */}
       <h4>User Details</h4>
       <div>
         <form

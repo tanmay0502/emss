@@ -6,9 +6,9 @@ import { ReactComponent as ChevronRightIcon } from '../../assets/ChevronRight.sv
 function ManageUsers() {
   return (
 	<div className="flex-col justify-center align-middle">
-		<div className="content-path">
+		{/* <div className="content-path">
 			<UserManagementIcon /><span>User Management</span><ChevronRightIcon /><span>List of Users</span>
-		</div>
+		</div> */}
 		<UserList/>
 	</div>
   )

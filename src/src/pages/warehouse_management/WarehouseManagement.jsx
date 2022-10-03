@@ -6,9 +6,9 @@ import WarehouseList from './WarehouseList';
 function WarehouseManagement() {
   return (
 	<div className="">
-		<div className="content-path">
+		{/* <div className="content-path">
 			<UserManagementIcon /><a href='/session/warehousemanagement'><span>Warehouse Management</span></a><ChevronRightIcon /><span>List of Warehouses</span>
-		</div>
+		</div> */}
 		<WarehouseList/>
 	</div>
   )

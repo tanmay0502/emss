@@ -1,23 +1,67 @@
 import React from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useNavigate, useLocation } from 'react-router-dom'
+
 import ECIIcon from './assets/eci_logo.png';
-import { ReactComponent as HomeIcon } from './assets/Home.svg';
+import { ReactComponent as DashboardIcon } from './assets/Dashboard.svg';
 import { ReactComponent as UserManagementIcon } from './assets/Users.svg';
 import { ReactComponent as OrderManagementIcon } from './assets/Order.svg';
 import { ReactComponent as UnitManagementIcon } from './assets/UnitManagement.svg';
 import { ReactComponent as WarehouseManagementIcon } from './assets/WarehouseManagement.svg';
 import { ReactComponent as IssueRequestManagementIcon } from './assets/Issue-RequestManagement.svg';
 import { ReactComponent as OtherServicesIcon } from './assets/OtherServices.svg';
-import { ReactComponent as ConsumableManagementIcon } from './assets/ConsumableManagement.svg';
-import { ReactComponent as LogoutIcon } from './assets/Logout.svg';
-import { useEffect } from 'react';
-import { useState } from 'react';
+import { ReactComponent as MessagesIcon } from './assets/Messages.svg';
+import { ReactComponent as DownloadsIcon } from './assets/Downloads.svg';
+import { ReactComponent as ChevronRight } from './assets/chevron-right.svg';
+import { useState, useEffect } from 'react';
+
+import './sidebar.css';
+import './Navbar.css'
 
 function Routed(props) {
+	const navigate = useNavigate()
+	const location = useLocation()
 
 	const [userData, setUserData] = useState({
 		username: null
 	})
+
+	const getNav = () => {
+		switch (location.pathname) {
+			case '/session/home':
+				return (<>
+					<DashboardIcon />
+					<span>Dashboard</span>
+				</>);
+			case '/session/usermanagement':
+				return (<>
+					<UserManagementIcon />
+					<span>User Management</span>
+				</>);
+			case '/session/usermanagement/createUser':
+				return (<>
+					<UserManagementIcon />
+					<span>Create New User</span>
+				</>);
+			case '/session/warehousemanagement':
+				return (<>
+					<WarehouseManagementIcon />
+					<span>Warehouse Management</span>
+				</>);
+			case '/session/warehousemanagement/addwarehouse':
+				return (<>
+					<WarehouseManagementIcon />
+					<span>Create New Warehouse</span>
+				</>);
+			default:
+				if(location.pathname.startsWith('/session/warehousemanagement/warehousedetails')){
+					return (<>
+						<WarehouseManagementIcon />
+						<span>Warehouse Details</span>
+					</>);
+				}
+				return <></>;
+		}
+	}
 
 	const fetchUserData = async (userid) => {
 		const response = await fetch(
@@ -27,7 +71,7 @@ function Routed(props) {
 				headers: {
 					"Content-Type": "application/json",
 				},
-				mode:"cors"
+				mode: "cors"
 
 			}
 		);
@@ -35,8 +79,6 @@ function Routed(props) {
 	}
 
 	useEffect(() => {
-
-
 		if (sessionStorage.getItem('sessionToken') === null) {
 			window.location.href = '/login'
 		}
@@ -47,20 +89,24 @@ function Routed(props) {
 				username: val
 			})
 		})
-
-
 		return () => {
 
 		}
 	}, [])
 
+	// const [randomState, setRandomState] = useState(Math.random())
+
+	// useEffect(() => {
+	//   setRandomState(Math.random())
+	//   console.log("Here!!")
+	//   return () => {
+
+	//   }
+	// }, [location])
+
 
 	return (
 		<div className="App">
-			{/* <header className="App-header">
-				<img className='App-Icon' src={ECIIcon} />
-				EVM Management System
-			</header> */}
 			<main>
 				<div className="nav-panel">
 					<div className="nav-panel-top">
@@ -68,49 +114,76 @@ function Routed(props) {
 							<img className='App-Icon' src={ECIIcon} />
 							EVM Management System
 						</div>
-						<span>Logged in as: {userData.userId}</span>
-						<span>Welcome, {userData.username}</span>
-						<button className='nav-button' onClick={() => {
-							window.location.href = "/session/home"
+						{/* <span>Welcome, {userData.username}</span> */}
+						<button className={window.location.pathname.startsWith("/session/home") ? 'nav-button active' : 'nav-button'} onClick={() => {
+							navigate("/session/home")
 						}}>
-							<HomeIcon />Home
+							<div>
+								<DashboardIcon />Dashboard
+							</div>
+							<ChevronRight className="chevron" />
 						</button>
-						<button className='nav-button' onClick={() => {
-							window.location.href = "/session/usermanagement"
+						<button className={window.location.pathname.startsWith("/session/usermanagement") ? 'nav-button active' : 'nav-button'} onClick={() => {
+							navigate("/session/usermanagement")
 						}}>
-							<UserManagementIcon />User Management
+							<div><UserManagementIcon />User</div>
+							<ChevronRight className="chevron" />
 						</button>
-						<button className='nav-button'>
-							<OrderManagementIcon />Order Management
+						<button className={window.location.pathname.startsWith("/session/unitmanagement") ? 'nav-button active' : 'nav-button'}>
+							<div><UnitManagementIcon />Unit</div>
+							<ChevronRight className="chevron" />
 						</button>
-						<button className='nav-button'>
-							<UnitManagementIcon />Unit Management
+						<button className={window.location.pathname.startsWith("/session/ordermanagement") ? 'nav-button active' : 'nav-button'}>
+							<div><OrderManagementIcon />Order</div>
+							<ChevronRight className="chevron" />
 						</button>
-						<button className='nav-button' onClick={() => {
-							window.location.href = "/session/warehousemanagement"
+						<button className={window.location.pathname.startsWith("/session/warehousemanagement") ? 'nav-button active' : 'nav-button'} onClick={() => {
+							navigate("/session/warehousemanagement")
 						}}>
-							<WarehouseManagementIcon />Warehouse Management
+							<div><WarehouseManagementIcon />Warehouse</div>
+							<ChevronRight className="chevron" />
 						</button>
-						<button className='nav-button'>
-							<IssueRequestManagementIcon />Issue/Request Management
+						<button className={window.location.pathname.startsWith("/session/issuemanagement") ? 'nav-button active' : 'nav-button'}>
+							<div><IssueRequestManagementIcon />Issue/Request</div>
+							<ChevronRight className="chevron" />
 						</button>
-						<button className='nav-button'>
-							<OtherServicesIcon />Other Services
+						<button className={window.location.pathname.startsWith("/session/messages") ? 'nav-button active' : 'nav-button'}>
+							<div><MessagesIcon />Messages</div>
+							<ChevronRight className="chevron" />
 						</button>
-						<button className='nav-button'>
-							<ConsumableManagementIcon />Consumable Management
+						<button className={window.location.pathname.startsWith("/session/downloads") ? 'nav-button active' : 'nav-button'}>
+							<div><DownloadsIcon />Downloads</div>
+							<ChevronRight className="chevron" />
+						</button>
+						<button className={window.location.pathname.startsWith("/session/otherservices") ? 'nav-button active' : 'nav-button'}>
+							<div><OtherServicesIcon />Others</div>
+							<ChevronRight className="chevron" />
 						</button>
 					</div>
-					<div className="nav-panel-bottom">
-						<button className='nav-button' onClick={() => {
+					{/* <div className="nav-panel-bottom">
+						<button className={window.location.pathname.startsWith("/session/home") ? 'nav-button active' : 'nav-button'} onClick={() => {
 							sessionStorage.removeItem('sessionToken')
 							window.location.href = '/'
 						}}>
 							<LogoutIcon />Logout
 						</button>
-					</div>
+					</div> */}
 				</div>
 				<div className="content-area">
+					<div className='divnav'>
+						<div className="nav-left">
+							{ getNav() }
+						</div>
+						<div className="nav-right">
+							<div className="userImage">
+
+							</div>
+							<div style={{display: "flex", "flexDirection": "column", alignItems: "center", "justifyContent": "center"}}>
+								<span>Position: {userData.userId ? userData.userId.slice(7) : ""} <ChevronRight style={{transform: "rotateZ(90deg)", maxWidth: "1.2em", marginLeft: "10px"}} /></span>
+								<span>{userData.username}</span>
+							</div>
+						</div>
+					</div>
 					<div className="content">
 						<Outlet />
 					</div>

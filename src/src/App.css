@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap');
 
 [hidden] {
   display: none !important;
@@ -72,33 +73,6 @@ h5 {
   font-weight: bold;
   text-align: left;
   color: var(--foreground-primary);
-}
-
-button.nav-button {
-  padding: 0 5px;
-  font-size: 16px;
-  height: 50px;
-  font-weight: bold;
-  color: var(--foreground-primary);
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-start;
-  border-radius: var(--border-radius-primary);
-  border: none;
-  background: var(--background-secondary);
-  margin-bottom: 15px;
-}
-
-button.nav-button:hover {
-  box-shadow: var(--dropshadow-card-or-button);
-}
-
-button.nav-button svg {
-  height: 35px;
-  max-width: 35px;
-  margin-right: 5px;
 }
 
 select, input[type="text"], input[type="password"], input[type="email"], input[type="tel"] {
@@ -203,35 +177,8 @@ button, input[type="submit"] {
   max-height: 100vh;
   text-align: center;
 
-  font-family: 'Nunito Sans';
-}
-
-.App-Icon {
-  max-height: 70%;
-  aspect-ratio: 1;
-  object-fit: contain;
-  margin-right: 15px;
-}
-
-.app-info {
-  background-color: var(--background-secondary);
-  /* min-height: 70px; */
-  height: max(7.8vh, 70px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  /* font-size: calc(10px + 2vmin); */
-  color: var(--foreground-primary);
-  font-size: 18px;
-  /* padding: 0 40px; */
-  margin-bottom: 25px;
-  position: relative;
-  font-weight: 700;
-}
-
-.app-info>img{
-  margin-bottom: 5px;
+  /* font-family: 'Nunito Sans'; */
+	font-family: 'Poppins' !important;
 }
 
 main {
@@ -245,14 +192,14 @@ main {
 
 .nav-panel {
   display: block;
-  width: 22.57vw;
-  min-width: 300px;
+  width: 20vw;
+  min-width: 270px;
   background-color: var(--background-secondary);
   height: 100%;
   box-shadow: var(--dropshadow-card);
   position: relative;
   z-index: 9990;
-  padding: 25px 0 10px 0;
+  padding: 0 0 10px 0;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -320,7 +267,7 @@ main {
 
 .content-area .content {
   height: 100%;
-  max-height: 100%;
+  max-height: 91vh;
   overflow: auto;
   padding: 25px 40px 25px 40px;
   box-sizing: border-box;
