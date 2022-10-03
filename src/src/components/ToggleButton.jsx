@@ -9,7 +9,7 @@ function ToggleButton(props) {
 			e.stopPropagation();
 			props.onToggle(props.userID); 
 		}}>
-			{props.checked ? "Active" : "Inactive"}
+			{props.customLabels ? props.checked ? props.customLabels["active"] : props.customLabels["inactive"]  : props.checked ? "Active" : "Inactive"}
 		</button>
 	</div>
   )

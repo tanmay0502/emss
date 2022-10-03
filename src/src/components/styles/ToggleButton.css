@@ -15,7 +15,7 @@ button.unchecked{
 	align-items: center;
 	padding: 2px 12px;
 	gap: 10px;
-	font-size: 14px;
+	font-size: 1em;
 	background: #FFC5C5;
 	border: 1px solid #DF0404;
 	border-radius: 4px;
@@ -30,8 +30,8 @@ button.checked{
 	align-items: center;
 	padding: 2px 12px;
 	gap: 10px;
-	font-size: 14px;
-	background: rgba(22, 192, 152, 0.38);
+	font-size: 1em;
+	background: #16c09861;
 	border: 1px solid #00B087;
 	border-radius: 4px;
 	color: #008767;

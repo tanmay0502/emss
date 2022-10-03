@@ -147,7 +147,8 @@ function UserList() {
 				const status = response;
 				if (status.status == 200) {
 					alert("User Activated Successfully");
-					window.location.href = '/session/usermanagement';
+					// window.location.href = '/session/usermanagement';
+					getUser();
 				}
 				else {
 					alert("Activation Failed");
@@ -176,7 +177,8 @@ function UserList() {
 				const status = response;
 				if (status.status == 200) {
 					alert("User Deactivated Successfully");
-					window.location.href = '/session/usermanagement';
+					// window.location.href = '/session/usermanagement';
+					getUser();
 				}
 				else {
 					alert("Deactivation Failed");

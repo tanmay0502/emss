@@ -1,6 +1,6 @@
-.user-list-grid{
+.warehouse-list-grid{
 	display: grid;
-	grid-template-columns: 2.75fr 1.5fr;
+	grid-template-columns: 3.5fr 1.5fr;
 	grid-template-rows: repeat(5, 1fr);
 	grid-column-gap: 20px;
 	grid-row-gap: 20px;
@@ -39,18 +39,18 @@
 	padding-bottom: 50px;
 }
 
-.users-table{
+.warehouses-table{
 	/* height: 100%; */
 	width: 100%;
 	/* table-layout:fixed; */
 	position: relative;
 }
 
-.users-table th{
+.warehouses-table th{
 	font-family: 'Poppins';
 	font-weight: 400;
-	font-size: 14px !important;
-	line-height: 21px !important;
+	font-size: 0.75em !important;
+	/* line-height: 21px !important; */
 	letter-spacing: -0.01em;
 	color: #B5B7C0 !important;
 	padding: 15px 0;
@@ -61,33 +61,24 @@
 	z-index: 999;
 }
 
-.users-table th:first-child, .users-table th:nth-child(3){
-	text-align: left;
-}
-
-.users-table th:first-child{
+.warehouses-table th:first-child{
 	padding-left: 10px;
 }
 
-.users-table td:first-child{
+.warehouses-table td:first-child{
 	padding-left: 10px;
 }
 
-.users-table td{
+.warehouses-table td{
 	padding: 20px 0;
 	border-bottom: 1px solid #EEEEEE;
 	font-family: 'Poppins';
 	font-style: normal;
 	font-weight: 400;
-	font-size: 14px;
-	line-height: 24px;
+	font-size: 0.75em !important;
+	/* line-height: 24px; */
 	letter-spacing: -0.01em;
 	color: #292D32;
-}
-
-.users-table td:first-child, .users-table td:nth-child(3){
-	text-align: left;
-	width: max-content;
 }
 
 .user-details button{
@@ -99,20 +90,21 @@
 	font-size: 1.2em;
 }
 
-.users-table tr:hover{
+.warehouses-table tr:hover{
 	background-color: rgba(0, 0, 0, 0.15);
 	cursor: pointer;
 }
 
-.userStats{
+.warehouseStats{
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
 	justify-content: center;
 	gap: 10px;
+	height: 100%;
 }
 
-.userStats li{
+.warehouseStats li{
 	display: flex;
 	flex-direction: row;
 	align-items: center;
@@ -120,32 +112,32 @@
 	gap: 30px;
 }
 
-.userStats li .icon{
+.warehouseStats li .icon{
 	width: 60px;
 	box-sizing: border-box;
-	padding: 15px;
+	padding: 20px;
 	aspect-ratio: 1;
 	background-color: #FDE1D9;
 	border-radius: 50%;
 }
 
-.userStats li .icon svg{
-	width: 30px;
-	height: 30px;
+.warehouseStats li .icon svg{
+	width: 20px;
+	height: 20px;
 }
 
-.userStats li .userStatsText{
+.warehouseStats li .warehouseStatsText{
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
 	justify-content: center;
 }
 
-.userStats li .userStatsText span{
+.warehouseStats li .warehouseStatsText span{
 	font-size: 0.8em;
 	color: #ACACAC;
 }
 
-.userStats li .userStatsText h3{
+.warehouseStats li .warehouseStatsText h3{
 	color: #333333;
 }

@@ -1,8 +1,9 @@
 import React from "react";
 import { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom'
 import "./styles/createuser.css";
-import { ReactComponent as UserManagementIcon } from "../../assets/Users.svg";
-import { ReactComponent as ChevronRightIcon } from "../../assets/ChevronRight.svg";
+
+
 var sha256 = require("js-sha256");
 class Queue {
   constructor() {
@@ -32,8 +33,7 @@ class Queue {
 }
 function CreateUser() {
 
-  
-   
+  const navigate = useNavigate()   
    
   
    
@@ -573,13 +573,9 @@ function CreateUser() {
   console.log(isTemporary);
   return (
     <div className="create-user-container">
-      {/* <div className="content-path">
-        <UserManagementIcon />
-        <a href="/session/usermanagement">User Management</a>
-        <ChevronRightIcon />
-        <span>Create User</span>
-      </div> */}
-      <h4>User Details</h4>
+      <span><button onClick={()=>{
+        navigate('/session/usermanagement')
+      }}>{"<"}</button><h4>User Details</h4></span>
       <div>
         <form
           id="createUserForm"
