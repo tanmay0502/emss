@@ -16,14 +16,59 @@ import { useState, useEffect } from 'react';
 
 import './sidebar.css';
 import './Navbar.css'
+import Profile from './components/Profile';
 
 function Routed(props) {
-	const navigate = useNavigate()
-	const location = useLocation()
 
+	const [profileView,setProfileView]=useState(0);
+	const [profileDetail,setProfileDetail]=useState([]);
 	const [userData, setUserData] = useState({
 		username: null
 	})
+
+	function viewProfile(){
+		setProfileView(profileView^1);
+	}
+
+
+	async function getUser() {
+		try {
+		  const response = await fetch(
+			"http://evm.iitbhilai.ac.in:8100/usermgt/listAllUsers",
+			{
+			  method: "GET",
+			  headers: {
+				"Content-Type": "application/json",
+			  },
+			  mode: "cors"
+			}
+		  );
+		  const data2 = await response.json();
+		  console.log(data2);
+		  if(data2["data"]!=undefined){
+			console.log("helo")
+				for(let i=0;i<data2["data"].length;i++){
+					// console.log(data2["data"][i][0],userData.userId)
+					if(data2["data"][i][0]==userData.userId){
+						setProfileDetail(data2["data"][i]);
+						// console.log(data2["data"][i])
+						break;
+					}
+				}
+		  }
+		} catch (err) {
+		  console.log(err);
+		}
+	  }
+	  // getUser();
+	  useEffect(() => {
+		getUser();
+	  }, [userData]);
+
+	const navigate = useNavigate()
+	const location = useLocation()
+
+	
 
 	const getNav = () => {
 		if (location.pathname.startsWith('/session/home')) {
@@ -90,6 +135,7 @@ function Routed(props) {
 
 	return (
 		<div className="App">
+			
 			<main>
 				<div className="nav-panel">
 					<div className="nav-panel-top">
@@ -152,7 +198,7 @@ function Routed(props) {
 						</button>
 					</div> */}
 				</div>
-				<div className="content-area">
+				<div className="content-area ">
 					<div className='divnav'>
 						<div className="nav-left">
 							{getNav()}
@@ -162,14 +208,17 @@ function Routed(props) {
 
 							</div>
 							<div style={{ display: "flex", "flexDirection": "column", alignItems: "center", "justifyContent": "center" }}>
-								<span>Position: {userData.userId ? userData.userId.slice(7) : ""} <ChevronRight style={{ transform: "rotateZ(90deg)", maxWidth: "1.2em", marginLeft: "10px" }} /></span>
+								<span>Position: {userData.userId ? userData.userId.slice(0) : ""}<button3 onClick={viewProfile}> <ChevronRight style={{ transform: "rotateZ(90deg)", maxWidth: "1.2em", marginLeft: "10px" }} /></button3></span>
 								<span>{userData.username}</span>
 							</div>
 						</div>
 					</div>
 					<div className="content">
 						<Outlet />
+						{profileView==1 && (<div className=' absolute top-16 right-6 z-50' style={{width:"45%"}}><Profile detail={profileDetail} /></div>)}
 					</div>
+					
+					
 				</div>
 			</main>
 		</div>

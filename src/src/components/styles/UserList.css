@@ -58,7 +58,7 @@
 	position: sticky;
   	top: 0;
 	background-color: white;
-	z-index: 999;
+	z-index: 9;
 }
 
 .users-table th:first-child, .users-table th:nth-child(3){
