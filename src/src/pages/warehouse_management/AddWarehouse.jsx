@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { ReactComponent as ChevronRightIcon } from "../../assets/ChevronRight.svg";
+import { AiOutlineArrowLeft } from 'react-icons/ai'
 import { ReactComponent as WarehouseManagementIcon } from "../../assets/WarehouseManagement.svg";
 import { FaWarehouse } from "react-icons/fa";
 import { FaRegBuilding } from "react-icons/fa";
@@ -14,37 +14,27 @@ import { BsFillPersonFill } from "react-icons/bs";
 // import { BsCheck2 } from 'react-icons/bs'
 import { useState } from "react";
 import './css/AddWarehouse.css'
+import { useNavigate } from "react-router-dom";
 
 export default function AddWarehouse() {
+  const navigate = useNavigate();
   const [doubleLockSystem, setDoubleLockSystem] = useState(true);
 
   const [states, setStates] = useState([]);
   const [statesCode, setStatesCode] = useState([]);
   const [PCs, setPCs] = useState([]);
   const [PCcodes, setPCcodes] = useState([]);
-  const [WarehouseId, setWarehouseId] = useState("");
 
   //Form filed states....
   const [myState, setmyState] = useState("");
   const [myPCcode, setmyPCcode] = useState("");
-  const [WarehouseState, setWarehouseState] = useState("");
-  const [WarehousePC, setWarehousePC] = useState("");
   const [WarehouseType, setWarehouseType] = useState("");
-  const [BuildingType, setBuildingType] = useState("");
-  const [isSealed, setisSealed] = useState("");
-  const [Address, setAddress] = useState("");
-  const [WarhouseCode, setWarehouseCode] = useState("");
-  const [Lat, setLat] = useState("");
-  const [Lng, setLng] = useState("");
-  const [PersonName1, setPersonName1] = useState("");
-  const [PersonName2, setPersonName2] = useState("");
-  const [PersonMobile1, setPersonMobile1] = useState("");
-  const [PersonMobile2, setPersonMobile2] = useState("");
-  const [PersonDesignation1, setPersonDesignation1] = useState("");
-  const [PersonDesignation2, setPersonDesignation2] = useState("");
+
   //Form filed states end....
 
   const onFormSubmit = async (e) => {
+    e.preventDefault()
+
     const warehouseType = document.getElementById("input_warehousetype").value;
     const buildingType = document.getElementById("input_buildingtype").value;
     const state =
@@ -64,22 +54,23 @@ export default function AddWarehouse() {
 
     const sealed = document.getElementById("input_sealed").value;
 
-    const reqBody = {
+    var reqBody = {
       warehouseType: warehouseType,
       warehouseBuildingType: buildingType,
       warehouseState: state,
       warehousePC: PC,
       warehouseLatLong: [lat, lon],
       warehouseAddress: address,
-      doubleLock: double_lock,
+      doubleLock: double_lock.toString().toUpperCase(),
       UIDKey1: person1_ID,
-      UIDKey2: person2_ID,
       updateTime: new Date().toISOString(),
       updatedByUID: window.sessionStorage.getItem("sessionToken"),
       warehouseStatus: sealed,
     };
-    // const whId = generateWarehouseId();
-    console.log(reqBody);
+
+    if(double_lock){
+      reqBody["UIDKey2"] = person2_ID;
+    }
 
     const response = fetch(
       `http://evm.iitbhilai.ac.in:8100/warehouse/createWarehouse`,
@@ -92,13 +83,16 @@ export default function AddWarehouse() {
       }
     );
     const status = await response;
+    console.log(status)
     alert(
       status.status == 200
         ? "Warehouse Created Successfully"
         : "Error Creating Warehouse."
     );
     if (status.status == 200) {
-      document.getElementById("create-warehouse-form").reset();
+      // document.getElementById("create-warehouse-form").reset();
+      // window.location.reload();
+      navigate('/session/warehousemanagement')
     }
   };
 
@@ -197,6 +191,15 @@ export default function AddWarehouse() {
           <div class="warehouse-type">
             <div className="PageTitle">
               <h4>
+              <button
+                className="flex justify-center rounded-full aspect-square "
+                onClick={()=>{
+                  navigate('/session/warehousemanagement')
+                }}
+                style={{"background" : "#84587C", color: "white"}}
+              >
+                <AiOutlineArrowLeft />
+              </button>
                 <WarehouseManagementIcon />
                 <span>Create Warehouse</span>
               </h4>
@@ -267,7 +270,9 @@ export default function AddWarehouse() {
                     required
                     name=""
                     id="input_state"
-                    onChange={(e) => setStateFunc(e.target.value)}
+                    onChange={(e)=> {
+                      setStateFunc(e.target.value)
+                    }}
                   >
                     <option value="" disabled selected>
                       --Select--
@@ -293,7 +298,6 @@ export default function AddWarehouse() {
                     required
                     name=""
                     id="input_buildingtype"
-                    onChange={(e) => setBuildingType(e.target.value)}
                   >
                     <option
                       value=""
@@ -324,7 +328,6 @@ export default function AddWarehouse() {
                     name=""
                     className=""
                     placeholder="Warehouse Address"
-                    onChange={(e) => setAddress(e.target.value)}
                   />
                   <div className="input_icon">
                     <FaMapMarkedAlt size="1em" />
@@ -340,7 +343,6 @@ export default function AddWarehouse() {
                     required
                     name=""
                     id="input_sealed"
-                    onChange={(e) => setisSealed(e.target.value)}
                   >
                     <option value="" className="FirstOption">
                       --Select--
@@ -392,7 +394,6 @@ export default function AddWarehouse() {
                       name=""
                       className=""
                       placeholder="Latitude"
-                      onChange={(e) => setLat(e.target.value)}
                     />
                     <div className="input_icon">
                       <FaLaptopHouse size="1em" />
@@ -413,7 +414,6 @@ export default function AddWarehouse() {
                       name=""
                       className=""
                       placeholder="Longitude"
-                      onChange={(e) => setLng(e.target.value)}
                     />
                     <div className="input_icon">
                       <FaLaptopHouse size="1em" />
@@ -442,8 +442,6 @@ export default function AddWarehouse() {
                     defaultChecked={true}
                     value="1"
                     onChange={(e) => {
-                      // console.log("Yes")
-                      // console.log(e.target.checked)
                       setDoubleLockSystem(true);
                     }}
                   />
@@ -454,8 +452,6 @@ export default function AddWarehouse() {
                     id="double_lock_no"
                     value="0"
                     onChange={(e) => {
-                      console.log("No");
-                      // console.log(e.target.checked)
                       setDoubleLockSystem(false);
                     }}
                   />
@@ -471,7 +467,6 @@ export default function AddWarehouse() {
                     placeholder="AA000000RRRRR"
                     id="input_personName_1"
                     name=""
-                    onChange={(e) => setPersonName1(e.target.value)}
                   />
                   <div className="input_icon">
                     <BsFillPersonFill size="1em" />
@@ -489,7 +484,6 @@ export default function AddWarehouse() {
                     placeholder="AA000000RRRRR"
                     id="input_personName_2"
                     name=""
-                    onChange={(e) => setPersonName2(e.target.value)}
                   />
                   <div className="input_icon">
                     <BsFillPersonFill size="1em" />

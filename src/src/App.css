@@ -108,42 +108,30 @@ input[type="file"] {
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  border: 2px solid transparent;
   line-height: calc(200%);
   padding: 12.5px 10px;
-  padding-right: 0;
   position: relative;
-}
-
-input[type="file"]:focus-within {
   outline: none;
-  border: 2px solid var(--border-active);
-  overflow: hidden;
-}
-
-input[type="file"]:focus-within::file-selector-button {
-  border-radius: 0;
-
 }
 
 input[type="file"]::file-selector-button {
-  background-color: var(--theme-color-blue);
+  background-color: #84587C;
   color: var(--foreground-theme-overlay);
-  padding: 12.5px 15px;
-  border-radius: var(--border-radius);
+  padding: 5px 15px;
+  border-radius: 10px;
   position: absolute;
   border: none;
   outline: none;
   top: 50%;
-  right: -5px;
+  right: 10px;
   transform: translateY(-50%);
   cursor: pointer;
-  height: 100%;
   transition: all linear 0.1s;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  content: 'Choose';
 }
 
 button, input[type="submit"] {

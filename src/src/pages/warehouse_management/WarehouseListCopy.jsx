@@ -20,6 +20,7 @@ import UserImageTest from '../../assets/UserImageTest.png'
 function WarehouseList() {
 	const navigate = useNavigate();
 	const [Details, setDetails] = React.useState([]);
+	const [warehouseMapping, setWarehouseMapping] = useState(null)
 
 	async function getList() {
         let userId = sessionStorage.getItem('sessionToken');
@@ -39,18 +40,18 @@ function WarehouseList() {
                 })
 
             const data = await response.json();
-            console.log(data);
-            MapWarehouseTypes(data["data"]);
+			setDetails(data["data"])
         } catch (error) {
             console.log(error)
         }
 
     }
     useEffect(() => {
+		MapWarehouseTypes();
         getList();
     }, [])
 
-    const MapWarehouseTypes = async (data) => {
+    const MapWarehouseTypes = async () => {
         try {
             const response = await fetch(
                 'http://evm.iitbhilai.ac.in:8100/warehouse/warehouseTypes',
@@ -62,15 +63,11 @@ function WarehouseList() {
                 }
             )
             const types = await response.json();
-            data.map(arr => {
-                types['data'].map(val => {
-                    if (arr[1] === val[0]) {
-                        arr[1] = val[1];
-                    }
-                })
-            })
-            console.log(data);
-            setDetails(data);
+            // data.map(arr => {
+			// 	arr = {...arr, "warehousebuildingtype": }
+            // })
+            // console.log(data);
+            setWarehouseMapping(types);
         } catch (error) {
             console.log(error);
         }
@@ -121,29 +118,34 @@ function WarehouseList() {
 			}
 		}).map((val) => {
 			return {
-				"Warehouse ID": val[0],
-				"Room Type": val[1],
-				"Double Locked": val[7] ? "Yes" : "No",
+				"Warehouse ID": val["warehouseid"],
+				"Room Type": warehouseMapping ? warehouseMapping["data"][val["warehousetype"]] : "",
+				"Double Locked": val["doublelock"] ? "Yes" : "No",
 				Details: val,
 				Edit: <button className="modifyBtn p-2 text-white" disabled={true}>
 					<FaUserEdit style={{ transform: "translateX(1px)" }} />
 				</button>,
-				"BuildingType": val[2],
-				"Building Type": <ToggleButton userID={val[0]} checked={val[2] === 'P'} onToggle={(e) => {
+				"BuildingType": val["warehousebuildingtype"],
+				"Building Type": <ToggleButton userID={val["warehouseid"]} checked={val["warehousebuildingtype"] === 'P'} onToggle={(e) => {
 				}} 
 				customLabels={{
 					"active": "Permanent",
 					"inactive": "Temporary"
 				}
 				}/>,
-				"Status": <ToggleButton userID={val[0]} checked={val[13] === 'A'} onToggle={(e) => {
-					if (val[13] !== "A") {
+				"Status": <ToggleButton userID={val["warehouseid"]} checked={val["warehousestatus"] === 'A'} onToggle={(e) => {
+					if (val["warehousestatus"] !== "A") {
 						ActivateWarehouse(e)
 					}
 					else {
 						DectivateWarehouse(e)
 					}
-				}} />
+				}} 
+				customLabels={{
+					"active": "Unsealed",
+					"inactive": "Sealed"
+				}}
+				/>
 			}
 		})
 		data.sort(function(a, b){ 
@@ -161,7 +163,7 @@ function WarehouseList() {
 		return () => {
 
 		}
-	}, [Details, tableFilter, sortBy, sortOrder])
+	}, [Details, warehouseMapping, tableFilter, sortBy, sortOrder])
 
 	
     const ActivateWarehouse = async (myId) => {
@@ -270,7 +272,7 @@ function WarehouseList() {
 						'Warehouse ID', 'Room Type', 'BuildingType'
 					]} />
 					:
-					<WarehouseDetail detail={user} close={close} />
+					<WarehouseDetail detail={user} close={close} warehouseMapping={warehouseMapping} />
 				}
 			</div>
 			<div className='myWrapper' style={{ "gridArea": "1 / 2 / 3 / 3" }}>
