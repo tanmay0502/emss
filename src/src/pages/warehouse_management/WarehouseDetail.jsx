@@ -13,7 +13,7 @@ function WarehouseDetail(props) {
         <button
           className="flex justify-center rounded-full aspect-square "
           onClick={props.close}
-          style={{"background" : "#84587C"}}
+          style={{"background" : "#84587C", color: "white"}}
         >
           <AiOutlineArrowLeft />
         </button>
@@ -38,73 +38,63 @@ function WarehouseDetail(props) {
       </div>
       {props.detail && (
         <div className="w-full px-2 py-8">
-          <div style={{ width: "100%", display: 'grid', "gridTemplateColumns": "repeat(2, 1fr)", gridGap: "20px 0" }}>
-            <div className=" m-1 text-center flex items-center justify-start p-2 rounded-md text-black w-full">
-              <p className="font-bold">Warehouse ID : </p>
+          <div className="warehouse-details-grid">
+              <b>Warehouse ID : </b>
               <p className="px-2 text-md">
-                {props.detail[0]}
+                {props.detail["warehouseid"]}
               </p>
-            </div>
-            <div className=" m-1 text-center flex items-center justify-start p-2 rounded-md text-black w-full">
-              <p className="font-bold">Room Type : </p>
+              <b>Room Type : </b>
               <p className="px-2 text-md">
-                {props.detail[1]}
+                {props.warehouseMapping["data"][props.detail["warehousetype"]]}
               </p>
-            </div>
-            <div className="m-1 text-center flex items-center justify-start p-2 rounded-md text-black w-full">
-              <p className="font-bold">Building Type : </p>
+              <b>Building Type : </b>
               <p className="px-2 text-md">
-                {props.detail[2] === 'P' ? "Permanent" : "Temporary"}
+                {props.detail["warehousebuildingtype"] === 'P' ? "Permanent" : "Temporary"}
               </p>
-            </div>
-            <div className=" m-1 text-center flex items-center justify-start p-2 rounded-md text-black w-full">
-              <p className="font-bold">Status : </p>
+            
+              <b>Status : </b>
               <p className="px-2 text-md">
-                {props.detail[13] === "A" ? "Active" : "Inactive"}
+                {props.detail["warehousestatus"] === "A" ? "Active" : "Inactive"}
               </p>
-            </div>
-            <div className=" m-1 text-center flex items-center justify-start p-2 rounded-md text-black w-full">
-              <p className="font-bold">State : </p>
+
+            
+              <b>State : </b>
               <p className="px-2 text-md">
-                {props.detail[3]}
+                {props.detail["warehousestate"]}
               </p>
-            </div>
-            <div className=" m-1 text-center flex items-center justify-start p-2 rounded-md text-black w-full">
-              <p className="font-bold">Address : </p>
+
+            
+              <b>Address : </b>
               <p className="px-2 text-md">
-                {props.detail[6]}
+                {props.detail["warehouseaddress"]}
               </p>
-            </div>
-            <div className=" m-1 text-center flex items-center justify-start p-2 rounded-md text-black w-full">
-              <p className="font-bold">Lat Long :</p>
+
+
+              <b>Lat Long :</b>
               <p className="px-2 text-md">
-                {props.detail[5]}
+                {props.detail["warehouselatlong"]}
               </p>
-            </div>
-            <div className=" m-1 text-center flex items-center justify-start p-2 rounded-md text-black w-full">
-              <p className="font-bold">Created By : </p>
+
+
+              <b>Updated By : </b>
               <p className="px-2 text-md">
-                {props.detail[12]}
+                {props.detail["updatedbyuid"]}
               </p>
-            </div>
-            <div className=" m-1 text-center flex items-center justify-start p-2 rounded-md text-black w-full" style={{ gridArea: "5 / 1 / 6 / 3" }}>
-              <p className="font-bold">Double Locked : </p>
+
+              <b>Double Locked : </b>
               <p className="px-2 text-md">
-                {props.detail[7] ? "Yes" : "No"}
+                {props.detail["doublelock"] ? "Yes" : "No"}
               </p>
-            </div>
-            <div className=" m-1 text-center flex items-center justify-start p-2 rounded-md text-black w-full">
-              <p className="font-bold">First Key Holder : </p>
+            
+              <b>First Key Holder : </b>
               <p className="px-2 text-md">
-                {props.detail[8]}
+                {props.detail["uidkey1"]}
               </p>
-            </div>
-            <div className=" m-1 text-center flex items-center justify-start p-2 rounded-md text-black w-full">
-              <p className="font-bold">Second Key Holder : </p>
+            
+              <b>Second Key Holder : </b>
               <p className="px-2 text-md">
-                {props.detail[9] !== "" ? props.detail[9] : "N/A"}
+                {props.detail["uidkey2"] !== "" ? props.detail["uidkey2"] : "N/A"}
               </p>
-            </div>
           </div>
         </div>
       )}
