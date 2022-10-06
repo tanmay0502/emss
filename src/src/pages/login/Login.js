@@ -154,7 +154,9 @@ const Login = () => {
   }
   // getState();
   useEffect(() => {
-    if (window.sessionStorage.getItem("sessionToken") !== null) {
+    sessionStorage.setItem("log",null)
+    console.log(window.sessionStorage.getItem("sessionToken") ,sessionStorage.getItem("log"),null)
+    if (window.sessionStorage.getItem("sessionToken") !==sessionStorage.getItem("log") && window.sessionStorage.getItem("sessionToken")!==null) {
       window.location.pathname = "/session/home";
     }
 

@@ -16,14 +16,74 @@ import { useState, useEffect } from 'react';
 
 import './sidebar.css';
 import './Navbar.css'
+import Profile from './components/Profile';
 
 function Routed(props) {
-	const navigate = useNavigate()
-	const location = useLocation()
 
+	const [profileView,setProfileView]=useState(0);
+	const [profileOption,setProfileOption]=useState(0);
+	const [profileDetail,setProfileDetail]=useState([]);
 	const [userData, setUserData] = useState({
 		username: null
 	})
+
+	function viewProfile(){
+		if(profileView==0){
+			setProfileOption(0);
+		}
+		setProfileView(profileView^1);
+		
+		
+	}
+	function optionForProfile(){
+		setProfileOption(profileOption^1);
+	}
+
+	function logOut(){
+		sessionStorage.setItem("sessionToken",null);
+		props.SetSession(null)
+		setUserData(null)
+		window.location.replace("/login");
+	}
+
+	async function getUser() {
+		try {
+		  const response = await fetch(
+			"http://evm.iitbhilai.ac.in:8100/usermgt/listAllUsers",
+			{
+			  method: "GET",
+			  headers: {
+				"Content-Type": "application/json",
+			  },
+			  mode: "cors"
+			}
+		  );
+		  const data2 = await response.json();
+		  console.log(data2);
+		  if(data2["data"]!=undefined){
+			console.log("helo")
+				for(let i=0;i<data2["data"].length;i++){
+					// console.log(data2["data"][i][0],userData.userId)
+					if(data2["data"][i][0]==userData.userId){
+						setProfileDetail(data2["data"][i]);
+						// console.log(data2["data"][i])
+						break;
+					}
+				}
+		  }
+		} catch (err) {
+		  console.log(err);
+		}
+	  }
+	  // getUser();
+	  useEffect(() => {
+		getUser();
+	  }, [userData]);
+
+	const navigate = useNavigate()
+	const location = useLocation()
+
+	
 
 	const getNav = () => {
 		if (location.pathname.startsWith('/session/home')) {
@@ -62,8 +122,15 @@ function Routed(props) {
 	}
 
 	useEffect(() => {
-		if (sessionStorage.getItem('sessionToken') === null) {
+		console.log(sessionStorage.getItem('sessionToken'))
+		const flag=sessionStorage.getItem('sessionToken');
+		sessionStorage.setItem("log",null);
+		console.log(flag,null)
+		if (flag ===sessionStorage.getItem("log") || flag===null) {
+		console.log(flag)
+
 			window.location.href = '/login'
+
 		}
 
 		fetchUserData(sessionStorage.getItem('sessionToken')).then((val) => {
@@ -90,6 +157,7 @@ function Routed(props) {
 
 	return (
 		<div className="App">
+			
 			<main>
 				<div className="nav-panel">
 					<div className="nav-panel-top">
@@ -152,7 +220,7 @@ function Routed(props) {
 						</button>
 					</div> */}
 				</div>
-				<div className="content-area">
+				<div className="content-area ">
 					<div className='divnav'>
 						<div className="nav-left">
 							{getNav()}
@@ -161,15 +229,38 @@ function Routed(props) {
 							<div className="userImage">
 
 							</div>
-							<div style={{ display: "flex", "flexDirection": "column", alignItems: "center", "justifyContent": "center" }}>
-								<span>Position: {userData.userId ? userData.userId.slice(7) : ""} <ChevronRight style={{ transform: "rotateZ(90deg)", maxWidth: "1.2em", marginLeft: "10px" }} /></span>
+							{profileView==0 && (<div style={{ display: "flex", "flexDirection": "column", alignItems: "center", "justifyContent": "center" }}>
+								<span>Position: {userData.userId ? userData.userId.slice(7) : ""}<button3 onClick={optionForProfile}> <ChevronRight style={{ transform: "rotateZ(90deg)", maxWidth: "1.2em", marginLeft: "10px" }} /></button3></span>
 								<span>{userData.username}</span>
 							</div>
+							)}
+							{profileView==1 && (<div style={{ display: "flex", "flexDirection": "column", alignItems: "center", "justifyContent": "center" }}>
+								<span>Position: {userData.userId ? userData.userId.slice(7) : ""}<button3 onClick={viewProfile}> <ChevronRight style={{ transform: "rotateZ(-90deg)", maxWidth: "1.2em", marginLeft: "10px", color:"red" }} /></button3></span>
+								<span  style={{color:"red"}}>{userData.username}</span>
+							</div>
+							)}
 						</div>
 					</div>
 					<div className="content">
-						<Outlet />
+						{profileView==0 && (<Outlet />)}
+						{profileView==1 && (<div className=' ' ><Profile detail={profileDetail} /></div>)}
+						{profileOption==1 &&(
+							<div className='absolute top-12 right-6  ' style={{width:"160px"}}>
+								
+								<button className="text-white cursor-pointer w-full p-3   rounded-sm" onClick={viewProfile} style={{backgroundColor:"#84587C"}}>My Profile</button>
+								
+								<hr />
+								<button className='text-white cursor-pointer   w-full p-3   rounded-sm' onClick={logOut}  style={{backgroundColor:"#84587C"}}>
+									Log Out
+								</button>
+								
+								
+							</div>
+
+						)}
 					</div>
+					
+					
 				</div>
 			</main>
 		</div>

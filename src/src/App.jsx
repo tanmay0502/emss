@@ -36,9 +36,9 @@ function App() {
               <Login Session={sessionState} SetSession={setSessionState} />
             }
           />
-          <Route path="/session/" element={<Routed Session={sessionState} />}>
+          <Route path="/session/" element={<Routed Session={sessionState} SetSession={setSessionState} />}>
             <Route path="/session/home" element={<Home />} />{" "}
-            {/* Dashboard Component goes here */}
+             Dashboard Component goes here 
             <Route path="/session/usermanagement/" element={<ManageUsers />} />
             <Route
               path="/session/usermanagement/createuser"
