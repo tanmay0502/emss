@@ -9,7 +9,7 @@ import { ReactComponent as UnitManagementIcon } from './assets/UnitManagement.sv
 import { ReactComponent as WarehouseManagementIcon } from './assets/WarehouseManagement.svg';
 import { ReactComponent as IssueRequestManagementIcon } from './assets/Issue-RequestManagement.svg';
 import { ReactComponent as OtherServicesIcon } from './assets/OtherServices.svg';
-import { ReactComponent as MessagesIcon } from './assets/Messages.svg';
+import { ReactComponent as MessagesIcon } from './assets/messageIcon2.svg';
 import { ReactComponent as DownloadsIcon } from './assets/Downloads.svg';
 import { ReactComponent as ChevronRight } from './assets/chevron-right.svg';
 import { useState, useEffect } from 'react';
@@ -44,11 +44,10 @@ function Routed(props) {
 				<span>User Management</span>
 			</>);
 		}
-
 		if (location.pathname.startsWith('/session/issuemanagement')) {
 			return (<>
 				<IssueRequestManagementIcon />
-				<span>Issue / Request Management</span>
+				<span>Issue/Request Management</span>
 			</>);
 		}
 		return <></>;
@@ -113,55 +112,40 @@ function Routed(props) {
 							</div>
 							<ChevronRight className="chevron" />
 						</button>
-
 						<button className={window.location.pathname.startsWith("/session/usermanagement") ? 'nav-button active' : 'nav-button'} onClick={() => {
 							navigate("/session/usermanagement")
 						}}>
 							<div><UserManagementIcon />User</div>
 							<ChevronRight className="chevron" />
 						</button>
-
 						<button className={window.location.pathname.startsWith("/session/unitmanagement") ? 'nav-button active' : 'nav-button'}>
 							<div><UnitManagementIcon />Unit</div>
 							<ChevronRight className="chevron" />
 						</button>
-
 						<button className={window.location.pathname.startsWith("/session/ordermanagement") ? 'nav-button active' : 'nav-button'}>
 							<div><OrderManagementIcon />Order</div>
 							<ChevronRight className="chevron" />
 						</button>
-
 						<button className={window.location.pathname.startsWith("/session/warehousemanagement") ? 'nav-button active' : 'nav-button'} onClick={() => {
 							navigate("/session/warehousemanagement")
 						}}>
 							<div><WarehouseManagementIcon />Warehouse</div>
 							<ChevronRight className="chevron" />
 						</button>
-
-						{/* <button className={window.location.pathname.startsWith("/session/issuemanagement") ? 'nav-button active' : 'nav-button'} onClick={() => {
+						<button className={window.location.pathname.startsWith("/session/issuemanagement") ? 'nav-button active' : 'nav-button'} onClick={() =>{
 							navigate("/session/issuemanagement")
 						}}>
-							<div><IssueRequestManagementIcon />Issue / Request</div>
-							<ChevronRight className="chevron" />
-						</button> */}
-
-						<button className={window.location.pathname.startsWith("/session/issuemanagement") ? 'nav-button active' : 'nav-button'} onClick={() => {
-							navigate("/session/issuemanagement")
-						}}>
-							<div><IssueRequestManagementIcon />Issue / Request</div>
+							<div><IssueRequestManagementIcon />Issue/Request</div>
 							<ChevronRight className="chevron" />
 						</button>
-
 						<button className={window.location.pathname.startsWith("/session/messages") ? 'nav-button active' : 'nav-button'}>
 							<div><MessagesIcon />Messages</div>
 							<ChevronRight className="chevron" />
 						</button>
-
 						<button className={window.location.pathname.startsWith("/session/downloads") ? 'nav-button active' : 'nav-button'}>
 							<div><DownloadsIcon />Downloads</div>
 							<ChevronRight className="chevron" />
 						</button>
-
 						<button className={window.location.pathname.startsWith("/session/otherservices") ? 'nav-button active' : 'nav-button'}>
 							<div><OtherServicesIcon />Others</div>
 							<ChevronRight className="chevron" />
@@ -195,8 +179,8 @@ function Routed(props) {
 						<Outlet />
 					</div>
 				</div>
-			</main >
-		</div >
+			</main>
+		</div>
 	)
 }
 

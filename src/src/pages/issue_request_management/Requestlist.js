@@ -42,7 +42,7 @@ function RequestList() {
                     <h4>Issue / Request List</h4>
                     <div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center" }}>
                         <button className='createUserBtn' onClick={() => {
-                            window.location.pathname = "/session/issuemanagement/registerrequest";
+                            window.location.pathname = "/session/issuemanagement/createIssue";
                         }}>
                             Add Request</button>
                         <div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center", background: "#F9FBFF", borderRadius: "10px", padding: "7.5px 15px 7.5px 0", fontSize: "0.8em" }}>
