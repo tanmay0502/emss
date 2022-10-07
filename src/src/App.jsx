@@ -2,7 +2,7 @@ import './App.css';
 
 import {BrowserRouter, Routes, Route, Navigate} from 'react-router-dom'
 
-
+import IssueList from './pages/issue_request_management/Requestlist'
 import CreateUser from './pages/user_management/CreateUser';
 import Home from './pages/home/Home';
 import ManageUsers from './pages/user_management/ManageUsers';
@@ -62,7 +62,11 @@ function App() {
               element={<ModifyWarehouse />}
             />
             <Route
-              path="/session/issuemanagement"
+              path="/session/issuemanagement/"
+              element={<IssueList/>}
+            />
+            <Route
+              path="/session/issuemanagement/createIssue"
               element={<CreateIssue/>}
             />
           </Route>
