@@ -187,7 +187,7 @@ export default function AddWarehouse() {
         className="myForm"
         onSubmit={onFormSubmit}
       >
-        <div className="formGrid">
+        <div className="">
           <div class="warehouse-type">
             <div className="PageTitle">
               <h4>

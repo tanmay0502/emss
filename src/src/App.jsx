@@ -14,6 +14,7 @@ import Login from './pages/login/Login';
 import Routed from './Router';
 import { useState } from 'react';
 import WarehouseDetails from './pages/warehouse_management/WarehouseDetails';
+import CreateIssue from './pages/issue_request_management/CreateIssue';
 
 function App() {
 
@@ -59,6 +60,10 @@ function App() {
             <Route
               path="/session/warehousemanagement/modifywarehouse/:id"
               element={<ModifyWarehouse />}
+            />
+            <Route
+              path="/session/issuemanagement"
+              element={<CreateIssue/>}
             />
           </Route>
         </Routes>

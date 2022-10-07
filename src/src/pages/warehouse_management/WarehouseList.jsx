@@ -75,7 +75,7 @@ export default function WarehouseList() {
                     }
                 })
             })
-            console.log(data);
+            console.log("data" +data);
             setDetails(data);
         } catch (error) {
             console.log(error);
