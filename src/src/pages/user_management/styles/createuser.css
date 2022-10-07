@@ -3,7 +3,7 @@
 	display: flex;
 	justify-content: space-between;
 	margin-bottom: 0px !important;
-	padding: 0 15px;
+	padding: 25px 15px;
 }
 
 .PageTitle h4 {
@@ -75,6 +75,24 @@
 	margin-left: 20px;
 	margin-right: 10px;
 }
+
+
+.formGrid {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	grid-template-rows: 1fr auto;
+	grid-column-gap: 20px;
+	grid-row-gap: 10px;
+	/* width: 90%; */
+	position: relative;
+	left: 50%;
+	transform: translateX(-50%);
+
+	border-radius: 15px;
+	background-color: #fff;
+	margin-bottom: 15px;
+	box-shadow: 0px 4px 50px rgba(0, 0, 0, 0.15);
+  }
 
 .form_group .form_select, .form_group .form_input, .form_group .form_input1 {
 	display: flex;
@@ -199,9 +217,11 @@
 	font-size: 1.2em;
 	text-transform: capitalize;
 }
+
 .userTemporaryToggle span.inactive{
 	color: rgba(126, 126, 126, 0.3);
 }
+
 .userTemporaryToggle span.active{
 	color: #F56A3F;
 }
@@ -209,6 +229,7 @@
 #create-User-form {
 	/* width: 90%; */
 	position: relative;
+	padding: 25px;
 }
 
 .create-user-fields-container {
@@ -274,3 +295,4 @@ input:checked+.slider:before {
 .slider.round:before {
 	border-radius: 50%;
 }
+
