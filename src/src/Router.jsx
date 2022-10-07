@@ -44,6 +44,12 @@ function Routed(props) {
 				<span>User Management</span>
 			</>);
 		}
+		if (location.pathname.startsWith('/session/issuemanagement')) {
+			return (<>
+				<IssueRequestManagementIcon />
+				<span>Issue/Request Management</span>
+			</>);
+		}
 		return <></>;
 	}
 
@@ -126,7 +132,9 @@ function Routed(props) {
 							<div><WarehouseManagementIcon />Warehouse</div>
 							<ChevronRight className="chevron" />
 						</button>
-						<button className={window.location.pathname.startsWith("/session/issuemanagement") ? 'nav-button active' : 'nav-button'}>
+						<button className={window.location.pathname.startsWith("/session/issuemanagement") ? 'nav-button active' : 'nav-button'} onClick={() =>{
+							navigate("/session/issuemanagement")
+						}}>
 							<div><IssueRequestManagementIcon />Issue/Request</div>
 							<ChevronRight className="chevron" />
 						</button>
