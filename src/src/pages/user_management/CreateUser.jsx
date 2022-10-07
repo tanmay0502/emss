@@ -1,6 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom'
+import { AiOutlineArrowLeft } from 'react-icons/ai'
 import { ReactComponent as Createuser } from "../../assets/CreateUser.svg";
 import "./styles/createuser.css";
 import styles from "./styles/createuser.css";
@@ -364,8 +365,6 @@ function CreateUser() {
             rname.push(data2["roleName"][i]);
           }
         }
-
-        //
         console.log(rname, rc)
         setRoles(rname);
         setRolesCode(rc);
@@ -457,234 +456,243 @@ function CreateUser() {
     <div className="flex-col justify-center align-middle">
       <form
         id="create-User-form"
-        className={styles.myForm}
+        className="myForm"
         onSubmit={onFormSubmit}
       >
-        <div class="create-user-fields-container">
-          <div className={styles.PageTitle}>
-            <h4>
-              <Createuser />
-              <span>Create User</span>
-            </h4>
+        <div className="PageTitle">
+          <h4>
+            <button
+              className="flex justify-center rounded-full aspect-square "
+              onClick={() => {
+                navigate('/session/usermanagement')
+              }}
+              style={{ "background": "#84587C", color: "white" }}
+            >
+              <AiOutlineArrowLeft />
+            </button>
+            <Createuser />
+            <span>Create User</span>
+          </h4>
+        </div>
+
+        <div className="userTemporaryToggle">
+          <span className={isTemporary ? styles.inactive : styles.active}>Permanent </span>
+          <Switch onClick={toggler} />
+          <span className={isTemporary ? styles.active : styles.inactive}>Temporary </span>
+        </div>
+
+        <div className="five-column-grid">
+          <div className="form_label">
+            <label htmlFor="">Name:</label>
           </div>
-
-          <div className={styles.userTemporaryToggle}>
-            <span className={isTemporary ? styles.inactive : styles.active}>Permanent User</span>
-            <Switch onClick={toggler} />
-            <span className={isTemporary ? styles.active : styles.inactive}>Temporary User</span>
-          </div>
-
-          <div className="five-column-grid">
-            <div className={styles.form_label}>
-              <label htmlFor="">Name:</label>
-            </div>
-            <div className={styles.form_group}>
-              <div className={styles.form_input}>
-                <input
-                  required
-                  id="formUserName"
-                  type={"text"}
-                  step="any"
-                  name=""
-                  className=""
-                  placeholder="Full Name"
-                />
-              </div>
-            </div>
-
-            <div className={styles.form_label}>
-              <label htmlFor="">Address:</label>
-            </div>
-            <div className={styles.form_group}>
-              <div className={styles.form_input}>
-                <input
-                  required
-                  id="formUserAddress"
-                  type={"text"}
-                  step="any"
-                  name=""
-                  className=""
-                  placeholder="Address"
-                />
-              </div>
-            </div>
-
-            <div className={styles.form_label}>
-              <label htmlFor="">Email Address:</label>
-            </div>
-            <div className={styles.form_group}>
-              <div className={styles.form_input}>
-                <input
-                  required
-                  id="formUserEmail"
-                  type={"text"}
-                  step="any"
-                  name=""
-                  className=""
-                  placeholder="Email Address"
-                />
-              </div>
-            </div>
-
-            <div className={styles.form_label}>
-              <label htmlFor="">State:</label>
-            </div>
-            <div className={styles.form_group}>
-              <div className="form_select">
-                <select
-                  required
-                  name=""
-                  id="input_state"
-                  onChange={(e) => setStateFunc(e.target.value)}
-                >
-                  <option value="0" disabled selected>
-                    --Select--
-                  </option>
-                  {states && states.map((st) => (
-                    <option value={st} className="text-black">
-                      {st}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            <div className={styles.form_label}>
-              <label htmlFor="">Mobile Number:</label>
-            </div>
-            <div className={styles.form_group}>
-              <div className={styles.form_input}>
-                <input
-                  required
-                  id="formUserMobileNumber"
-                  type={"number"}
-                  step="any"
-                  name=""
-                  className=""
-                  placeholder="00000 00000"
-                />
-              </div>
-            </div>
-
-            <div className={styles.form_label}>
-              <label htmlFor="">PC:</label>
-            </div>
-            <div className={styles.form_group}>
-              <div className="form_select">
-                <select
-                  required
-                  name=""
-                  id="input_PC"
-                  onChange={(e) => setPCFunc(e.target.value)}
-                >
-                  <option value="" disabled selected>
-                    --Select--
-                  </option>
-                  {PCs && PCs.map((st) => (
-                    <option value={st} className="text-black">
-                      {st}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            <div className={styles.form_label}>
-              <label htmlFor="">Alt Contact 1:</label>
-            </div>
-            <div className={styles.form_group}>
-              <div className={styles.form_input}>
-                <input
-                  id="formUserAltNumber1"
-                  type={"tel"}
-                  step="any"
-                  name=""
-                  className=""
-                  placeholder="00000 00000"
-                />
-              </div>
-            </div>
-
-            <div className={styles.form_label}>
-              <label htmlFor="">AC:</label>
-            </div>
-            <div className={styles.form_group}>
-              <div className="form_select">
-                <select
-                  required
-                  name=""
-                  id="input_AC"
-                  onChange={(e) => setACFunc(e.target.value)}
-                >
-                  <option value="" disabled selected>
-                    --Select--
-                  </option>
-                  {ACs && ACs.map((st) => (
-                    <option value={st} className="text-black">
-                      {st}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            <div className={styles.form_label}>
-              <label htmlFor="">Alt Contact 2:</label>
-            </div>
-            <div className={styles.form_group}>
-              <div className={styles.form_input}>
-                <input
-                  id="formUserAltNumber2"
-                  type={"tel"}
-                  step="any"
-                  name=""
-                  className=""
-                  placeholder="00000 00000"
-                />
-              </div>
-            </div>
-
-            <div className={styles.form_label}>
-              <label htmlFor="">Role/s:</label>
-            </div>
-            <div className={styles.form_group}>
-              <div className="form_select">
-                <select
-                  required={!isTemporary}
-                  name=""
-                  id="input_Roles"
-                  onChange={(e) => setRoleFunc(e.target.value)}
-                >
-                  <option value="" disabled selected>
-                    --Select--
-                  </option>
-                  {roles && roles.map((st) => (
-                    <option value={st} className="text-black">
-                      {st}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            <div className={styles.form_label}>
-              <label htmlFor="">User Image:</label>
-            </div>
-            <div className={styles.form_group}>
+          <div className="form_group">
+            <div className="form_input">
               <input
-                id="formUserImage"
-                required={isTemporary}
-                type="file"
-                placeholder="Choose Image (Upto 5 MB)"
+                required
+                id="formUserName"
+                type={"text"}
+                step="any"
+                name=""
+                className=""
+                placeholder="Full Name"
               />
             </div>
           </div>
 
+          <div className="form_label">
+            <label htmlFor="">Address:</label>
+          </div>
+          <div className="form_group">
+            <div className="form_input">
+              <input
+                required
+                id="formUserAddress"
+                type={"text"}
+                step="any"
+                name=""
+                className=""
+                placeholder="Address"
+              />
+            </div>
+          </div>
+
+          <div className="form_label">
+            <label htmlFor="">Email Address:</label>
+          </div>
+          <div className="form_group">
+            <div className="form_input">
+              <input
+                required
+                id="formUserEmail"
+                type={"text"}
+                step="any"
+                name=""
+                className=""
+                placeholder="Email Address"
+              />
+            </div>
+          </div>
+
+          <div className="form_label">
+            <label htmlFor="">State:</label>
+          </div>
+          <div className="form_group">
+            <div className="form_select">
+              <select
+                required
+                name=""
+                id="input_state"
+                onChange={(e) => setStateFunc(e.target.value)}
+              >
+                <option value="0" disabled selected>
+                  --Select--
+                </option>
+                {states && states.map((st) => (
+                  <option value={st} className="text-black">
+                    {st}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="form_label">
+            <label htmlFor="">Mobile Number:</label>
+          </div>
+          <div className="form_group">
+            <div className="form_input">
+              <input
+                required
+                id="formUserMobileNumber"
+                type={"tel"}
+                step="any"
+                name=""
+                className=""
+                placeholder="00000 00000"
+              />
+            </div>
+          </div>
+
+          <div className="form_label">
+            <label htmlFor="">PC:</label>
+          </div>
+          <div className="form_group">
+            <div className="form_select">
+              <select
+                required
+                name=""
+                id="input_PC"
+                onChange={(e) => setPCFunc(e.target.value)}
+              >
+                <option value="" disabled selected>
+                  --Select--
+                </option>
+                {PCs && PCs.map((st) => (
+                  <option value={st} className="text-black">
+                    {st}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="form_label">
+            <label htmlFor="">Alt Contact 1:</label>
+          </div>
+          <div className="form_group">
+            <div className="form_input">
+              <input
+                id="formUserAltNumber1"
+                type={"tel"}
+                step="any"
+                name=""
+                className=""
+                placeholder="00000 00000"
+              />
+            </div>
+          </div>
+
+          <div className="form_label">
+            <label htmlFor="">AC:</label>
+          </div>
+          <div className="form_group">
+            <div className="form_select">
+              <select
+                required
+                name=""
+                id="input_AC"
+                onChange={(e) => setACFunc(e.target.value)}
+              >
+                <option value="" disabled selected>
+                  --Select--
+                </option>
+                {ACs && ACs.map((st) => (
+                  <option value={st} className="text-black">
+                    {st}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="form_label">
+            <label htmlFor="">Alt Contact 2:</label>
+          </div>
+          <div className="form_group">
+            <div className="form_input">
+              <input
+                id="formUserAltNumber2"
+                type={"tel"}
+                step="any"
+                name=""
+                className=""
+                placeholder="00000 00000"
+              />
+            </div>
+          </div>
+
+          <div className="form_label">
+            <label htmlFor="">Role/s:</label>
+          </div>
+          <div className="form_group">
+            <div className="form_select">
+              <select
+                required={!isTemporary}
+                name=""
+                id="input_Roles"
+                onChange={(e) => setRoleFunc(e.target.value)}
+              >
+                <option value="" disabled selected>
+                  --Select--
+                </option>
+                {roles && roles.map((st) => (
+                  <option value={st} className="text-black">
+                    {st}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="form_label">
+            <label htmlFor="">User Image:</label>
+          </div>
+          <div className="form_group">
+            <input
+              id="formUserImage"
+              required={isTemporary}
+              type="file"
+              placeholder="Choose Image (Upto 5 MB)"
+            />
+          </div>
         </div>
+
         <center>
-          <input type={"submit"} className={styles.mySubmit}>
+          <input type={"submit"} className="mySubmit">
           </input>
         </center>
+
+
       </form >
     </div >
   );
