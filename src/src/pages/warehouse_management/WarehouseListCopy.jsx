@@ -293,7 +293,7 @@ function WarehouseList() {
 						<div className="warehouseStatsText">
 							<span>Permanent Warehouses</span>
 							<h3>{tableData.filter((elem) => {
-								return elem["Details"] && elem["Details"][2] === 'P'
+								return elem["Details"] && elem["Details"]["warehousebuildingtype"] === 'P'
 							}).length.toLocaleString()}</h3>
 						</div>
 					</li>
@@ -304,7 +304,7 @@ function WarehouseList() {
 						<div className="warehouseStatsText">
 							<span>Temporary Warehouses</span>
 							<h3>{tableData.filter((elem) => {
-								return elem["Details"] && elem["Details"][2] !== 'P'
+								return elem["Details"] && elem["Details"]["warehousebuildingtype"] !== 'P'
 							}).length.toLocaleString()}</h3>
 						</div>
 					</li>

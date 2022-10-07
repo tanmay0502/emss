@@ -9,6 +9,12 @@ import { ReactComponent as TypeIcon } from '../../assets/type.svg';
 
 
 export default function CreateIssue() {
+
+    
+    const typeArray = ["Stock Entry", "Scanning", "FLC Related", "Randomization", "Recieving/Sending", "Confilct", "Defective Machines", "EP Related", "Physical Verification", "User Related", "Mobile App", "Awareness","Status Marking", "Strong Room/Warehouse", "Application","Miscellaneous"]
+    const levelArray = ["Unit","Warehouse","AC","PC","State"];
+    const severityArray = ["Low","Medium","High"];
+    
     return(
         <div class="parent">
             <div class="div1 font-semibold "> 
@@ -33,11 +39,11 @@ export default function CreateIssue() {
                             <option value="" disabled selected>
                                 Select
                             </option>
-                                {/* {roles && roles.map((st) => (
+                                {typeArray.map((st,index) => (
                                     <option value={st} className="text-black">
-                                    {st}
+                                    {index+1}. {st}
                                     </option>
-                                ))} */}
+                                ))}
                         </select>
                         <div className="pl-2 pt-1 scale-90"><TypeIcon /></div>
                     </div>
@@ -55,11 +61,11 @@ export default function CreateIssue() {
                             <option value="" disabled selected>
                                 Select
                             </option>
-                                {/* {roles && roles.map((st) => (
+                                {levelArray.map((st,index) => (
                                     <option value={st} className="text-black">
-                                    {st}
+                                    {index+1}. {st}
                                     </option>
-                                ))} */}
+                                ))}
                         </select>
                         <div className="pl-2 pt-1 scale-90"><LevelIcon /></div>
                         </div>
@@ -77,11 +83,11 @@ export default function CreateIssue() {
                             <option value="" disabled selected>
                                 Select
                             </option>
-                                {/* {roles && roles.map((st) => (
+                                {severityArray.map((st,index) => (
                                     <option value={st} className="text-black">
-                                    {st}
+                                    {index+1}. {st}
                                     </option>
-                                ))} */}
+                                ))}
                         </select>
                         <div className="pl-2 pt-1 scale-90"><SeverityIcon /></div>
                     </div>
@@ -111,6 +117,7 @@ export default function CreateIssue() {
                             // required={isTemporary}
                             type="file"
                             placeholder="Choose Image (Upto 5 MB)"
+                            multiple
                         />
                     </div>
                 </div>

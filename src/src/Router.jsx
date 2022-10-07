@@ -9,7 +9,7 @@ import { ReactComponent as UnitManagementIcon } from './assets/UnitManagement.sv
 import { ReactComponent as WarehouseManagementIcon } from './assets/WarehouseManagement.svg';
 import { ReactComponent as IssueRequestManagementIcon } from './assets/Issue-RequestManagement.svg';
 import { ReactComponent as OtherServicesIcon } from './assets/OtherServices.svg';
-import { ReactComponent as MessagesIcon } from './assets/Messages.svg';
+import { ReactComponent as MessagesIcon } from './assets/messageIcon2.svg';
 import { ReactComponent as DownloadsIcon } from './assets/Downloads.svg';
 import { ReactComponent as ChevronRight } from './assets/chevron-right.svg';
 import { useState, useEffect } from 'react';
