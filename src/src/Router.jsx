@@ -16,28 +16,26 @@ import { useState, useEffect } from 'react';
 
 import './sidebar.css';
 import './Navbar.css'
-import Profile from './components/Profile';
 
 function Routed(props) {
 
-	const [profileView,setProfileView]=useState(0);
-	const [profileOption,setProfileOption]=useState(0);
-	const [profileDetail,setProfileDetail]=useState([]);
+	// const [profileView,setProfileView]=useState(0);
+	// const [profileOption,setProfileOption]=useState(0);
+	
 	const [userData, setUserData] = useState({
 		username: null
 	})
 
-	function viewProfile(){
-		if(profileView==0){
-			setProfileOption(0);
-		}
-		setProfileView(profileView^1);
-		
-		
-	}
-	function optionForProfile(){
-		setProfileOption(profileOption^1);
-	}
+	// function viewProfile(){
+	// 	if(profileView==0){
+	// 		setProfileOption(0);
+	// 	}
+	// 	setProfileView(profileView^1);	
+	// }
+
+	// function optionForProfile(){
+	// 	setProfileOption(profileOption^1);
+	// }
 
 	function logOut(){
 		sessionStorage.setItem("sessionToken",null);
@@ -45,40 +43,10 @@ function Routed(props) {
 		setUserData(null)
 		window.location.replace("/login");
 	}
-
-	async function getUser() {
-		try {
-		  const response = await fetch(
-			"http://evm.iitbhilai.ac.in:8100/usermgt/listAllUsers",
-			{
-			  method: "GET",
-			  headers: {
-				"Content-Type": "application/json",
-			  },
-			  mode: "cors"
-			}
-		  );
-		  const data2 = await response.json();
-		  console.log(data2);
-		  if(data2["data"]!=undefined){
-			console.log("helo")
-				for(let i=0;i<data2["data"].length;i++){
-					// console.log(data2["data"][i][0],userData.userId)
-					if(data2["data"][i][0]==userData.userId){
-						setProfileDetail(data2["data"][i]);
-						// console.log(data2["data"][i])
-						break;
-					}
-				}
-		  }
-		} catch (err) {
-		  console.log(err);
-		}
-	  }
 	  // getUser();
-	  useEffect(() => {
-		getUser();
-	  }, [userData]);
+	//   useEffect(() => {
+		// getUser();
+	//   }, [userData]);
 
 	const navigate = useNavigate()
 	const location = useLocation()
@@ -102,6 +70,12 @@ function Routed(props) {
 			return (<>
 				<UserManagementIcon />
 				<span>User Management</span>
+			</>);
+		}
+		if (location.pathname.startsWith('/session/user-profile')) {
+			return (<>
+				<UserManagementIcon />
+				<span>User Profile</span>
 			</>);
 		}
 		if (location.pathname.startsWith('/session/issuemanagement')) {
@@ -139,9 +113,13 @@ function Routed(props) {
 
 		}
 
+		setUserData({
+			userId: sessionStorage.getItem('sessionToken')
+		})
+
 		fetchUserData(sessionStorage.getItem('sessionToken')).then((val) => {
 			setUserData({
-				userId: sessionStorage.getItem('sessionToken'),
+				...userData,
 				username: val
 			})
 		})
@@ -237,38 +215,31 @@ function Routed(props) {
 							<div className="userImage">
 
 							</div>
-							{profileView==0 && (<div style={{ display: "flex", "flexDirection": "column", alignItems: "center", "justifyContent": "center" }}>
-								<span>Position: {userData.userId ? userData.userId.slice(7) : ""}<button3 onClick={optionForProfile}> <ChevronRight style={{ transform: "rotateZ(90deg)", maxWidth: "1.2em", marginLeft: "10px" }} /></button3></span>
+							<div style={{ display: "flex", "flexDirection": "column", alignItems: "center", "justifyContent": "center", overflowY: "visible", maxHeight: "100%" }}>
+								<span tyle={{position: "relative"}}>Position: {userData.userId ? userData.userId.slice(7) : ""}
+								<button3 tabIndex={1} className="navBarDropDownBtn" style={{position: "relative", overflowY: "visible"}} onClick={()=>{
+									console.log("Helloo!")
+									document.getElementsByClassName('navBarDropDownBtn')[0].focus()
+								}}>
+									<ChevronRight style={{ transform: "rotateZ(90deg)", maxWidth: "1.2em", marginLeft: "10px" }} />
+									<div id='nav-bar-drop-down' className='navBarDropDown absolute top-12 right-6 rounded-full' style={{width:"160px", zIndex: "999", "overflow" : 'hidden'}}>
+										<button className="text-white cursor-pointer w-full p-3   rounded-sm" style={{backgroundColor:"#84587C"}} onClick={()=>{
+											navigate('/session/user-profile')
+										}} >My Profile</button>
+										<hr />
+										<button className='text-white cursor-pointer   w-full p-3   rounded-sm' onClick={logOut}  style={{backgroundColor:"#84587C"}}>
+											Log Out
+										</button>
+									</div>
+								</button3>
+								</span>
 								<span>{userData.username}</span>
 							</div>
-							)}
-							{profileView==1 && (<div style={{ display: "flex", "flexDirection": "column", alignItems: "center", "justifyContent": "center" }}>
-								<span>Position: {userData.userId ? userData.userId.slice(7) : ""}<button3 onClick={viewProfile}> <ChevronRight style={{ transform: "rotateZ(-90deg)", maxWidth: "1.2em", marginLeft: "10px", color:"red" }} /></button3></span>
-								<span  style={{color:"red"}}>{userData.username}</span>
-							</div>
-							)}
 						</div>
 					</div>
 					<div className="content">
-						{profileView==0 && (<Outlet />)}
-						{profileView==1 && (<div className=' ' ><Profile detail={profileDetail} /></div>)}
-						{profileOption==1 &&(
-							<div className='absolute top-12 right-6  ' style={{width:"160px"}}>
-								
-								<button className="text-white cursor-pointer w-full p-3   rounded-sm" onClick={viewProfile} style={{backgroundColor:"#84587C"}}>My Profile</button>
-								
-								<hr />
-								<button className='text-white cursor-pointer   w-full p-3   rounded-sm' onClick={logOut}  style={{backgroundColor:"#84587C"}}>
-									Log Out
-								</button>
-								
-								
-							</div>
-
-						)}
+						<Outlet />
 					</div>
-					
-					
 				</div>
 			</main>
 		</div>

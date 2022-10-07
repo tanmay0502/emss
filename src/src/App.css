@@ -90,6 +90,13 @@ select:focus-within, input[type="text"]:focus-within, input[type="password"]:foc
   border: 2px solid var(--border-active);
 }
 
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  text-indent: 1px;
+  text-overflow: '';
+}
+
 input[type=number]::-webkit-outer-spin-button,
 input[type=number]::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -158,6 +165,10 @@ button, input[type="submit"] {
 .hide-scroll-bar::-webkit-scrollbar {
   display: none;
   /* Safari and Chrome */
+}
+
+.rounded-full{
+  border-radius: 10px !important;
 }
 
 .App {
