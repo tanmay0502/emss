@@ -15,6 +15,7 @@ import Routed from './Router';
 import { useState } from 'react';
 import WarehouseDetails from './pages/warehouse_management/WarehouseDetails';
 import CreateIssue from './pages/issue_request_management/CreateIssue';
+import Profile from './components/Profile';
 
 function App() {
 
@@ -25,6 +26,38 @@ function App() {
 		userName: null,
 		userImage: null
 	})
+
+  const [profileDetail,setProfileDetail]=useState([]);
+
+  async function getUser() {
+		try {
+		  const response = await fetch(
+			"http://evm.iitbhilai.ac.in:8100/usermgt/listAllUsers",
+			{
+			  method: "GET",
+			  headers: {
+				"Content-Type": "application/json",
+			  },
+			  mode: "cors"
+			}
+		  );
+		  const data2 = await response.json();
+		  // console.log(data2);
+		  if(data2["data"]!=undefined){
+			// console.log("helo")
+				for(let i=0;i<data2["data"].length;i++){
+					// console.log(data2["data"][i][0],userData.userId)
+					if(data2["data"][i][0]==sessionStorage.getItem('sessionToken')){
+						setProfileDetail(data2["data"][i]);
+						// console.log(data2["data"][i])
+						break;
+					}
+				}
+		  }
+		} catch (err) {
+		  console.log(err);
+		}
+	  }
 
 	return (
     <>
@@ -68,6 +101,10 @@ function App() {
             <Route
               path="/session/issuemanagement/createIssue"
               element={<CreateIssue/>}
+            />
+            <Route
+              path='/session/user-profile'
+              element={<Profile detail={profileDetail} />} 
             />
           </Route>
         </Routes>

@@ -1,7 +1,8 @@
 .divnav{
     width: 100%;
     height: 9vh;
-    overflow: auto;
+    max-height: 9vh;
+    /* overflow: auto; */
     background: #FFFFFF;
     box-sizing: border-box;
     position: relative;
@@ -72,4 +73,11 @@
     line-height: 31px;
     text-transform: capitalize;
     color: #000000;
+}
+
+.navBarDropDownBtn > .navBarDropDown{
+    display: none;
+}
+.navBarDropDownBtn:focus > .navBarDropDown, .navBarDropDownBtn:focus-within > .navBarDropDown{
+    display: block;
 }

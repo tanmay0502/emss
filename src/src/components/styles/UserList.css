@@ -49,7 +49,7 @@
 .users-table th{
 	font-family: 'Poppins';
 	font-weight: 400;
-	font-size: 14px !important;
+	font-size: 0.85em !important;
 	line-height: 21px !important;
 	letter-spacing: -0.01em;
 	color: #B5B7C0 !important;
@@ -79,8 +79,7 @@
 	font-family: 'Poppins';
 	font-style: normal;
 	font-weight: 400;
-	font-size: 14px;
-	line-height: 24px;
+	font-size: 0.9em;
 	letter-spacing: -0.01em;
 	color: #292D32;
 }

@@ -36,7 +36,6 @@ function RequestList() {
     }
 
     return (
-        <div className="user-list-grid">
             <div className="myWrapper myWrapper1" style={{ position: "relative", height: "100%", gridArea: "1 / 1 / 6 / 2" }}>
                 {isDetail == 0 ? <div style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between" }}>
                     <h4>Issue / Request List</h4>
@@ -91,7 +90,6 @@ function RequestList() {
                     {/* <UserDetail detail={request} close={close} /> */ }
                 }
             </div>
-        </div>
     );
 
 }

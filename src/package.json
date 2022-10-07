@@ -25,7 +25,6 @@
     "react-simple-maps": "^3.0.0",
     "react-table": "^7.8.0",
     "react-tooltip": "^4.2.21",
-    "react-tooltips": "^0.4.6",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
