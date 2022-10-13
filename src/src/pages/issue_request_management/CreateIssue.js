@@ -10,12 +10,65 @@ import { ReactComponent as TypeIcon } from '../../assets/type.svg';
 
 export default function CreateIssue() {
 
-    
-    const typeArray = ["Stock Entry", "Scanning", "FLC Related", "Randomization", "Recieving/Sending", "Confilct", "Defective Machines", "EP Related", "Physical Verification", "User Related", "Mobile App", "Awareness","Status Marking", "Strong Room/Warehouse", "Application","Miscellaneous"]
-    const levelArray = ["Unit","Warehouse","AC","PC","State"];
-    const severityArray = ["Low","Medium","High"];
+
+
+    const onFormSubmit = async (e) => {
+        e.preventDefault();
+        console.log("submit button clicked")
+        addRequest(); 
+      };
+    async function addRequest() {
+
+        try {
+        const response = await fetch(
+            "http://evm.iitbhilai.ac.in:8100/issue_requests/register_issue",
+            {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                    Severity: document.getElementById("formSeverity").value.slice(-1),
+                    remarks: document.getElementById("formRemarks").value,
+                    Subject: document.getElementById("formSubject").value,
+                    Type: document.getElementById("formType").value.slice(-3),
+                    IssueLevel: document.getElementById("formLevel").value.slice(-2),
+                    LodgerUserID: window.sessionStorage.getItem("sessionToken"),
+                    tags: [
+                        document.getElementById("formSubject").value,
+                        document.getElementById("formTags").value
+                    ],
+                    SupportingDocuments: "files",
+                    MMType: "MMType",
+                    RecipientUserID: document.getElementById("formTo").value
+                  
+            }),
+            }
+        );
+
+        console.log(response);
+        const data2 = await response.json();
+        console.log("data2"+ data2);
+        console.log("Message"+ data2["message"])
+        if (data2["message"] === "Issue created successfully") {
+            document.getElementById("form").reset();
+            alert("Created Successfully");
+            window.location.pathname = "/session/issuemanagement/createIssue";
+        } else {
+            alert("Failed!");
+        }
+        } catch (err) {
+        console.log(err);
+        }
+  }
+    const typeArray = ["Stock Entry-STE", "Scanning-SCN", "FLC Related-FLC", "Randomization-RND", "Recieving/Sending-RNS", "Confilct-CON", "Defective Machines-DEF", "EP Related-EPT", "Physical Verification-PHV", "User Related-USR", "Mobile App-APP", "Awareness-AWR","Status Marking-SRW", "Strong Room/Warehouse-APN", "Application-APN","Miscellaneous-MSC"]
+    const levelArray = ["Unit-UN","Warehouse-WH","AC-AC","PC-PC","State-ST"];
+    const severityArray = ["Low-L","Medium-M","High-H"];
     
     return(
+        <form onSubmit={onFormSubmit} id="form">
+
+        
         <div class="parent">
             <div class="div1 font-semibold "> 
                 <p className="flex">
@@ -26,13 +79,30 @@ export default function CreateIssue() {
 
             <div class="div2 borderStyle">
                 <div className="div2Container pt-8 pb-12">
+                <div className="rowElement">
+                    <p className="flex text-lg"> To: <span className="text-orange-600">*</span></p>
+                    <div className="flex m-0 p-0">
+                        <input
+                        // required
+                        id="formTo"
+                        // type={"number"}
+                        // step="any"
+                        className="tagInput p-2" 
+                        placeholder="Type UserID "
+                        />
+                        {/* <div className="pt-1 pl-2 scale-90">
+                            <TagIcon/>
+                        </div> */}
+                        
+                    </div>
+                    </div>
                     <div className="rowElement">
                     <p className="flex text-lg"> Type<span className="text-orange-600">*</span></p>
                     <div className="flex m-0 p-0">
                         <select 
                                 //   required={!isTemporary}
                                 name=""
-                                id="input_Roles"
+                                id="formType"
                                 className=" selectBox"
                                 //   onChange={(e) => setRoleFunc(e.target.value)}
                                 >
@@ -54,7 +124,7 @@ export default function CreateIssue() {
                         <select 
                                 //   required={!isTemporary}
                                 name=""
-                                id="input_Roles"
+                                id="formLevel"
                                 className=" selectBox"
                                 //   onChange={(e) => setRoleFunc(e.target.value)}
                                 >
@@ -76,7 +146,7 @@ export default function CreateIssue() {
                         <select 
                                 //   required={!isTemporary}
                                 name=""
-                                id="input_Roles"
+                                id="formSeverity"
                                 className=" selectBox"
                                 //   onChange={(e) => setRoleFunc(e.target.value)}
                                 >
@@ -100,9 +170,23 @@ export default function CreateIssue() {
             </div>
 
             <div className="div3 borderStyle">
-                <div className="w-full h-full div3Container">
+            <div className="w-full pt-8 div3Container1">
+                <p className="text-lg flex" > Subject<span className="text-orange-600">*</span></p>
+                <input
+                        // required
+                        id="formSubject"
+                        // type={"number"}
+                        // step="any"
+                        className="subjectInput p-2" 
+                        placeholder="Subject"
+                        />
+                        {/* <div className="pt-1 pl-2 scale-90">
+                            <TagIcon/>
+                        </div> */}
+                </div>
+                <div className="w-full div3Container">
                 <p className="text-lg flex" > Remarks<span className="text-orange-600">*</span></p>
-                <textarea className="textarea flex"  id="w3review" name="w3review" rows="" cols=""  placeholder="Text Input">
+                <textarea className="textarea flex"  id="formRemarks" name="w3review" rows="" cols=""  placeholder="Text Input">
                     
                 </textarea>
                 </div>
@@ -113,7 +197,7 @@ export default function CreateIssue() {
                     <p className="text-lg flex" >Supporting Documents  </p>   
                     <div>
                         <input
-                            id="formUserDocument"
+                            id="formDocuments"
                             // required={isTemporary}
                             type="file"
                             placeholder="Choose Image (Upto 5 MB)"
@@ -129,7 +213,7 @@ export default function CreateIssue() {
                     <div className="tagInputDiv pb-4">
                         <input
                         // required
-                        // id="formUserMobileNumber"
+                        id="formTags"
                         // type={"number"}
                         // step="any"
                         className="tagInput p-2" 
@@ -144,10 +228,11 @@ export default function CreateIssue() {
                 
             </div>
             <div class="div6">
-                    <button className="submitBtn">
+                    <button type={"submit"} className="submitBtn">
                         Submit
                     </button>
             </div>
         </div>
+        </form>
     )
   }

@@ -437,7 +437,7 @@ function CreateUser() {
         alert("User Created Successfully");
         window.location.pathname = "/session/usermanagement";
       } else {
-        alert("User cannot be created");
+        alert("User cannot be created.");
       }
     } catch (err) {
       console.log(err);
