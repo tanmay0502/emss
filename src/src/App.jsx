@@ -16,7 +16,7 @@ import { useState } from 'react';
 import WarehouseDetails from './pages/warehouse_management/WarehouseDetails';
 import CreateIssue from './pages/issue_request_management/CreateIssue';
 import Profile from './components/Profile';
-
+import ViewRequest from './pages/issue_request_management/ViewRequest';
 function App() {
 
 	const [sessionState, setSessionState] = useState({
@@ -101,6 +101,11 @@ function App() {
             <Route
               path="/session/issuemanagement/createIssue"
               element={<CreateIssue/>}
+            />
+            
+            <Route
+              path='/session/issuemanagement/viewRequest/:id'
+              element={<ViewRequest/>} 
             />
             <Route
               path='/session/user-profile'
