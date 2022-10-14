@@ -4,10 +4,11 @@ import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 import ECIIcon from './assets/eci_logo.png';
 import { ReactComponent as DashboardIcon } from './assets/Dashboard.svg';
 import { ReactComponent as UserManagementIcon } from './assets/Users.svg';
-import { ReactComponent as OrderManagementIcon } from './assets/Order.svg';
+// import { ReactComponent as OrderManagementIcon } from './assets/Order.svg';
 import { ReactComponent as UnitManagementIcon } from './assets/UnitManagement.svg';
 import { ReactComponent as WarehouseManagementIcon } from './assets/WarehouseManagement.svg';
 import { ReactComponent as IssueRequestManagementIcon } from './assets/Issue-RequestManagement.svg';
+import { ReactComponent as OrderManagementIcon } from './assets/OrderManagement.svg';
 import { ReactComponent as OtherServicesIcon } from './assets/OtherServices.svg';
 import { ReactComponent as MessagesIcon } from './assets/messageIcon2.svg';
 import { ReactComponent as DownloadsIcon } from './assets/Downloads.svg';
@@ -84,6 +85,12 @@ function Routed(props) {
 				<span>Issue/Request Management</span>
 			</>);
 		}
+		if (location.pathname.startsWith('/session/ordermanagement')) {
+			return (<>
+				<OrderManagementIcon />
+				<span>Order Management</span>
+			</>);
+		}
 		return <></>;
 	}
 
@@ -119,7 +126,7 @@ function Routed(props) {
 
 		fetchUserData(sessionStorage.getItem('sessionToken')).then((val) => {
 			setUserData({
-				...userData,
+				userId: sessionStorage.getItem('sessionToken'),
 				username: val
 			})
 		})

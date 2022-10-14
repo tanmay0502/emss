@@ -11,7 +11,7 @@ const MapIndia = props => {
 
     return (
         <div className=''>  
-            <div className='state-chart-container' style={{ height: 'calc(32.5vh)', width:'250px', backgroundColor: '' }}>
+            <div className='state-chart-container' style={{ height: 'calc(32.5vh)', width:'100%', backgroundColor: '' }}>
                 <MapChart {...props} />
             </div>
         </div>

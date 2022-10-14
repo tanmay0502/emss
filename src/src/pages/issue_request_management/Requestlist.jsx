@@ -6,12 +6,14 @@ import { ReactComponent as SearchInputElement } from '../../assets/searchInputIc
 import { ReactComponent as ChevronDown } from '../../assets/ChevronDown.svg';
 import DynamicDataTable from "@langleyfoxall/react-dynamic-data-table";
 // import UserImageTest from '../../assets/UserImageTest.png'
-// import { renderMatches } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { FaUserEdit } from "react-icons/fa";
 import SeverityButton from './SeverityButton'
 import UserImageTest from '../../assets/UserImageTest.png'
 
 function RequestList() {
+
+    const navigate = useNavigate()
 
     const [sortOrder, setSortOrder] = useState("asc");
     const [sortBy, setSortBy] = useState("None");
@@ -114,13 +116,13 @@ function RequestList() {
     }, [request, tableFilter, sortBy, sortOrder]);
 
     return (
-        <div className="request-list-grid">
-            <div className="myWrapper myWrapper1" style={{ position: "relative", height: "100%", gridArea: "1 / 1 / 6 / 6" }}>
+        <div style={{height: "100%"}}>
+            <div className="" style={{ background: "white", position: "relative", height: "100%", gridArea: "1 / 1 / 6 / 6", borderRadius: "20px" }}>
                 {isDetail == 0 ? <div className='MainHeader pd-5 ' style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between", "alignItems" : "center"}}>
                     <h4 className='text-white'>Issue / Request List</h4>
                     <div  style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center" }}>
                         <button className='createRequestBtn' onClick={() => {
-                            window.location.pathname = "/session/issuemanagement/createIssue";
+                            navigate("/session/issuemanagement/createIssue");
                         }}>
                             Add Request</button>
                         <div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center", background: "#F9FBFF", borderRadius: "10px", padding: "7.5px 15px 7.5px 0", fontSize: "0.8em" }}>
@@ -153,7 +155,7 @@ function RequestList() {
                     orderByField={sortMapping[sortBy]}
                     orderByDirection={sortOrder}
                     onClick={(event, row) => {
-                        window.location.pathname = `/session/issuemanagement/viewRequest/id=${row.Details.issueid}`;
+                        navigate(`/session/issuemanagement/viewRequest/id=${row.Details.issueid}`);
                     }}
                     buttons={[]}
                     allowOrderingBy={[

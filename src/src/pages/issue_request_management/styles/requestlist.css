@@ -1,4 +1,4 @@
-.user-list-grid{
+.request-list-grid{
 	display: grid;
 	grid-template-columns: 3.5fr 1.5fr;
 	grid-template-rows: repeat(5, 1fr);
@@ -6,10 +6,13 @@
 	grid-row-gap: 20px;
 	height: 100%;
 	max-height: 100%;
+	/* padding: 0 100px; */
 }
 
 .myWrapper1{
+	padding-left: 40px;
     width: 100%;
+	/* box-shadow: 0 0 10px rgba(0,0,0,0.6); */
 }
 
 .myWrapper > div:last-child{
@@ -18,13 +21,14 @@
 	overflow: hidden;
 }
 
-.createUserBtn{
+.createRequestBtn{
 	padding: 5px 10px;
 	background: #F56A3F;
 	border-radius: 10px;
 	margin-right: 10px;
 	font-weight: 600;
 	font-size: small;
+	color: white;
 }
 
 .sortOrderButton{
@@ -43,14 +47,15 @@
 	padding-bottom: 50px;
 }
 
-.users-table{
-	/* height: 100%; */
-	width: 100%;
-	/* table-layout:fixed; */
+.request-table{
+	width:100%;
 	position: relative;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 20px;
 }
 
-.users-table th{
+.request-table th{
 	font-family: 'Poppins';
 	font-weight: 400;
 	font-size: 14px !important;
@@ -65,19 +70,19 @@
 	z-index: 999;
 }
 
-.users-table th:first-child, .users-table th:nth-child(3){
-	text-align: left;
+.request-table th:first-child, .request-table th:nth-child(3){
+	text-align: center;
 }
 
-.users-table th:first-child{
+.request-table th:first-child{
 	padding-left: 10px;
 }
 
-.users-table td:first-child{
+.request-table td:first-child{
 	padding-left: 10px;
 }
 
-.users-table td{
+.request-table td{
 	padding: 20px 0;
 	border-bottom: 1px solid #EEEEEE;
 	font-family: 'Poppins';
@@ -87,14 +92,15 @@
 	line-height: 24px;
 	letter-spacing: -0.01em;
 	color: #292D32;
+	text-align: center !important;
 }
 
-.users-table td:first-child, .users-table td:nth-child(3){
+.request-table td:first-child, .request-table td:nth-child(3){
 	text-align: left;
 	width: max-content;
 }
 
-.user-details button{
+.request-details button{
 	flex-direction: column;
 	width: 40px;
 	height: 40px;
@@ -103,12 +109,12 @@
 	font-size: 1.2em;
 }
 
-.users-table tr:hover{
+.request-table tr:hover{
 	background-color: rgba(0, 0, 0, 0.15);
 	cursor: pointer;
 }
 
-.userStats{
+.requestStats{
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
@@ -116,7 +122,7 @@
 	gap: 10px;
 }
 
-.userStats li{
+.requestStats li{
 	display: flex;
 	flex-direction: row;
 	align-items: center;
@@ -124,7 +130,7 @@
 	gap: 30px;
 }
 
-.userStats li .icon{
+.requestStats li .icon{
 	width: 60px;
 	box-sizing: border-box;
 	padding: 15px;
@@ -133,30 +139,30 @@
 	border-radius: 50%;
 }
 
-.userStats li .icon svg{
+.requestStats li .icon svg{
 	width: 30px;
 	height: 30px;
 }
 
-.userStats li .userStatsText{
+.requestStats li .requestStatsText{
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
 	justify-content: center;
 }
 
-.userStats li .userStatsText span{
+.requestStats li .requestStatsText span{
 	font-size: 0.8em;
 	color: #ACACAC;
 }
 
-.userStats li .userStatsText h3{
+.requestStats li .requestStatsText h3{
 	color: #333333;
 }
 
 /* User Detail CSS from here */
 
-.user-details-grid{
+.request-details-grid{
 	display: grid;
 	grid-template-columns: auto 1fr auto 1fr;
 	width: 100%; 
@@ -167,6 +173,21 @@
 }
 
 
-.user-details-grid b{
+.request-details-grid b{
 	text-align: right;
+}
+
+.MainHeader{
+background: linear-gradient(180deg, #84587C 0%, #BA8BB1 100%);
+border-radius: 20px 20px 0px 0px;
+height: 108px;
+}
+.MainHeader h4{
+	margin-bottom:0 !important ;
+}
+.text-white{
+	color : #fff !important;
+}
+.pd-5{
+	padding : 0px 50px;
 }

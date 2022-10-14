@@ -1,12 +1,12 @@
 .parent {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
-    grid-template-rows: repeat(9, 1fr);
+    grid-template-rows: auto repeat(8, 1fr);
     grid-column-gap: 30px;
     grid-row-gap: 30px;
     /* height: 100%; */
     height: fit-content;
-    padding: 30px;
+    padding: 0 30px;
     position: relative;
     }
     
@@ -23,16 +23,18 @@
 .div3 { 
     grid-area: 2 / 6 / 7 / 13; background-color: white;
     border-radius: 15px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-}
-.div3Container{
-    width: 80%;
-    height: 80%;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
 
 }
+.div3Container{
+    box-sizing: border-box;
+    width: 100%;
+    height: calc(100% - 4.5em);
+    padding: 2.75em 4em;
+}
+
 .div4 { 
     grid-area: 7 / 1 / 9 / 6; background-color: white;
     border-radius: 15px;
@@ -110,6 +112,7 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    padding: 2.75em 4em;
 
 }
 p{
@@ -118,7 +121,7 @@ p{
 }
 .rowElement{
     padding-top: 1%;
-    width: 80%;
+    width: 100%;
 }
 .submitBtn{
     padding: 10px 30px;
@@ -127,19 +130,26 @@ p{
     border-radius: 10px;
 }
 .bottomDivs{
-    width: 80%;
+    width: 90%;
 }
 .tagInputDiv{
     width:100%;
-    display: flex;
+    display: flex; 
 }
 .tagInput{
     border: 2px solid #84587C;
-    width: 80%;
+    width: 100%;
     height: 50px;
     border-radius: 10px;
     font-size: 16px;
 }
 .tagInput:hover{
     border: 2px solid #F56A3F;
+}
+.subjectInput{
+    border: 2px solid #84587C;
+    width: 100%;
+    height: 50px;
+    border-radius: 10px;
+    font-size: 16px;
 }
