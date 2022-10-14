@@ -15,6 +15,7 @@ import Routed from './Router';
 import { useState } from 'react';
 import WarehouseDetails from './pages/warehouse_management/WarehouseDetails';
 import CreateIssue from './pages/issue_request_management/CreateIssue';
+import ActionIssue from './pages/issue_request_management/ActionIssue';
 import Profile from './components/Profile';
 import ViewRequest from './pages/issue_request_management/ViewRequest';
 import SelectOrderType from './pages/order_management/SelectOrderType';
@@ -109,6 +110,10 @@ function App() {
             <Route
               path='/session/issuemanagement/viewRequest/:id'
               element={<ViewRequest/>} 
+            />
+            <Route
+              path="/session/issuemanagement/actionIssue"
+              element={<ActionIssue/>}
             />
             <Route
               path='/session/user-profile'

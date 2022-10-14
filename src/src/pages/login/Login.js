@@ -142,6 +142,7 @@ const Login = () => {
           headers: {
             "Content-Type": "application/json",
           },
+          mode:"cors"
         }
       );
       const data2 = await response.json();
@@ -179,6 +180,7 @@ const Login = () => {
               headers: {
                 "Content-Type": "application/json",
               },
+              mode: "cors",
             }
           );
           const data2 = await response.json();
@@ -213,6 +215,7 @@ const Login = () => {
               headers: {
                 "Content-Type": "application/json",
               },
+              mode: "cors",
             }
           );
           const data2 = await response.json();
@@ -245,6 +248,7 @@ const Login = () => {
           headers: {
             "Content-Type": "application/json",
           },
+          mode: "cors",
         }
       );
       const data2 = await response.json();
@@ -324,6 +328,7 @@ const Login = () => {
                   body: JSON.stringify({
                     mobileNumber: userID,
                   }),
+                  mode: "cors",
                 }
               );
               const data2 = await response.json();
@@ -352,6 +357,7 @@ const Login = () => {
               body: JSON.stringify({
                 userID: userID,
               }),
+              mode: "cors",
             }
           );
           const data = await response.json();
@@ -370,6 +376,7 @@ const Login = () => {
                   body: JSON.stringify({
                     mobileNumber: data["mobile"][0],
                   }),
+                  mode: "cors",
                 }
               );
               const data2 = await response.json();
@@ -410,6 +417,7 @@ const Login = () => {
             mobileNumber: mobile,
             otp: OTP,
           }),
+          mode: "cors",
         }
       );
       const data2 = await response.json();
@@ -443,6 +451,7 @@ const Login = () => {
             userID: userID,
             passwordhash: sha256(password),
           }),
+          mode: "cors",
         }
       );
       const data2 = await response.json();
