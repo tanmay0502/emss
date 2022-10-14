@@ -17,6 +17,12 @@ import './css/AddWarehouse.css'
 import { useNavigate } from "react-router-dom";
 
 export default function AddWarehouse() {
+
+  const userId =  sessionStorage.getItem('sessionToken');
+  const first2 = userId.slice(0, 2);
+
+
+
   const navigate = useNavigate();
   const [doubleLockSystem, setDoubleLockSystem] = useState(true);
 
@@ -29,7 +35,7 @@ export default function AddWarehouse() {
   const [myState, setmyState] = useState("");
   const [myPCcode, setmyPCcode] = useState("");
   const [WarehouseType, setWarehouseType] = useState("");
-
+  const [userState,setUserState] = useState("");
   //Form filed states end....
 
   const onFormSubmit = async (e) => {
@@ -111,8 +117,19 @@ export default function AddWarehouse() {
       );
       const StateData = await response.json();
       console.log(StateData)
-      setStates(StateData["states"]);
-      setStatesCode(StateData["stcodes"]);
+
+      const ans = StateData.states[StateData.stcodes.indexOf(first2)]
+    
+      if(["EC", "ME", "MB"].includes(
+        window.sessionStorage.getItem("sessionToken").substring(0, 2)
+      )){
+        setStates(StateData['states']);
+      setStatesCode(StateData['stcodes']);
+      }
+     else{
+      setStates([ans]);
+      setStatesCode([first2]);
+     }
     } catch (error) {
       console.log(error);
     }
@@ -213,7 +230,7 @@ export default function AddWarehouse() {
               }}
             >
               <div className="form_group">
-                <div className="form_label">
+                <div className="form_label" >
                   <label htmlFor="">Room Type</label>
                 </div>
                 <div className="form_select">
@@ -273,12 +290,14 @@ export default function AddWarehouse() {
                     onChange={(e)=> {
                       setStateFunc(e.target.value)
                     }}
+                    disabled = {true}
                   >
-                    <option value="" disabled selected>
+                    {/* <option value="" disabled selected>
                       --Select--
-                    </option>
+                    </option> */}
+                    {console.log(states)}
                     {states && states.map((st) => (
-                      <option value={st} className="text-black">
+                      <option value={st} className="text-black" selected={st == first2 ? true : false}>
                         {st}
                       </option>
                     ))}

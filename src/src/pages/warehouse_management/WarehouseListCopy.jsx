@@ -142,8 +142,8 @@ function WarehouseList() {
 					}
 				}} 
 				customLabels={{
-					"active": "Unsealed",
-					"inactive": "\u00a0Sealed\u00a0"
+					"active": "Active",
+					"inactive": "Inactive"
 				}}
 				/>
 			}
