@@ -233,3 +233,139 @@ textarea {
 	transition: 0.2s;
 	transform: scale(1.05);
 }
+
+
+
+/* Code by Rohit */
+:root{
+	--orange : #F7693E;
+	--purple :  linear-gradient(180deg, #84587C 0%, #BA8BB1 100%);
+	--grey : #6A6A6A;
+}
+/* boiler plate code */
+.MyContainer{
+	width: 90%;
+	margin-left: auto;
+	margin-right: auto;
+}
+.myPadding{
+	padding: 15px 50px;
+}
+.myFlexBox,.myFlexBoxCenter{	
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+}
+.myFlexBoxCenter{
+	align-items: center;
+}
+.myFlexBoxTop{
+	display: flex;
+	flex-direction: column;
+	justify-content: start !important;
+	align-items: center;
+}
+.myFlexWrap{
+	flex-wrap: wrap;
+}
+.myButton{
+	border-radius: 10px;
+	padding: 10px 35px;
+}
+.myCard{
+	width: 100%;
+	box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.35);
+	border-radius: 25px;
+	
+}
+.myCardHeader{
+	background: var(--purple);
+	color : #fff;
+	border-top-left-radius: 25px;
+	border-top-right-radius: 25px;
+	font-weight: 500;
+	font-size: 25px;
+	height: 79px;
+	display: flex;
+	align-items: center;
+}
+.myGroup{
+	margin: 8px 0px;
+}
+.first-child{
+	margin-left: 0 !important;
+}
+.myRightMargin{
+	margin-right: 100px;
+}
+.myLeftMargin{
+	margin-left: 100px;
+}
+.mt-3{
+	margin-top: 30px;
+}
+.maxHeight{
+	max-height: 350px;
+	overflow-y: scroll;
+}
+.d-none{
+	display:  none;
+}
+/* boiler plate code ends*/
+.RequestId{
+	font-size: 1.5em;
+}
+.RequestId span{
+	margin-left: 10px;
+}
+.ActionButton{
+	background: var(--orange) !important;
+	color : #fff;
+}
+.LabelText{
+	color: var(--orange);
+	margin-right: 10px;
+	font-weight: 550;
+}
+.connector_box{
+	width: 10%;
+	padding-top: 20px;
+	/* border: 2px solid red; */
+}
+.action_box{
+	width: 90%;
+}
+.action_box .action{
+	margin : 10px 0;
+}
+.ConnectorOne,.ConnectorTwo{
+	position: relative;
+	height: 20px;
+	width: 20px;
+	background-color: var(--grey);
+	border-radius: 50%;
+}
+.ConnectorTwo .Line{
+	height: 75px;
+	width: 5px;
+	background-color: var(--grey);
+	margin-top : 20px;
+	margin-left: 8px;
+	/* border: 2px solid blue; */
+}
+.ConnectorTwoBox{
+	height: 95px;
+	/* border: 2px solid green; */
+	display: flex;
+}
+
+::-webkit-scrollbar {
+	width: 5px;
+	height: 50px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+	background: var(--orange); 
+  }
+
+/*  Code Ends */
