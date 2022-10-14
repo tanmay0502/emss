@@ -208,9 +208,11 @@
 }
 
 .ant-switch-checked {
-    background-color: #F56A3F !important;
+    background-color: #F56A3F!important;
 }
-
+.ant-switch {
+   background-color: #F56A3F !important;
+}
 .userTemporaryToggle span{
 	font-family: 'Poppins';
 	font-weight: 600;
@@ -218,12 +220,16 @@
 	text-transform: capitalize;
 }
 
+
+
 .userTemporaryToggle span.inactive{
-	color: rgba(126, 126, 126, 0.3);
+
+	background-color: #F56A3F!important;
 }
 
 .userTemporaryToggle span.active{
 	color: #F56A3F;
+	background-color: #F56A3F!important;
 }
 
 #create-User-form {
