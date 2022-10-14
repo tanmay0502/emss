@@ -483,7 +483,7 @@ function CreateUser() {
 
         <div className="five-column-grid">
           <div className="form_label">
-            <label htmlFor="">Name:</label>
+            <label htmlFor="">Name:<span className="text-red-500 text-lg">*</span></label>
           </div>
           <div className="form_group">
             <div className="form_input">
@@ -500,7 +500,7 @@ function CreateUser() {
           </div>
 
           <div className="form_label">
-            <label htmlFor="">Address:</label>
+            <label htmlFor="">Address:<span className="text-red-500 text-lg">*</span></label>
           </div>
           <div className="form_group">
             <div className="form_input">
@@ -517,7 +517,7 @@ function CreateUser() {
           </div>
 
           <div className="form_label">
-            <label htmlFor="">Email Address:</label>
+            <label htmlFor="">Email Address:<span className="text-red-500 text-lg">*</span></label>
           </div>
           <div className="form_group">
             <div className="form_input">
@@ -534,11 +534,12 @@ function CreateUser() {
           </div>
 
           <div className="form_label">
-            <label htmlFor="">State:</label>
+            <label htmlFor="">State:<span className="text-red-500 text-lg">*</span></label>
           </div>
           <div className="form_group">
             <div className="form_select">
               <select
+                disabled = {isTemporary}
                 required
                 name=""
                 id="input_state"
@@ -557,7 +558,7 @@ function CreateUser() {
           </div>
 
           <div className="form_label">
-            <label htmlFor="">Mobile Number:</label>
+            <label htmlFor="">Mobile Number:<span className="text-red-500 text-lg">*</span></label>
           </div>
           <div className="form_group">
             <div className="form_input">
@@ -574,11 +575,12 @@ function CreateUser() {
           </div>
 
           <div className="form_label">
-            <label htmlFor="">PC:</label>
+            <label htmlFor="">PC:<span className="text-red-500 text-lg">*</span></label>
           </div>
           <div className="form_group">
             <div className="form_select">
               <select
+                disabled = {isTemporary}
                 required
                 name=""
                 id="input_PC"
@@ -613,11 +615,12 @@ function CreateUser() {
           </div>
 
           <div className="form_label">
-            <label htmlFor="">AC:</label>
+            <label htmlFor="">AC:<span className="text-red-500 text-lg">*</span></label>
           </div>
           <div className="form_group">
             <div className="form_select">
               <select
+                disabled = {isTemporary}
                 required
                 name=""
                 id="input_AC"
@@ -652,11 +655,12 @@ function CreateUser() {
           </div>
 
           <div className="form_label">
-            <label htmlFor="">Role/s:</label>
+            <label htmlFor="">Role/s:<span className="text-red-500 text-lg">*</span></label>
           </div>
           <div className="form_group">
             <div className="form_select">
               <select
+                disabled = {isTemporary}
                 required={!isTemporary}
                 name=""
                 id="input_Roles"
@@ -675,7 +679,9 @@ function CreateUser() {
           </div>
 
           <div className="form_label">
-            <label htmlFor="">User Image:</label>
+            <label htmlFor="">User Image:
+                  {isTemporary?<span className="text-red-500 text-lg">*</span>: <span></span> }
+            </label>
           </div>
           <div className="form_group">
             <input
