@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import {FaEdit} from 'react-icons/fa'
-import './styles/issue.css'
+import styles from './styles/issue.module.css'
 
 import Group from './Group'
 import ConnnectorOne from './ConnectorOne';
 import ConnectorTwo from './ConnectorTwo';
+import { useNavigate } from 'react-router-dom';
 
 export default function ViewRequest(){
+    const navigate = useNavigate()
 
     const [Details,setDetails] = useState({});
 
@@ -66,56 +68,59 @@ export default function ViewRequest(){
     console.log(Details);
    let len = Details['remakrs']!= undefined && Details['remarks'].length ;
     return (
-        <div className='MyContainer'>
-            <div className='PageTitle'>
-                <div className='RequestId myFlexBoxCenter'>
+        <div className={styles.MyContainer}>
+            <div className={styles.PageTitle}>
+                <div className={`${styles.RequestId} ${styles.myFlexBoxCenter}`} >
                     <FaEdit/> <span> Request ID : {issueId()}</span>
                 </div>
-                <button className='ActionButton myButton'>Take Action</button>
+                <button className={`${styles.ActionButton} ${styles.myButton}`} onClick={()=>navigate('/session/issuemanagement/actionIssue/id='+issueId())}>Take Action</button>
             </div>
 
-            <div className='myCard'>
-                <div className='myCardHeader myPadding'>
+            <div className={`${styles.myCard}`} >
+                <div className={`${styles.myCardHeader} ${styles.myPadding}`} >
                     Request
                 </div>
-                <div className='myCardBody myPadding myRightMargin'>
-                    <div className='myFlexBox myFlexWrap'>
+                <div className={`${styles.myCardBody} ${styles.myPadding} `}>
+                    <div className={`${styles.myFlexBox} ${styles.myFlexWrap}`} >
                         <Group LabelText = 'Lodger' value = { Details['issue'] != undefined && Details['issue'][0][1]} />
                         <Group LabelText = 'Recipient' value = { Details['issue'] != undefined && Details['issue'][0][7]}/>
                         <Group LabelText = 'Date / Time' value = {Details['issue'] != undefined &&  getTime(Details['issue'][0][9])}/>
                         <Group LabelText = 'Severity' value = {Details['issue'] != undefined && mapSeverity(Details['issue'][0][5])}/>
                     </div>
-                    <div className='myFlexBox myFlexWrap'>
+                    <div className={`${styles.myFlexBox} ${styles.myFlexWrap}`}>
                         <Group  LabelText = 'Remarks'  value = {Details['remarks'] != undefined && Details['remarks'].length ? Details['remarks'][0][3] : "No Remarks Added"}/>
                     </div>
-                    <Group  LabelText = 'Documents' value = 'No data Found'/>
+                    <div className={`${styles.myFlexBox} ${styles.myFlexWrap}`}>
+                        <Group  LabelText = 'Documents' value = 'No data Found'/>
+                    </div>
                 </div>
             </div>
-            <div className='myCard mt-3'>
-                <div className='myCardHeader myPadding'>
+            <div className={`${styles.myCard} ${styles.mt_3}`}>
+                <div className={`${styles.myCardHeader} ${styles.myPadding}`} >
                     Action
                 </div>
 
-                <div className={len > 3 ? "myCardBody myPadding  myFlexBox myRightMargin maxHeight" : "myCardBody myPadding  myFlexBox myRightMargin" }  id='ActionCard'>
-                     <div className={Details['ConnectorLength']  ? 'connector_box myFlexBoxTop' : 'd-none'}>
+                <div className={len > 3 ? `${styles.myCardBody} ${styles.myPadding} ${styles.myFlexBox} ${styles.maxHeight}` : `${styles.myCardBody} ${styles.myPadding} ${styles.myFlexBox}` }  id='ActionCard'>
+                     <div className={Details['ConnectorLength']  ? `${styles.connector_box} ${styles.myFlexBoxTop}` : `${styles.dNone}`}>
                         {Details['ConnectorLength']}
                      </div>
-                     <div className='action_box'>
+                     <div className={`${styles.action_box}`}>
                          
                             {Details['remarks']!= undefined && Details['remarks'].length && checkAction() ? Details['remarks'].map((val,index) =>(
                                 val[6] == "Y" &&
                                  <div>
-                                      <div className='action '>
-                                        <div className='myFlexBox myFlexWrap'>
-                                            <Group LabelText = 'Done By' value = {val[2]} class='first-child'/>
+                                      <div className={`${styles.action}`}>
+                                        <div className={`${styles.myFlexBox} ${styles.myFlexWrap}`}>
+                                            <Group LabelText = 'Done By' value = {val[2]} className={`${styles.first_child}`}/>
                                             <Group LabelText = 'Action' value = {val[3]} />
                                             <Group LabelText = 'Date / Time' value = {getTime(val[7])} />
                                             <Group LabelText = 'Severity' value = {Details['issue'] != undefined && Details['issue'][0][5] == "L" ? "Low" : Details['issue'][0][5] == "M" ? "Medium" : "High"} class='first-child'/>
                                         </div>
-                                        <Group  LabelText = 'Remarks' class='first-child' value = {Details['remarks'][index-1][3]}/>
+                                        <Group  LabelText = 'Remarks' className={`${styles.first_child}`} value = {Details['remarks'][index-1][3]}/>
                                  </div>{index != Details['remarks'].length - 1 ? <hr/> : ''}
                                  </div>
-                            )) : 'No data Found' }
+                            )) : 
+                            'No data Found' }
                      </div>
                 </div>
             </div>

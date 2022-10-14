@@ -287,7 +287,7 @@ textarea {
 .myGroup{
 	margin: 8px 0px;
 }
-.first-child{
+.first_child{
 	margin-left: 0 !important;
 }
 .myRightMargin{
@@ -296,14 +296,14 @@ textarea {
 .myLeftMargin{
 	margin-left: 100px;
 }
-.mt-3{
+.mt_3{
 	margin-top: 30px;
 }
 .maxHeight{
 	max-height: 350px;
 	overflow-y: scroll;
 }
-.d-none{
+.dNone{
 	display:  none;
 }
 /* boiler plate code ends*/
@@ -328,7 +328,7 @@ textarea {
 	/* border: 2px solid red; */
 }
 .action_box{
-	width: 90%;
+	width: 100%;
 }
 .action_box .action{
 	margin : 10px 0;

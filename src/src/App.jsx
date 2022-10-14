@@ -112,7 +112,7 @@ function App() {
               element={<ViewRequest/>} 
             />
             <Route
-              path="/session/issuemanagement/actionIssue"
+              path="/session/issuemanagement/actionIssue/:id"
               element={<ActionIssue/>}
             />
             <Route
