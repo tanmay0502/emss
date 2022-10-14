@@ -242,7 +242,7 @@ function UserList() {
 					<UserDetail detail={user} close={close} />
 				}
 			</div>
-			<div className='myWrapper' style={{ "gridArea": "1 / 2 / 3 / 3" }}>
+			<div className='myWrapper' style={{ "gridArea": "1 / 2 / 3 / 3", display: "flex", flexDirection: "column", "alignItems": "center", "justifyContent": "center" }}>
 				<ul className='userStats'>
 					<li>
 						<div className="icon">

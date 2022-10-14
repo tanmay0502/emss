@@ -12,7 +12,7 @@ body {
 :root {
   --background-gray: #F9F9F9;
   --background-secondary: #FFFFFF;
-  --theme-color-blue: #086AED;
+  --theme-color-blue: #f56a3f;
   --theme-color-light-blue: #4B98EF;
   --foreground-primary: #101125;
   --foreground-secondary: #494A59;
@@ -145,7 +145,7 @@ button, input[type="submit"] {
   font-family: 'Poppins';
   background-color: var(--theme-color-blue);
   color: var(--foreground-theme-overlay);
-  padding: 12.5px 15px;
+  padding: 10px 20px;
   border-radius: var(--border-radius);
   position: relative;
   border: none;

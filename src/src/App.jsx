@@ -17,6 +17,9 @@ import WarehouseDetails from './pages/warehouse_management/WarehouseDetails';
 import CreateIssue from './pages/issue_request_management/CreateIssue';
 import Profile from './components/Profile';
 import ViewRequest from './pages/issue_request_management/ViewRequest';
+import SelectOrderType from './pages/order_management/SelectOrderType';
+import GenerateOrder from './pages/order_management/OrderDetails';
+import OrderTypes from './pages/order_management/OrderTypes';
 function App() {
 
 	const [sessionState, setSessionState] = useState({
@@ -110,6 +113,14 @@ function App() {
             <Route
               path='/session/user-profile'
               element={<Profile detail={profileDetail} />} 
+            />
+            <Route
+              path='/session/ordermanagement/createorder'
+              element={<OrderTypes />} 
+            />
+            <Route
+              path='/session/ordermanagement/createorder/generateorder/:ordertype'
+              element={<GenerateOrder />} 
             />
           </Route>
         </Routes>

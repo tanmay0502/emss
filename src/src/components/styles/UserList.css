@@ -109,6 +109,8 @@
 	align-items: flex-start;
 	justify-content: center;
 	gap: 10px;
+	margin-bottom: 0 !important;
+	width: 90%;
 }
 
 .userStats li{
