@@ -22,7 +22,7 @@ function WarehouseDetail(props) {
           style={{"background" : "#16c09861", color: "#008767"}}
         onClick={()=>{
           navigate({
-            pathname: `/session/warehousemanagement/modifywarehouse/id=${props.detail[0]}`
+            pathname: `/session/warehousemanagement/modifywarehouse/id=${props.detail['warehouseid']}`
           })
         }}
         >

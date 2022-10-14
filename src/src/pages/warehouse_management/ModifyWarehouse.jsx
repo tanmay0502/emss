@@ -166,7 +166,7 @@ useEffect(()=>{
           className="myForm"
           onSubmit={onFormSubmit}
         >
-          <div className="formGrid">
+          <div className="form_Grid">
             <div class="warehouse-type">
               <h5>Warehouse Type</h5>
               <div
@@ -219,7 +219,7 @@ useEffect(()=>{
                 </div>
               </div>
             </div>
-            <div class="warehouse-location">
+            <div class="warehouse-location" style={{gridArea: '3 / 1 / 4 / 3'}}>
               <h5>Warehouse Location</h5>
               <div className="input_group">
                 <div
@@ -326,8 +326,8 @@ useEffect(()=>{
                   </div>
                 </div>
                 <div className="form_group">
-                  <div className="form_label">
-                    <label htmlFor="">Personnel 1 User ID : </label>
+                  <div className="form_label" style={{width : '20%'}}>
+                    <label htmlFor="">Personnel 1 ID : </label>
                   </div>
                   <div className="form_input">
                     <input
@@ -346,8 +346,8 @@ useEffect(()=>{
 
                
                 <div className="form_group" hidden={!doubleLockSystem}>
-                  <div className="form_label">
-                    <label htmlFor="">Personnel 2 User ID : </label>
+                  <div className="form_label" style={{width : '20%'}}>
+                    <label htmlFor="">Personnel 2 ID : </label>
                   </div>
                   <div className="form_input">
                     <input
