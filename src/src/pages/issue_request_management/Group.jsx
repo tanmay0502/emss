@@ -1,10 +1,11 @@
 import React from 'react';
+import styles from './styles/issue.module.css'
 
 
 export default function Group(props){
     return (
-        <div className={props.class ? "myGroup first-child" : "myGroup"} >
-            <label className='LabelText'>{props.LabelText}:</label>
+        <div className={props.class ? `${styles.myGroup} ${styles.first_child}` : `${styles.myGroup}`} >
+            <label className={`${styles.LabelText}`}>{props.LabelText}: </label>
             <span>{props.value}</span>
         </div>
     )

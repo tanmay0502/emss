@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import "./styles/actionIssue.css";
 import { ReactComponent as CreateIssueIcon } from "../../assets/create_issue_request.svg";
 import { ReactComponent as SeverityIcon } from "../../assets/severity.svg";
@@ -8,6 +8,43 @@ import { ReactComponent as TypeIcon } from "../../assets/type.svg";
 import TextArea from "antd/lib/input/TextArea";
 
 export default function ActionIssue() {
+  const [Details,setDetails] = useState({});
+
+  const issueId = () => {
+    const URL = window.location.href;
+    const arr = URL.split("/");
+    const param = arr[arr.length - 1];
+    const arr1 = param.split("=");
+    return arr1[1];
+  }
+
+  const getDetails = async () => {
+    const myId = issueId();
+    try {
+      const response = await fetch(
+        `http://evm.iitbhilai.ac.in:8100/issue_requests/search_request/${myId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          mode: 'cors'
+        }
+      )
+      const data = await response.json();
+      console.log(data)
+      setDetails(data);
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    getDetails();
+  }, [])
+  
+
   function formatText(tag) {
     var selectedText = document.selection.createRange().text;
 
@@ -18,7 +55,7 @@ export default function ActionIssue() {
   }
   return (
     <div className="p-3">
-      <p className="text-left text-lg flex"><CreateIssueIcon className="mr-2"/>Request ID : C0023622</p>
+      <p className="text-left text-lg flex"><CreateIssueIcon className="mr-2" />Request ID : {issueId()}</p>
       <div className="rounded-lg shadow-md mt-5 bg-white">
         <div
           className="rounded-t-lg p-2 text-left "
@@ -29,22 +66,21 @@ export default function ActionIssue() {
         <div className="p-4 pl-10">
           <div className="flex mt-3 ">
             <p className="w-1/4 text-left">
-              <span className="text-red-600">Lodger:</span> DEO Gwalior
+              <span className="text-red-600">Lodger:</span> {Details.issue ? Details["issue"][0][1] : ""}
             </p>
             <p className="w-1/4 text-left">
-              <span className="text-red-600">Recipient:</span> CEO Gwalior
+              <span className="text-red-600">Recipient:</span> {Details.issue ? Details.issue[0][7] : ""}
             </p>
             <p className="w-1/4 text-left">
               <span className="text-red-600">Date/Time:</span>{" "}
-              22-09-2022/12:44:08
+              {Details.issue ? Details.issue[0][9] : ""}
             </p>
             <p className="w-1/4 text-left">
-              <span className="text-red-600">Severity:</span> Medium
+              <span className="text-red-600">Severity:</span> {Details.issue ? {'L': 'Low', 'M': 'Medium', 'H': 'High'}[Details.issue[0][5]] : ""}
             </p>
           </div>
           <p className="text-left mt-4">
-            <span className="text-red-600">Remarks:</span>&nbsp; Problems with
-            the setting up Account
+            <span className="text-red-600">Remarks:</span>&nbsp; {Details.remarks ? Details.remarks[0][3] : ""}
           </p>
           <p className="text-left mt-4">
             <span className="text-red-600">Documents:</span>&nbsp;
