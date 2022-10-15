@@ -35,7 +35,7 @@ function UserList() {
   async function getUser() {
     try {
       const response = await fetch(
-        "http://evm.iitbhilai.ac.in:8100/usermgt/listAllUsers",
+        "http://evm.iitbhilai.ac.in:8100/user/listAllUsers",
         {
           method: "GET",
           headers: {
@@ -60,7 +60,7 @@ function UserList() {
     if (window.confirm(`Are you sure you want to Activate user ${myId} ?`)) {
       try {
         const response = await fetch(
-          `http://evm.iitbhilai.ac.in:8100/usermgt/activateUser`,
+          `http://evm.iitbhilai.ac.in:8100/user/activateUser`,
           {
             method: "POST",
             headers: {
@@ -89,7 +89,7 @@ function UserList() {
     if (window.confirm(`Are you sure you want to Dectivate user ${myId} ?`)) {
       try {
         const response = await fetch(
-          `http://evm.iitbhilai.ac.in:8100/usermgt/deactivateUser`,
+          `http://evm.iitbhilai.ac.in:8100/user/deactivateUser`,
           {
             method: "POST",
             headers: {
