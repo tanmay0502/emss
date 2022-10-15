@@ -11,11 +11,15 @@ import { ReactComponent as ChevronDown } from '../../assets/ChevronDown.svg';
 import { ReactComponent as TotalWarehouses } from '../../assets/TotalWarehouses.svg';
 import { ReactComponent as PermanentWarehouses } from '../../assets/PermanentWarehouses.svg';
 import { ReactComponent as TemporaryWarehouses } from '../../assets/TemporaryWarehouses.svg';
-
+import { Fragment } from 'react';
 import DynamicDataTable from "@langleyfoxall/react-dynamic-data-table";
 import ToggleButton from '../../components/ToggleButton';
 
 import UserImageTest from '../../assets/UserImageTest.png'
+
+// React Icons
+import {FaCircle} from 'react-icons/fa'
+import {FaKey} from 'react-icons/fa'
 
 function WarehouseList() {
 	const navigate = useNavigate();
@@ -118,21 +122,21 @@ function WarehouseList() {
 			}
 		}).map((val) => {
 			return {
-				"Warehouse ID": val["warehouseid"],
+				"Warehouse ID": val["warehousebuildingtype"] == 'P' ? <Fragment><span style={{display : 'flex',justifyContent : 'center', alignItems : 'center'}}><FaCircle size='0.8em' className='PermaWarehouse'/><span style={{marginLeft : '10px' , marginRight : '10px'}}>{val['warehouseid']}</span>{val['doublelock'] ? <Fragment><FaKey className='keyColor'/><FaKey className='keyColor'/></Fragment> : <FaKey className='keyColor'/>}</span></Fragment> : <Fragment><span style={{display : 'flex',justifyContent : 'center', alignItems : 'center'}}><FaCircle size='0.8em' className='TempWarehouse'/><span style={{marginLeft : '10px', marginRight : '10px'}}>{val['warehouseid']}</span>{val['doublelock'] ? <Fragment><FaKey className='keyColor'/><FaKey className='keyColor'/></Fragment> : <FaKey className='keyColor'/>}</span></Fragment>,
 				"Room Type": warehouseMapping ? warehouseMapping["data"][val["warehousetype"]] : "",
-				"Double Locked": val["doublelock"] ? "Yes" : "No",
+				// "Double Locked": val["doublelock"] ? "Yes" : "No",
 				Details: val,
 				Edit: <button className="modifyBtn p-2 text-white" disabled={true}>
 					<FaUserEdit style={{ transform: "translateX(1px)" }} />
 				</button>,
-				"BuildingType": val["warehousebuildingtype"],
-				"Building Type": <ToggleButton userID={val["warehouseid"]} checked={val["warehousebuildingtype"] === 'P'} onToggle={(e) => {
-				}} 
-				customLabels={{
-					"active": "Permanent",
-					"inactive": "Temporary"
-				}
-				}/>,
+				// "BuildingType": val["warehousebuildingtype"],
+				// "Building Type": <ToggleButton userID={val["warehouseid"]} checked={val["warehousebuildingtype"] === 'P'} onToggle={(e) => {
+				// }} 
+				// customLabels={{
+				// 	"active": "Permanent",
+				// 	"inactive": "Temporary"
+				// }
+				// }/>,
 				"Status": <ToggleButton userID={val["warehouseid"]} checked={val["warehousestatus"] === 'A'} onToggle={(e) => {
 					if (val["warehousestatus"] !== "A") {
 						ActivateWarehouse(e)
@@ -228,7 +232,14 @@ function WarehouseList() {
 	// console.log(users);
 	return (
 		<div className="warehouse-list-grid">
+			
 			<div className="myWrapper" style={{ position: "relative", height: "100%", gridArea: "1 / 1 / 6 / 2" }}>
+				<div className='label_list'>
+					<div className='label d-flex d-flex-center'><span><FaCircle className='PermaWarehouse'/></span> Permanent Warehouse</div>
+					<div className='label d-flex d-flex-center'><span><FaCircle className='TempWarehouse'/></span> Temporary Warehouse</div>
+					<div className='label d-flex d-flex-center'><span><Fragment><span className='d-flex d-flex-center'><FaKey className='keyColor'/><FaKey className='keyColor'/></span></Fragment></span> Double Lock Present</div>
+					<div className='label d-flex d-flex-center'><span><FaKey className='keyColor'/></span> Double Lock Absent</div>
+				</div>
 				{isDetail == 0 ? <div style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between" }}>
 					<h4>Warehouses</h4>
 					<div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center" }}>
@@ -259,6 +270,7 @@ function WarehouseList() {
 					</div>
 
 				</div> : <></>}
+				
 				{isDetail == 0 ? <DynamicDataTable className="warehouses-table"
 					rows={tableData}
 					fieldsToExclude={["Details", "Edit", "BuildingType"]}
