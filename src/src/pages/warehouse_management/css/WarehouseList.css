@@ -162,3 +162,39 @@
 .warehouse-details-grid b{
 	text-align: right;
 }
+.d-flex{
+	display: flex;
+}
+.d-flex{
+	justify-content: center;
+	align-items: center;
+}
+.PermaWarehouse{
+ color : #008767;
+}
+.TempWarehouse{
+	color: #DF0404;
+}
+.keyColor{
+	color :#F56A3F;
+}
+.d-flex{
+	display: flex;
+}
+.d-flex-center{
+	justify-content: center;
+	align-items: center;
+}
+.label_list{
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	margin: 10px 0 25px 0;
+}
+.label{
+	font-size: 0.9em;
+	margin: 0 8px;
+}
+.label span{
+	margin: 0 5px ;
+}
