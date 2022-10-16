@@ -1,11 +1,11 @@
 import React from 'react';
-
+import styles from './styles/issue.module.css'
 
 export default function ConnectorTwo(){
     return (
-        <div className='ConnectorTwoBox'>
-            <div className='ConnectorTwo'>
-                <div className='Line'></div>
+        <div className={`${styles.ConnectorTwoBox}`}>
+            <div className={`${styles.ConnectorTwo}`}>
+                <div className={`${styles.Line}`}></div>
             </div>
         </div>
     )
