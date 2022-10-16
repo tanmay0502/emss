@@ -74,7 +74,7 @@ export default function WarehouseDetails(){
     const getStateName = async (state_code) => {
         try {
             const response = await fetch(
-                'http://evm.iitbhilai.ac.in:8100/usermgt/getStateList',
+                'http://evm.iitbhilai.ac.in:8100/user/getStateList',
                 {
                     method: "GET",
                     headers: {
@@ -99,7 +99,7 @@ export default function WarehouseDetails(){
     const getPCName = async (state_code,pc_code,data) => {
         try {
             const response = await fetch(
-                `http://evm.iitbhilai.ac.in:8100/usermgt/getPCListbyState/${state_code}`,
+                `http://evm.iitbhilai.ac.in:8100/user/getPCListbyState/${state_code}`,
                 {
                     method: "GET",
                     headers: {

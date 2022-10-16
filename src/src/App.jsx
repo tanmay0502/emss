@@ -34,7 +34,7 @@ function App() {
   async function getUser() {
 		try {
 		  const response = await fetch(
-			"http://evm.iitbhilai.ac.in:8100/usermgt/listAllUsers",
+			"http://evm.iitbhilai.ac.in:8100/user/listAllUsers",
 			{
 			  method: "GET",
 			  headers: {

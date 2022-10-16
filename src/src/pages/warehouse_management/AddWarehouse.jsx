@@ -107,7 +107,7 @@ export default function AddWarehouse() {
   async function getState() {
     try {
       const response = await fetch(
-        "http://evm.iitbhilai.ac.in:8100/usermgt/getStateList",
+        "http://evm.iitbhilai.ac.in:8100/user/getStateList",
         {
           method: "GET",
           headers: {
@@ -169,7 +169,7 @@ export default function AddWarehouse() {
 
       try {
         const response = await fetch(
-          `http://evm.iitbhilai.ac.in:8100/usermgt/getPCListbyState/${selectedCode}`,
+          `http://evm.iitbhilai.ac.in:8100/user/getPCListbyState/${selectedCode}`,
           {
             method: "GET",
             headers: {
