@@ -8,7 +8,7 @@ export default function Navigator(props){
     const myArr = props.navtext;
     
     return (
-        <div className="Navigator d-flex d-flex-vertical" style={{gap : '12px'}}>
+        <div className="Navigator d-flex d-flex-vertical" style={{gap : '12px', justifyContent: "flex-start"}}>
             <div className="NavIcon" >{props.navicon}</div>
                 {
                     myArr.map((element,index) => <><span className="d-flex-" style={{cursor : 'pointer',fontSize : '18px',fontWeight : '500',lineHeight : '100%'}} onClick={()=> {navigate(element.href)}}>{element.text}</span>{index != myArr.length - 1 ? <ChevronRight style={{height : '100%',width : '20.44px'}}/> : ''}</>)
