@@ -96,7 +96,7 @@ function Routed(props) {
 
 	const fetchUserData = async (userid) => {
 		const response = await fetch(
-			`http://evm.iitbhilai.ac.in:8100/usermgt/getNameFromUserID/${userid}`,
+			`http://evm.iitbhilai.ac.in:8100/user/getNameFromUserID/${userid}`,
 			{
 				method: "GET",
 				headers: {
@@ -175,7 +175,9 @@ function Routed(props) {
 							<div><UnitManagementIcon />Unit</div>
 							<ChevronRight className="chevron" />
 						</button>
-						<button className={window.location.pathname.startsWith("/session/ordermanagement") ? 'nav-button active' : 'nav-button'}>
+						<button className={window.location.pathname.startsWith("/session/ordermanagement") ? 'nav-button active' : 'nav-button'} onClick={() => {
+							navigate("/session/ordermanagement")
+						}} >
 							<div><OrderManagementIcon />Order</div>
 							<ChevronRight className="chevron" />
 						</button>

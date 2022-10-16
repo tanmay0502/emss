@@ -40,8 +40,6 @@ function CreateUser() {
 
   const navigate = useNavigate()
 
-
-
   const lev5 = { "TU": null }
   const lev4A = { DDEO: lev5, RO: null, "RO/ARO": null, WHM: lev5, TU: null };
   const lev3A = { Nos: null, DEO: lev4A, "CEO-Office": null };
@@ -66,6 +64,96 @@ function CreateUser() {
   const [roles, setRoles] = useState([]);
   const [rolesCode, setRolesCode] = useState([]);
 
+  const [stateDisable,setStateDisable] = useState(false);
+  const [pcDisable,setPcDisable] = useState(false);
+
+async function getRoleList(){
+  try {
+    const response = await fetch(
+      `http://evm.iitbhilai.ac.in:8100/user/getRoleList/`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const data2 = await response.json();
+    console.log(data2);
+    filterRoleList(data2);
+}  catch (err) {
+  console.log(err);
+}
+
+ 
+}
+
+function filterRoleList(
+  data2,
+  changeUserID = true,
+  filterStr = window.sessionStorage.getItem("sessionToken").substring(7)
+  ){
+  if (["EC", "ME", "MB"].includes(
+    window.sessionStorage.getItem("sessionToken").substring(0, 2)
+  )) {
+    setRoles(data2["roleName"]);
+    setRolesCode(data2["roleCode"]);
+  }
+  else {
+
+    let rcode = [];
+    var q = new Queue();
+
+    if (filterStr in lev1) {
+      q.enqueue(lev1[filterStr]);
+    }
+    else if (filterStr in lev2) {
+      q.enqueue(lev2[filterStr]);
+    }
+    else if (filterStr in lev3A) {
+      q.enqueue(lev3A[filterStr]);
+    }
+    else if (filterStr in lev3B) {
+      q.enqueue(lev3B[filterStr]);
+    }
+
+    else if (filterStr in lev4A) {
+      q.enqueue(lev4A[filterStr]);
+    }
+    else if (filterStr in lev5) {
+      q.enqueue(lev5[filterStr]);
+    }
+
+
+    while (!q.isEmpty) {
+      var f = q.peek();
+      q.dequeue();
+      if (f == null) continue;
+      for (let key in f) {
+        q.enqueue(f[key]);
+        if (key != filterStr) {
+          rcode.push(key);
+        }
+      }
+
+    }
+    rcode = [...new Set(rcode)];
+    console.log(rcode);
+    let rc = [];
+    let rname = []
+    for (let i = 0; i < data2["roleCode"].length; i++) {
+      console.log(data2["roleCode"][i]);
+      if (rcode.includes(data2["roleCode"][i])) {
+        console.log("hh");
+        rc.push(data2["roleCode"][i]);
+        rname.push(data2["roleName"][i]);
+      }
+    }
+    console.log(rname, rc)
+    setRoles(rname);
+    setRolesCode(rc);
+  } 
+}
   async function getState() {
 
     try {
@@ -91,7 +179,8 @@ function CreateUser() {
     if (window.sessionStorage.getItem("sessionToken") === null) {
       window.location.pathname = "/session/home";
     }
-    getState();
+    // getState();
+    getRoleList();
   }, []);
 
   useEffect(() => {
@@ -284,10 +373,13 @@ function CreateUser() {
   async function setACFunc(
     st,
     changeUserID = true,
-    filterStr = window.sessionStorage.getItem("sessionToken").substring(7)
+    
   ) {
     setAC(ACsCode[ACs.indexOf(st)]);
     console.log(ACsCode[ACs.indexOf(st)]);
+<<<<<<< src/src/pages/user_management/CreateUser.jsx
+  
+=======
     try {
       const response = await fetch(
         `http://evm.iitbhilai.ac.in:8100/user/getRoleList/`,
@@ -372,6 +464,7 @@ function CreateUser() {
     } catch (err) {
       console.log(err);
     }
+>>>>>>> src/src/pages/user_management/CreateUser.jsx
     if (changeUserID) {
       setUserID(
         state +
@@ -382,15 +475,33 @@ function CreateUser() {
     }
   }
 
-  async function setRoleFunc(st, changeUserID = true) {
+  async function setRoleFunc(
+    st, 
+    changeUserID = true, 
+    filterStr = window.sessionStorage.getItem("sessionToken").substring(7)
+    ){
+    
     if (st !== "Select:") {
       setRole(rolesCode[roles.indexOf(st)]);
+
+      if(filterStr == 'CEO'){
+        setStateDisable(true);
+        setStateFunc(window.sessionStorage.getItem("sessionToken").substring(0, 2));
+      }
+   
+      else if(filterStr == 'DEO'){
+        setStateDisable(true);
+        setStateFunc(window.sessionStorage.getItem("sessionToken").substring(0, 2));
+        setPcDisable(true);
+        setPCFunc(window.sessionStorage.getItem("sessionToken").substring(0, 2));
+      }      
       if (changeUserID) {
         setUserID(
           state + ("00" + PC).slice(-2) + AC + rolesCode[roles.indexOf(st)]
         );
       }
       console.log(userID);
+      getState();
     }
   }
 
@@ -399,6 +510,9 @@ function CreateUser() {
       state + ("00" + PC).slice(-2) + AC + role
     );
   }, [state, AC, PC, role])
+
+
+
 
   async function addUser() {
     console.log(userID)
@@ -414,17 +528,17 @@ function CreateUser() {
             userID: userID,
             email: document.getElementById("formUserEmail").value,
             name: document.getElementById("formUserName").value,
-            mobilenumber: document.getElementById("formUserMobileNumber").value,
+            mobileNumber: document.getElementById("formUserMobileNumber").value,
             address: document.getElementById("formUserAddress").value,
             othercontactnum1:
               document.getElementById("formUserAltNumber1").value,
             othercontactnum2:
               document.getElementById("formUserAltNumber2").value,
             active: isTemporary ? "I" : "A",
-            activationtime: "2022-09-14T17:14:33.658Z",
+            activationTime: "2022-09-14T17:14:33.658Z",
             photofilename: "imagefile",
-            createdby: window.sessionStorage.getItem("sessionToken"),
-            creationtime: "2022-09-14T17:14:33.658Z",
+            createdBy: window.sessionStorage.getItem("sessionToken"),
+            creationTime: "2022-09-14T17:14:33.658Z"
           }),
         }
       );
@@ -433,9 +547,9 @@ function CreateUser() {
       const data2 = await response.json();
       console.log(data2);
       if (data2["message"] === "User created successfully") {
-        document.getElementById("createUserForm").reset();
         alert("User Created Successfully");
         window.location.pathname = "/session/usermanagement";
+        // document.getElementById("createUserForm").reset();
       } else {
         alert("User cannot be created");
       }
@@ -500,22 +614,29 @@ function CreateUser() {
           </div>
 
           <div className="form_label">
-            <label htmlFor="">Address:<span className="text-red-500 text-lg">*</span></label>
+            <label htmlFor="">Role/s:<span className="text-red-500 text-lg">*</span></label>
           </div>
           <div className="form_group">
-            <div className="form_input">
-              <input
-                required
-                id="formUserAddress"
-                type={"text"}
-                step="any"
+            <div className="form_select">
+              <select
+                disabled = {isTemporary}
+                required={!isTemporary}
                 name=""
-                className=""
-                placeholder="Address"
-              />
+                id="input_Roles"
+                onChange={(e) => setRoleFunc(e.target.value)}
+              >
+                <option value="" disabled selected>
+                  --Select--
+                </option>
+                {roles && roles.map((st) => (
+                  <option value={st} className="text-black">
+                    {st}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
-
+          
           <div className="form_label">
             <label htmlFor="">Email Address:<span className="text-red-500 text-lg">*</span></label>
           </div>
@@ -539,7 +660,7 @@ function CreateUser() {
           <div className="form_group">
             <div className="form_select">
               <select
-                disabled = {isTemporary}
+                disabled = {isTemporary || stateDisable}
                 required
                 name=""
                 id="input_state"
@@ -580,7 +701,7 @@ function CreateUser() {
           <div className="form_group">
             <div className="form_select">
               <select
-                disabled = {isTemporary}
+                disabled = {isTemporary || pcDisable}
                 required
                 name=""
                 id="input_PC"
@@ -655,28 +776,22 @@ function CreateUser() {
           </div>
 
           <div className="form_label">
-            <label htmlFor="">Role/s:<span className="text-red-500 text-lg">*</span></label>
+            <label htmlFor="">Address:<span className="text-red-500 text-lg">*</span></label>
           </div>
           <div className="form_group">
-            <div className="form_select">
-              <select
-                disabled = {isTemporary}
-                required={!isTemporary}
+            <div className="form_input">
+              <input
+                required
+                id="formUserAddress"
+                type={"text"}
+                step="any"
                 name=""
-                id="input_Roles"
-                onChange={(e) => setRoleFunc(e.target.value)}
-              >
-                <option value="" disabled selected>
-                  --Select--
-                </option>
-                {roles && roles.map((st) => (
-                  <option value={st} className="text-black">
-                    {st}
-                  </option>
-                ))}
-              </select>
+                className=""
+                placeholder="Address"
+              />
             </div>
           </div>
+
 
           <div className="form_label">
             <label htmlFor="">User Image:

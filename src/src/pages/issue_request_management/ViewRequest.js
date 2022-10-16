@@ -35,10 +35,13 @@ export default function ViewRequest(){
             )
             const data = await response.json();
 
-            let connectorLength = data['remarks'].filter((e,index) => {
+            let connectorLength = data['remarks'].map((e,index) => {
                 if(e[6] == "Y") return index != data['remarks'].length - 1 ? <ConnectorTwo/> : <ConnnectorOne/>
             })
-
+            connectorLength  = connectorLength.filter((ele)=> {
+                return ele !== undefined;
+            })
+            console.log(connectorLength);
             if(data['remarks']!=undefined && data['remarks'].length == 1 || data['remarks'].length == 0 || connectorLength.length == 1) connectorLength = '';
             
             data['ConnectorLength'] = connectorLength;

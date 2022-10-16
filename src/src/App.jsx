@@ -15,11 +15,9 @@ import Routed from './Router';
 import { useState } from 'react';
 import WarehouseDetails from './pages/warehouse_management/WarehouseDetails';
 import CreateIssue from './pages/issue_request_management/CreateIssue';
-import ActionIssue from './pages/issue_request_management/ActionIssue';
 import Profile from './components/Profile';
 import ViewRequest from './pages/issue_request_management/ViewRequest';
-import SelectOrderType from './pages/order_management/SelectOrderType';
-import GenerateOrder from './pages/order_management/OrderDetails';
+import OrderManagement from './pages/order_management/OrderManagement';
 import OrderTypes from './pages/order_management/OrderTypes';
 function App() {
 
@@ -106,27 +104,28 @@ function App() {
               path="/session/issuemanagement/createIssue"
               element={<CreateIssue/>}
             />
-            
+
             <Route
               path='/session/issuemanagement/viewRequest/:id'
               element={<ViewRequest/>} 
             />
-            <Route
-              path="/session/issuemanagement/actionIssue/:id"
-              element={<ActionIssue/>}
-            />
+
             <Route
               path='/session/user-profile'
               element={<Profile detail={profileDetail} />} 
             />
+
             <Route
-              path='/session/ordermanagement/createorder'
-              element={<OrderTypes />} 
+              path="/session/ordermanagement"
+              element={<OrderManagement/>}
             />
+
             <Route
-              path='/session/ordermanagement/createorder/generateorder/:ordertype'
-              element={<GenerateOrder />} 
+              path="/session/ordermanagement/ordertypes"
+              element={<OrderTypes/>}
             />
+
+
           </Route>
         </Routes>
       </BrowserRouter>
