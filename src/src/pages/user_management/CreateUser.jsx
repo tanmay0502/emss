@@ -70,7 +70,7 @@ function CreateUser() {
 
     try {
       const response = await fetch(
-        "http://evm.iitbhilai.ac.in:8100/usermgt/getStateList",
+        "http://evm.iitbhilai.ac.in:8100/user/getStateList",
         {
           method: "GET",
           headers: {
@@ -217,7 +217,7 @@ function CreateUser() {
       } else {
         try {
           const response = await fetch(
-            `http://evm.iitbhilai.ac.in:8100/usermgt/getPCListbyState/${statesCode[states.indexOf(st)]
+            `http://evm.iitbhilai.ac.in:8100/user/getPCListbyState/${statesCode[states.indexOf(st)]
             }`,
             {
               method: "GET",
@@ -256,7 +256,7 @@ function CreateUser() {
       } else {
         try {
           const response = await fetch(
-            `http://evm.iitbhilai.ac.in:8100/usermgt/getACListbyStatePC/${state}`,
+            `http://evm.iitbhilai.ac.in:8100/user/getACListbyStatePC/${state}`,
             {
               method: "GET",
               headers: {
@@ -290,7 +290,7 @@ function CreateUser() {
     console.log(ACsCode[ACs.indexOf(st)]);
     try {
       const response = await fetch(
-        `http://evm.iitbhilai.ac.in:8100/usermgt/getRoleList/`,
+        `http://evm.iitbhilai.ac.in:8100/user/getRoleList/`,
         {
           method: "GET",
           headers: {
@@ -404,7 +404,7 @@ function CreateUser() {
     console.log(userID)
     try {
       const response = await fetch(
-        "http://evm.iitbhilai.ac.in:8100/usermgt/createUser",
+        "http://evm.iitbhilai.ac.in:8100/user/createUser",
         {
           method: "POST",
           headers: {

@@ -136,7 +136,7 @@ const Login = () => {
   async function getState() {
     try {
       const response = await fetch(
-        "http://evm.iitbhilai.ac.in:8100/usermgt/getStateList",
+        "http://evm.iitbhilai.ac.in:8100/user/getStateList",
         {
           method: "GET",
           headers: {
@@ -172,7 +172,7 @@ const Login = () => {
      
         try {
           const response = await fetch(
-            `http://evm.iitbhilai.ac.in:8100/usermgt/getPCListbyState/${
+            `http://evm.iitbhilai.ac.in:8100/user/getPCListbyState/${
               statesCode[states.indexOf(st)]
             }`,
             {
@@ -209,7 +209,7 @@ const Login = () => {
       } else {
         try {
           const response = await fetch(
-            `http://evm.iitbhilai.ac.in:8100/usermgt/getACListbyStatePC/${state}`,
+            `http://evm.iitbhilai.ac.in:8100/user/getACListbyStatePC/${state}`,
             {
               method: "GET",
               headers: {
@@ -242,7 +242,7 @@ const Login = () => {
     console.log(ACsCode[ACs.indexOf(st)]);
     try {
       const response = await fetch(
-        `http://evm.iitbhilai.ac.in:8100/usermgt/getRoleList/`,
+        `http://evm.iitbhilai.ac.in:8100/user/getRoleList/`,
         {
           method: "GET",
           headers: {
@@ -292,7 +292,7 @@ const Login = () => {
         setMobile(userID);
         try {
           const response = await fetch(
-            "http://evm.iitbhilai.ac.in:8100/usermgt/getUserIDsByMobileNumber",
+            "http://evm.iitbhilai.ac.in:8100/user/getUserIDsByMobileNumber",
             {
               method: "POST",
               headers: {
@@ -319,7 +319,7 @@ const Login = () => {
             setInvalidUser("");
             try {
               const response = await fetch(
-                "http://evm.iitbhilai.ac.in:8100/usermgt/sendOTP",
+                "http://evm.iitbhilai.ac.in:8100/user/sendOTP",
                 {
                   method: "POST",
                   headers: {
@@ -348,7 +348,7 @@ const Login = () => {
         console.log(userID)
         try {
           const response = await fetch(
-            "http://evm.iitbhilai.ac.in:8100/usermgt/getMobileFromUserID",
+            "http://evm.iitbhilai.ac.in:8100/user/getMobileFromUserID",
             {
               method: "POST",
               headers: {
@@ -367,7 +367,7 @@ const Login = () => {
             setMobile(data["mobile"][0]);
             try {
               const response = await fetch(
-                "http://evm.iitbhilai.ac.in:8100/usermgt/sendOTP",
+                "http://evm.iitbhilai.ac.in:8100/user/sendOTP",
                 {
                   method: "POST",
                   headers: {
@@ -407,7 +407,7 @@ const Login = () => {
   async function requestPasswordBlock() {
     try {
       const response = await fetch(
-        "http://evm.iitbhilai.ac.in:8100/usermgt/verifyOTP",
+        "http://evm.iitbhilai.ac.in:8100/user/verifyOTP",
         {
           method: "POST",
           headers: {
@@ -441,7 +441,7 @@ const Login = () => {
     console.log(userID, password);
     try {
       const response = await fetch(
-        "http://evm.iitbhilai.ac.in:8100/usermgt/verifyPasswordByUserID",
+        "http://evm.iitbhilai.ac.in:8100/user/verifyPasswordByUserID",
         {
           method: "POST",
           headers: {

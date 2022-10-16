@@ -116,7 +116,7 @@ export default function ViewRequest(){
                                             <Group LabelText = 'Date / Time' value = {getTime(val[7])} />
                                             <Group LabelText = 'Severity' value = {Details['issue'] != undefined && Details['issue'][0][5] == "L" ? "Low" : Details['issue'][0][5] == "M" ? "Medium" : "High"} class='first-child'/>
                                         </div>
-                                        <Group  LabelText = 'Remarks' className={`${styles.first_child}`} value = {Details['remarks'][index-1][3]}/>
+                                        <Group  LabelText = 'Remarks' className={`${styles.first_child}`} value = {Details['remarks'][index][3]}/>
                                  </div>{index != Details['remarks'].length - 1 ? <hr/> : ''}
                                  </div>
                             )) : 
