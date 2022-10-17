@@ -19,6 +19,37 @@ function UserDetail(props) {
       color:"black"
     };
     console.log(props.detail)
+
+    const ResetPassword = async () => {
+        const userId = props.detail[0];
+
+        if(window.confirm("Are you suer you want to reset password for this user ? ")){
+           try {
+              const response = await fetch(
+                `http://evm.iitbhilai.ac.in:8100/user/resetPassword/${userId}`,
+                {
+                  method: "GET",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  mode: "cors"
+                }
+              )
+              const msg = await response.json();
+              if(msg['message'] = 'Password reset successfully'){
+                  alert(msg['message']);
+                  window.location = window.location.href;
+              }
+              else{
+                alert('Error in resetting password, Please try again');
+              }
+           } catch (error) {
+             console.log(error)
+           }
+        }
+    }
+
+
     return (
       <div className="user-details">
         <div className="flex justify-between">
@@ -29,13 +60,18 @@ function UserDetail(props) {
               >
                 <AiOutlineArrowLeft />
               </button>
-              <button
-                className="flex justify-center rounded-full aspect-square "
-                style={{"background" : "#16c09861", color: "#008767"}}
-                // onClick={props.close}
-              >
-                <AiOutlineEdit />
-              </button>
+              <div className=" flex justify-between">
+                    <div className="right_btn" onClick={() => ResetPassword()}>
+                        Reset Password
+                    </div>
+                  <button
+                    className="flex justify-center rounded-full aspect-square "
+                    style={{"background" : "#16c09861", color: "#008767"}}
+                    // onClick={props.close}
+                  >
+                    <AiOutlineEdit />
+                  </button>
+              </div>
             </div>
         <div className="rounded-full  justify-center flex ">
           <img
