@@ -19,6 +19,7 @@ import Profile from './components/Profile';
 import ViewRequest from './pages/issue_request_management/ViewRequest';
 import OrderManagement from './pages/order_management/OrderManagement';
 import OrderTypes from './pages/order_management/OrderTypes';
+import FillAvailability from './pages/order_management/FillAvailability';
 function App() {
 
 	const [sessionState, setSessionState] = useState({
@@ -125,6 +126,10 @@ function App() {
               element={<OrderTypes/>}
             />
 
+            <Route
+              path="/session/ordermanagement/orderdetails"
+              element={<FillAvailability/>}
+            />
 
           </Route>
         </Routes>
