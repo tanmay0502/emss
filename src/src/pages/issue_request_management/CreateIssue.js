@@ -1,5 +1,7 @@
 import React from "react";
+import { useState } from "react";
 import "./styles/createIssue.css";
+import {decode as base64_decode, encode as base64_encode} from 'base-64';
 import { ReactComponent as CreateIssueIcon } from '../../assets/create_issue_request.svg';
 import { ReactComponent as SeverityIcon } from '../../assets/severity.svg';
 import { ReactComponent as LevelIcon } from '../../assets/level.svg';
@@ -15,8 +17,10 @@ export default function CreateIssue() {
     const onFormSubmit = async (e) => {
         e.preventDefault();
         console.log("submit button clicked")
+        console.log("base64" + window.base64Converted)
         addRequest();
     };
+    
     async function addRequest() {
 
         try {
@@ -35,16 +39,23 @@ export default function CreateIssue() {
                         IssueLevel: document.getElementById("formLevel").value.slice(-2),
                         LodgerUserID: window.sessionStorage.getItem("sessionToken"),
                         tags: [
-                            document.getElementById("formSubject").value,
+                            // document.getElementById("formTo").value,
                             document.getElementById("formTags").value
                         ],
-                        SupportingDocuments: "files",
-                        MMType: "MMType",
+                        SupportingDocuments: window.fileName,
+                        MMType: window.fileType,
+                        SupportingDocumentsData: window.base64Converted,
                         RecipientUserID: document.getElementById("formTo").value
 
                     }),
                 }
             );
+
+            // var x = document.getElementById("formDocuments")
+            // let encoded = base64_encode(x);
+            // console.log("Encoded:- "+encoded +"x" +x);
+
+            // alert(document.getElementById("formTags").value)
 
             console.log(response);
             const data = await response.json();
@@ -64,6 +75,63 @@ export default function CreateIssue() {
     const typeArray = ["Stock Entry-STE", "Scanning-SCN", "FLC Related-FLC", "Randomization-RND", "Recieving/Sending-RNS", "Confilct-CON", "Defective Machines-DEF", "EP Related-EPT", "Physical Verification-PHV", "User Related-USR", "Mobile App-APP", "Awareness-AWR", "Status Marking-SRW", "Strong Room/Warehouse-APN", "Application-APN", "Miscellaneous-MSC"]
     const levelArray = ["Unit-UN", "Warehouse-WH", "AC-AC", "PC-PC", "State-ST"];
     const severityArray = ["Low-L", "Medium-M", "High-H"];
+
+    // const base64Converted = ''
+ 
+    const uploadImage = async (e) =>{
+        const file = e.target.files[0];
+        const fullFileName = file.name;
+        const indexDot = fullFileName.indexOf(".");
+        console.log("indexDot"+indexDot)
+        window.fileName = fullFileName.slice(0, indexDot);
+        console.log("fileName"+ window.fileName);
+        window.fileType = fullFileName.slice(indexDot+1);
+        // const file2 = e.target.files[1];
+        window.base64Converted = await convertBase64(file);
+        // window.base64Converted2 = await convertBase64(file2);
+        console.log("base64-1" + window.base64Converted)
+        console.log("type:" + window.fileType)
+        // console.log("base64-2" + window.base64Converted2)
+    }
+    // console.log(uploadImage())
+    const convertBase64 = (file) =>{
+        return new Promise((resolve,reject)=>{
+            const fileReader = new FileReader();
+            fileReader.readAsDataURL(file);
+
+            fileReader.onload = () =>{
+                resolve(fileReader.result);
+            }
+
+            fileReader.onerror = (error) => {
+                reject(error);
+            }
+        })
+    }
+    const [value, setValue] = useState()
+
+    const tagValue = (e) => {
+        
+        // let currentLen = document.getElementById("formTags").value.length
+        // console.log(currentLen)
+        // var y =  document.getElementById("formTags").value
+        // console.log("Value" + document.getElementById("formTags").value)
+        // y.replace("sd",  "ss");
+        // console.log("y" + y)
+        // if(currentLen!=0 && currentLen%11 === 0){
+        //     y.replace("sd",  "ss")
+            
+        // }
+        
+
+        let currValue = document.getElementById("formTags").value
+        let currentLen = document.getElementById("formTags").value.length
+        console.log(currentLen)
+        if(currentLen!=0 && currentLen%11 === 0){
+            
+            
+        }
+    }
 
     return (
         <form class="parent" onSubmit={onFormSubmit} id="form">
@@ -174,6 +242,7 @@ export default function CreateIssue() {
                         // step="any"
                         className="subjectInput p-2"
                         placeholder="Subject"
+                        
                     />
                     {/* <div className="pt-1 pl-2 scale-90">
                             <TagIcon/>
@@ -197,6 +266,9 @@ export default function CreateIssue() {
                             type="file"
                             placeholder="Choose Image (Upto 5 MB)"
                             multiple
+                            onChange={(e)=>{
+                                uploadImage(e);
+                            }}
                         />
                     </div>
                 </div>
