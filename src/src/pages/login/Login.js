@@ -47,13 +47,88 @@ const Login = () => {
   const [roles, setRoles] = useState([]);
   const [rolesCode, setRolesCode] = useState([]);
 
+
+  const [flag1, setFlag1]=useState(0);
+  
+
+
+
+  useEffect(()=>{
+   
+    if(PCs===[]){
+      if(document.getElementById("pcDropdown"))
+      document.getElementById("pcDropdown").value="0";
+    }
+    if(ACs===[]){
+      if( document.getElementById("acDropdown"))
+      document.getElementById("acDropdown").value="0";
+    }
+    if(roles===[]){
+      if(document.getElementById("roleDropdown"))
+      document.getElementById("roleDropdown").value="0";
+    }
+    if(PCs.length!=0 || ACs.length!=0 || roles.length!=0){
+      checkEmpty();
+    }
+
+  },[states,PCs,ACs,roles])
+
+  function checkEmpty(){
+    if(userID.length==0){
+      if(document.getElementById("stateDropdown") && document.getElementById("pcDropdown")&& document.getElementById("roleDropdown") && document.getElementById("acDropdown")){
+      document.getElementById("stateDropdown").value="0";
+      document.getElementById("pcDropdown").value="0";
+      document.getElementById("acDropdown").value="0";
+      document.getElementById("roleDropdown").value="0";
+
+      }
+      setPCs([])
+      setACs([])
+      setRoles([])
+      console.log("checked")
+    }
+  }
+
+  useEffect(()=>{
+   checkEmpty()
+    
+  },[userID])
   useEffect(() => {
+    
+    if((userID.length>0 && Number(userID)) || (userID.length>0 && userID[0]=="0")  ){
+      if(document.getElementById("stateDropdown") && document.getElementById("pcDropdown")&& document.getElementById("roleDropdown") && document.getElementById("acDropdown") && document.getElementById("dropDowns")){
+      document.getElementById("stateDropdown").setAttribute("disabled","disabled")
+      document.getElementById("pcDropdown").setAttribute("disabled","disabled")
+      document.getElementById("acDropdown").setAttribute("disabled","disabled")
+      document.getElementById("roleDropdown").setAttribute("disabled","disabled")
+      document.getElementById("dropDowns").style.opacity="1"
+      setFlag1(1)
+      }
+      getState()
+      setPCs([])
+      setACs([])
+      setRoles([])
+      // console.log("hurry")
+    }
+    else{
+      if(document.getElementById("stateDropdown") && document.getElementById("pcDropdown")&& document.getElementById("roleDropdown") && document.getElementById("acDropdown") && document.getElementById("dropDowns")){
+      document.getElementById("stateDropdown").removeAttribute("disabled")
+      document.getElementById("pcDropdown").removeAttribute("disabled")
+      document.getElementById("acDropdown").removeAttribute("disabled")
+      document.getElementById("roleDropdown").removeAttribute("disabled")
+      document.getElementById("dropDowns").style.opacity="1"
+      setFlag1(0)
+      }
+  //  console.log("userid",userID)
+ 
     if (userID.length >= 2) {
       const statecode = userID.substring(0, 2);
+      console.log(userID,states)
       if (statesCode.indexOf(statecode) !== -1) {
         if (document.getElementById("stateDropdown")) {
           document.getElementById("stateDropdown").value =
             states[statesCode.indexOf(statecode)];
+
         }
         setStateFunc(states[statesCode.indexOf(statecode)], false);
       } else {
@@ -61,7 +136,14 @@ const Login = () => {
           document.getElementById("stateDropdown").value = "Select:";
       }
     }
-    if (userID.length >= 4) {
+    else{
+      if (document.getElementById("stateDropdown"))
+      document.getElementById("stateDropdown").value="0";
+      setPCs([])
+
+      
+    }
+    if (userID.length >= 4 && PCsCode && PCs) {
       var pccode = parseInt(userID.substring(2, 4)).toString();
         const pwpcode = userID.substring(2, 4);
         if (PCs[PCsCode.indexOf(pwpcode)] != -1) {
@@ -89,6 +171,13 @@ const Login = () => {
         if (document.getElementById("pcDropdown"))
           document.getElementById("pcDropdown").value = "Select:";
       }
+    }
+    else{
+      if (document.getElementById("pcDropdown"))
+      document.getElementById("pcDropdown").value="0";
+      setACs([])
+
+      
     }
 
     if (userID.length >= 7) {
@@ -129,6 +218,18 @@ const Login = () => {
         setRoleFunc(roles[rolesCode.indexOf(role)], false);
       }
     }
+    else{
+      if (document.getElementById("acDropdown"))
+      document.getElementById("acDropdown").value="0";
+
+      
+    }
+    if(userID.length <= 7){
+      if (document.getElementById("roleDropdown"))
+      document.getElementById("roleDropdown").value="0";
+      setRoles([])
+    }
+  }
 
     return () => {};
   }, [userID]);
@@ -146,14 +247,38 @@ const Login = () => {
         }
       );
       const data2 = await response.json();
-      console.log(data2);
+      console.log(data2)
       setStates(data2["states"]);
       setStatesCode(data2["stcodes"]);
+      checkEmpty()
     } catch (err) {
       console.log(err);
     }
   }
   // getState();
+
+  async function getRoles(){
+    try {
+      const response = await fetch(
+        `http://evm.iitbhilai.ac.in:8100/user/getRoleList/`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          mode: "cors",
+        }
+      );
+      const data2 = await response.json();
+      console.log(data2);
+      setRoles(data2["roleName"]);
+      setRolesCode(data2["roleCode"]);
+      checkEmpty()
+
+    } catch (err) {
+      console.log(err);
+    }
+  }
   useEffect(() => {
     sessionStorage.setItem("log",null)
     console.log(window.sessionStorage.getItem("sessionToken") ,sessionStorage.getItem("log"),null)
@@ -162,6 +287,7 @@ const Login = () => {
     }
 
     getState();
+    // getRoles();
   }, []);
 
   async function setStateFunc(st, changeUserID = true) {
@@ -185,8 +311,17 @@ const Login = () => {
           );
           const data2 = await response.json();
           console.log(data2);
+          if(userID.length!=0){
+          if(data2["status"]==502){
+            setPCs(["00"]);
+            setPCsCode(["00"]);
+          }
+          else{
           setPCs(data2["pcname"]);
           setPCsCode(data2["pccode"]);
+          }
+        }
+
         } catch (err) {
           console.log(err);
           setPCs(["00"]);
@@ -221,13 +356,23 @@ const Login = () => {
           const data2 = await response.json();
           console.log("ACs");
           console.log(data2);
+          if(userID.length!=0){
+
+          if(data2["status"]==502){
+            setACs(["000"])
+            setACsCode(["000"])
+          }
+          else{
           setACs(data2["acname"]);
           setACsCode(data2["accode"]);
+          }
+        }
         } catch (err) {
           console.log(err);
           setACs(["000"])
           setACsCode(["000"])
         }
+
       }
       if (changeUserID) {
         setUserID(
@@ -253,8 +398,12 @@ const Login = () => {
       );
       const data2 = await response.json();
       console.log(data2);
+      if(userID.length!=0){
+
       setRoles(data2["roleName"]);
       setRolesCode(data2["roleCode"]);
+      }
+
     } catch (err) {
       console.log(err);
     }
@@ -562,22 +711,75 @@ const Login = () => {
                     className="mobile-tab  place-content-center border-2 mt-2 rounded-lg p-4"
                     style={{ border: "1px solid #717171" }}
                   >
+                    <div id="dropDowns">
                     <div className="dropdown">
                       <p
-                        for="position"
+                        for="role"
                         className="text-black ml-2 -mb-6 text-sm font-semibold"
                         style={{ fontFamily: "nunito sans" }}
                       >
-                        State
+                        {roles.length==0 && <div className="opacity-40">Role</div>}
+                        {roles.length!=0 && <>Role</>}
                       </p>
+                      {roles.length==0 &&(
+                         <select
+                         className="pl-3 pr-3 mt-7 h-13 text-black outline-none rounded-md w-full mb-3 opacity-40"
+                          disabled
+                        id="roleDropdown"
+
+                       ><option value="0" className="text-black">
+                       Select:
+                     </option>
+                        </select>
+                      )}
+                      {roles.length!=0 && ( 
+                      <select
+                        className="pl-3 pr-3 mt-7 h-13 text-black outline-none rounded-md w-full mb-3"
+                        style={{ fontFamily: "nunito sans" }}
+                        name="role"
+                        id="roleDropdown"
+                        // value={role}
+                        onChange={(e) => setRoleFunc(e.target.value)}
+                      >
+                        <option value="0" className="text-black">
+                          Select:
+                        </option>
+                        {roles &&
+                          roles.map((st) => (
+                            <option value={st} className="text-black">
+                              {st}
+                            </option>
+                          ))}
+                      </select>)}
+                     
+                    </div>
+                    <div className="dropdown">
+                      <p
+                        for="state"
+                        className="text-black ml-2 -mb-6 text-sm font-semibold"
+                        style={{ fontFamily: "nunito sans" }}
+                      >
+                        {(states.length==0 || flag1==1)  && <div className="opacity-40">State</div>}
+                        {states.length!=0 && flag1==0 && <>State</>}
+                      </p>
+                      {(states.length==0 || flag1==1)  && (<select className="pl-3 pr-3 mt-7 h-13 text-black outline-none rounded-md w-full mb-5 opacity-40"  disabled
+                        id="stateDropdown"
+                        >
+                        <option value="0" className="text-black">
+                            Select:
+                        </option>
+                      </select>)}
+                      {states.length!=0 && flag1==0 && 
                       <select
                         className="pl-3 pr-3 mt-7 h-13 text-black outline-none rounded-md w-full mb-5"
                         style={{ fontFamily: "nunito sans" }}
-                        id="stateDropdown"
-                        name="position"
+                        
+                        name="state"
                         // value={state}
                         onChange={(e) => setStateFunc(e.target.value)}
+                        id="stateDropdown"
                       >
+                       
                         <option value="0" className="text-black">
                           Select:
                         </option>
@@ -588,21 +790,36 @@ const Login = () => {
                               {st}
                             </option>
                           ))}
+                          {states.length==0 && (<option value="0" className="text-black">
+                          Select:
+                        </option>)}
                       </select>
+                      }
                     </div>
                     <div className="dropdown">
                       <p
-                        for="position"
+                        for="pc"
                         className="text-black ml-2 -mb-6 text-sm font-semibold"
                         style={{ fontFamily: "nunito sans" }}
                       >
-                        PC
+                        {PCs && PCs.length==0 && <div className="opacity-40">PC</div>}
+                        {PCs && PCs.length!=0 && <>PC</>}
                       </p>
+                      {PCs.length==0 && <div>
+                          <select className="pl-3 pr-3 mt-7 h-13 text-black outline-none rounded-md w-full mb-5 opacity-40" disabled 
+                        id="pcDropdown"
+                        >
+                          <option value="0" className="text-black">
+                          Select:
+                        </option>
+                          </select>
+                        </div>}
+                        {PCs.length!=0 && (
                       <select
                         className="pl-3 pr-3 mt-7 h-13 text-black outline-none rounded-md w-full mb-5"
                         style={{ fontFamily: "nunito sans" }}
                         id="pcDropdown"
-                        name="position"
+                        name="pc"
                         // value={PC}
                         onChange={(e) => setPCFunc(e.target.value)}
                       >
@@ -616,19 +833,29 @@ const Login = () => {
                             </option>
                           ))}
                       </select>
+                        )}
                     </div>
                     <div className="dropdown">
                       <p
-                        for="position"
+                        for="ac"
                         className="text-black ml-2 -mb-6 text-sm font-semibold"
                         style={{ fontFamily: "nunito sans" }}
                       >
-                        AC
+                        {ACs.length==0 && <div className="opacity-40">AC</div>}
+                        {ACs.length!=0 && <>AC</>}
                       </p>
+                      {ACs.length==0 && (<select className="pl-3 pr-3  mt-7 h-13 text-black outline-none rounded-md w-full mb-5 opacity-40" disabled 
+                        id="acDropdown"
+                        >
+                        <option value="0" className="text-black">
+                          Select:
+                        </option>
+                      </select>)}
+                      {ACs.length!=0 && 
                       <select
                         className="pl-3 pr-3  mt-7 h-13 text-black outline-none rounded-md w-full mb-5"
                         style={{ fontFamily: "nunito sans" }}
-                        name="position"
+                        name="ac"
                         id="acDropdown"
                         // value={AC}
                         onChange={(e) => setACFunc(e.target.value)}
@@ -643,33 +870,9 @@ const Login = () => {
                             </option>
                           ))}
                       </select>
+                    } 
                     </div>
-                    <div className="dropdown">
-                      <p
-                        for="position"
-                        className="text-black ml-2 -mb-6 text-sm font-semibold"
-                        style={{ fontFamily: "nunito sans" }}
-                      >
-                        Role
-                      </p>
-                      <select
-                        className="pl-3 pr-3 mt-7 h-13 text-black outline-none rounded-md w-full mb-3"
-                        style={{ fontFamily: "nunito sans" }}
-                        name="position"
-                        id="roleDropdown"
-                        // value={role}
-                        onChange={(e) => setRoleFunc(e.target.value)}
-                      >
-                        <option value="0" className="text-black">
-                          Select:
-                        </option>
-                        {roles &&
-                          roles.map((st) => (
-                            <option value={st} className="text-black">
-                              {st}
-                            </option>
-                          ))}
-                      </select>
+                    
                     </div>
                     <button
                       onClick={requestOTP}
@@ -680,6 +883,7 @@ const Login = () => {
                       Request OTP
                     </button>
                   </div>
+                 
                 </>
               )}
               {passwordBlock == 1 && (

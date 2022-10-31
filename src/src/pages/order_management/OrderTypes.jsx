@@ -59,7 +59,7 @@ export default function OrderTypes(){
                 </div>
                 <button className="btn" onClick={()=>{
                     if(selected){
-                        navigate('/session/ordermanagement/createorder/generateorder/ordertype='+ orderTypeMapping[selected])
+                        navigate('/session/ordermanagement/createorder/generateorder/'+ orderTypeMapping[selected])
                     }
                     else{
                         alert('Order Type not Selected!')
