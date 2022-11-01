@@ -1,5 +1,7 @@
 {
   "dependencies": {
-    "react-collapsed": "^3.4.0"
+    "react-collapsed": "^3.4.0",
+    "react-tag-input": "^6.8.1",
+    "react-tag-input-component": "^2.0.2"
   }
 }

@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function AddWarehouse() {
 
-  const userId =  sessionStorage.getItem('sessionToken');
+  const userId = sessionStorage.getItem('sessionToken');
   const first2 = userId.slice(0, 2);
 
 
@@ -31,15 +31,24 @@ export default function AddWarehouse() {
   const [PCs, setPCs] = useState([]);
   const [PCcodes, setPCcodes] = useState([]);
 
+  // const [userid_1, setUserId_1] = useState('');
+  // const [userid_2, setUserId_2] = useState('');
+
+
+
   //Form filed states....
   const [myState, setmyState] = useState("");
   const [myPCcode, setmyPCcode] = useState("");
   const [WarehouseType, setWarehouseType] = useState("");
-  const [userState,setUserState] = useState("");
+  const [userState, setUserState] = useState("");
   //Form filed states end....
 
   const onFormSubmit = async (e) => {
     e.preventDefault()
+
+    
+
+
 
     const warehouseType = document.getElementById("input_warehousetype").value;
     const buildingType = document.getElementById("input_buildingtype").value;
@@ -53,12 +62,17 @@ export default function AddWarehouse() {
     const address = document.getElementById("input_address").value;
     const double_lock = document.getElementById("double_lock_yes").checked;
 
-    const person1_ID = document.getElementById("input_personName_1").value;
+    const person1_ID = validate(document.getElementById("input_personName_1").value) ? document.getElementById("input_personName_1").value :  "";
     const person2_ID = double_lock
-      ? document.getElementById("input_personName_2").value :
+      ? validate(document.getElementById("input_personName_2").value) ? document.getElementById("input_personName_2").value :  "" :
       "";
 
     const sealed = document.getElementById("input_sealed").value;
+
+    if(person1_ID=="" || (double_lock && person2_ID=="")){
+      alert("UserID must be in valid formate");
+      return;
+    }
 
     var reqBody = {
       warehouseType: warehouseType,
@@ -74,7 +88,7 @@ export default function AddWarehouse() {
       warehouseStatus: sealed,
     };
 
-    if(double_lock){
+    if (double_lock) {
       reqBody["UIDKey2"] = person2_ID;
     }
 
@@ -89,7 +103,7 @@ export default function AddWarehouse() {
       }
     );
     const status = await response;
-    console.log(status)
+    // console.log(status)
     alert(
       status.status == 200
         ? "Warehouse Created Successfully"
@@ -115,21 +129,42 @@ export default function AddWarehouse() {
           },
         }
       );
+
+      try {
+        const response = await fetch(
+          `http://evm.iitbhilai.ac.in:8100/user/getPCListbyState/${window.sessionStorage.getItem("sessionToken").substring(0, 2)}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        const data = await response.json();
+        setPCs(data["pcname"]);
+        setPCcodes(data["pccode"]);
+      } catch (error) {
+        console.log(error);
+        setPCs(["00"]);
+        setPCcodes(["00"]);
+      }
+
       const StateData = await response.json();
-      console.log(StateData)
+      // console.log(StateData)
 
       const ans = StateData.states[StateData.stcodes.indexOf(first2)]
-    
-      if(["EC", "ME", "MB"].includes(
+
+      if (["EC", "ME", "MB"].includes(
         window.sessionStorage.getItem("sessionToken").substring(0, 2)
-      )){
+      )) {
         setStates(StateData['states']);
-      setStatesCode(StateData['stcodes']);
+        setStatesCode(StateData['stcodes']);
       }
-     else{
-      setStates([ans]);
-      setStatesCode([first2]);
-     }
+      else {
+        setStates([ans]);
+        setStatesCode([first2]);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -162,10 +197,10 @@ export default function AddWarehouse() {
   }
   async function setStateFunc(st) {
     if (st !== "-1") {
-      console.log(st, states, statesCode);
+      // console.log(st, states, statesCode);
       const selectedCode = statesCode[states.indexOf(st)];
       setmyState(selectedCode);
-      console.log(selectedCode)
+      // console.log(selectedCode)
 
       try {
         const response = await fetch(
@@ -197,6 +232,17 @@ export default function AddWarehouse() {
     }
   }
 
+
+  function validate(ID) {
+    const regex = new RegExp(
+      '[A-Z]{2}[0-9]{5}[A-Z]{3,10}$'
+    );
+
+    return regex.test(ID)
+  }
+
+
+
   return (
     <div className="flex-col justify-center align-middle">
       <form
@@ -208,15 +254,15 @@ export default function AddWarehouse() {
           <div class="warehouse-type">
             <div className="PageTitle">
               <h4>
-              <button
-                className="flex justify-center rounded-full aspect-square "
-                onClick={()=>{
-                  navigate('/session/warehousemanagement')
-                }}
-                style={{"background" : "#84587C", color: "white"}}
-              >
-                <AiOutlineArrowLeft />
-              </button>
+                <button
+                  className="flex justify-center rounded-full aspect-square "
+                  onClick={() => {
+                    navigate('/session/warehousemanagement')
+                  }}
+                  style={{ "background": "#84587C", color: "white" }}
+                >
+                  <AiOutlineArrowLeft />
+                </button>
                 <WarehouseManagementIcon />
                 <span>Create Warehouse</span>
               </h4>
@@ -287,15 +333,14 @@ export default function AddWarehouse() {
                     required
                     name=""
                     id="input_state"
-                    onChange={(e)=> {
+                    onChange={(e) => {
                       setStateFunc(e.target.value)
                     }}
-                    disabled = {true}
+                    disabled={true}
                   >
                     {/* <option value="" disabled selected>
                       --Select--
                     </option> */}
-                    {console.log(states)}
                     {states && states.map((st) => (
                       <option value={st} className="text-black" selected={st == first2 ? true : false}>
                         {st}
@@ -398,48 +443,50 @@ export default function AddWarehouse() {
                   </div>
                 </div>
               </div>
-              <div></div>
-              <div className="three-column-grid">
-                <div className="form_group">
-                  <div className="form_label">
-                    <label htmlFor="">Latitude</label>
-                  </div>
-                  <div className="form_input">
-                    <input
-                      required
-                      type={"number"}
-                      step="any"
-                      id="input_lat"
-                      name=""
-                      className=""
-                      placeholder="Latitude"
-                    />
-                    <div className="input_icon">
-                      <FaLaptopHouse size="1em" />
-                    </div>
-                  </div>
-                </div>
+              {/* <div></div>
+              <div className="three-column-grid">----------------------------------------------- */}
 
-                <div className="form_group">
-                  <div className="form_label">
-                    <label htmlFor="">Longitude</label>
-                  </div>
-                  <div className="form_input">
-                    <input
-                      required
-                      id="input_lng"
-                      type={"number"}
-                      step="any"
-                      name=""
-                      className=""
-                      placeholder="Longitude"
-                    />
-                    <div className="input_icon">
-                      <FaLaptopHouse size="1em" />
-                    </div>
+              <div className="form_group">
+                <div className="form_label">
+                  <label htmlFor="">Latitude</label>
+                </div>
+                <div className="form_input">
+                  <input
+                    required
+                    type={"number"}
+                    step="any"
+                    id="input_lat"
+                    name=""
+                    className=""
+                    placeholder="Latitude"
+                  />
+                  <div className="input_icon">
+                    <FaLaptopHouse size="1em" />
                   </div>
                 </div>
               </div>
+
+              <div className="form_group">
+                <div className="form_label">
+                  <label htmlFor="">Longitude</label>
+                </div>
+                <div className="form_input">
+                  <input
+                    required
+                    id="input_lng"
+                    type={"number"}
+                    step="any"
+                    name=""
+                    className=""
+                    placeholder="Longitude"
+                  />
+                  <div className="input_icon">
+                    <FaLaptopHouse size="1em" />
+                  </div>
+                </div>
+              </div>
+
+              {/* </div>-------------------------------------------------------------- */}
             </div>
           </div>
           <div class="warehouse-personnel">
