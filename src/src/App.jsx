@@ -2,6 +2,7 @@ import './App.css';
 
 import {BrowserRouter, Routes, Route, Navigate} from 'react-router-dom'
 
+import ActionIssue from './pages/issue_request_management/ActionIssue';
 import IssueList from './pages/issue_request_management/Requestlist'
 import CreateUser from './pages/user_management/CreateUser';
 import Home from './pages/home/Home';
@@ -119,6 +120,10 @@ function App() {
             <Route
               path="/session/ordermanagement"
               element={<OrderManagement />}
+            />
+            <Route
+              path='/session/issuemanagement/actionIssue/:id'
+              element={<ActionIssue />}
             />
             <Route
               path="/session/ordermanagement/ordertypes"
