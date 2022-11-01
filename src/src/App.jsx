@@ -18,9 +18,9 @@ import WarehouseDetails from './pages/warehouse_management/WarehouseDetails';
 import CreateIssue from './pages/issue_request_management/CreateIssue';
 import Profile from './components/Profile';
 import ViewRequest from './pages/issue_request_management/ViewRequest';
-import ActionIssue from './pages/issue_request_management/ActionIssue';
 import OrderManagement from './pages/order_management/OrderManagement';
 import OrderTypes from './pages/order_management/OrderTypes';
+import GenerateOrder from './pages/order_management/GenarateOrder';
 import FillAvailability from './pages/order_management/FillAvailability';
 import EditView from './pages/home/EditView';
 function App() {
@@ -143,7 +143,7 @@ function App() {
             />
             <Route
               path="/session/ordermanagement/createorder/generateorder/:orderType"
-              element={<GenerateOrder />}
+              element={<GenerateOrder/>}
             />
           </Route>
         </Routes>
