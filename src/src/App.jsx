@@ -21,6 +21,7 @@ import ViewRequest from './pages/issue_request_management/ViewRequest';
 import OrderManagement from './pages/order_management/OrderManagement';
 import OrderTypes from './pages/order_management/OrderTypes';
 import FillAvailability from './pages/order_management/FillAvailability';
+import GenerateOrder from './pages/order_management/GenarateOrder';
 function App() {
 
 	const [sessionState, setSessionState] = useState({
@@ -74,9 +75,14 @@ function App() {
               <Login Session={sessionState} SetSession={setSessionState} />
             }
           />
-          <Route path="/session/" element={<Routed Session={sessionState} SetSession={setSessionState} />}>
-            <Route path="/session/home" element={<Home />} />{" "}
-             Dashboard Component goes here 
+          <Route
+            path="/session/"
+            element={
+              <Routed Session={sessionState} SetSession={setSessionState} />
+            }
+          >
+            <Route path="/session/home" element={<Home />} /> Dashboard
+            Component goes here
             <Route path="/session/usermanagement/" element={<ManageUsers />} />
             <Route
               path="/session/usermanagement/createuser"
@@ -98,28 +104,22 @@ function App() {
               path="/session/warehousemanagement/modifywarehouse/:id"
               element={<ModifyWarehouse />}
             />
-            <Route
-              path="/session/issuemanagement/"
-              element={<IssueList/>}
-            />
+            <Route path="/session/issuemanagement/" element={<IssueList />} />
             <Route
               path="/session/issuemanagement/createIssue"
-              element={<CreateIssue/>}
+              element={<CreateIssue />}
             />
-
             <Route
-              path='/session/issuemanagement/viewRequest/:id'
-              element={<ViewRequest/>} 
+              path="/session/issuemanagement/viewRequest/:id"
+              element={<ViewRequest />}
             />
-
             <Route
-              path='/session/user-profile'
-              element={<Profile detail={profileDetail} />} 
+              path="/session/user-profile"
+              element={<Profile detail={profileDetail} />}
             />
-
             <Route
               path="/session/ordermanagement"
-              element={<OrderManagement/>}
+              element={<OrderManagement />}
             />
             <Route
               path='/session/issuemanagement/actionIssue/:id'
@@ -127,14 +127,16 @@ function App() {
             />
             <Route
               path="/session/ordermanagement/ordertypes"
-              element={<OrderTypes/>}
+              element={<OrderTypes />}
             />
-
             <Route
               path="/session/ordermanagement/orderdetails"
-              element={<FillAvailability/>}
+              element={<FillAvailability />}
             />
-
+            <Route
+              path="/session/ordermanagement/createorder/generateorder/:orderType"
+              element={<GenerateOrder />}
+            />
           </Route>
         </Routes>
       </BrowserRouter>

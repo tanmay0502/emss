@@ -26,7 +26,7 @@ const SelectUser = (props) => {
 
           {users.map((value) => (
             
-              <option value={value} className="text-black">
+              <option value={value} className="text-black ">
                 {value}
               </option>
             
