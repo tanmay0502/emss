@@ -4,7 +4,7 @@ import {BrowserRouter, Routes, Route, Navigate} from 'react-router-dom'
 
 import IssueList from './pages/issue_request_management/Requestlist'
 import CreateUser from './pages/user_management/CreateUser';
-import Home from './pages/home/Home';
+import Home1 from './pages/home/Home1';
 import ManageUsers from './pages/user_management/ManageUsers';
 import WarehouseManagement from './pages/warehouse_management/WarehouseManagement'
 import AddWarehouse from './pages/warehouse_management/AddWarehouse';
@@ -17,10 +17,11 @@ import WarehouseDetails from './pages/warehouse_management/WarehouseDetails';
 import CreateIssue from './pages/issue_request_management/CreateIssue';
 import Profile from './components/Profile';
 import ViewRequest from './pages/issue_request_management/ViewRequest';
+import ActionIssue from './pages/issue_request_management/ActionIssue';
 import OrderManagement from './pages/order_management/OrderManagement';
 import OrderTypes from './pages/order_management/OrderTypes';
 import FillAvailability from './pages/order_management/FillAvailability';
-import GenerateOrder from './pages/order_management/GenarateOrder';
+import EditView from './pages/home/EditView';
 function App() {
 
 	const [sessionState, setSessionState] = useState({
@@ -74,14 +75,15 @@ function App() {
               <Login Session={sessionState} SetSession={setSessionState} />
             }
           />
-          <Route
-            path="/session/"
-            element={
-              <Routed Session={sessionState} SetSession={setSessionState} />
-            }
-          >
-            <Route path="/session/home" element={<Home />} /> Dashboard
-            Component goes here
+          <Route path="/session/" element={<Routed Session={sessionState} SetSession={setSessionState} />}>
+            <Route path="/session/home" element={<Home1 />} />{" "}
+             Dashboard Component goes here 
+
+             <Route
+              path="/session/home/editview"
+              element={<EditView/>}
+            />
+
             <Route path="/session/usermanagement/" element={<ManageUsers />} />
             <Route
               path="/session/usermanagement/createuser"
@@ -112,6 +114,12 @@ function App() {
               path="/session/issuemanagement/viewRequest/:id"
               element={<ViewRequest />}
             />
+
+              <Route
+              path='/session/issuemanagement/actionIssue/:id'
+              element={<ActionIssue/>} 
+            />
+
             <Route
               path="/session/user-profile"
               element={<Profile detail={profileDetail} />}

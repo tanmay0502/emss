@@ -44,6 +44,7 @@
 	width: 100%;
 	/* table-layout:fixed; */
 	position: relative;
+	color: var(--foreground-primary) !important;
 }
 
 .users-table th{
@@ -52,12 +53,12 @@
 	font-size: 0.85em !important;
 	line-height: 21px !important;
 	letter-spacing: -0.01em;
-	color: #B5B7C0 !important;
+	color: var(--table-header-light) !important;
 	padding: 15px 0;
 	border-bottom: 1px solid #EEEEEE;
 	position: sticky;
   	top: 0;
-	background-color: white;
+	background-color: var(--background-secondary);
 	z-index: 9;
 }
 
@@ -81,7 +82,7 @@
 	font-weight: 400;
 	font-size: 0.9em;
 	letter-spacing: -0.01em;
-	color: #292D32;
+	color: var(--foreground-primary) !important;
 }
 
 .users-table td:first-child, .users-table td:nth-child(3){

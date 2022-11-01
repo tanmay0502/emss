@@ -76,7 +76,8 @@ export default function ViewRequest(){
                 <div className={`${styles.RequestId} ${styles.myFlexBoxCenter}`} >
                     <FaEdit/> <span> Request ID : {issueId()}</span>
                 </div>
-                <button className={`${styles.ActionButton} ${styles.myButton}`} onClick={()=>navigate('/session/issuemanagement/actionIssue/id='+issueId())}>Take Action</button>
+                <button className={`${styles.ActionButton} ${styles.myButton}`} onClick={()=> window.location.href = '/session/issuemanagement/actionIssue/id='+issueId()}
+                >Take Action</button>
             </div>
 
             <div className={`${styles.myCard}`} >
