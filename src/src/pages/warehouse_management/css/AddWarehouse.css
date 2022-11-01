@@ -37,7 +37,7 @@
 
 .myForm {
 	position: relative;
-	width: 95%;
+	width: 85%;
 	margin-left: auto;
 	margin-right: auto;
   }
@@ -81,7 +81,7 @@
 	white-space: nowrap;
 	overflow: hidden;
 	display: block !important;
-	width: 52%;
+	width: 10%;
 	text-align: right;
   }
   

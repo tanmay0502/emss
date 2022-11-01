@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
+import { useState } from "react";
 import "./styles/createIssue.css";
 import {decode as base64_decode, encode as base64_encode} from 'base-64';
 import { ReactComponent as CreateIssueIcon } from '../../assets/create_issue_request.svg';
@@ -6,14 +7,13 @@ import { ReactComponent as SeverityIcon } from '../../assets/severity.svg';
 import { ReactComponent as LevelIcon } from '../../assets/level.svg';
 import { ReactComponent as TagIcon } from '../../assets/tag.svg';
 import { ReactComponent as TypeIcon } from '../../assets/type.svg';
-import { WithContext as ReactTags } from 'react-tag-input';
-import { TagsInput } from "react-tag-input-component";
+
 
 
 export default function CreateIssue() {
 
-    const [tags, setTags] = React.useState([]);
-    console.log(tags)
+
+
     const onFormSubmit = async (e) => {
         e.preventDefault();
         console.log("submit button clicked")
@@ -38,10 +38,15 @@ export default function CreateIssue() {
                         Type: document.getElementById("formType").value.slice(-3),
                         IssueLevel: document.getElementById("formLevel").value.slice(-2),
                         LodgerUserID: window.sessionStorage.getItem("sessionToken"),
-                        tags: tags,
-                        SupportingDocuments: "files",
-                        MMType: "MMType",
+                        tags: [
+                            // document.getElementById("formTo").value,
+                            document.getElementById("formTags").value
+                        ],
+                        SupportingDocuments: window.fileName,
+                        MMType: window.fileType,
+                        SupportingDocumentsData: window.base64Converted,
                         RecipientUserID: document.getElementById("formTo").value
+
                     }),
                 }
             );
@@ -271,23 +276,20 @@ export default function CreateIssue() {
             </div>
             <div class="div5 borderStyle flex">
                 <div className="bottomDivs">
-                    <p className="text-lg flex pb-2" >Tag Users </p>
-                    <div className=" pb-4">
-                        {/* <div className="tagInputDiv pb-4"> */}
-                        <div className="tagwrap">
-                            <TagsInput
-
-                                // style={{ width: '100%' }}
-                                className='li_noti hide-scroll-bar tagInput p-2'
-                                value={tags}
-                                id="formTags"
-                                onChange={setTags}
-                                placeHolder="@DeoGwalior, @DEOBhopal"
-                            />
-                        </div>
-                        {/* <div className="pt-1 pl-2 scale-90">
+                    <p className="text-lg flex pb-2" >Tag Users  </p>
+                    <div className="tagInputDiv pb-4">
+                        <input
+                            // required
+                            id="formTags"
+                            // type={"number"}
+                            // step="any"
+                            className="tagInput p-2"
+                            placeholder="@DeoGwalior, @DEOBhopal"
+                        />
+                        <div className="pt-1 pl-2 scale-90">
                             <TagIcon />
-                        </div> */}
+                        </div>
+
                     </div>
                 </div>
 

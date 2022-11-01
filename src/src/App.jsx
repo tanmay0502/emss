@@ -1,4 +1,3 @@
-import React from 'react';
 import './App.css';
 
 import {BrowserRouter, Routes, Route, Navigate} from 'react-router-dom'
@@ -23,7 +22,6 @@ import OrderManagement from './pages/order_management/OrderManagement';
 import OrderTypes from './pages/order_management/OrderTypes';
 import FillAvailability from './pages/order_management/FillAvailability';
 import GenerateOrder from './pages/order_management/GenarateOrder';
-import ActionIssue from './pages/issue_request_management/ActionIssue';
 function App() {
 
 	const [sessionState, setSessionState] = useState({
@@ -114,10 +112,6 @@ function App() {
             <Route
               path="/session/issuemanagement/viewRequest/:id"
               element={<ViewRequest />}
-            />
-             <Route
-              path='/session/issuemanagement/actionIssue/:id'
-              element={<ActionIssue/>}
             />
             <Route
               path="/session/user-profile"

@@ -59,7 +59,7 @@
 	align-items: center;
 	justify-content: flex-start;
 	margin: 5px 0;
-	overflow: hidden !important; 
+	overflow: hidden !important;
 }
 
 .five-column-grid .form_label {
