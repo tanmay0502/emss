@@ -145,14 +145,14 @@ const Login = () => {
     }
     if (userID.length >= 4 && PCsCode && PCs) {
       var pccode = parseInt(userID.substring(2, 4)).toString();
-        const pwpcode = userID.substring(2, 4);
-        if (PCs[PCsCode.indexOf(pwpcode)] != -1) {
-          pccode = pwpcode;
-        } 
+      const pwpcode = userID.substring(2, 4);
+      if (PCs[PCsCode.indexOf(pwpcode)] != -1) {
+        pccode = pwpcode;
+      }
       console.log(PCsCode, pccode, PCsCode.indexOf(pccode));
       console.log(PCsCode);
 
-      if (pccode == "0" || !PCsCode || PCsCode.length==0) {
+      if (pccode == "0" || !PCsCode || PCsCode.length == 0) {
         console.log("kk");
         setPCs(["00"]);
         setPCsCode(["00"]);
@@ -190,7 +190,7 @@ const Login = () => {
         if (document.getElementById("acDropdown"))
           document.getElementById("acDropdown").value = "000";
 
-          setACFunc(ACs[ACsCode.indexOf(accode)], false);
+        setACFunc(ACs[ACsCode.indexOf(accode)], false);
       } else if (ACsCode.indexOf(accode) !== -1) {
         if (document.getElementById("acDropdown")) {
           document.getElementById("acDropdown").value =
@@ -203,7 +203,7 @@ const Login = () => {
       }
 
       const role = userID.substring(7);
-      if(Number(role)){
+      if (Number(role)) {
         setRoles([]);
       }
       console.log(roles);
@@ -243,11 +243,11 @@ const Login = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          mode:"cors"
+          mode: "cors"
         }
       );
       const data2 = await response.json();
-      console.log(data2)
+      console.log(data2);
       setStates(data2["states"]);
       setStatesCode(data2["stcodes"]);
       checkEmpty()
@@ -280,9 +280,9 @@ const Login = () => {
     }
   }
   useEffect(() => {
-    sessionStorage.setItem("log",null)
-    console.log(window.sessionStorage.getItem("sessionToken") ,sessionStorage.getItem("log"),null)
-    if (window.sessionStorage.getItem("sessionToken") !==sessionStorage.getItem("log") && window.sessionStorage.getItem("sessionToken")!==null) {
+    sessionStorage.setItem("log", null)
+    console.log(window.sessionStorage.getItem("sessionToken"), sessionStorage.getItem("log"), null)
+    if (window.sessionStorage.getItem("sessionToken") !== sessionStorage.getItem("log") && window.sessionStorage.getItem("sessionToken") !== null) {
       window.location.pathname = "/session/home";
     }
 
@@ -295,39 +295,38 @@ const Login = () => {
       console.log(st);
       setState(statesCode[states.indexOf(st)]);
       // console.log(statesCode[states.indexOf(st)]);
-     
-        try {
-          const response = await fetch(
-            `http://evm.iitbhilai.ac.in:8100/user/getPCListbyState/${
-              statesCode[states.indexOf(st)]
-            }`,
-            {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              mode: "cors",
-            }
-          );
-          const data2 = await response.json();
-          console.log(data2);
+
+      try {
+        const response = await fetch(
+          `http://evm.iitbhilai.ac.in:8100/user/getPCListbyState/${statesCode[states.indexOf(st)]
+          }`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            mode: "cors",
+          }
+        );
+        const data2 = await response.json();
+        console.log(data2);
           if(userID.length!=0){
           if(data2["status"]==502){
             setPCs(["00"]);
             setPCsCode(["00"]);
           }
           else{
-          setPCs(data2["pcname"]);
-          setPCsCode(data2["pccode"]);
+        setPCs(data2["pcname"]);
+        setPCsCode(data2["pccode"]);
           }
         }
 
-        } catch (err) {
-          console.log(err);
-          setPCs(["00"]);
-          setPCsCode(["00"]);
-        }
-      
+      } catch (err) {
+        console.log(err);
+        setPCs(["00"]);
+        setPCsCode(["00"]);
+      }
+
       if (changeUserID) {
         setUserID(
           statesCode[states.indexOf(st)]
@@ -376,7 +375,7 @@ const Login = () => {
       }
       if (changeUserID) {
         setUserID(
-          state + ("00" + PCsCode[PCs.indexOf(st)]).slice(-2) 
+          state + ("00" + PCsCode[PCs.indexOf(st)]).slice(-2)
         );
       }
       setInvalidUser("");
@@ -410,8 +409,8 @@ const Login = () => {
     if (changeUserID) {
       setUserID(
         state +
-          ("00" + PC).slice(-2) +
-          ("000" + ACsCode[ACs.indexOf(st)]).slice(-3)
+        ("00" + PC).slice(-2) +
+        ("000" + ACsCode[ACs.indexOf(st)]).slice(-3)
       );
     }
     setInvalidUser("");
@@ -427,11 +426,10 @@ const Login = () => {
         );
       }
       setInvalidUser("");
-
       console.log(userID);
     }
   }
-
+  console.log(selectUserBlock, passwordBlock, isOTPSent, "HIIIIIIIIIIIIIIIII")
   async function requestOTP() {
     if (userID == "") {
       setInvalidUser("Invalid User ID");
@@ -458,11 +456,13 @@ const Login = () => {
           console.log(data2["userids"]);
           setUserIds(data2["userids"]);
           if (
-            data2["status"]==404
+            data2["status"] == 404
           ) {
             setInvalidMobile("Mobile Number is not provided");
             setInvalidUser("");
-            // setSelectUserBlock(1);
+            setSelectUserBlock(1);
+            setPasswordBlock(1)
+            setIsOTPSent(1);
           } else {
             setInvalidMobile("");
             setInvalidUser("");
@@ -484,7 +484,7 @@ const Login = () => {
               console.log(data2);
 
               setIsOTPSent(1);
-
+              setPasswordBlock(1)
               setSelectUserBlock(1);
             } catch (err) {
               console.log(err);
@@ -512,7 +512,7 @@ const Login = () => {
           const data = await response.json();
           console.log(data);
 
-          if (data["status"]==200) {
+          if (data["status"] == 200) {
             setMobile(data["mobile"][0]);
             try {
               const response = await fetch(
@@ -530,8 +530,12 @@ const Login = () => {
               );
               const data2 = await response.json();
               console.log(data2);
-              if(data2["status"]==200)
-              setIsOTPSent(1);
+              if (data2["status"] == 200) {
+
+                setIsOTPSent(1);
+                // setSelectUserBlock(1);
+                setPasswordBlock(1);
+              }
             } catch (err) {
               console.log(err);
             }
@@ -552,75 +556,98 @@ const Login = () => {
       }
     }
   }
+  // console.log(typeof (userID), typeof (password), typeof (mobile), typeof (OTP))
 
-  async function requestPasswordBlock() {
-    try {
-      const response = await fetch(
-        "http://evm.iitbhilai.ac.in:8100/user/verifyOTP",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            mobileNumber: mobile,
-            otp: OTP,
-          }),
-          mode: "cors",
-        }
-      );
-      const data2 = await response.json();
-      console.log(data2);
-      if (data2["status"] == 404) {
-        setInvalidOTP("OTP does not match");
-        setOTP("");
-     
-        setInvalidOTP("User ID or OTP is incorrect");
-      } else {
-        setSelectUserBlock(0);
-        setIsOTPSent(0);
-        setPasswordBlock(1);
-        setIsMobile(0);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  }
+  // async function requestOTPPasswordBlock() {
+  //   console.log(userID, "UserID")
+  //   try {
+  //     console.log(userID, password, mobile, OTP)
+  //     const response = await fetch(
+  //       "http://evm.iitbhilai.ac.in:8100/user/verifyOTPPassword",
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({
+  //           'credentials': {
+  //             'userID': userID.toString(),
+  //             'password': password.toString()
+  //           },
+  //           'otp': {
+  //             'mobileNumber': mobile.toString(),
+  //             'otp': OTP.toString()
+  //           }
+  //         }),
+  //         mode: "no-cors",
+  //       }
+  //     );
+  //     console.log("something")
+  //     const data2 = await response.json();
+  //     console.log(data2)
+  //     if (data2["status"] == 200) {
+  //       alert("You are logged In");
+  //       setSelectUserBlock(0);
+  //       setIsOTPSent(0);
+  //       setPasswordBlock(0);
+  //       setIsMobile(0);
+  //       window.sessionStorage.setItem("sessionToken", userID);
+  //       window.location.replace("/session/home");
+  //     }
+
+  //     else {
+  //       setInvalidOTP("OTP or Password is incorrect");
+  //       setOTP("");
+  //       setPassword("");
+  //       setInvalidOTP("User ID or OTP is incorrect");
+  //     }
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // }
+
   async function requestDashboard() {
     console.log(userID, password);
     try {
       const response = await fetch(
-        "http://evm.iitbhilai.ac.in:8100/user/verifyPasswordByUserID",
+        "http://evm.iitbhilai.ac.in:8100/user/verifyOTPPassword",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            userID: userID,
-            passwordhash: sha256(password),
+            'credentials': {
+              'userID': userID.toString(),
+              'password': password.toString()
+            },
+            'otp': {
+              'mobileNumber': mobile.toString(),
+              'otp': OTP.toString()
+            }
           }),
           mode: "cors",
         }
       );
       const data2 = await response.json();
       console.log(data2);
-      if (data2["status"] === 404) {
-        setInvalidPassword("Password does not match");
-        setPassword("");
-      } else {
+      if (data2["status"] === 200) {
         alert("You are logged In");
         setIsOTPSent(0);
         setPasswordBlock(0);
         setSelectUserBlock(0);
         window.sessionStorage.setItem("sessionToken", userID);
+        window.location.replace("/session/home");
+      } else {
+        setInvalidPassword("Password does not match");
+        setPassword("");
         // setMobile("");
         // setUserID("");
         // setState("");
         // setPC("");
         // setAC("");
         // setRole("");
-        window.location.replace("/session/home");
+
       }
     } catch (err) {
       console.log(err);
@@ -722,7 +749,7 @@ const Login = () => {
                         {roles.length!=0 && <>Role</>}
                       </p>
                       {roles.length==0 &&(
-                         <select
+                      <select
                          className="pl-3 pr-3 mt-7 h-13 text-black outline-none rounded-md w-full mb-3 opacity-40"
                           disabled
                         id="roleDropdown"
@@ -886,18 +913,10 @@ const Login = () => {
                  
                 </>
               )}
-              {passwordBlock == 1 && (
-                <Password
-                  data={requestDashboard}
-                  user={userID}
-                  password={password}
-                  setPassword={setPassword}
-                  invalidPassword={invalidPassword}
-                />
-              )}
+
               {selectUserBlock == 1 && (
                 <SelectUser
-                  data={requestPasswordBlock}
+                  // data={requestDashboard}
                   user={setUserID}
                   userID={userID}
                   userIDs={userIDs}
@@ -905,10 +924,21 @@ const Login = () => {
               )}
               {isOTPSent == 1 && (
                 <Otp
-                  data={requestPasswordBlock}
+                  // data={requestDashboard}
                   OTP={OTP}
                   setOTP={setOTP}
                   invalidOTP={invalidOTP}
+                />
+              )}
+
+              {passwordBlock == 1 && (
+                <Password
+                  data={requestDashboard}
+                  user={userID}
+                  password={password}
+                  setPassword={setPassword}
+                  invalidPassword={invalidPassword}
+                  OTP={OTP}
                 />
               )}
             </div>

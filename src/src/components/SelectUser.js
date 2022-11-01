@@ -3,6 +3,10 @@ import { useState } from "react";
 const SelectUser = (props) => {
 
   const users=props.userIDs;
+  if(users.lenght==1){
+    console.log(users[0])
+    props.user(users[0]);
+  }
   return (
     <>
       <div className="dropdown">
