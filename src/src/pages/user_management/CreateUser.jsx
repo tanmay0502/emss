@@ -66,6 +66,7 @@ function CreateUser() {
 
   const [stateDisable,setStateDisable] = useState(false);
   const [pcDisable,setPcDisable] = useState(false);
+  const [acDisable,setAcDisable] = useState(false);
 
 async function getRoleList(){
   try {
@@ -155,7 +156,6 @@ function filterRoleList(
   } 
 }
   async function getState() {
-
     try {
       const response = await fetch(
         "http://evm.iitbhilai.ac.in:8100/user/getStateList",
@@ -295,9 +295,10 @@ function filterRoleList(
     addUser(); // Perform API Call here
   };
 
-  async function setStateFunc(st, changeUserID = true) {
+  async function setStateFunc(st, changeUserID = true, filterStr = window.sessionStorage.getItem("sessionToken").substring(7)) {
     if (st !== "Select:") {
       setState(statesCode[states.indexOf(st)]);
+      if(role=='CEO' || role =='CEO-Office') return;
       if (
         statesCode[states.indexOf(st)] == "IN" ||
         statesCode[states.indexOf(st)] == "EL" ||
@@ -336,10 +337,11 @@ function filterRoleList(
     isTemporary ? setIsTemporary(false) : setIsTemporary(true);
   }
 
-  async function setPCFunc(st, changeUserID = true) {
-    console.log(st)
-    console.log(state, PCsCode[PCs.indexOf(st)]);
+  async function setPCFunc(st, changeUserID = true,filterStr = window.sessionStorage.getItem("sessionToken").substring(7)) {
+   
     setPC(PCsCode[PCs.indexOf(st)]);
+
+    if((filterStr == 'CEO' && role == 'DEO')||(filterStr == 'CEO' && role == 'DDEO')) return;
     if (state !== "Select:") {
       if (state == "IN" || state == "EL" || state == "BL") {
       } else {
@@ -397,17 +399,33 @@ function filterRoleList(
     if (st !== "Select:") {
       setRole(rolesCode[roles.indexOf(st)]);
 
-      if(filterStr == 'CEO'){
-        setStateDisable(true);
-        setStateFunc(window.sessionStorage.getItem("sessionToken").substring(0, 2));
-      }
-   
-      else if(filterStr == 'DEO'){
-        setStateDisable(true);
-        setStateFunc(window.sessionStorage.getItem("sessionToken").substring(0, 2));
+      //Reset
+      setStateDisable(false);
+      setPcDisable(false);
+      setAcDisable(false);
+
+      if((filterStr == 'ECI-Admin') &&( st == 'Chief Electoral Officer' || st== 'Chief Electoral Officer Office' || st == 'STATE NODAL OFFICER')){
+        setPC("00");
         setPcDisable(true);
-        setPCFunc(window.sessionStorage.getItem("sessionToken").substring(0, 2));
-      }      
+        setAC("000");
+        setAcDisable(true);
+      }
+      else if((filterStr =='CEO' && st == "STATE NODAL OFFICER")|| (filterStr =='CEO' && st == "Chief Electoral Officer Office")){
+        setStateDisable(true);
+        setStateFunc(window.sessionStorage.getItem("sessionToken").substring(0, 2));
+        setPC("00");
+        setPcDisable(true);
+        setAC("000");
+        setAcDisable(true);
+      }
+      else if((filterStr =='CEO' && st == 'District Election Officer')||
+      (filterStr =='CEO' && st == "Deputy District Election Officer")){
+        setStateDisable(true);
+        setStateFunc(window.sessionStorage.getItem("sessionToken").substring(0, 2));
+        setAC("000");
+        setAcDisable(true);
+      }
+     
       if (changeUserID) {
         setUserID(
           state + ("00" + PC).slice(-2) + AC + rolesCode[roles.indexOf(st)]
@@ -453,6 +471,7 @@ function filterRoleList(
             createdBy: window.sessionStorage.getItem("sessionToken"),
             creationTime: "2022-09-14T17:14:33.658Z"
           }),
+          mode : 'cors'
         }
       );
 
@@ -615,7 +634,6 @@ function filterRoleList(
             <div className="form_select">
               <select
                 disabled = {isTemporary || pcDisable}
-                required
                 name=""
                 id="input_PC"
                 onChange={(e) => setPCFunc(e.target.value)}
@@ -654,8 +672,7 @@ function filterRoleList(
           <div className="form_group">
             <div className="form_select">
               <select
-                disabled = {isTemporary}
-                required
+                disabled = {isTemporary || acDisable}
                 name=""
                 id="input_AC"
                 onChange={(e) => setACFunc(e.target.value)}

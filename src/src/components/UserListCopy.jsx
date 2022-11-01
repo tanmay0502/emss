@@ -198,12 +198,12 @@ function UserList() {
 						<button className='createUserBtn' onClick={() => {
 							navigate("/session/usermanagement/createUser")
 						}}>Create User</button>
-						<div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center", background: "#F9FBFF", borderRadius: "10px", padding: "7.5px 15px 7.5px 0", fontSize: "0.8em" }}>
+						<div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center", background: "var(--lightGrayBG )" , borderRadius: "10px", padding: "7.5px 15px 7.5px 0", fontSize: "0.8em" }}>
 							<SearchInputElement style={{ margin: "0 7.5px", width: "20px" }} />
 							<input type={'search'} defaultValue={tableFilter} onChange={(e) => { setTableFilter(e.target.value) }} placeholder='Search' style={{ outline: "none", background: "transparent" }} />
 						</div>
-						<div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center", marginLeft: "10px", background: "#F9FBFF", borderRadius: "10px", padding: "7.5px 15px 7.5px 0", fontSize: "0.8em" }}>
-							<span style={{ minWidth: "max-content", paddingInlineStart: "7.5px" }}>Sort by : &nbsp;</span>
+						<div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center", marginLeft: "10px", background: "var(--lightGrayBG )", borderRadius: "10px", padding: "7.5px 15px 7.5px 0", fontSize: "0.8em" }}>
+							<span className='SampleText' style={{ minWidth: "max-content", paddingInlineStart: "7.5px" }}>Sort by : &nbsp;</span>
 							<select 
 							style={{ textAlign: "center", outline: "none", background: "transparent", padding: "0px", border: "none" }}
 							onChange={(e)=>setSortBy(e.target.value)}>

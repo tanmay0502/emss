@@ -57,12 +57,12 @@
 	font-size: 0.85em !important;
 	/* line-height: 21px !important; */
 	letter-spacing: -0.01em;
-	color: #B5B7C0 !important;
+	color: var(--table-header-light) !important;
 	padding: 15px 0;
 	border-bottom: 1px solid #EEEEEE;
 	position: sticky;
   	top: 0;
-	background-color: white;
+	background-color: var(--background-secondary) !important;
 	z-index: 999;
 }
 
@@ -83,7 +83,7 @@
 	font-size: 0.9em !important;
 	/* line-height: 24px; */
 	letter-spacing: -0.01em;
-	color: #292D32;
+	color: var(--foreground-primary) !important;
 }
 
 .user-details button{

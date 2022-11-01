@@ -3,7 +3,8 @@
     height: 9vh;
     max-height: 9vh;
     /* overflow: auto; */
-    background: #FFFFFF;
+    background: var(--background-secondary) !important;
+    color : var(--foreground-primary) !important;
     box-sizing: border-box;
     position: relative;
     display: flex;
@@ -60,7 +61,7 @@
 }
 
 .divnav svg > *{
-    fill: black;
+    fill: var(--foreground-primary);
 }
 
 .divnav span{
@@ -72,7 +73,7 @@
     font-size: 1.8em;
     line-height: 31px;
     text-transform: capitalize;
-    color: #000000;
+    color: var(--foreground-primary) !important;
 }
 
 .navBarDropDownBtn > .navBarDropDown{

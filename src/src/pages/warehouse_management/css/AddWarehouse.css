@@ -129,6 +129,8 @@
 	font-size: 0.8em;
 	margin-right: 10px;
 	transition: all linear 0.2s;
+	background-color: var(--background-secondary) !important;
+	color: var(--foreground-primary) !important;
   }
   
   .form_group:focus-within .form_select select, .form_group:focus-within .form_input input{

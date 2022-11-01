@@ -10,11 +10,13 @@ import { ReactComponent as WarehouseManagementIcon } from './assets/WarehouseMan
 import { ReactComponent as IssueRequestManagementIcon } from './assets/Issue-RequestManagement.svg';
 import { ReactComponent as OrderManagementIcon } from './assets/OrderManagement.svg';
 import { ReactComponent as OtherServicesIcon } from './assets/OtherServices.svg';
-import { ReactComponent as MessagesIcon } from './assets/messageIcon2.svg';
+import { ReactComponent as MessagesIcon } from './assets/jam_messages.svg';
 import { ReactComponent as DownloadsIcon } from './assets/Downloads.svg';
 import { ReactComponent as ChevronRight } from './assets/chevron-right.svg';
+import { ReactComponent as ServicesIcon } from './assets/ser.svg';
+import {ReactComponent as ReportIcon} from './assets/carbon_report.svg';
+import Switch from "react-switch";
 import { useState, useEffect } from 'react';
-
 import './sidebar.css';
 import './Navbar.css'
 
@@ -26,6 +28,12 @@ function Routed(props) {
 	const [userData, setUserData] = useState({
 		username: null
 	})
+	const theme = () => {
+		var r = document.querySelector(':root');
+		r.style.setProperty('--light', 'white');
+		r.style.setProperty('--background-gray','black');
+	  }
+	// theme();
 
 	// function viewProfile(){
 	// 	if(profileView==0){
@@ -52,8 +60,40 @@ function Routed(props) {
 	const navigate = useNavigate()
 	const location = useLocation()
 
+	const [checked,setChecked] = useState(false);
 	
 
+	const handleChange = () => {
+			setChecked(!checked)
+			var r = document.querySelector(':root');
+			if(!checked){ //Dark
+				r.style.setProperty('--light', 'white');
+				r.style.setProperty('--background-gray','#101125');
+				r.style.setProperty('--background-secondary','rgb(25, 25, 39)');
+				r.style.setProperty('--foreground-primary','#FFFFFF');
+				r.style.setProperty('--trans','rgb(25, 25, 39)');
+				r.style.setProperty('--second','#FFFFFF');
+				r.style.setProperty('--border','#FFFFFF');
+				r.style.setProperty('--dashed','#FFFFFF');
+				r.style.setProperty('--table-header-light','#FFFFFF');
+				r.style.setProperty('--lightGrayBG','transparent');
+
+
+			}
+			else{ //Light
+				r.style.setProperty('--light', 'rgba(0, 0, 0, 0.4)');
+				r.style.setProperty('--background-gray','#F9F9F9');
+				r.style.setProperty('--background-secondary','#FFFFFF');
+				r.style.setProperty('--foreground-primary','rgb(25, 25, 39)');
+				r.style.setProperty('--trans','#F8F8F8');
+				r.style.setProperty('--second','rgba(0, 0, 0, 0.5)');
+				r.style.setProperty('--border','rgba(0, 0, 0, 0.1)');
+				r.style.setProperty('--dashed','rgba(0, 0, 0, 0.28)');
+				r.style.setProperty('--table-header-light','#B5B7C0');
+				r.style.setProperty('--lightGrayBG','#F9FBFF');
+
+			}
+	}
 	const getNav = () => {
 		if (location.pathname.startsWith('/session/home')) {
 			return (<>
@@ -187,24 +227,53 @@ function Routed(props) {
 							<div><WarehouseManagementIcon />Warehouse</div>
 							<ChevronRight className="chevron" />
 						</button>
+
+
+
 						<button className={window.location.pathname.startsWith("/session/issuemanagement") ? 'nav-button active' : 'nav-button'} onClick={() =>{
 							navigate("/session/issuemanagement")
 						}}>
 							<div><IssueRequestManagementIcon />Issue/Request</div>
 							<ChevronRight className="chevron" />
 						</button>
+
+						
+						<button className={window.location.pathname.startsWith("/session/services") ? 'nav-button active' : 'nav-button'} onClick={() => {
+							navigate("/session/services")
+						}}>
+							<div><ServicesIcon />Other Services</div>
+							<ChevronRight className="chevron" />
+						</button>
+
+						<div className="horz_line">
+							
+						</div>
+
 						<button className={window.location.pathname.startsWith("/session/messages") ? 'nav-button active' : 'nav-button'}>
-							<div><MessagesIcon />Messages</div>
+							<div className='filler'><MessagesIcon />Messages</div>
 							<ChevronRight className="chevron" />
 						</button>
 						<button className={window.location.pathname.startsWith("/session/downloads") ? 'nav-button active' : 'nav-button'}>
 							<div><DownloadsIcon />Downloads</div>
 							<ChevronRight className="chevron" />
 						</button>
+
+						<button className={window.location.pathname.startsWith("/session/downloads") ? 'nav-button active' : 'nav-button'}>
+							<div><ReportIcon />Report</div>
+							<ChevronRight className="chevron" />
+						</button>
+
+
 						<button className={window.location.pathname.startsWith("/session/otherservices") ? 'nav-button active' : 'nav-button'}>
 							<div><OtherServicesIcon />Others</div>
 							<ChevronRight className="chevron" />
 						</button>
+
+						<div className="myToggle">
+							<span>Dark Mode</span>
+							<Switch onChange={handleChange} checked={checked} onColor="#F56A3F" uncheckedIcon={false}
+            checkedIcon={false} />
+						</div>
 					</div>
 					{/* <div className="nav-panel-bottom">
 						<button className={window.location.pathname.startsWith("/session/home") ? 'nav-button active' : 'nav-button'} onClick={() => {

@@ -15,7 +15,7 @@
 	align-items: center;
 	justify-content: flex-start;
 	/* font-size: calc(10px + 2vmin); */
-	color: rgba(0, 0, 0, 0.7);
+	color: var(--foreground-primary) !important;
 	font-size: 1em;
 	/* padding: 0 40px; */
 	margin-bottom: 25px;
@@ -45,46 +45,10 @@ button.nav-button {
 	margin-bottom: 5px;
 	transition: all linear 0.1s;
 	border-radius: 10px !important;
-	color: black !important;
+	/* color: var(--foreground-primary) !important; */
+	fill: var(--foreground-primary) !important;
 	font-family: 'Poppins' !important;
 	font-weight: 400 !important;
-}
-
-button.nav-button svg > * {
-	fill: black !important;
-}
-
-button.nav-button:hover {
-	background: #84587C !important;
-	color: white !important;
-}
-
-button.nav-button.active {
-	background: #84587C !important;
-	color: white !important;
-}
-
-button.nav-button:hover svg > * {
-	fill: white !important;
-}
-
-button.nav-button.active svg > * {
-	fill: white !important;
-}
-
-button.nav-button.active .chevron{
-	display: block;
-}
-
-button.nav-button .chevron *{
-	fill: white !important;
-}
-
-button.nav-button div{
-	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: flex-start;
 }
 
 button.nav-button svg {
@@ -94,10 +58,72 @@ button.nav-button svg {
 	margin-right: 10px;
 	padding: 2.5px;
 }
+button.nav-button svg  > * {
+	fill: var(--foreground-primary) ;	
+}
+
+button.nav-button:hover {
+	background: #84587C !important;
+	color: white!important;
+}
+
+button.nav-button.active {
+	background: #84587C !important;
+	fill: white !important;
+	color: white !important;
+}
+
+button.nav-button:hover svg > * {
+	fill: white !important;
+}
+
+button.nav-button.active svg > * {
+	fill: white!important;
+}
+
+button.nav-button.active .chevron{
+	display: block;
+}
+
+button.nav-button .chevron *{
+	fill: var(--background-secondary)  !important;
+}
+
+button.nav-button div{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: flex-start;
+}
 
 button.nav-button .chevron {
 	height: 20px;
 	max-width: 20px;
 	display: none;
 	margin-right: 0px !important;
+}
+
+.horz_line{
+	height: 1px;
+	width: 184px;
+	background-color: #D9D9D9;
+	margin: 15px 0;
+	margin-left: -50px;
+}
+.myToggle{
+	display: flex;
+	align-items: center;
+	margin-left: -25%;
+	margin-top: 20px;
+}
+.myToggle span{
+	font-family: 'Poppins';
+	font-style: normal;
+	font-weight: 500;
+	line-height: 31px;
+	/* identical to box height, or 129% */
+	font-size: 20px;
+	text-transform: capitalize;
+	margin-right: 15px;
+	color: var(--foreground-primary);
 }
