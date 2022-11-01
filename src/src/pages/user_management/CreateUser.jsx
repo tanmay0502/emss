@@ -64,96 +64,113 @@ function CreateUser() {
   const [roles, setRoles] = useState([]);
   const [rolesCode, setRolesCode] = useState([]);
 
-  const [stateDisable,setStateDisable] = useState(false);
-  const [pcDisable,setPcDisable] = useState(false);
+  const [stateDisable, setStateDisable] = useState(false);
+  const [pcDisable, setPcDisable] = useState(false);
 
-async function getRoleList(){
-  try {
-    const response = await fetch(
-      `http://evm.iitbhilai.ac.in:8100/user/getRoleList/`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    const data2 = await response.json();
-    console.log(data2);
-    filterRoleList(data2);
-}  catch (err) {
-  console.log(err);
-}
+  const [fileError,setFileError]=useState(0);
 
- 
-}
-
-function filterRoleList(
-  data2,
-  changeUserID = true,
-  filterStr = window.sessionStorage.getItem("sessionToken").substring(7)
-  ){
-  if (["EC", "ME", "MB"].includes(
-    window.sessionStorage.getItem("sessionToken").substring(0, 2)
-  )) {
-    setRoles(data2["roleName"]);
-    setRolesCode(data2["roleCode"]);
+  function getExtension(filename) {
+    return filename.split('.').pop()
   }
-  else {
+  function checkFile(file){
+      const type = (getExtension(file))
 
-    let rcode = [];
-    var q = new Queue();
+      if(type=="png" || type=="jpg" || type=="jpeg"){
+        setFileError(0);
+      }
+      else{
+        setFileError(1);
 
-    if (filterStr in lev1) {
-      q.enqueue(lev1[filterStr]);
-    }
-    else if (filterStr in lev2) {
-      q.enqueue(lev2[filterStr]);
-    }
-    else if (filterStr in lev3A) {
-      q.enqueue(lev3A[filterStr]);
-    }
-    else if (filterStr in lev3B) {
-      q.enqueue(lev3B[filterStr]);
+      }
+  }
+
+  async function getRoleList() {
+    try {
+      const response = await fetch(
+        `http://evm.iitbhilai.ac.in:8100/user/getRoleList/`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data2 = await response.json();
+      console.log(data2);
+      filterRoleList(data2);
+    } catch (err) {
+      console.log(err);
     }
 
-    else if (filterStr in lev4A) {
-      q.enqueue(lev4A[filterStr]);
+
+  }
+
+  function filterRoleList(
+    data2,
+    changeUserID = true,
+    filterStr = window.sessionStorage.getItem("sessionToken").substring(7)
+  ) {
+    if (["EC", "ME", "MB"].includes(
+      window.sessionStorage.getItem("sessionToken").substring(0, 2)
+    )) {
+      setRoles(data2["roleName"]);
+      setRolesCode(data2["roleCode"]);
     }
-    else if (filterStr in lev5) {
-      q.enqueue(lev5[filterStr]);
-    }
+    else {
+
+      let rcode = [];
+      var q = new Queue();
+
+      if (filterStr in lev1) {
+        q.enqueue(lev1[filterStr]);
+      }
+      else if (filterStr in lev2) {
+        q.enqueue(lev2[filterStr]);
+      }
+      else if (filterStr in lev3A) {
+        q.enqueue(lev3A[filterStr]);
+      }
+      else if (filterStr in lev3B) {
+        q.enqueue(lev3B[filterStr]);
+      }
+
+      else if (filterStr in lev4A) {
+        q.enqueue(lev4A[filterStr]);
+      }
+      else if (filterStr in lev5) {
+        q.enqueue(lev5[filterStr]);
+      }
 
 
-    while (!q.isEmpty) {
-      var f = q.peek();
-      q.dequeue();
-      if (f == null) continue;
-      for (let key in f) {
-        q.enqueue(f[key]);
-        if (key != filterStr) {
-          rcode.push(key);
+      while (!q.isEmpty) {
+        var f = q.peek();
+        q.dequeue();
+        if (f == null) continue;
+        for (let key in f) {
+          q.enqueue(f[key]);
+          if (key != filterStr) {
+            rcode.push(key);
+          }
+        }
+
+      }
+      rcode = [...new Set(rcode)];
+      console.log(rcode);
+      let rc = [];
+      let rname = []
+      for (let i = 0; i < data2["roleCode"].length; i++) {
+        console.log(data2["roleCode"][i]);
+        if (rcode.includes(data2["roleCode"][i])) {
+          console.log("hh");
+          rc.push(data2["roleCode"][i]);
+          rname.push(data2["roleName"][i]);
         }
       }
-
+      console.log(rname, rc)
+      setRoles(rname);
+      setRolesCode(rc);
     }
-    rcode = [...new Set(rcode)];
-    console.log(rcode);
-    let rc = [];
-    let rname = []
-    for (let i = 0; i < data2["roleCode"].length; i++) {
-      console.log(data2["roleCode"][i]);
-      if (rcode.includes(data2["roleCode"][i])) {
-        console.log("hh");
-        rc.push(data2["roleCode"][i]);
-        rname.push(data2["roleName"][i]);
-      }
-    }
-    console.log(rname, rc)
-    setRoles(rname);
-    setRolesCode(rc);
-  } 
-}
+  }
   async function getState() {
 
     try {
@@ -291,8 +308,9 @@ function filterRoleList(
 
   const onFormSubmit = async (e) => {
     e.preventDefault();
-
+    if(!fileError){
     addUser(); // Perform API Call here
+    }
   };
 
   async function setStateFunc(st, changeUserID = true) {
@@ -333,7 +351,19 @@ function filterRoleList(
   }
 
   const toggler = () => {
+
     isTemporary ? setIsTemporary(false) : setIsTemporary(true);
+    document.getElementById("formUserEmail").value = '';
+    document.getElementById("formUserName").value = '';
+    document.getElementById("formUserMobileNumber").value = '';
+    document.getElementById("formUserAddress").value = '';
+    document.getElementById("formUserAltNumber1").value = '';
+    document.getElementById("formUserAltNumber2").value = '';
+    document.getElementById("formUserImage").value = '';
+    document.getElementById("input_Roles").value = '';
+    document.getElementById("input_PC").value = '';
+    document.getElementById("input_AC").value = '';
+
   }
 
   async function setPCFunc(st, changeUserID = true) {
@@ -373,11 +403,11 @@ function filterRoleList(
   async function setACFunc(
     st,
     changeUserID = true,
-    
+
   ) {
     setAC(ACsCode[ACs.indexOf(st)]);
     console.log(ACsCode[ACs.indexOf(st)]);
-  
+
     if (changeUserID) {
       setUserID(
         state +
@@ -389,25 +419,25 @@ function filterRoleList(
   }
 
   async function setRoleFunc(
-    st, 
-    changeUserID = true, 
+    st,
+    changeUserID = true,
     filterStr = window.sessionStorage.getItem("sessionToken").substring(7)
-    ){
-    
+  ) {
+
     if (st !== "Select:") {
       setRole(rolesCode[roles.indexOf(st)]);
 
-      if(filterStr == 'CEO'){
+      if (filterStr == 'CEO') {
         setStateDisable(true);
         setStateFunc(window.sessionStorage.getItem("sessionToken").substring(0, 2));
       }
-   
-      else if(filterStr == 'DEO'){
+
+      else if (filterStr == 'DEO') {
         setStateDisable(true);
         setStateFunc(window.sessionStorage.getItem("sessionToken").substring(0, 2));
         setPcDisable(true);
         setPCFunc(window.sessionStorage.getItem("sessionToken").substring(0, 2));
-      }      
+      }
       if (changeUserID) {
         setUserID(
           state + ("00" + PC).slice(-2) + AC + rolesCode[roles.indexOf(st)]
@@ -428,7 +458,6 @@ function filterRoleList(
 
 
   async function addUser() {
-    console.log(userID)
     try {
       const response = await fetch(
         "http://evm.iitbhilai.ac.in:8100/user/createUser",
@@ -439,14 +468,12 @@ function filterRoleList(
           },
           body: JSON.stringify({
             userID: userID,
-            email: document.getElementById("formUserEmail").value,
+            email: ValidateEmail(document.getElementById("formUserEmail").value) ? document.getElementById("formUserEmail").value : document.getElementById("formUserEmail").value = '',
             name: document.getElementById("formUserName").value,
-            mobileNumber: document.getElementById("formUserMobileNumber").value,
+            mobileNumber: validate_number(document.getElementById("formUserMobileNumber").value) ? document.getElementById("formUserMobileNumber").value : document.getElementById("formUserMobileNumber").value = '',
             address: document.getElementById("formUserAddress").value,
-            othercontactnum1:
-              document.getElementById("formUserAltNumber1").value,
-            othercontactnum2:
-              document.getElementById("formUserAltNumber2").value,
+            othercontactnum1: validate_number(document.getElementById("formUserAltNumber1").value) ? document.getElementById("formUserAltNumber1").value : document.getElementById("formUserAltNumber1").value = '',
+            othercontactnum2: validate_number(document.getElementById("formUserAltNumber2").value) ? document.getElementById("formUserAltNumber2").value : document.getElementById("formUserAltNumber2").value = '',
             active: isTemporary ? "I" : "A",
             activationTime: "2022-09-14T17:14:33.658Z",
             photofilename: "imagefile",
@@ -477,7 +504,31 @@ function filterRoleList(
     }
     return () => { };
   }, [isTemporary]);
-  console.log(isTemporary);
+
+
+  function ValidateEmail(mail) {
+    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)) {
+      return (true)
+    }
+    alert("You have entered an invalid email address!")
+    return (false)
+  }
+
+  function validate_number(MobNumber) {
+    const regex = new RegExp(
+      '^\\d{10}$'
+    );
+
+    if (regex.test(MobNumber))
+      return true
+    else {
+      alert("You have entered an invalid mobile number!")
+      return false
+    }
+  }
+
+
+
   return (
 
     <div className="flex-col justify-center align-middle">
@@ -532,7 +583,7 @@ function filterRoleList(
           <div className="form_group">
             <div className="form_select">
               <select
-                disabled = {isTemporary}
+                disabled={isTemporary}
                 required={!isTemporary}
                 name=""
                 id="input_Roles"
@@ -549,7 +600,7 @@ function filterRoleList(
               </select>
             </div>
           </div>
-          
+
           <div className="form_label">
             <label htmlFor="">Email Address:<span className="text-red-500 text-lg">*</span></label>
           </div>
@@ -573,7 +624,7 @@ function filterRoleList(
           <div className="form_group">
             <div className="form_select">
               <select
-                disabled = {isTemporary || stateDisable}
+                disabled={isTemporary || stateDisable}
                 required
                 name=""
                 id="input_state"
@@ -614,7 +665,7 @@ function filterRoleList(
           <div className="form_group">
             <div className="form_select">
               <select
-                disabled = {isTemporary || pcDisable}
+                disabled={isTemporary || pcDisable}
                 required
                 name=""
                 id="input_PC"
@@ -654,7 +705,7 @@ function filterRoleList(
           <div className="form_group">
             <div className="form_select">
               <select
-                disabled = {isTemporary}
+                disabled={isTemporary}
                 required
                 name=""
                 id="input_AC"
@@ -708,7 +759,7 @@ function filterRoleList(
 
           <div className="form_label">
             <label htmlFor="">User Image:
-                  {isTemporary?<span className="text-red-500 text-lg">*</span>: <span></span> }
+              {isTemporary ? <span className="text-red-500 text-lg">*</span> : <span></span>}
             </label>
           </div>
           <div className="form_group">
@@ -717,8 +768,13 @@ function filterRoleList(
               required={isTemporary}
               type="file"
               placeholder="Choose Image (Upto 5 MB)"
+              onChange={(e)=>(checkFile(e.target.value))}
             />
           </div>
+          <br/>
+        {fileError==1 && (<div className="text-left text-red-700 ">*File type must of .jpg, .jpeg or png only.</div>)}
+          
+          
         </div>
 
         <center>
