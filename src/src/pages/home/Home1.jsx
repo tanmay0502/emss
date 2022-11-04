@@ -109,7 +109,7 @@ const blocked = [
             </div>
         </div>
 
-        <div className='w-100 gridCustom'>
+        <div className='w-100 gridCustom  pb-10'>
            {otherElements.includes("District") &&  <div className="myCardSample">
                 <div className="card_title">
                     District
@@ -173,7 +173,7 @@ const blocked = [
                         <div className="card_header_noti ">
                         <div className="heading">Notifications</div>
                         <div className='hBox'>
-                        <ul className='li_noti hide-scroll-bar'>
+                        <ul className='li_noti '>
                         <li>
                         <span>
                         <span>
@@ -390,7 +390,7 @@ const blocked = [
                 <div className="card_header_noti ">
         <div className="heading">Recent Issues</div>
             <div className='hBox'>
-            <ul className='li_noti hide-scroll-bar'>
+            <ul className='li_noti '>
           <li>
             <span>
               <span>

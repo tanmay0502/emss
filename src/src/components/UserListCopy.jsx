@@ -1,5 +1,6 @@
 import React, { ReactComponent } from 'react'
 import { useState, useEffect } from "react";
+import jwt_decode from "jwt-decode";
 import './styles/UserList.css'
 import UserDetail from './UserDetail';
 import { FaUserEdit } from "react-icons/fa";
@@ -30,7 +31,7 @@ function UserList() {
 	const [sortOrder, setSortOrder] = useState("asc")
 
 	const sortMapping = {
-		"None" : null,
+		"None": null,
 		"User ID": "User ID",
 		"Name": "User Name",
 		"Role": "Role",
@@ -87,13 +88,13 @@ function UserList() {
 				}} />
 			}
 		})
-		data.sort(function(a, b){ 
-			if(sortMapping[sortBy] !== null){
-				return a[sortMapping[sortBy]].localeCompare(b[sortMapping[sortBy]]) 
+		data.sort(function (a, b) {
+			if (sortMapping[sortBy] !== null) {
+				return a[sortMapping[sortBy]].localeCompare(b[sortMapping[sortBy]])
 			}
 			else return 0;
 		});
-		if(sortMapping[sortBy] !== null && sortOrder === 'desc'){
+		if (sortMapping[sortBy] !== null && sortOrder === 'desc') {
 			data.reverse();
 		}
 		// console.log(data)
@@ -106,6 +107,11 @@ function UserList() {
 
 
 	async function getUser() {
+		let token = localStorage.getItem("token");
+		const decode = jwt_decode(JSON.parse(token)["access_token"])
+        // console.log(decode)
+    	// console.log(JSON.parse(token));
+		const access_token=JSON.parse(token)["access_token"];
 		try {
 			const response = await fetch(
 				"http://evm.iitbhilai.ac.in:8100/user/listAllUsers",
@@ -113,12 +119,13 @@ function UserList() {
 					method: "GET",
 					headers: {
 						"Content-Type": "application/json",
+						'Authorization': 'Bearer ' + access_token,
 					},
 					mode: "cors"
 				}
 			);
 			const data2 = await response.json();
-			// console.log(data2);
+			console.log(data2);
 			setUsers(data2["data"]);
 		} catch (err) {
 			console.log(err);
@@ -213,7 +220,7 @@ function UserList() {
 								<option value={"Role"}>Role</option>
 							</select>
 							<ChevronDown />
-							<button className='sortOrderButton' onClick={()=>{
+							<button className='sortOrderButton' onClick={() => {
 								setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
 							}}>
 								{sortOrder === 'asc' ? <AiOutlineSortAscending /> : <AiOutlineSortDescending />}

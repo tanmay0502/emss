@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react'
-import {FaEdit} from 'react-icons/fa'
+import { FaEdit } from 'react-icons/fa'
 import styles from './styles/issue.module.css'
 
 import Group from './Group'
 import ConnnectorOne from './ConnectorOne';
 import ConnectorTwo from './ConnectorTwo';
 import { useNavigate } from 'react-router-dom';
+import { AiOutlineArrowLeft } from 'react-icons/ai'
 
-export default function ViewRequest(){
+export default function ViewRequest() {
     const navigate = useNavigate()
 
-    const [Details,setDetails] = useState({});
+    const [Details, setDetails] = useState({});
 
     const issueId = () => {
         const URL = window.location.href;
@@ -28,35 +29,35 @@ export default function ViewRequest(){
                 {
                     method: "GET",
                     headers: {
-                      "Content-Type": "application/json",
+                        "Content-Type": "application/json",
                     },
-                    mode : 'cors'
+                    mode: 'cors'
                 }
             )
             const data = await response.json();
 
-            let connectorLength = data['remarks'].map((e,index) => {
-                if(e[6] == "Y") return index != data['remarks'].length - 1 ? <ConnectorTwo/> : <ConnnectorOne/>
+            let connectorLength = data['remarks'].map((e, index) => {
+                if (e[6] == "Y") return index != data['remarks'].length - 1 ? <ConnectorTwo /> : <ConnnectorOne />
             })
-            connectorLength  = connectorLength.filter((ele)=> {
+            connectorLength = connectorLength.filter((ele) => {
                 return ele !== undefined;
             })
             console.log(connectorLength);
-            if(data['remarks']!=undefined && data['remarks'].length == 1 || data['remarks'].length == 0 || connectorLength.length == 1) connectorLength = '';
-            
+            if (data['remarks'] != undefined && data['remarks'].length == 1 || data['remarks'].length == 0 || connectorLength.length == 1) connectorLength = '';
+
             data['ConnectorLength'] = connectorLength;
             setDetails(data);
-           
+
         } catch (error) {
             console.log(error);
-        }        
+        }
     }
 
     const mapSeverity = (code) => code != undefined && code == "L" ? "Low" : code == "M" ? "Medium" : "High";
-    
+
     const getTime = (str) => {
         const myArr = str.split("T");
-        return myArr[0] + ' / '+ myArr[1].split(".")[0];
+        return myArr[0] + ' / ' + myArr[1].split(".")[0];
     }
 
     const checkAction = () => {
@@ -64,21 +65,40 @@ export default function ViewRequest(){
         return countEle.length ? true : false;
     };
 
-    useEffect(()=>{
+    useEffect(() => {
         getDetails();
-    },[]);
+    }, []);
 
-    console.log(Details);
-   let len = Details['remakrs']!= undefined && Details['remarks'].length ;
+    // console.log(Details);
+    let len = Details['remakrs'] != undefined && Details['remarks'].length;
     return (
         <div className={styles.MyContainer}>
-            <div className={styles.PageTitle}>
+            {/* <div className={styles.PageTitle}>
                 <div className={`${styles.RequestId} ${styles.myFlexBoxCenter}`} >
-                    <FaEdit/> <span> Request ID : {issueId()}</span>
+                    <FaEdit /> <span> Request ID : {issueId()}</span>
                 </div>
-                <button className={`${styles.ActionButton} ${styles.myButton}`} onClick={()=> window.location.href = '/session/issuemanagement/actionIssue/id='+issueId()}
+                <button className={`${styles.ActionButton} ${styles.myButton}`} onClick={() => window.location.href = '/session/issuemanagement/actionIssue/id=' + issueId()}
+                >Take Action</button>
+            </div> */}
+            <div className="PageTitle" >
+                <h4>
+                    <button
+                        className="flex justify-center rounded-full aspect-square "
+                        onClick={() => {
+                            navigate('/session/issuemanagement')
+                        }}
+                        style={{ "background": "#84587C", color: "white" }}
+                    >
+                        <AiOutlineArrowLeft />
+                    </button>
+                    <div className={`${styles.RequestId} ${styles.myFlexBoxCenter}`} >
+                        <FaEdit /> <span> Request ID : {issueId()}</span>
+                    </div>
+                </h4>
+                <button className={`${styles.ActionButton} ${styles.myButton}`} style={{ marginBottom: "10px" }} onClick={() => window.location.href = '/session/issuemanagement/actionIssue/id=' + issueId()}
                 >Take Action</button>
             </div>
+
 
             <div className={`${styles.myCard}`} >
                 <div className={`${styles.myCardHeader} ${styles.myPadding}`} >
@@ -86,16 +106,16 @@ export default function ViewRequest(){
                 </div>
                 <div className={`${styles.myCardBody} ${styles.myPadding} `}>
                     <div className={`${styles.myFlexBox} ${styles.myFlexWrap}`} >
-                        <Group LabelText = 'Lodger' value = { Details['issue'] != undefined && Details['issue'][0][1]} />
-                        <Group LabelText = 'Recipient' value = { Details['issue'] != undefined && Details['issue'][0][7]}/>
-                        <Group LabelText = 'Date / Time' value = {Details['issue'] != undefined &&  getTime(Details['issue'][0][9])}/>
-                        <Group LabelText = 'Severity' value = {Details['issue'] != undefined && mapSeverity(Details['issue'][0][5])}/>
+                        <Group LabelText='Lodger' value={Details['issue'] != undefined && Details['issue'][0][1]} />
+                        <Group LabelText='Recipient' value={Details['issue'] != undefined && Details['issue'][0][7]} />
+                        <Group LabelText='Date / Time' value={Details['issue'] != undefined && getTime(Details['issue'][0][9])} />
+                        <Group LabelText='Severity' value={Details['issue'] != undefined && mapSeverity(Details['issue'][0][5])} />
                     </div>
                     <div className={`${styles.myFlexBox} ${styles.myFlexWrap}`}>
-                        <Group  LabelText = 'Remarks'  value = {Details['remarks'] != undefined && Details['remarks'].length ? Details['remarks'][0][3] : "No Remarks Added"}/>
+                        <Group LabelText='Remarks' value={Details['remarks'] != undefined && Details['remarks'].length ? Details['remarks'][0][3] : "No Remarks Added"} />
                     </div>
                     <div className={`${styles.myFlexBox} ${styles.myFlexWrap}`}>
-                        <Group  LabelText = 'Documents' value = 'No data Found'/>
+                        <Group LabelText='Documents' value={Details['remarks'] != undefined && Details['remarks'].length ? Details['remarks'][0][4] : "Document not found"} />
                     </div>
                 </div>
             </div>
@@ -104,28 +124,28 @@ export default function ViewRequest(){
                     Action
                 </div>
 
-                <div className={len > 3 ? `${styles.myCardBody} ${styles.myPadding} ${styles.myFlexBox} ${styles.maxHeight}` : `${styles.myCardBody} ${styles.myPadding} ${styles.myFlexBox}` }  id='ActionCard'>
-                     <div className={Details['ConnectorLength']  ? `${styles.connector_box} ${styles.myFlexBoxTop}` : `${styles.dNone}`}>
+                <div className={len > 3 ? `${styles.myCardBody} ${styles.myPadding} ${styles.myFlexBox} ${styles.maxHeight}` : `${styles.myCardBody} ${styles.myPadding} ${styles.myFlexBox}`} id='ActionCard'>
+                    <div className={Details['ConnectorLength'] ? `${styles.connector_box} ${styles.myFlexBoxTop}` : `${styles.dNone}`}>
                         {Details['ConnectorLength']}
-                     </div>
-                     <div className={`${styles.action_box}`}>
-                         
-                            {Details['remarks']!= undefined && Details['remarks'].length && checkAction() ? Details['remarks'].map((val,index) =>(
-                                val[6] == "Y" &&
-                                 <div>
-                                      <div className={`${styles.action}`}>
-                                        <div className={`${styles.myFlexBox} ${styles.myFlexWrap}`}>
-                                            <Group LabelText = 'Done By' value = {val[2]} className={`${styles.first_child}`}/>
-                                            <Group LabelText = 'Action' value = {val[3]} />
-                                            <Group LabelText = 'Date / Time' value = {getTime(val[7])} />
-                                            <Group LabelText = 'Severity' value = {Details['issue'] != undefined && Details['issue'][0][5] == "L" ? "Low" : Details['issue'][0][5] == "M" ? "Medium" : "High"} class='first-child'/>
-                                        </div>
-                                        <Group  LabelText = 'Remarks' className={`${styles.first_child}`} value = {Details['remarks'][index][3]}/>
-                                 </div>{index != Details['remarks'].length - 1 ? <hr/> : ''}
-                                 </div>
-                            )) : 
-                            'No data Found' }
-                     </div>
+                    </div>
+                    <div className={`${styles.action_box}`}>
+
+                        {Details['remarks'] != undefined && Details['remarks'].length && checkAction() ? Details['remarks'].map((val, index) => (
+                            val[6] == "Y" &&
+                            <div>
+                                <div className={`${styles.action}`}>
+                                    <div className={`${styles.myFlexBox} ${styles.myFlexWrap}`}>
+                                        <Group LabelText='Done By' value={val[2]} className={`${styles.first_child}`} />
+                                        <Group LabelText='Action' value={val[3]} />
+                                        <Group LabelText='Date / Time' value={getTime(val[7])} />
+                                        <Group LabelText='Severity' value={Details['issue'] != undefined && Details['issue'][0][5] == "L" ? "Low" : Details['issue'][0][5] == "M" ? "Medium" : "High"} class='first-child' />
+                                    </div>
+                                    <Group LabelText='Remarks' className={`${styles.first_child}`} value={Details['remarks'][index][3]} />
+                                </div>{index != Details['remarks'].length - 1 ? <hr /> : ''}
+                            </div>
+                        )) :
+                            'No data Found'}
+                    </div>
                 </div>
             </div>
         </div>

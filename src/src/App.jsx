@@ -13,7 +13,7 @@ import ModifyWarehouse from './pages/warehouse_management/ModifyWarehouse';
 
 import Login from './pages/login/Login';
 import Routed from './Router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import WarehouseDetails from './pages/warehouse_management/WarehouseDetails';
 import CreateIssue from './pages/issue_request_management/CreateIssue';
 import Profile from './components/Profile';
@@ -36,17 +36,20 @@ function App() {
   const [profileDetail,setProfileDetail]=useState([]);
 
   async function getUser() {
+    let token = localStorage.getItem("token");
+		const access_token=JSON.parse(token)["access_token"];
 		try {
-		  const response = await fetch(
-			"http://evm.iitbhilai.ac.in:8100/user/listAllUsers",
-			{
-			  method: "GET",
-			  headers: {
-				"Content-Type": "application/json",
-			  },
-			  mode: "cors"
-			}
-		  );
+      const response = await fetch(
+				"http://evm.iitbhilai.ac.in:8100/user/listAllUsers",
+				{
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+						'Authorization': 'Bearer ' + access_token,
+					},
+					mode: "cors"
+				}
+			);
 		  const data2 = await response.json();
 		  // console.log(data2);
 		  if(data2["data"]!=undefined){
@@ -64,6 +67,9 @@ function App() {
 		  console.log(err);
 		}
 	  }
+    useEffect(()=>{
+      getUser();
+    })
 
 	return (
     <>
@@ -144,6 +150,10 @@ function App() {
             <Route
               path="/session/ordermanagement/createorder/generateorder/:orderType"
               element={<GenerateOrder/>}
+            />
+            <Route
+              path="/session/services"
+              element={<>Other Services</>}
             />
           </Route>
         </Routes>

@@ -13,18 +13,18 @@ function WarehouseDetail(props) {
         <button
           className="flex justify-center rounded-full aspect-square "
           onClick={props.close}
-          style={{"background" : "#84587C", color: "white"}}
+          style={{ "background": "#84587C", color: "white" }}
         >
           <AiOutlineArrowLeft />
         </button>
         <button
           className="flex justify-center rounded-full aspect-square "
-          style={{"background" : "#16c09861", color: "#008767"}}
-        onClick={()=>{
-          navigate({
-            pathname: `/session/warehousemanagement/modifywarehouse/id=${props.detail['warehouseid']}`
-          })
-        }}
+          style={{ "background": "#16c09861", color: "#008767" }}
+          onClick={() => {
+            navigate({
+              pathname: `/session/warehousemanagement/modifywarehouse/id=${props.detail['warehouseid']}`
+            })
+          }}
         >
           <AiOutlineEdit />
         </button>
@@ -39,62 +39,67 @@ function WarehouseDetail(props) {
       {props.detail && (
         <div className="w-full px-2 py-8">
           <div className="warehouse-details-grid">
-              <b>Warehouse ID : </b>
-              <p className="px-2 text-md">
-                {props.detail["warehouseid"]}
-              </p>
-              <b>Room Type : </b>
-              <p className="px-2 text-md">
-                {props.warehouseMapping["data"][props.detail["warehousetype"]]}
-              </p>
-              <b>Building Type : </b>
-              <p className="px-2 text-md">
-                {props.detail["warehousebuildingtype"] === 'P' ? "Permanent" : "Temporary"}
-              </p>
-            
-              <b>Status : </b>
-              <p className="px-2 text-md">
-                {props.detail["warehousestatus"] === "A" ? "Active" : "Inactive"}
-              </p>
+            <b>Warehouse ID : </b>
+            <p className="px-2 text-md">
+              {props.detail["warehouseid"]}
+            </p>
+            <b>Room Type : </b>
+            <p className="px-2 text-md">
+              {props.warehouseMapping["data"][props.detail["warehousetype"]]}
+            </p>
+            <b>Building Type : </b>
+            <p className="px-2 text-md">
+              {props.detail["warehousebuildingtype"] === 'P' ? "Permanent" : "Temporary"}
+            </p>
 
-            
-              <b>State : </b>
-              <p className="px-2 text-md">
-                {props.detail["warehousestate"]}
-              </p>
-
-            
-              <b>Address : </b>
-              <p className="px-2 text-md">
-                {props.detail["warehouseaddress"]}
-              </p>
+            <b>Status : </b>
+            <p className="px-2 text-md">
+              {props.detail["warehousestatus"] === "A" ? "Active" : "Inactive"}
+            </p>
 
 
-              <b>Lat Long :</b>
-              <p className="px-2 text-md">
-                {props.detail["warehouselatlong"]}
-              </p>
+            <b>State : </b>
+            <p className="px-2 text-md">
+              {props.detail["warehousestate"]}
+            </p>
 
 
-              <b>Updated By : </b>
-              <p className="px-2 text-md">
-                {props.detail["updatedbyuid"]}
-              </p>
+            <b>Address : </b>
+            <p className="px-2 text-md">
+              {props.detail["warehouseaddress"]}
+            </p>
 
-              <b>Double Locked : </b>
-              <p className="px-2 text-md">
-                {props.detail["doublelock"] ? "Yes" : "No"}
-              </p>
-            
-              <b>First Key Holder : </b>
-              <p className="px-2 text-md">
-                {props.detail["uidkey1"]}
-              </p>
-            
-              <b>Second Key Holder : </b>
-              <p className="px-2 text-md">
-                {props.detail["uidkey2"] !== "" ? props.detail["uidkey2"] : "N/A"}
-              </p>
+
+            <b>Lat Long :</b>
+            <p className="px-2 text-md">
+              {props.detail["warehouselatlong"]}
+            </p>
+
+
+            <b>Updated By : </b>
+            <p className="px-2 text-md">
+              {props.detail["updatedbyuid"]}
+            </p>
+
+            <b>Double Locked : </b>
+            <p className="px-2 text-md">
+              {props.detail["doublelock"] ? "Yes" : "No"}
+            </p>
+
+            <b>First Key Holder : </b>
+            <p className="px-2 text-md">
+              {props.detail["uidkey1"]}
+            </p>
+
+            {props.detail["doublelock"] && (
+              <>
+                <b>Second Key Holder : </b>
+                <p className="px-2 text-md" >
+                  {props.detail["uidkey2"] !== "" ? props.detail["uidkey2"] : "N/A"}
+                </p>
+              </>
+            )
+            }
           </div>
         </div>
       )}

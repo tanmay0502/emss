@@ -24,7 +24,7 @@ function Routed(props) {
 
 	// const [profileView,setProfileView]=useState(0);
 	// const [profileOption,setProfileOption]=useState(0);
-	
+
 	const [userData, setUserData] = useState({
 		username: null
 	})
@@ -46,15 +46,16 @@ function Routed(props) {
 	// 	setProfileOption(profileOption^1);
 	// }
 
-	function logOut(){
-		sessionStorage.setItem("sessionToken",null);
+	function logOut() {
+		sessionStorage.setItem("sessionToken", null);
 		props.SetSession(null)
-		setUserData(null)
+		setUserData(null)		
+		localStorage.setItem("token",null);
 		window.location.replace("/login");
 	}
-	  // getUser();
+	// getUser();
 	//   useEffect(() => {
-		// getUser();
+	// getUser();
 	//   }, [userData]);
 
 	const navigate = useNavigate()
@@ -150,11 +151,11 @@ function Routed(props) {
 
 	useEffect(() => {
 		console.log(sessionStorage.getItem('sessionToken'))
-		const flag=sessionStorage.getItem('sessionToken');
-		sessionStorage.setItem("log",null);
-		console.log(flag,null)
-		if (flag ===sessionStorage.getItem("log") || flag===null) {
-		console.log(flag)
+		const flag = sessionStorage.getItem('sessionToken');
+		sessionStorage.setItem("log", null);
+		console.log(flag, null)
+		if (flag === sessionStorage.getItem("log") || flag === null) {
+			console.log(flag)
 
 			window.location.href = '/login'
 
@@ -188,7 +189,7 @@ function Routed(props) {
 
 	return (
 		<div className="App">
-			
+
 			<main>
 				<div className="nav-panel">
 					<div className="nav-panel-top">
@@ -294,22 +295,22 @@ function Routed(props) {
 
 							</div>
 							<div style={{ display: "flex", "flexDirection": "column", alignItems: "center", "justifyContent": "center", overflowY: "visible", maxHeight: "100%" }}>
-								<span tyle={{position: "relative"}}>Position: {userData.userId ? userData.userId.slice(7) : ""}
-								<button3 tabIndex={1} className="navBarDropDownBtn" style={{position: "relative", overflowY: "visible"}} onClick={()=>{
-									console.log("Helloo!")
-									document.getElementsByClassName('navBarDropDownBtn')[0].focus()
-								}}>
-									<ChevronRight style={{ transform: "rotateZ(90deg)", maxWidth: "1.2em", marginLeft: "10px" }} />
-									<div id='nav-bar-drop-down' className='navBarDropDown absolute top-12 right-6 rounded-full' style={{width:"160px", zIndex: "999", "overflow" : 'hidden'}}>
-										<button className="text-white cursor-pointer w-full p-3   rounded-sm" style={{backgroundColor:"#84587C"}} onClick={()=>{
-											navigate('/session/user-profile')
-										}} >My Profile</button>
-										<hr />
-										<button className='text-white cursor-pointer   w-full p-3   rounded-sm' onClick={logOut}  style={{backgroundColor:"#84587C"}}>
-											Log Out
-										</button>
-									</div>
-								</button3>
+								<span tyle={{ position: "relative" }}>Position: {userData.userId ? userData.userId.slice(7) : ""}
+									<button3 tabIndex={1} className="navBarDropDownBtn" style={{ position: "relative", overflowY: "visible" }} onClick={() => {
+										console.log("Helloo!")
+										document.getElementsByClassName('navBarDropDownBtn')[0].focus()
+									}}>
+										<ChevronRight style={{ transform: "rotateZ(90deg)", maxWidth: "1.2em", marginLeft: "10px" }} />
+										<div id='nav-bar-drop-down' className='navBarDropDown absolute top-12 right-6 rounded-full' style={{ width: "160px", zIndex: "999", "overflow": 'hidden' }}>
+											<button className="text-white cursor-pointer w-full p-3   rounded-sm" style={{ backgroundColor: "#84587C" }} onClick={() => {
+												navigate('/session/user-profile')
+											}} >My Profile</button>
+											<hr />
+											<button className='text-white cursor-pointer   w-full p-3   rounded-sm' onClick={logOut} style={{ backgroundColor: "#84587C" }}>
+												Log Out
+											</button>
+										</div>
+									</button3>
 								</span>
 								<span>{userData.username}</span>
 							</div>

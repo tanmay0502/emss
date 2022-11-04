@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import "./styles/actionIssue.css";
 import { ReactComponent as CreateIssueIcon } from "../../assets/create_issue_request.svg";
 import { ReactComponent as SeverityIcon } from "../../assets/severity.svg";
@@ -7,17 +7,21 @@ import { ReactComponent as TagIcon } from "../../assets/tag.svg";
 import { ReactComponent as TypeIcon } from "../../assets/type.svg";
 import TextArea from "antd/lib/input/TextArea";
 import * as mime from "react-native-mime-types";
-
+import styles from './styles/issue.module.css'
+import { AiOutlineArrowLeft } from 'react-icons/ai'
+import { useNavigate } from "react-router-dom";
+import { FaEdit } from 'react-icons/fa'
 
 export default function ActionIssue() {
-  const [Details,setDetails] = useState({});
+  const navigate = useNavigate();
+  const [Details, setDetails] = useState({});
 
-  const [remarks,setRemarks] = useState("");
-  const [action,setAction] = useState("");
-  const [MMtype,setMMtype] = useState("");
-  const [forwardedTo,setForwardedTo] = useState("");
-  const [supportingDoc,setSupportingDoc] = useState("");
-  const [users,setUsers] = useState([]);
+  const [remarks, setRemarks] = useState("");
+  const [action, setAction] = useState("");
+  const [MMtype, setMMtype] = useState("");
+  const [forwardedTo, setForwardedTo] = useState("");
+  const [supportingDoc, setSupportingDoc] = useState("");
+  const [users, setUsers] = useState([]);
 
 
   const issueId = () => {
@@ -51,22 +55,27 @@ export default function ActionIssue() {
   }
 
   const getList = async () => {
+    let token = localStorage.getItem("token");
+        // console.log(decode)
+    	console.log(JSON.parse(token)["access_token"]);
+		const access_token=JSON.parse(token)["access_token"];
     const myId = issueId();
     try {
       const response = await fetch(
-        `http://evm.iitbhilai.ac.in:8100/user/listAllUsers`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          mode: "cors",
-        }
-      );
+				"http://evm.iitbhilai.ac.in:8100/user/listAllUsers",
+				{
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+						'Authorization': 'Bearer ' + access_token,
+					},
+					mode: "cors"
+				}
+			);
       const data = await response.json();
       console.log(data);
-      let allUsers=[]
-      for(let i=0;i<data["data"].length;i++){
+      let allUsers = []
+      for (let i = 0; i < data["data"].length; i++) {
         allUsers.push(data["data"][i][0])
       }
       console.log(allUsers)
@@ -80,7 +89,7 @@ export default function ActionIssue() {
     getDetails();
     getList();
   }, [])
-  
+
 
   function formatText(tag) {
     var selectedText = document.selection.createRange().text;
@@ -97,42 +106,58 @@ export default function ActionIssue() {
     setMMtype(mime.lookup(supportingDoc));
 
 
-     try {
-       const response = await fetch(
-         `http://evm.iitbhilai.ac.in:8100/issue_requests/${action}_issue`,
-         {
-           method: "POST",
-           headers: {
-             "Content-Type": "application/json",
-           },
-           body: JSON.stringify({
-             issueID: parseInt(issueId()),
-             remarks: remarks,
-             supportingDocuments: supportingDoc,
-             MMType: mime.lookup(supportingDoc),
-             newrecipient: forwardedTo,
-           }),
-           mode:"cors"
-         }
-       );
+    try {
+      const response = await fetch(
+        `http://evm.iitbhilai.ac.in:8100/issue_requests/${action}_issue`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            issueID: parseInt(issueId()),
+            remarks: remarks,
+            supportingDocuments: supportingDoc,
+            MMType: mime.lookup(supportingDoc),
+            newrecipient: forwardedTo,
+          }),
+          mode: "cors"
+        }
+      );
 
-       const data = await response.json();
-       console.log(data)
-       window.location.replace(`/session/issuemanagement/viewRequest/id=${issueId()}`);
-     } catch (err) {
-       console.log(err);
-     }
+      const data = await response.json();
+      console.log(data)
+      window.location.replace(`/session/issuemanagement/viewRequest/id=${issueId()}`);
+    } catch (err) {
+      console.log(err);
+    }
 
 
   };
-  
+
 
   return (
     <div className="p-3">
-      <p className="text-left text-lg flex">
+      <div className="PageTitle" >
+        <h4>
+          <button
+            className="flex justify-center rounded-full aspect-square "
+            onClick={() => {
+              navigate('/session/issuemanagement')
+            }}
+            style={{ "background": "#84587C", color: "white" }}
+          >
+            <AiOutlineArrowLeft />
+          </button>
+          <div className={`${styles.RequestId} ${styles.myFlexBoxCenter}`} >
+            <FaEdit /> <span> Request ID : {issueId()}</span>
+          </div>
+        </h4>
+      </div>
+      {/* <p className="text-left text-lg flex">
         <CreateIssueIcon className="mr-2" />
         Request ID : {issueId()}
-      </p>
+      </p> */}
       <div className="rounded-lg shadow-md mt-5 bg-white">
         <div
           className="rounded-t-lg p-2 text-left "
@@ -225,7 +250,7 @@ export default function ActionIssue() {
               {action == "forward" && (
                 <div className="text-left mt-4">
                   <label className="text-left ">
-                    Forwarded To<span className="text-red-600">*</span>
+                    Forward To<span className="text-red-600">*</span>
                   </label>
                   <br />
                   <div className="flex">
@@ -233,11 +258,11 @@ export default function ActionIssue() {
                       type="text"
                       className="w-4/5 h-10 mt-1 p-2 border rounded-md"
                       value={forwardedTo}
-                      onChange={(e)=>(setForwardedTo(e.target.value))}
+                      onChange={(e) => (setForwardedTo(e.target.value))}
                       required
                     >
                       <option value="">Select</option>
-                      {users.map((userId)=>(
+                      {users.map((userId) => (
                         <option>{userId}</option>
                       ))}
 
@@ -252,13 +277,12 @@ export default function ActionIssue() {
           <div className="mt-5 text-left w-1/3">
             <label className="text-left">Supporting Documents</label>
             <input type="file" className="w-1/6"
-            value={supportingDoc}
-            onChange={(e)=>setSupportingDoc(e.target.value)}
-            required
+              value={supportingDoc}
+              onChange={(e) => setSupportingDoc(e.target.value)}
             ></input>
           </div>
           <button
-          type="submit"
+            type="submit"
             className="text-white h-10 p-0 pl-3 pr-3"
             style={{ backgroundColor: "#F56A3F" }}
           >
