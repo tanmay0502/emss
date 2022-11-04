@@ -8,8 +8,11 @@ import { FaLaptopHouse } from "react-icons/fa";
 import { BsShieldLockFill } from "react-icons/bs";
 import { BsFillPersonFill } from "react-icons/bs";
 import { useState } from "react";
+import { AiOutlineArrowLeft } from 'react-icons/ai'
+import { useNavigate } from "react-router-dom";
 
 export default function ModifyWarehouse() {
+  const navigate = useNavigate();
 
   const [WarehouseId, setWarehouseId] = useState("");
 
@@ -19,13 +22,13 @@ export default function ModifyWarehouse() {
   const [Address, setAddress] = useState("");
   const [Lat, setLat] = useState("");
   const [Lng, setLng] = useState("");
- const [userId1,setUserId1] = useState("");
- const [userId2,setUserId2] = useState("");
- const [doubleLockSystem, setDoubleLockSystem] = useState(true);
-  const [WarehouseDetails,setWarehousDetails] = useState([]);
+  const [userId1, setUserId1] = useState("");
+  const [userId2, setUserId2] = useState("");
+  const [doubleLockSystem, setDoubleLockSystem] = useState(true);
+  const [WarehouseDetails, setWarehousDetails] = useState([]);
   //Form filed states end....
 
-  
+
 
   const onFormSubmit = async (e) => {
     e.preventDefault();
@@ -39,32 +42,32 @@ export default function ModifyWarehouse() {
 
     console.log(double_lock);
     const person2_ID = double_lock ? document.getElementById("input_personName_2").value : "";
-    double_lock =  double_lock == true ? "TRUE" : "FALSE";
+    double_lock = double_lock == true ? "TRUE" : "FALSE";
     const person1_ID = document.getElementById("input_personName_1").value;
 
-      let reqBody = {};
-if(double_lock === "TRUE"){
-   reqBody = {
-    warehouseID : WarehouseId,
-    warehouseBuildingType: buildingType,
-    warehouseLatLong: [lat, lon],
-    warehouseAddress: address,
-    doubleLock: double_lock,
-    UIDKey1: person1_ID,
-    UIDKey2: person2_ID,
-    updatedByUID: window.sessionStorage.getItem("sessionToken"),
-  };
-}else{
-   reqBody = {
-    warehouseID : WarehouseId,
-    warehouseBuildingType: buildingType,
-    warehouseLatLong: [lat, lon],
-    warehouseAddress: address,
-    doubleLock: double_lock,
-    UIDKey1: person1_ID,
-    updatedByUID: window.sessionStorage.getItem("sessionToken"),
-  };
-}
+    let reqBody = {};
+    if (double_lock === "TRUE") {
+      reqBody = {
+        warehouseID: WarehouseId,
+        warehouseBuildingType: buildingType,
+        warehouseLatLong: [lat, lon],
+        warehouseAddress: address,
+        doubleLock: double_lock,
+        UIDKey1: person1_ID,
+        UIDKey2: person2_ID,
+        updatedByUID: window.sessionStorage.getItem("sessionToken"),
+      };
+    } else {
+      reqBody = {
+        warehouseID: WarehouseId,
+        warehouseBuildingType: buildingType,
+        warehouseLatLong: [lat, lon],
+        warehouseAddress: address,
+        doubleLock: double_lock,
+        UIDKey1: person1_ID,
+        updatedByUID: window.sessionStorage.getItem("sessionToken"),
+      };
+    }
     console.log(reqBody);
 
     const response = await fetch(
@@ -91,56 +94,56 @@ if(double_lock === "TRUE"){
 
   //Get state list
 
-  const getDetails = async () =>{
+  const getDetails = async () => {
     const URL = window.location.href;
     const arr = URL.split("/");
     const param = arr[arr.length - 1];
     const arr1 = param.split("=");
     const myId = arr1[1];
     setWarehouseId(myId);
-        try {
-            const response = await fetch(
-                `http://evm.iitbhilai.ac.in:8100/warehouse/warehouseDetails/${myId}`,
-                {
-                    method: "GET",
-                    headers: {
-                      "Content-Type": "application/json",
-                    }
-                }
-            )
-
-            const dataObj = await response.json();
-            const data = dataObj["data"];
-            const coordinates = data[5];
-            const myArr = coordinates.split(",");
-            const lat = myArr[0].substring(1);
-            const lng = myArr[1].slice(0,-1);
-            data.push(lat);
-            data.push(lng);
-          
-            console.log(data[7]);
-            setDoubleLockSystem(data[7]);
-            setAddress(data[6]);
-            setBuildingType(data[2]);
-            setLat(data[14]);
-            setLng(data[15]);
-            setUserId1(data[8]);
-            setUserId2(data[9]);
-            // setWarehousDetails(data);
-            // setValues(data);
-
-
-        } catch (error) {
-            console.log(error);
+    try {
+      const response = await fetch(
+        `http://evm.iitbhilai.ac.in:8100/warehouse/warehouseDetails/${myId}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          }
         }
+      )
+
+      const dataObj = await response.json();
+      const data = dataObj["data"];
+      const coordinates = data[5];
+      const myArr = coordinates.split(",");
+      const lat = myArr[0].substring(1);
+      const lng = myArr[1].slice(0, -1);
+      data.push(lat);
+      data.push(lng);
+
+      console.log(data[7]);
+      setDoubleLockSystem(data[7]);
+      setAddress(data[6]);
+      setBuildingType(data[2]);
+      setLat(data[14]);
+      setLng(data[15]);
+      setUserId1(data[8]);
+      setUserId2(data[9]);
+      // setWarehousDetails(data);
+      // setValues(data);
 
 
-    } 
-    
- 
-useEffect(()=>{
-  getDetails();
-},[]);
+    } catch (error) {
+      console.log(error);
+    }
+
+
+  }
+
+
+  useEffect(() => {
+    getDetails();
+  }, []);
 
 
   return (
@@ -155,8 +158,23 @@ useEffect(()=>{
       </div> */}
 
       <div className="myWrapper">
-        <div className="PageTitle">
+        {/* <div className="PageTitle">
           <h4>
+            <FaWarehouse />
+            <span>Modify Warehouse Details - {WarehouseId}</span>
+          </h4>
+        </div> */}
+        <div className="PageTitle" style={{ marginLeft: '1%' }}>
+          <h4>
+            <button
+              className="flex justify-center rounded-full aspect-square "
+              onClick={() => {
+                navigate('/session/warehousemanagement')
+              }}
+              style={{ "background": "#84587C", color: "white" }}
+            >
+              <AiOutlineArrowLeft />
+            </button>
             <FaWarehouse />
             <span>Modify Warehouse Details - {WarehouseId}</span>
           </h4>
@@ -177,7 +195,7 @@ useEffect(()=>{
                   gridGap: "5px 15px",
                 }}
               >
-               
+
                 <div className="form_group">
                   <div className="form_label">
                     <label htmlFor="">Building Type : </label>
@@ -219,7 +237,7 @@ useEffect(()=>{
                 </div>
               </div>
             </div>
-            <div class="warehouse-location" style={{gridArea: '3 / 1 / 4 / 3'}}>
+            <div class="warehouse-location" style={{ gridArea: '3 / 1 / 4 / 3' }}>
               <h5>Warehouse Location</h5>
               <div className="input_group">
                 <div
@@ -310,7 +328,7 @@ useEffect(()=>{
                       onChange={(e) => {
                         setDoubleLockSystem(true);
                       }}
-                      checked = {doubleLockSystem === true ? true : false}
+                      checked={doubleLockSystem === true ? true : false}
                     />
                     <label htmlFor="double_lock_no">No </label>
                     <input
@@ -321,12 +339,12 @@ useEffect(()=>{
                         setDoubleLockSystem(false);
                       }}
                       value={false}
-                      checked = {doubleLockSystem === false ? true : false}
+                      checked={doubleLockSystem === false ? true : false}
                     />
                   </div>
                 </div>
                 <div className="form_group">
-                  <div className="form_label" style={{width : '20%'}}>
+                  <div className="form_label" style={{ width: '20%' }}>
                     <label htmlFor="">Personnel 1 ID : </label>
                   </div>
                   <div className="form_input">
@@ -344,9 +362,9 @@ useEffect(()=>{
                   </div>
                 </div>
 
-               
+
                 <div className="form_group" hidden={!doubleLockSystem}>
-                  <div className="form_label" style={{width : '20%'}}>
+                  <div className="form_label" style={{ width: '20%' }}>
                     <label htmlFor="">Personnel 2 ID : </label>
                   </div>
                   <div className="form_input">

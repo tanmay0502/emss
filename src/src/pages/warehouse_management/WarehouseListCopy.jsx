@@ -18,64 +18,65 @@ import ToggleButton from '../../components/ToggleButton';
 import UserImageTest from '../../assets/UserImageTest.png'
 
 // React Icons
-import {FaCircle} from 'react-icons/fa'
-import {FaKey} from 'react-icons/fa'
+import { FaCircle } from 'react-icons/fa'
+import { FaKey } from 'react-icons/fa'
 
 function WarehouseList() {
 	const navigate = useNavigate();
 	const [Details, setDetails] = React.useState([]);
 	const [warehouseMapping, setWarehouseMapping] = useState(null)
+	console.log(window.localStorage.getItem("token"))
 
 	async function getList() {
-        let userId = sessionStorage.getItem('sessionToken');
-        const code = userId.slice(0, 2);
-        console.log(code);
-        try {
-            const response = await fetch(
-                `http://evm.iitbhilai.ac.in:8100/warehouse/listWarehouses`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        "stateCode": code
-                    }),
-                })
+		let userId = sessionStorage.getItem('sessionToken');
+		const code = userId.slice(0, 2);
+		console.log(code);
+		try {
+			const response = await fetch(
+				`http://evm.iitbhilai.ac.in:8100/warehouse/listWarehouses`,
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+						"stateCode": code
+					}),
+				})
 
-            const data = await response.json();
+			const data = await response.json();
 			setDetails(data["data"])
-        } catch (error) {
-            console.log(error)
-        }
+		} catch (error) {
+			console.log(error)
+		}
 
-    }
-    useEffect(() => {
+	}
+	useEffect(() => {
 		MapWarehouseTypes();
-        getList();
-    }, [])
+		getList();
+	}, [])
 
-    const MapWarehouseTypes = async () => {
-        try {
-            const response = await fetch(
-                'http://evm.iitbhilai.ac.in:8100/warehouse/warehouseTypes',
-                {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                }
-            )
-            const types = await response.json();
-            // data.map(arr => {
+	const MapWarehouseTypes = async () => {
+		try {
+			const response = await fetch(
+				'http://evm.iitbhilai.ac.in:8100/warehouse/warehouseTypes',
+				{
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+					},
+				}
+			)
+			const types = await response.json();
+			// data.map(arr => {
 			// 	arr = {...arr, "warehousebuildingtype": }
-            // })
-            // console.log(data);
-            setWarehouseMapping(types);
-        } catch (error) {
-            console.log(error);
-        }
-    }
+			// })
+			// console.log(data);
+			setWarehouseMapping(types);
+		} catch (error) {
+			console.log(error);
+		}
+	}
 
 	const [isDetail, setIsDetail] = useState(0);
 
@@ -86,7 +87,7 @@ function WarehouseList() {
 	const [sortOrder, setSortOrder] = useState("asc")
 
 	const sortMapping = {
-		"None" : null,
+		"None": null,
 		"Warehouse ID": "Warehouse ID",
 		"Building Type": "BuildingType",
 		"Room Type": "Room Type",
@@ -122,7 +123,7 @@ function WarehouseList() {
 			}
 		}).map((val) => {
 			return {
-				"Warehouse ID": val["warehousebuildingtype"] == 'P' ? <Fragment><span style={{display : 'flex',justifyContent : 'center', alignItems : 'center'}}><FaCircle size='0.8em' className='PermaWarehouse'/><span style={{marginLeft : '10px' , marginRight : '10px'}}>{val['warehouseid']}</span>{val['doublelock'] ? <Fragment><FaKey className='keyColor'/><FaKey className='keyColor'/></Fragment> : <FaKey className='keyColor'/>}</span></Fragment> : <Fragment><span style={{display : 'flex',justifyContent : 'center', alignItems : 'center'}}><FaCircle size='0.8em' className='TempWarehouse'/><span style={{marginLeft : '10px', marginRight : '10px'}}>{val['warehouseid']}</span>{val['doublelock'] ? <Fragment><FaKey className='keyColor'/><FaKey className='keyColor'/></Fragment> : <FaKey className='keyColor'/>}</span></Fragment>,
+				"Warehouse ID": val["warehousebuildingtype"] == 'P' ? <Fragment><span style={{ display: 'flex', justifyContent: 'left', alignItems: 'left', marginLeft: "35%" }}><FaCircle size='0.8em' className='PermaWarehouse' /><span style={{ marginLeft: '10px', marginRight: '10px' }}>{val['warehouseid']}</span>{val['doublelock'] ? <Fragment><FaKey className='keyColor' /><FaKey className='keyColor' /></Fragment> : <FaKey className='keyColor' />}</span></Fragment> : <Fragment><span style={{ display: 'flex', justifyContent: 'left', alignItems: 'left', marginLeft: "35%" }}><FaCircle size='0.8em' className='TempWarehouse' /><span style={{ marginLeft: '10px', marginRight: '10px' }}>{val['warehouseid']}</span>{val['doublelock'] ? <Fragment><FaKey className='keyColor' /><FaKey className='keyColor' /></Fragment> : <FaKey className='keyColor' />}</span></Fragment>,
 				"Room Type": warehouseMapping ? warehouseMapping["data"][val["warehousetype"]] : "",
 				// "Double Locked": val["doublelock"] ? "Yes" : "No",
 				Details: val,
@@ -144,21 +145,21 @@ function WarehouseList() {
 					else {
 						DectivateWarehouse(e)
 					}
-				}} 
-				customLabels={{
-					"active": "Active",
-					"inactive": "Inactive"
 				}}
+					customLabels={{
+						"active": "Active",
+						"inactive": "Inactive"
+					}}
 				/>
 			}
 		})
-		data.sort(function(a, b){ 
-			if(sortMapping[sortBy] !== null){
-				return a[sortMapping[sortBy]].localeCompare(b[sortMapping[sortBy]]) 
+		data.sort(function (a, b) {
+			if (sortMapping[sortBy] !== null) {
+				return a[sortMapping[sortBy]].localeCompare(b[sortMapping[sortBy]])
 			}
 			else return 0;
 		});
-		if(sortMapping[sortBy] !== null && sortOrder === 'desc'){
+		if (sortMapping[sortBy] !== null && sortOrder === 'desc') {
 			data.reverse();
 		}
 		// console.log(data)
@@ -169,76 +170,76 @@ function WarehouseList() {
 		}
 	}, [Details, warehouseMapping, tableFilter, sortBy, sortOrder])
 
-	
-    const ActivateWarehouse = async (myId) => {
-        if (window.confirm(`Are you sure you want to Activate Warehouse ${myId}? `)) {
-            try {
 
-                const response = await fetch(
-                    `http://evm.iitbhilai.ac.in:8100/warehouse/activateWarehouse/${myId}`,
-                    {
-                        method: "GET",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                    }
-                )
+	const ActivateWarehouse = async (myId) => {
+		if (window.confirm(`Are you sure you want to Activate Warehouse ${myId}? `)) {
+			try {
 
-                const status = response;
-                if (status.status == 200) {
-                    alert("Warehouse Activated Successfully");
-                    // navigate('/session/warehousemanagement');
+				const response = await fetch(
+					`http://evm.iitbhilai.ac.in:8100/warehouse/activateWarehouse/${myId}`,
+					{
+						method: "GET",
+						headers: {
+							"Content-Type": "application/json",
+						},
+					}
+				)
+
+				const status = response;
+				if (status.status == 200) {
+					alert("Warehouse Activated Successfully");
+					// navigate('/session/warehousemanagement');
 					getList();
-                }
-                else {
-                    alert("Deactivation Failed");
-                }
+				}
+				else {
+					alert("Deactivation Failed");
+				}
 
-            } catch (error) {
-                console.log(error);
-            }
-        }
-    }
+			} catch (error) {
+				console.log(error);
+			}
+		}
+	}
 
-    const DectivateWarehouse = async (myId) => {
-        if (window.confirm(`Are you sure you want to Deactivate Warehouse ${myId}? `)) {
-            try {
+	const DectivateWarehouse = async (myId) => {
+		if (window.confirm(`Are you sure you want to Deactivate Warehouse ${myId}? `)) {
+			try {
 
-                const response = await fetch(
-                    `http://evm.iitbhilai.ac.in:8100/warehouse/deactivateWarehouse/${myId}`,
-                    {
-                        method: "GET",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                    }
-                )
+				const response = await fetch(
+					`http://evm.iitbhilai.ac.in:8100/warehouse/deactivateWarehouse/${myId}`,
+					{
+						method: "GET",
+						headers: {
+							"Content-Type": "application/json",
+						},
+					}
+				)
 
-                const status = response;
-                if (status.status == 200) {
-                    alert("Warehouse Deactivated Successfully");
-                    // window.location.href = '/session/warehousemanagement';
+				const status = response;
+				if (status.status == 200) {
+					alert("Warehouse Deactivated Successfully");
+					// window.location.href = '/session/warehousemanagement';
 					getList();
-                }
-                else {
-                    alert("Deactivation Failed");
-                }
+				}
+				else {
+					alert("Deactivation Failed");
+				}
 
-            } catch (error) {
-                console.log(error);
-            }
-        }
-    }
+			} catch (error) {
+				console.log(error);
+			}
+		}
+	}
 	// console.log(users);
 	return (
 		<div className="warehouse-list-grid">
-			
+
 			<div className="myWrapper" style={{ position: "relative", height: "100%", gridArea: "1 / 1 / 6 / 2" }}>
 				<div className='label_list'>
-					<div className='label d-flex d-flex-center'><span><FaCircle className='PermaWarehouse'/></span> Permanent Warehouse</div>
-					<div className='label d-flex d-flex-center'><span><FaCircle className='TempWarehouse'/></span> Temporary Warehouse</div>
-					<div className='label d-flex d-flex-center'><span><Fragment><span className='d-flex d-flex-center'><FaKey className='keyColor'/><FaKey className='keyColor'/></span></Fragment></span> Double Lock Present</div>
-					<div className='label d-flex d-flex-center'><span><FaKey className='keyColor'/></span> Double Lock Absent</div>
+					<div className='label d-flex d-flex-center'><span><FaCircle className='PermaWarehouse' /></span> Permanent Warehouse</div>
+					<div className='label d-flex d-flex-center'><span><FaCircle className='TempWarehouse' /></span> Temporary Warehouse</div>
+					<div className='label d-flex d-flex-center'><span><Fragment><span className='d-flex d-flex-center'><FaKey className='keyColor' /><FaKey className='keyColor' /></span></Fragment></span> Double Lock Present</div>
+					<div className='label d-flex d-flex-center'><span><FaKey className='keyColor' /></span> Double Lock Absent</div>
 				</div>
 				{isDetail == 0 ? <div style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between" }}>
 					<h4>Warehouses</h4>
@@ -252,16 +253,16 @@ function WarehouseList() {
 						</div>
 						<div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center", marginLeft: "10px", background: "var(--lightGrayBG )", borderRadius: "10px", padding: "7.5px 15px 7.5px 0", fontSize: "0.8em" }}>
 							<span style={{ minWidth: "max-content", paddingInlineStart: "7.5px" }}>Sort by : &nbsp;</span>
-							<select 
-							style={{ textAlign: "center", outline: "none", background: "transparent", padding: "0px", border: "none" }}
-							onChange={(e)=>setSortBy(e.target.value)}>
+							<select
+								style={{ textAlign: "center", outline: "none", background: "transparent", padding: "0px", border: "none" }}
+								onChange={(e) => setSortBy(e.target.value)}>
 								<option value={"None"}>Default</option>
 								<option value={"Warehouse ID"}>Warehouse ID</option>
 								<option value={"Room Type"}>Room Type</option>
 								<option value={"Building Type"}>Building Type</option>
 							</select>
 							<ChevronDown />
-							<button className='sortOrderButton' onClick={()=>{
+							<button className='sortOrderButton' onClick={() => {
 								setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
 							}}>
 								{sortOrder === 'asc' ? <AiOutlineSortAscending /> : <AiOutlineSortDescending />}
@@ -270,7 +271,7 @@ function WarehouseList() {
 					</div>
 
 				</div> : <></>}
-				
+
 				{isDetail == 0 ? <DynamicDataTable className="warehouses-table"
 					rows={tableData}
 					fieldsToExclude={["Details", "Edit", "BuildingType"]}

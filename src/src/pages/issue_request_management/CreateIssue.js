@@ -1,26 +1,27 @@
 import React from "react";
 import { useState } from "react";
 import "./styles/createIssue.css";
-import {decode as base64_decode, encode as base64_encode} from 'base-64';
+import { decode as base64_decode, encode as base64_encode } from 'base-64';
 import { ReactComponent as CreateIssueIcon } from '../../assets/create_issue_request.svg';
 import { ReactComponent as SeverityIcon } from '../../assets/severity.svg';
 import { ReactComponent as LevelIcon } from '../../assets/level.svg';
 import { ReactComponent as TagIcon } from '../../assets/tag.svg';
 import { ReactComponent as TypeIcon } from '../../assets/type.svg';
-
-
+import { TagsInput } from "react-tag-input-component";
+import { AiOutlineArrowLeft } from 'react-icons/ai'
+import { useNavigate } from "react-router-dom";
 
 export default function CreateIssue() {
+    const navigate = useNavigate();
 
-
-
+    const [tags, setTags] = React.useState([]);
     const onFormSubmit = async (e) => {
         e.preventDefault();
         console.log("submit button clicked")
         console.log("base64" + window.base64Converted)
         addRequest();
     };
-    
+
     async function addRequest() {
 
         try {
@@ -38,10 +39,11 @@ export default function CreateIssue() {
                         Type: document.getElementById("formType").value.slice(-3),
                         IssueLevel: document.getElementById("formLevel").value.slice(-2),
                         LodgerUserID: window.sessionStorage.getItem("sessionToken"),
-                        tags: [
-                            // document.getElementById("formTo").value,
-                            document.getElementById("formTags").value
-                        ],
+                        tags: tags,
+                        // tags: [
+                        //     // document.getElementById("formTo").value,
+                        //     document.getElementById("formTags").value
+                        // ],
                         SupportingDocuments: window.fileName,
                         MMType: window.fileType,
                         SupportingDocumentsData: window.base64Converted,
@@ -77,15 +79,15 @@ export default function CreateIssue() {
     const severityArray = ["Low-L", "Medium-M", "High-H"];
 
     // const base64Converted = ''
- 
-    const uploadImage = async (e) =>{
+
+    const uploadImage = async (e) => {
         const file = e.target.files[0];
         const fullFileName = file.name;
         const indexDot = fullFileName.indexOf(".");
-        console.log("indexDot"+indexDot)
+        console.log("indexDot" + indexDot)
         window.fileName = fullFileName.slice(0, indexDot);
-        console.log("fileName"+ window.fileName);
-        window.fileType = fullFileName.slice(indexDot+1);
+        console.log("fileName" + window.fileName);
+        window.fileType = fullFileName.slice(indexDot + 1);
         // const file2 = e.target.files[1];
         window.base64Converted = await convertBase64(file);
         // window.base64Converted2 = await convertBase64(file2);
@@ -94,12 +96,12 @@ export default function CreateIssue() {
         // console.log("base64-2" + window.base64Converted2)
     }
     // console.log(uploadImage())
-    const convertBase64 = (file) =>{
-        return new Promise((resolve,reject)=>{
+    const convertBase64 = (file) => {
+        return new Promise((resolve, reject) => {
             const fileReader = new FileReader();
             fileReader.readAsDataURL(file);
 
-            fileReader.onload = () =>{
+            fileReader.onload = () => {
                 resolve(fileReader.result);
             }
 
@@ -111,7 +113,7 @@ export default function CreateIssue() {
     const [value, setValue] = useState()
 
     const tagValue = (e) => {
-        
+
         // let currentLen = document.getElementById("formTags").value.length
         // console.log(currentLen)
         // var y =  document.getElementById("formTags").value
@@ -120,185 +122,215 @@ export default function CreateIssue() {
         // console.log("y" + y)
         // if(currentLen!=0 && currentLen%11 === 0){
         //     y.replace("sd",  "ss")
-            
+
         // }
-        
+
 
         let currValue = document.getElementById("formTags").value
         let currentLen = document.getElementById("formTags").value.length
         console.log(currentLen)
-        if(currentLen!=0 && currentLen%11 === 0){
-            
-            
+        if (currentLen != 0 && currentLen % 11 === 0) {
+
+
         }
     }
 
     return (
-        <form class="parent" onSubmit={onFormSubmit} id="form">
-            <div class="div1 font-semibold ">
-                <p className="flex">
+        <div className="flex-col justify-center align-middle">
+            <div className="PageTitle" style={{ marginLeft: '1%' }}>
+                <h4>
+                    <button
+                        className="flex justify-center rounded-full aspect-square "
+                        onClick={() => {
+                            navigate('/session/issuemanagement')
+                        }}
+                        style={{ "background": "#84587C", color: "white" }}
+                    >
+                        <AiOutlineArrowLeft />
+                    </button>
                     <CreateIssueIcon />
-                    <span className="text-xl  pl-4">Register Issue/Request</span>
-                </p>
+                    <span>Register Issue/Request</span>
+                </h4>
             </div>
-            {/* Div2 Start */}
-            <div class="div2 borderStyle">
-                <div className="div2Container">
-                    <div className="rowElement">
-                        <p className="flex text-lg"> To: <span className="text-orange-600">*</span></p>
-                        <div className="flex m-0 p-0">
-                            <input
-                                required
-                                id="formTo"
-                                className="tagInput p-2"
-                                placeholder="Type UserID "
-                            />
-                            <div className="pt-1 pl-2 scale-90">
-                                <TagIcon />
+            {/* <div class=" PageTitle">
+                <button
+                    className="flex justify-center rounded-full aspect-square "
+                    onClick={() => {
+                        navigate('/session/issuemanagement')
+                    }}
+                    style={{ "background": "#84587C", color: "white" }}
+                >
+                    <AiOutlineArrowLeft />
+                </button>
+                <p className="flex" >
+                    <CreateIssueIcon />
+                    <span className="text-xl  pl-4" >Register Issue/Request</span>
+                </p>
+            </div> */}
+            <form class="parent" onSubmit={onFormSubmit} id="form">
+
+                {/* Div2 Start */}
+                <div class="div2 borderStyle">
+                    <div className="div2Container">
+                        <div className="rowElement">
+                            <p className="flex text-lg"> To: <span className="text-orange-600">*</span></p>
+                            <div className="flex m-0 p-0">
+                                <input
+                                    required
+                                    id="formTo"
+                                    className="tagInput p-2"
+                                    placeholder="Type UserID "
+                                />
+                                <div className="pt-1 pl-2 scale-90">
+                                    <TagIcon />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="rowElement">
+                            <p className="flex text-lg"> Type<span className="text-orange-600">*</span></p>
+                            <div className="flex m-0 p-0">
+                                <select
+                                    //   required={!isTemporary}
+                                    name=""
+                                    required
+                                    id="formType"
+                                    className=" selectBox"
+                                //   onChange={(e) => setRoleFunc(e.target.value)}
+                                >
+                                    <option value="" disabled selected>
+                                        Select
+                                    </option>
+                                    {typeArray.map((st, index) => (
+                                        <option value={st} className="text-black">
+                                            {index + 1}. {st}
+                                        </option>
+                                    ))}
+                                </select>
+                                <div className="pl-2 pt-1 scale-90"><TypeIcon /></div>
+                            </div>
+                        </div>
+                        <div className="rowElement">
+                            <p className="flex text-lg"> Level<span className="text-orange-600">*</span></p>
+                            <div className="flex">
+                                <select
+                                    //   required={!isTemporary}
+                                    required
+                                    name=""
+                                    id="formLevel"
+                                    className=" selectBox"
+                                //   onChange={(e) => setRoleFunc(e.target.value)}
+                                >
+                                    <option value="" disabled selected>
+                                        Select
+                                    </option>
+                                    {levelArray.map((st, index) => (
+                                        <option value={st} className="text-black">
+                                            {index + 1}. {st}
+                                        </option>
+                                    ))}
+                                </select>
+                                <div className="pl-2 pt-1 scale-90"><LevelIcon /></div>
+                            </div>
+                        </div>
+                        <div className="rowElement">
+                            <p className="flex text-lg pt-2 "> Severity<span className="text-orange-600">*</span></p>
+                            <div className="flex">
+                                <select
+                                    //   required={!isTemporary}
+                                    name=""
+                                    required
+                                    id="formSeverity"
+                                    className=" selectBox"
+                                //   onChange={(e) => setRoleFunc(e.target.value)}
+                                >
+                                    <option value="" disabled selected>
+                                        Select
+                                    </option>
+                                    {severityArray.map((st, index) => (
+                                        <option value={st} className="text-black">
+                                            {index + 1}. {st}
+                                        </option>
+                                    ))}
+                                </select>
+                                <div className="pl-2 pt-1 scale-90"><SeverityIcon /></div>
                             </div>
                         </div>
                     </div>
-                    <div className="rowElement">
-                        <p className="flex text-lg"> Type<span className="text-orange-600">*</span></p>
-                        <div className="flex m-0 p-0">
-                            <select
-                                //   required={!isTemporary}
-                                name=""
-                                required
-                                id="formType"
-                                className=" selectBox"
-                            //   onChange={(e) => setRoleFunc(e.target.value)}
-                            >
-                                <option value="" disabled selected>
-                                    Select
-                                </option>
-                                {typeArray.map((st, index) => (
-                                    <option value={st} className="text-black">
-                                        {index + 1}. {st}
-                                    </option>
-                                ))}
-                            </select>
-                            <div className="pl-2 pt-1 scale-90"><TypeIcon /></div>
-                        </div>
-                    </div>
-                    <div className="rowElement">
-                        <p className="flex text-lg"> Level<span className="text-orange-600">*</span></p>
-                        <div className="flex">
-                            <select
-                                //   required={!isTemporary}
-                                required
-                                name=""
-                                id="formLevel"
-                                className=" selectBox"
-                            //   onChange={(e) => setRoleFunc(e.target.value)}
-                            >
-                                <option value="" disabled selected>
-                                    Select
-                                </option>
-                                {levelArray.map((st, index) => (
-                                    <option value={st} className="text-black">
-                                        {index + 1}. {st}
-                                    </option>
-                                ))}
-                            </select>
-                            <div className="pl-2 pt-1 scale-90"><LevelIcon /></div>
-                        </div>
-                    </div>
-                    <div className="rowElement">
-                        <p className="flex text-lg pt-2 "> Severity<span className="text-orange-600">*</span></p>
-                        <div className="flex">
-                            <select
-                                //   required={!isTemporary}
-                                name=""
-                                required
-                                id="formSeverity"
-                                className=" selectBox"
-                            //   onChange={(e) => setRoleFunc(e.target.value)}
-                            >
-                                <option value="" disabled selected>
-                                    Select
-                                </option>
-                                {severityArray.map((st, index) => (
-                                    <option value={st} className="text-black">
-                                        {index + 1}. {st}
-                                    </option>
-                                ))}
-                            </select>
-                            <div className="pl-2 pt-1 scale-90"><SeverityIcon /></div>
-                        </div>
-                    </div>
                 </div>
-            </div>
 
-            {/* Div2 End */}
+                {/* Div2 End */}
 
-            <div className="div3 borderStyle">
-                <div className="div3Container">
-                    <p className="text-lg flex" > Subject<span className="text-orange-600">*</span></p>
-                    <input
-                        required
-                        id="formSubject"
-                        // type={"number"}
-                        // step="any"
-                        className="subjectInput p-2"
-                        placeholder="Subject"
-                        
-                    />
-                    {/* <div className="pt-1 pl-2 scale-90">
-                            <TagIcon/>
-                        </div> */}
-                    {/* </div>
-                    <div className="w-full div3Container"> */}
-                    <p className="text-lg flex" > Remarks<span className="text-orange-600">*</span></p>
-                    <textarea required className="textarea flex" id="formRemarks" name="w3review" rows="" cols="" placeholder="Text Input">
-
-                    </textarea>
-                </div>
-            </div>
-
-            <div class="div4 borderStyle flex">
-                <div className="bottomDivs">
-                    <p className="text-lg flex" >Supporting Documents  </p>
-                    <div>
+                <div className="div3 borderStyle">
+                    <div className="div3Container">
+                        <p className="text-lg flex" > Subject<span className="text-orange-600">*</span></p>
                         <input
-                            id="formDocuments"
-                            // required={isTemporary}
-                            type="file"
-                            placeholder="Choose Image (Upto 5 MB)"
-                            multiple
-                            onChange={(e)=>{
-                                uploadImage(e);
-                            }}
-                        />
-                    </div>
-                </div>
-
-            </div>
-            <div class="div5 borderStyle flex">
-                <div className="bottomDivs">
-                    <p className="text-lg flex pb-2" >Tag Users  </p>
-                    <div className="tagInputDiv pb-4">
-                        <input
-                            // required
-                            id="formTags"
+                            required
+                            id="formSubject"
                             // type={"number"}
                             // step="any"
-                            className="tagInput p-2"
-                            placeholder="@DeoGwalior, @DEOBhopal"
-                        />
-                        <div className="pt-1 pl-2 scale-90">
-                            <TagIcon />
-                        </div>
+                            className="subjectInput p-2"
+                            placeholder="Subject"
 
+                        />
+                        {/* <div className="pt-1 pl-2 scale-90">
+                            <TagIcon/>
+                        </div> */}
+                        {/* </div>
+                    <div className="w-full div3Container"> */}
+                        <p className="text-lg flex" > Remarks<span className="text-orange-600">*</span></p>
+                        <textarea required className="textarea flex" id="formRemarks" name="w3review" rows="" cols="" placeholder="Text Input">
+
+                        </textarea>
                     </div>
                 </div>
 
-            </div>
-            <div class="div6">
-                <button type={"submit"} className="submitBtn">
-                    Submit
-                </button>
-            </div>
-        </form>
+                <div class="div4 borderStyle flex">
+                    <div className="bottomDivs">
+                        <p className="text-lg flex" >Supporting Documents  </p>
+                        <div>
+                            <input
+                                id="formDocuments"
+                                // required={isTemporary}
+                                type="file"
+                                placeholder="Choose Image (Upto 5 MB)"
+                                multiple
+                                onChange={(e) => {
+                                    uploadImage(e);
+                                }}
+                            />
+                        </div>
+                    </div>
+
+                </div>
+                <div class="div5 borderStyle flex">
+                    <div className="bottomDivs">
+                        <p className="text-lg flex pb-2" >Tag Users </p>
+                        <div className=" pb-4">
+                            {/* <div className="tagInputDiv pb-4"> */}
+                            <div className="tagwrap">
+                                <TagsInput
+
+                                    // style={{ width: '100%' }}
+                                    className='li_noti hide-scroll-bar tagInput p-2'
+                                    value={tags}
+                                    id="formTags"
+                                    onChange={setTags}
+                                    placeHolder="@DeoGwalior, @DEOBhopal"
+                                />
+                            </div>
+                            {/* <div className="pt-1 pl-2 scale-90">
+                            <TagIcon />
+                        </div> */}
+                        </div>
+                    </div>
+
+                </div>
+                <div class="div6">
+                    <button type={"submit"} className="submitBtn">
+                        Submit
+                    </button>
+                </div>
+            </form>
+        </div>
     )
 }
