@@ -1,6 +1,6 @@
 import './App.css';
 
-import {BrowserRouter, Routes, Route, Navigate} from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 
 import ActionIssue from './pages/issue_request_management/ActionIssue';
 import IssueList from './pages/issue_request_management/Requestlist'
@@ -25,53 +25,49 @@ import FillAvailability from './pages/order_management/FillAvailability';
 import EditView from './pages/home/EditView';
 function App() {
 
-	const [sessionState, setSessionState] = useState({
-		userID: null,
-		userEmail: null,
-		active: null,
-		userName: null,
-		userImage: null
-	})
+  const [sessionState, setSessionState] = useState({
+    userID: null,
+    userEmail: null,
+    active: null,
+    userName: null,
+    userImage: null
+  })
 
-  const [profileDetail,setProfileDetail]=useState([]);
+  const [profileDetail, setProfileDetail] = useState([]);
 
   async function getUser() {
     let token = localStorage.getItem("token");
-		const access_token=JSON.parse(token)["access_token"];
-		try {
+    const access_token = JSON.parse(token)["access_token"];
+    try {
       const response = await fetch(
-				"http://evm.iitbhilai.ac.in:8100/user/listAllUsers",
-				{
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json",
-						'Authorization': 'Bearer ' + access_token,
-					},
-					mode: "cors"
-				}
-			);
-		  const data2 = await response.json();
-		  // console.log(data2);
-		  if(data2["data"]!=undefined){
-			// console.log("helo")
-				for(let i=0;i<data2["data"].length;i++){
-					// console.log(data2["data"][i][0],userData.userId)
-					if(data2["data"][i][0]==sessionStorage.getItem('sessionToken')){
-						setProfileDetail(data2["data"][i]);
-						// console.log(data2["data"][i])
-						break;
-					}
-				}
-		  }
-		} catch (err) {
-		  console.log(err);
-		}
-	  }
-    useEffect(()=>{
-      getUser();
-    })
+        "http://evm.iitbhilai.ac.in:8100/user/listAllUsers",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            'Authorization': 'Bearer ' + access_token,
+          },
+          mode: "cors"
+        }
+      );
+      const data2 = await response.json();
+      if (data2["data"] != undefined) {
+        for (let i = 0; i < data2["data"].length; i++) {
+          if (data2["data"][i][0] == sessionStorage.getItem('sessionToken')) {
+            setProfileDetail(data2["data"][i]);
+            break;
+          }
+        }
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  useEffect(() => {
+    getUser();
+  }, [])
 
-	return (
+  return (
     <>
       <BrowserRouter>
         <Routes>
@@ -84,11 +80,11 @@ function App() {
           />
           <Route path="/session/" element={<Routed Session={sessionState} SetSession={setSessionState} />}>
             <Route path="/session/home" element={<Home1 />} />{" "}
-             Dashboard Component goes here 
+            Dashboard Component goes here
 
-             <Route
+            <Route
               path="/session/home/editview"
-              element={<EditView/>}
+              element={<EditView />}
             />
 
             <Route path="/session/usermanagement/" element={<ManageUsers />} />
@@ -122,9 +118,9 @@ function App() {
               element={<ViewRequest />}
             />
 
-              <Route
+            <Route
               path='/session/issuemanagement/actionIssue/:id'
-              element={<ActionIssue/>} 
+              element={<ActionIssue />}
             />
 
             <Route
@@ -149,7 +145,7 @@ function App() {
             />
             <Route
               path="/session/ordermanagement/createorder/generateorder/:orderType"
-              element={<GenerateOrder/>}
+              element={<GenerateOrder />}
             />
             <Route
               path="/session/services"

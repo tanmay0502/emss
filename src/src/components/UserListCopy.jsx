@@ -131,8 +131,9 @@ function UserList() {
 			console.log(err);
 		}
 	}
-	// getUser();
+	
 	useEffect(() => {
+		console.log("Use Effect Here")
 		getUser();
 	}, []);
 

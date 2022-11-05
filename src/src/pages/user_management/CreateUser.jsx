@@ -441,7 +441,7 @@ function CreateUser() {
 
       if (changeUserID) {
         setUserID(
-          state + ("00" + PC).slice(-2) + AC + rolesCode[roles.indexOf(st)]
+          state + (PC != undefined ?("00" + PC).slice(-2) : '00') + AC + rolesCode[roles.indexOf(st)]
         );
       }
       console.log(userID);
@@ -451,7 +451,7 @@ function CreateUser() {
 
   useEffect(() => {
     setUserID(
-      state + ("00" + PC).slice(-2) + AC + role
+      state + (PC != undefined ?("00" + PC).slice(-2) : '00') + AC + role
     );
   }, [state, AC, PC, role])
 
@@ -489,29 +489,32 @@ function CreateUser() {
       return;
     }
     if (document.getElementById("formUserAltNumber1").value != '') {
-      if(!validate_number(document.getElementById("formUserAltNumber1").value)){
-          document.getElementById("formUserAltNumber1").value = ''
-          return;
+      if (!validate_number(document.getElementById("formUserAltNumber1").value)) {
+        document.getElementById("formUserAltNumber1").value = ''
+        return;
       }
-      
+
     }
     if (document.getElementById("formUserAltNumber2").value != '') {
-      if(!validate_number(document.getElementById("formUserAltNumber2").value)){
-          document.getElementById("formUserAltNumber2").value = ''
-          return;
+      if (!validate_number(document.getElementById("formUserAltNumber2").value)) {
+        document.getElementById("formUserAltNumber2").value = ''
+        return;
       }
-      
+
     }
-    
+
 
     else {
       try {
+        let token = localStorage.getItem("token");
+        const access_token = JSON.parse(token)["access_token"];
         const response = await fetch(
           "http://evm.iitbhilai.ac.in:8100/user/createUser",
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+              'Authorization': 'Bearer ' + access_token,
             },
             body: JSON.stringify({
               userID: userID,
@@ -522,10 +525,10 @@ function CreateUser() {
               othercontactnum1: document.getElementById("formUserAltNumber1").value,
               othercontactnum2: document.getElementById("formUserAltNumber2").value,
               active: isTemporary ? "I" : "A",
-              activationTime: "2022-09-14T17:14:33.658Z",
+              activationTime: new Date().toISOString(),
               photofilename: "imagefile",
               createdBy: window.sessionStorage.getItem("sessionToken"),
-              creationTime: "2022-09-14T17:14:33.658Z"
+              creationTime: new Date().toISOString()
             }),
             mode: 'no-cors'
           }
