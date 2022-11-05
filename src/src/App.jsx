@@ -33,41 +33,7 @@ function App() {
     userImage: null
   })
 
-  const [profileDetail, setProfileDetail] = useState([]);
-
-  async function getUser() {
-    let token = localStorage.getItem("token");
-    const access_token = JSON.parse(token)["access_token"];
-    try {
-      const response = await fetch(
-        "http://evm.iitbhilai.ac.in:8100/user/listAllUsers",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            'Authorization': 'Bearer ' + access_token,
-          },
-          mode: "cors"
-        }
-      );
-      const data2 = await response.json();
-      if (data2["data"] != undefined) {
-        for (let i = 0; i < data2["data"].length; i++) {
-          if (data2["data"][i][0] == sessionStorage.getItem('sessionToken')) {
-            setProfileDetail(data2["data"][i]);
-            break;
-          }
-        }
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  }
-  useEffect(() => {
-    getUser();
-  }, [])
-
-  return (
+	return (
     <>
       <BrowserRouter>
         <Routes>
@@ -125,7 +91,7 @@ function App() {
 
             <Route
               path="/session/user-profile"
-              element={<Profile detail={profileDetail} />}
+              element={<Profile />}
             />
             <Route
               path="/session/ordermanagement"

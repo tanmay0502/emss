@@ -30,6 +30,10 @@ function UserList() {
 	const [sortBy, setSortBy] = useState("None")
 	const [sortOrder, setSortOrder] = useState("asc")
 
+	const [noOfActiveUsers, setNoOfActiveUsers] = useState(0);
+	const [noOfInActiveUsers, setNoOfInActiveUsers] = useState(0);
+	const [noOfTotalUsers, setNoOfTotalUsers] = useState(0);
+
 	const sortMapping = {
 		"None": null,
 		"User ID": "User ID",
@@ -108,9 +112,9 @@ function UserList() {
 
 	async function getUser() {
 		let token = localStorage.getItem("token");
-		const decode = jwt_decode(JSON.parse(token)["access_token"])
+		// const decode = jwt_decode(JSON.parse(token)["access_token"])
         // console.log(decode)
-    	// console.log(JSON.parse(token));
+    	console.log(JSON.parse(token));
 		const access_token=JSON.parse(token)["access_token"];
 		try {
 			const response = await fetch(
@@ -125,6 +129,9 @@ function UserList() {
 				}
 			);
 			const data2 = await response.json();
+			setNoOfActiveUsers(data2["active_users"]);
+			setNoOfInActiveUsers(data2["inactive_users"]);
+			setNoOfTotalUsers(data2["total_users"]);
 			console.log(data2);
 			setUsers(data2["data"]);
 		} catch (err) {
@@ -139,6 +146,8 @@ function UserList() {
 
 	const activateUser = async (myId) => {
 		if (window.confirm(`Are you sure you want to Activate user ${myId} ?`)) {
+			let token = localStorage.getItem("token");
+		const access_token=JSON.parse(token)["access_token"];
 			try {
 				const response = await fetch(
 					`http://evm.iitbhilai.ac.in:8100/user/activateUser`,
@@ -146,6 +155,7 @@ function UserList() {
 						method: "POST",
 						headers: {
 							"Content-Type": "application/json",
+							'Authorization': 'Bearer ' + access_token,
 						},
 						body: JSON.stringify({
 							"userID": myId
@@ -169,6 +179,8 @@ function UserList() {
 
 	const deactivateUser = async (myId) => {
 		if (window.confirm(`Are you sure you want to Dectivate user ${myId} ?`)) {
+			let token = localStorage.getItem("token");
+			const access_token=JSON.parse(token)["access_token"];
 			try {
 				const response = await fetch(
 					`http://evm.iitbhilai.ac.in:8100/user/deactivateUser`,
@@ -176,6 +188,7 @@ function UserList() {
 						method: "POST",
 						headers: {
 							"Content-Type": "application/json",
+							'Authorization': 'Bearer ' + access_token,
 						},
 						body: JSON.stringify({
 							"userID": myId
@@ -258,7 +271,8 @@ function UserList() {
 						</div>
 						<div className="userStatsText">
 							<span>Total Users</span>
-							<h3>{tableData.length.toLocaleString()}</h3>
+							{/* <h3>{tableData.length.toLocaleString()}</h3> */}
+							<h3>{noOfTotalUsers}</h3>
 						</div>
 					</li>
 					<li>
@@ -267,9 +281,10 @@ function UserList() {
 						</div>
 						<div className="userStatsText">
 							<span>Active Users</span>
-							<h3>{tableData.filter((elem) => {
+							{/* <h3>{tableData.filter((elem) => {
 								return elem["Details"] && elem["Details"][7] === 'A'
-							}).length.toLocaleString()}</h3>
+							}).length.toLocaleString()}</h3> */}
+							<h3>{noOfActiveUsers}</h3>
 						</div>
 					</li>
 					<li>
@@ -278,9 +293,10 @@ function UserList() {
 						</div>
 						<div className="userStatsText">
 							<span>Inactive Users</span>
-							<h3>{tableData.filter((elem) => {
+							{/* <h3>{tableData.filter((elem) => {
 								return elem["Details"] && elem["Details"][7] !== 'A'
-							}).length.toLocaleString()}</h3>
+							}).length.toLocaleString()}</h3> */}
+							<h3>{noOfInActiveUsers}</h3>
 						</div>
 					</li>
 				</ul>

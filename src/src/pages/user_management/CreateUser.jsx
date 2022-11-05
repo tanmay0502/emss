@@ -505,6 +505,11 @@ function CreateUser() {
 
 
     else {
+      let token = localStorage.getItem("token");
+		// const decode = jwt_decode(JSON.parse(token)["access_token"])
+        // console.log(decode)
+    	// console.log(JSON.parse(token));
+		const access_token=JSON.parse(token)["access_token"];
       try {
         let token = localStorage.getItem("token");
         const access_token = JSON.parse(token)["access_token"];
@@ -530,7 +535,9 @@ function CreateUser() {
               createdBy: window.sessionStorage.getItem("sessionToken"),
               creationTime: new Date().toISOString()
             }),
+
             mode: 'no-cors'
+
           }
         );
 
