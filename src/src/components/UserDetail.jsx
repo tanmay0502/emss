@@ -30,6 +30,8 @@ function UserDetail(props) {
     const userId = props.detail[0];
 
     if (window.confirm("Are you suer you want to reset password for this user ? ")) {
+      let token = localStorage.getItem("token");
+		const access_token=JSON.parse(token)["access_token"];
       try {
         const response = await fetch(
           `http://evm.iitbhilai.ac.in:8100/user/resetPassword/${userId}`,
@@ -37,6 +39,7 @@ function UserDetail(props) {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
+							'Authorization': 'Bearer ' + access_token,
             },
             mode: "cors"
           }

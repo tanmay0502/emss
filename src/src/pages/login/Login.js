@@ -461,10 +461,11 @@ const Login = () => {
             data2["status"] == 404
           ) {
             setInvalidMobile("Mobile Number is not provided");
+            console.log("not found")
             setInvalidUser("");
-            setSelectUserBlock(1);
-            setPasswordBlock(1)
-            setIsOTPSent(1);
+            setSelectUserBlock(0);
+            setPasswordBlock(0)
+            setIsOTPSent(0);
           } else {
             setInvalidMobile("");
             setInvalidUser("");

@@ -4,12 +4,50 @@ import { AiOutlineArrowLeft, AiOutlineEdit } from 'react-icons/ai'
 
 function Profile(props) {
 
-
+  
+  const [profileDetail,setProfileDetail]=useState([]);
   const [editPic, setEditPic] = useState(0)
 
   function editProfile() {
     setEditPic(editPic ^ 1);
   }
+  
+
+  async function getUser() {
+    let token = localStorage.getItem("token");
+		const access_token=JSON.parse(token)["access_token"];
+		try {
+      const response = await fetch(
+				"http://evm.iitbhilai.ac.in:8100/user/listAllUsers",
+				{
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+						'Authorization': 'Bearer ' + access_token,
+					},
+					mode: "cors"
+				}
+			);
+		  const data2 = await response.json();
+		  // console.log(data2);
+		  if(data2["data"]!=undefined){
+			// console.log("helo")
+				for(let i=0;i<data2["data"].length;i++){
+					// console.log(data2["data"][i][0],userData.userId)
+					if(data2["data"][i][0]==sessionStorage.getItem('sessionToken')){
+						setProfileDetail(data2["data"][i]);
+						// console.log(data2["data"][i])
+						break;
+					}
+				}
+		  }
+		} catch (err) {
+		  console.log(err);
+		}
+	  }
+    useEffect(()=>{
+      getUser();
+    })
 
 
   const myFont = {
@@ -27,11 +65,10 @@ function Profile(props) {
     lineHeight: "35px",
     color: "black"
   };
-  console.log(props.detail)
   return (
     <div className="myWrapper">
       <h4>
-        Welcome, {props.detail[2]}
+        Welcome, {profileDetail[2]}
       </h4>
       <div className="rounded-full justify-center flex " style={{position: "relative"}}>
         {editPic == 0 && (<><img
@@ -64,39 +101,39 @@ function Profile(props) {
           </div>
         )}
       </div>
-      {props.detail && (
+      {profileDetail && (
         <div className="w-full">
           <div className="flex w-full justify-center">
             <div className="w-2/5 ">
               <div className="m-2 text-left p-2 rounded-md text-black w-full">
                 <p className="font-bold">User Id </p>
                 <p className="mt-1 text-lg tracking-widest">
-                  {/* {props.detail[0]} */}
+                  {/* {profileDetail[0]} */}
                   {sessionStorage.getItem('sessionToken')}
                 </p>
               </div>
               <div className="m-2 text-left p-2 rounded-md text-black w-full">
                 <p className="font-bold">User Name </p>
                 <p className="mt-1 text-lg tracking-widest">
-                  {props.detail[2]}
+                  {profileDetail[2]}
                 </p>
               </div>
               <div className="m-2 text-left p-2 rounded-md text-black w-full">
                 <p className="font-bold">Address </p>
                 <p className="mt-1 text-lg tracking-widest">
-                  {props.detail[4]}
+                  {profileDetail[4]}
                 </p>
               </div>
               <div className="m-2 text-left p-2 rounded-md text-black w-full">
                 <p className="font-bold">Alternate Number 2 </p>
                 <p className="mt-1 text-lg tracking-widest">
-                  {props.detail[6]}
+                  {profileDetail[6]}
                 </p>
               </div>
               <div className="m-2 text-left p-2 rounded-md text-black w-full">
                 <p className="font-bold">Created By </p>
                 <p className="mt-1 text-lg tracking-widest">
-                  {props.detail[10]}
+                  {profileDetail[10]}
                 </p>
               </div>
             </div>
@@ -104,25 +141,25 @@ function Profile(props) {
               <div className="m-2 text-left p-2 rounded-md text-black w-full">
                 <p className="font-bold">Email Id </p>
                 <p className="mt-1 text-lg tracking-widest">
-                  {props.detail[1]}
+                  {profileDetail[1]}
                 </p>
               </div>
               <div className="m-2 text-left p-2 rounded-md text-black w-full">
                 <p className="font-bold">Mobile Number </p>
                 <p className="mt-1 text-lg tracking-widest">
-                  {props.detail[3]}
+                  {profileDetail[3]}
                 </p>
               </div>
               <div className="m-2 text-left p-2 rounded-md text-black w-full">
                 <p className="font-bold">Alternate Number 1</p>
                 <p className="mt-1 text-lg tracking-widest">
-                  {props.detail[5]}
+                  {profileDetail[5]}
                 </p>
               </div>
               <div className="m-2 text-left p-2 rounded-md text-black w-full">
                 <p className="font-bold">Type </p>
                 <p className="mt-1 text-lg tracking-widest">
-                  {props.detail[7]}
+                  {profileDetail[7]}
                 </p>
               </div>
             </div>
