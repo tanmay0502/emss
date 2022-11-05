@@ -3,8 +3,8 @@ import { useState } from "react";
 const SelectUser = (props) => {
 
   const users=props.userIDs;
-  if(users.lenght==1){
-    console.log(users[0])
+  if(users && users.length==1){
+    // console.log(users[0])
     props.user(users[0]);
   }
   return (
@@ -28,7 +28,7 @@ const SelectUser = (props) => {
             Select:
           </option>
 
-          {users.map((value) => (
+          {users && users.map((value) => (
             
               <option value={value} className="text-black ">
                 {value}

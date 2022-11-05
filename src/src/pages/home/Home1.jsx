@@ -86,7 +86,7 @@ const blocked = [
                 </div>
                 <div className="right_sec">
                     <p>45,00,512</p>
-                    <p>Contrl Unit</p>
+                    <p>Control Units</p>
                 </div>
             </div>
             <div className="gross_box d-flex justify-content-evenly">
@@ -95,7 +95,7 @@ const blocked = [
                 </div>
                 <div className="right_sec">
                     <p>51,06,525</p>
-                    <p>Ballot Unit</p>
+                    <p>Ballot Units</p>
                 </div>
             </div>
             <div className="gross_box d-flex justify-content-evenly">

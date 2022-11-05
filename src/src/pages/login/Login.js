@@ -69,7 +69,7 @@ const Login = () => {
       if (document.getElementById("roleDropdown"))
         document.getElementById("roleDropdown").value = "0";
     }
-    if (PCs.length != 0 || ACs.length != 0 || roles.length != 0) {
+    if ((PCs && ACs && roles) && (PCs.length != 0 || ACs.length != 0 || roles.length != 0)) {
       checkEmpty();
     }
 

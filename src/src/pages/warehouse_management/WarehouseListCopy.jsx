@@ -123,7 +123,26 @@ function WarehouseList() {
 			}
 		}).map((val) => {
 			return {
-				"Warehouse ID": val["warehousebuildingtype"] == 'P' ? <Fragment><span style={{ display: 'flex', justifyContent: 'left', alignItems: 'left', marginLeft: "35%" }}><FaCircle size='0.8em' className='PermaWarehouse' /><span style={{ marginLeft: '10px', marginRight: '10px' }}>{val['warehouseid']}</span>{val['doublelock'] ? <Fragment><FaKey className='keyColor' /><FaKey className='keyColor' /></Fragment> : <FaKey className='keyColor' />}</span></Fragment> : <Fragment><span style={{ display: 'flex', justifyContent: 'left', alignItems: 'left', marginLeft: "35%" }}><FaCircle size='0.8em' className='TempWarehouse' /><span style={{ marginLeft: '10px', marginRight: '10px' }}>{val['warehouseid']}</span>{val['doublelock'] ? <Fragment><FaKey className='keyColor' /><FaKey className='keyColor' /></Fragment> : <FaKey className='keyColor' />}</span></Fragment>,
+				"Warehouse ID": val["warehousebuildingtype"] == 'P' ?
+					<Fragment><span style={{ display: 'flex', justifyContent: 'left', alignItems: 'left', marginLeft: "35%" }}>
+						<FaCircle size='0.8em' className='PermaWarehouse' />
+						<span style={{ marginLeft: '10px', marginRight: '10px' }}>
+							{val['warehouseid']}</span>{val['doublelock'] ?
+								<Fragment><FaKey className='keyColor' />
+								<FaKey className='keyColor' /></Fragment>
+								:
+								<FaKey className='keyColor' />}</span></Fragment>
+					:
+					<Fragment><span style={{ display: 'flex', justifyContent: 'left', alignItems: 'left', marginLeft: "35%" }}>
+						<FaCircle size='0.8em' className='TempWarehouse' />
+						<span style={{ marginLeft: '10px', marginRight: '10px' }}>{val['warehouseid']}</span>{val['doublelock'] ?
+							<Fragment>
+								<FaKey className='keyColor' />
+								<FaKey className='keyColor' />
+							</Fragment> :
+							<FaKey className='keyColor' />}
+					</span>
+					</Fragment>,
 				"Room Type": warehouseMapping ? warehouseMapping["data"][val["warehousetype"]] : "",
 				// "Double Locked": val["doublelock"] ? "Yes" : "No",
 				Details: val,
