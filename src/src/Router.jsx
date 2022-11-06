@@ -47,10 +47,10 @@ function Routed(props) {
 	// }
 
 	function logOut() {
-		sessionStorage.setItem("sessionToken", null);
+		localStorage.removeItem("token", null);
 		props.SetSession(null)
 		setUserData(null)
-		localStorage.setItem("token", null);
+		// localStorage.setItem("token", null);
 		window.location.replace("/login");
 	}
 	// getUser();
@@ -154,7 +154,7 @@ function Routed(props) {
 		const flag = sessionStorage.getItem('sessionToken');
 		sessionStorage.setItem("log", null);
 		console.log(flag, null)
-		if (flag === sessionStorage.getItem("log") || flag === null) {
+		if (!localStorage.getItem('token')) {
 			console.log(flag)
 
 			window.location.href = '/login'

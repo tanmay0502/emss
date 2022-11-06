@@ -7,6 +7,9 @@ import SelectUser from "../../components/SelectUser";
 import jwt_decode from "jwt-decode";
 var sha256 = require("js-sha256");
 
+function getKeyByValue(object, value) {
+  return Object.keys(object).find(key => object[key] === value);
+}
 
 const Login = () => {
   const myFont = {
@@ -40,12 +43,12 @@ const Login = () => {
   const [invalidUsers, setInvalidUsers] = useState("");
 
   const [userIDs, setUserIds] = useState(["user1", "user2"]);
-  const [states, setStates] = useState([]);
-  const [statesCode, setStatesCode] = useState([]);
-  const [PCs, setPCs] = useState(["00"]);
-  const [PCsCode, setPCsCode] = useState(["00"]);
-  const [ACs, setACs] = useState(["000"]);
-  const [ACsCode, setACsCode] = useState(["000"]);
+  const [states, setStates] = useState({});
+  // const [statesCode, setStatesCode] = useState([]);
+  const [PCs, setPCs] = useState({});
+  // const [PCsCode, setPCsCode] = useState(["00"]);
+  const [ACs, setACs] = useState({});
+  // const [ACsCode, setACsCode] = useState(["000"]);
   const [roles, setRoles] = useState([]);
   const [rolesCode, setRolesCode] = useState([]);
 
@@ -57,19 +60,19 @@ const Login = () => {
 
   useEffect(() => {
 
-    if (PCs === []) {
+    if (PCs === {}) {
       if (document.getElementById("pcDropdown"))
         document.getElementById("pcDropdown").value = "0";
     }
-    if (ACs === []) {
+    if (ACs === {}) {
       if (document.getElementById("acDropdown"))
         document.getElementById("acDropdown").value = "0";
     }
-    if (roles === []) {
+    if (roles === {}) {
       if (document.getElementById("roleDropdown"))
         document.getElementById("roleDropdown").value = "0";
     }
-    if ((PCs && ACs && roles) && (PCs.length != 0 || ACs.length != 0 || roles.length != 0)) {
+    if ((PCs && ACs && roles) && (PCs != {} || ACs != {} || roles.length != 0)) {
       checkEmpty();
     }
 
@@ -84,17 +87,13 @@ const Login = () => {
         document.getElementById("roleDropdown").value = "0";
 
       }
-      setPCs([])
-      setACs([])
+      setPCs({})
+      setACs({})
       setRoles([])
       console.log("checked")
     }
   }
 
-  useEffect(() => {
-    checkEmpty()
-
-  }, [userID])
   useEffect(() => {
 
     if ((userID.length > 0 && Number(userID)) || (userID.length > 0 && userID[0] == "0")) {
@@ -107,8 +106,8 @@ const Login = () => {
         setFlag1(1)
       }
       getState()
-      setPCs([])
-      setACs([])
+      setPCs({})
+      setACs({})
       setRoles([])
       // console.log("hurry")
     }
@@ -125,14 +124,15 @@ const Login = () => {
 
       if (userID.length >= 2) {
         const statecode = userID.substring(0, 2);
-        console.log(userID, states)
-        if (statesCode.indexOf(statecode) !== -1) {
+        // console.log(userID, states)
+        var key = getKeyByValue(states, statecode)
+        if (key !== -1) {
           if (document.getElementById("stateDropdown")) {
             document.getElementById("stateDropdown").value =
-              states[statesCode.indexOf(statecode)];
+              key;
 
           }
-          setStateFunc(states[statesCode.indexOf(statecode)], false);
+          setStateFunc(key, false);
         } else {
           if (document.getElementById("stateDropdown"))
             document.getElementById("stateDropdown").value = "Select:";
@@ -145,31 +145,29 @@ const Login = () => {
 
 
       }
-      if (userID.length >= 4 && PCsCode && PCs) {
+      if (userID.length >= 4 && PCs) {
         var pccode = parseInt(userID.substring(2, 4)).toString();
         const pwpcode = userID.substring(2, 4);
-        if (PCs[PCsCode.indexOf(pwpcode)] != -1) {
+        var key = getKeyByValue(PCs, pwpcode)
+        if (key != -1) {
           pccode = pwpcode;
         }
-        console.log(PCsCode, pccode, PCsCode.indexOf(pccode));
-        console.log(PCsCode);
 
-        if (pccode == "0" || !PCsCode || PCsCode.length == 0) {
-          console.log("kk");
-          setPCs(["00"]);
-          setPCsCode(["00"]);
+        if (pccode == "0") {
+          // console.log("kk");
+          setPCs({});
           if (document.getElementById("pcDropdown"))
             document.getElementById("pcDropdown").value = "00";
-        } else if (PCsCode.indexOf(pccode) !== -1) {
+        } else if (getKeyByValue(PCs, pccode) !== -1) {
           console.log("lkk");
           if (document.getElementById("pcDropdown")) {
-            console.log("l", PCs[PCsCode.indexOf(pccode)]);
+            console.log("l", PCs[key]);
             document.getElementById("pcDropdown").value =
-              PCs[PCsCode.indexOf(pccode)];
+            getKeyByValue(PCs, pccode);
           }
-          setPCFunc(PCs[PCsCode.indexOf(pccode)], false);
+          setPCFunc(key, false);
         } else {
-          console.log("lkk")
+          // console.log("lkk")
           if (document.getElementById("pcDropdown"))
             document.getElementById("pcDropdown").value = "Select:";
         }
@@ -177,7 +175,7 @@ const Login = () => {
       else {
         if (document.getElementById("pcDropdown"))
           document.getElementById("pcDropdown").value = "0";
-        setACs([])
+        setACs({})
 
 
       }
@@ -187,18 +185,17 @@ const Login = () => {
         console.log(accode);
         if (accode == "000") {
           console.log("pp");
-          setACs(["000"]);
-          setACsCode(["000"]);
+          setACs( {} );
           if (document.getElementById("acDropdown"))
             document.getElementById("acDropdown").value = "000";
 
-          setACFunc(ACs[ACsCode.indexOf(accode)], false);
-        } else if (ACsCode.indexOf(accode) !== -1) {
+          setACFunc(getKeyByValue(ACs, accode), false);
+        } else if (getKeyByValue(ACs, accode) !== -1) {
           if (document.getElementById("acDropdown")) {
             document.getElementById("acDropdown").value =
-              ACs[ACsCode.indexOf(accode)];
+            getKeyByValue(ACs, accode);
           }
-          setACFunc(ACs[ACsCode.indexOf(accode)], false);
+          setACFunc(getKeyByValue(ACs, accode), false);
         } else {
           if (document.getElementById("acDropdown"))
             document.getElementById("acDropdown").value = "Select:";
@@ -208,12 +205,10 @@ const Login = () => {
         if (Number(role)) {
           setRoles([]);
         }
-        console.log(roles);
-        console.log(role);
-        console.log(rolesCode.indexOf(role));
+        
         if (rolesCode.indexOf(role) !== -1) {
-          console.log("Readable Role:");
-          console.log(roles[rolesCode.indexOf(role)]);
+          // console.log("Readable Role:");
+          // console.log(roles[rolesCode.indexOf(role)]);
           if (document.getElementById("roleDropdown"))
             document.getElementById("roleDropdown").value =
               roles[rolesCode.indexOf(role)];
@@ -251,7 +246,6 @@ const Login = () => {
       const data2 = await response.json();
       console.log(data2);
       setStates(data2["states"]);
-      setStatesCode(data2["stcodes"]);
       checkEmpty()
     } catch (err) {
       console.log(err);
@@ -272,7 +266,7 @@ const Login = () => {
         }
       );
       const data2 = await response.json();
-      console.log(data2);
+      // console.log(data2);
       setRoles(data2["roleName"]);
       setRolesCode(data2["roleCode"]);
       checkEmpty()
@@ -282,9 +276,9 @@ const Login = () => {
     }
   }
   useEffect(() => {
-    sessionStorage.setItem("log", null)
-    console.log(window.sessionStorage.getItem("sessionToken"), sessionStorage.getItem("log"), null)
-    if (window.sessionStorage.getItem("sessionToken") !== sessionStorage.getItem("log") && window.sessionStorage.getItem("sessionToken") !== null) {
+    // sessionStorage.setItem("log", null)
+    // console.log(window.sessionStorage.getItem("sessionToken"), sessionStorage.getItem("log"), null)
+    if (window.localStorage.getItem("token") !== null) {
       window.location.pathname = "/session/home";
     }
 
@@ -295,13 +289,11 @@ const Login = () => {
   async function setStateFunc(st, changeUserID = true) {
     if (st !== "Select:") {
       console.log(st);
-      setState(statesCode[states.indexOf(st)]);
-      // console.log(statesCode[states.indexOf(st)]);
+      setState(states[st]);
 
       try {
         const response = await fetch(
-          `http://evm.iitbhilai.ac.in:8100/user/getPCListbyState/${statesCode[states.indexOf(st)]
-          }`,
+          `http://evm.iitbhilai.ac.in:8100/user/getPCListbyState/${states[st]}`,
           {
             method: "GET",
             headers: {
@@ -314,32 +306,28 @@ const Login = () => {
         console.log(data2);
         if (userID.length != 0) {
           if (data2["status"] == 502) {
-            setPCs(["00"]);
-            setPCsCode(["00"]);
+            setPCs({});
           }
           else {
-            setPCs(data2["pcname"]);
-            setPCsCode(data2["pccode"]);
+            setPCs(data2["PCs"]);
           }
         }
 
       } catch (err) {
         console.log(err);
-        setPCs(["00"]);
-        setPCsCode(["00"]);
+        setPCs({});
       }
 
       if (changeUserID) {
         setUserID(
-          statesCode[states.indexOf(st)]
+          states[st]
         );
       }
       setInvalidUser("");
     }
   }
   async function setPCFunc(st, changeUserID = true) {
-    console.log(state, PCsCode[PCs.indexOf(st)]);
-    setPC(PCsCode[PCs.indexOf(st)]);
+    setPC( PCs[st] );
     if (state !== "Select:") {
       if (0) {
       } else {
@@ -355,37 +343,33 @@ const Login = () => {
             }
           );
           const data2 = await response.json();
-          console.log("ACs");
-          console.log(data2);
+          // console.log("ACs");
+          // console.log(data2);
           if (userID.length != 0) {
 
             if (data2["status"] == 502) {
-              setACs(["000"])
-              setACsCode(["000"])
+              setACs({})
             }
             else {
-              setACs(data2["acname"]);
-              setACsCode(data2["accode"]);
+              setACs(data2["ACs"])
             }
           }
         } catch (err) {
           console.log(err);
-          setACs(["000"])
-          setACsCode(["000"])
+          setACs({})
         }
 
       }
       if (changeUserID) {
         setUserID(
-          state + ("00" + PCsCode[PCs.indexOf(st)]).slice(-2)
+          state + ("00" + PCs[st]).slice(-2)
         );
       }
       setInvalidUser("");
     }
   }
   async function setACFunc(st, changeUserID = true) {
-    setAC(ACsCode[ACs.indexOf(st)]);
-    console.log(ACsCode[ACs.indexOf(st)]);
+    setAC(ACs[st]);
     try {
       const response = await fetch(
         `http://evm.iitbhilai.ac.in:8100/user/getRoleList/`,
@@ -412,7 +396,7 @@ const Login = () => {
       setUserID(
         state +
         ("00" + PC).slice(-2) +
-        ("000" + ACsCode[ACs.indexOf(st)]).slice(-3)
+        ("000" + ACs[st]).slice(-3)
       );
     }
     setInvalidUser("");
@@ -791,17 +775,17 @@ const Login = () => {
                           className="text-black ml-2 -mb-6 text-sm font-semibold"
                           style={{ fontFamily: "nunito sans" }}
                         >
-                          {(states.length == 0 || flag1 == 1) && <div className="opacity-40">State</div>}
-                          {states.length != 0 && flag1 == 0 && <>State</>}
+                          {(states == {} || flag1 == 1) && <div className="opacity-40">State</div>}
+                          {states != {} && flag1 == 0 && <>State</>}
                         </p>
-                        {(states.length == 0 || flag1 == 1) && (<select className="pl-3 pr-3 mt-7 h-13 text-black outline-none rounded-md w-full mb-5 opacity-40" disabled
+                        {(states == {} || flag1 == 1) && (<select className="pl-3 pr-3 mt-7 h-13 text-black outline-none rounded-md w-full mb-5 opacity-40" disabled
                           id="stateDropdown"
                         >
                           <option value="0" className="text-black">
                             Select:
                           </option>
                         </select>)}
-                        {states.length != 0 && flag1 == 0 &&
+                        {states != {} && flag1 == 0 &&
                           <select
                             className="pl-3 pr-3 mt-7 h-13 text-black outline-none rounded-md w-full mb-5"
                             style={{ fontFamily: "nunito sans" }}
@@ -817,12 +801,12 @@ const Login = () => {
                             </option>
 
                             {states &&
-                              states.map((st) => (
+                              Object.keys(states).map((st) => (
                                 <option value={st} className="text-black">
                                   {st}
                                 </option>
                               ))}
-                            {states.length == 0 && (<option value="0" className="text-black">
+                            {states == {} && (<option value="0" className="text-black">
                               Select:
                             </option>)}
                           </select>
@@ -834,10 +818,10 @@ const Login = () => {
                           className="text-black ml-2 -mb-6 text-sm font-semibold"
                           style={{ fontFamily: "nunito sans" }}
                         >
-                          {PCs && PCs.length == 0 && <div className="opacity-40">PC</div>}
-                          {PCs && PCs.length != 0 && <>PC</>}
+                          {(PCs === {} || flag1 == 1) && <div className="opacity-40">PC</div>}
+                          {(PCs !== {} && flag1 == 0) && <>PC</>}
                         </p>
-                        {PCs.length == 0 && <div>
+                        {PCs == {} && <div>
                           <select className="pl-3 pr-3 mt-7 h-13 text-black outline-none rounded-md w-full mb-5 opacity-40" disabled
                             id="pcDropdown"
                           >
@@ -846,7 +830,7 @@ const Login = () => {
                             </option>
                           </select>
                         </div>}
-                        {PCs.length != 0 && (
+                        {PCs != {} && (
                           <select
                             className="pl-3 pr-3 mt-7 h-13 text-black outline-none rounded-md w-full mb-5"
                             style={{ fontFamily: "nunito sans" }}
@@ -859,7 +843,7 @@ const Login = () => {
                               Select:
                             </option>
                             {PCs &&
-                              PCs.map((st) => (
+                              Object.keys(PCs).map((st) => (
                                 <option value={st} className="text-black">
                                   {st}
                                 </option>
@@ -873,17 +857,17 @@ const Login = () => {
                           className="text-black ml-2 -mb-6 text-sm font-semibold"
                           style={{ fontFamily: "nunito sans" }}
                         >
-                          {ACs.length == 0 && <div className="opacity-40">AC</div>}
-                          {ACs.length != 0 && <>AC</>}
+                          {(ACs === {} || flag1 == 1) && <div className="opacity-40">AC</div>}
+                          {(ACs !== {} && flag1 == 0) && <>AC</>}
                         </p>
-                        {ACs.length == 0 && (<select className="pl-3 pr-3  mt-7 h-13 text-black outline-none rounded-md w-full mb-5 opacity-40" disabled
+                        {ACs == {} && (<select className="pl-3 pr-3  mt-7 h-13 text-black outline-none rounded-md w-full mb-5 opacity-40" disabled
                           id="acDropdown"
                         >
                           <option value="0" className="text-black">
                             Select:
                           </option>
                         </select>)}
-                        {ACs.length != 0 &&
+                        {ACs != {} &&
                           <select
                             className="pl-3 pr-3  mt-7 h-13 text-black outline-none rounded-md w-full mb-5"
                             style={{ fontFamily: "nunito sans" }}
@@ -896,7 +880,7 @@ const Login = () => {
                               Select:
                             </option>
                             {ACs &&
-                              ACs.map((st) => (
+                              Object.keys(ACs).map((st) => (
                                 <option value={st} className="text-black">
                                   {st}
                                 </option>
