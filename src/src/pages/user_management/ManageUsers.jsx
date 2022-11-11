@@ -1,5 +1,5 @@
 import React from 'react'
-import UserList from "../../components/UserListCopy"
+import UserList from "../../components/UserList"
 import { ReactComponent as UserManagementIcon } from '../../assets/Users.svg';
 import { ReactComponent as ChevronRightIcon } from '../../assets/ChevronRight.svg';
 

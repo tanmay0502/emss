@@ -33,7 +33,7 @@ export default function WarehouseList() {
         console.log(code);
         try {
             const response = await fetch(
-                `http://evm.iitbhilai.ac.in:8100/warehouse/listWarehouses`,
+                `${process.env.REACT_APP_API_SERVER}/warehouse/listWarehouses`,
                 {
                     method: "POST",
                     headers: {
@@ -88,7 +88,7 @@ export default function WarehouseList() {
             try {
 
                 const response = await fetch(
-                    `http://evm.iitbhilai.ac.in:8100/warehouse/activateWarehouse/${myId}`,
+                    `${process.env.REACT_APP_API_SERVER}/warehouse/activateWarehouse/${myId}`,
                     {
                         method: "GET",
                         headers: {
@@ -117,7 +117,7 @@ export default function WarehouseList() {
             try {
 
                 const response = await fetch(
-                    `http://evm.iitbhilai.ac.in:8100/warehouse/deactivateWarehouse/${myId}`,
+                    `${process.env.REACT_APP_API_SERVER}/warehouse/deactivateWarehouse/${myId}`,
                     {
                         method: "GET",
                         headers: {

@@ -36,7 +36,7 @@ export default function ActionIssue() {
     const myId = issueId();
     try {
       const response = await fetch(
-        `http://evm.iitbhilai.ac.in:8100/issue_requests/search_request/${myId}`,
+        `${process.env.REACT_APP_API_SERVER}/issue_requests/search_request/${myId}`,
         {
           method: "GET",
           headers: {
@@ -62,7 +62,7 @@ export default function ActionIssue() {
     const myId = issueId();
     try {
       const response = await fetch(
-				"http://evm.iitbhilai.ac.in:8100/user/listAllUsers",
+				`${process.env.REACT_APP_API_SERVER}/user/listAllUsers`,
 				{
 					method: "GET",
 					headers: {
@@ -108,7 +108,7 @@ export default function ActionIssue() {
 
     try {
       const response = await fetch(
-        `http://evm.iitbhilai.ac.in:8100/issue_requests/${action}_issue`,
+        `${process.env.REACT_APP_API_SERVER}/issue_requests/${action}_issue`,
         {
           method: "POST",
           headers: {

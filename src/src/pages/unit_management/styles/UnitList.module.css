@@ -1,0 +1,168 @@
+.unit_list_container{
+    height: 100%;
+    width: 100%;
+    max-height: 100%;
+    border-radius: 25px;
+    background: #FFFFFF;
+    box-shadow: 0px 10px 60px rgba(226, 236, 249, 0.5);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 25px;
+}
+
+.unit_list_header{
+    height: 10vh;
+    background: linear-gradient(180deg, #84587C 0%, #BA8BB1 100%);
+    border-radius: 25px 25px 0 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5vh;
+    width: 100%;
+}
+
+.unit_list_header h4{
+    margin-bottom: 0 !important;
+    color: white !important;
+}
+
+.unit_list_header_right{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.filterButton{
+    padding: 12.5px;
+    background-color: white;
+    font-size: .8em;
+}
+
+.filterButton svg{
+    height: 24;
+    width: 24;
+}
+
+.unitListTable{
+
+}
+
+.unit_list_container>div:nth-child(2){
+    /* height: calc(100% - 15vh); */
+    width: 100%;
+    flex: 1;
+}
+
+.unit_list_container table{
+    /* display: block; */
+    width: 100%;
+    /* height: 100%; */
+    max-height: 100%;
+    font-size: 0.95em !important;
+}
+
+.unit_list_container table th{
+    color: #B5B7C0 !important;
+    font-size: 1em !important;
+}
+
+.unit_list_container table td{
+    color: #292D32 !important;
+    padding: 25px 0;
+}
+
+.unit_list_container table tr{
+    transition: all linear 0.15s;
+    cursor: pointer;
+    height: min-content;
+}
+
+.unit_list_container table tr:hover td{
+    /* background-color: #b5b7c0bf; */
+}
+
+.unit_list_container table input[type=checkbox]{
+    margin-left: 25px;
+}
+
+.unit_status{
+    min-width: 45px;
+    background: rgba(132, 88, 124, 0.1);
+    border: 1px solid #84587C;
+    border-radius: 4px;
+    padding: 4px 0;
+}
+
+.optionsButton{
+    background: transparent;
+    height: 32px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    padding: 2.5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all linear 0.2s;
+    position: relative;
+}
+
+.optionsButton:focus-within{
+    background-color: #b5b7c028;
+}
+
+.optionsButton:focus-within .optionsMenu{
+    display: block !important;
+}
+
+.optionsMenu{
+    position: absolute;
+    top: calc(100% + 5px);
+    right: 0;
+    white-space: nowrap;
+    background: white;
+    box-shadow: 0px 10px 60px rgba(226, 236, 249, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 0;
+    border-radius: 10px;
+    z-index: 9999;
+    overflow: hidden;
+    display: none !important;
+}
+
+.optionsMenu ul{
+    margin: 0;
+}
+
+.optionsMenu ul li{
+    padding: 10px 25px;
+    transition: all linear 0.2s;
+}
+
+.optionsMenu ul li:hover{
+    background: #b5b7c05f;
+}
+
+.unit_list_container table tr:hover td .optionsButton{
+    background-color: #b5b7c028;
+}
+
+.optionsButton:hover{
+    background-color: #b5b7c05f !important;
+}
+
+.unit_list_container table tbody td{
+    border-bottom: 1px solid var(--border);
+}
+
+.unit_list_container table tbody td:first-child, .unit_list_container table tbody td:last-child{
+    border-bottom: 1px solid transparent;
+}

@@ -4,7 +4,6 @@ import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 import ECIIcon from './assets/eci_logo.png';
 import { ReactComponent as DashboardIcon } from './assets/Dashboard.svg';
 import { ReactComponent as UserManagementIcon } from './assets/Users.svg';
-// import { ReactComponent as OrderManagementIcon } from './assets/Order.svg';
 import { ReactComponent as UnitManagementIcon } from './assets/UnitManagement.svg';
 import { ReactComponent as WarehouseManagementIcon } from './assets/WarehouseManagement.svg';
 import { ReactComponent as IssueRequestManagementIcon } from './assets/Issue-RequestManagement.svg';
@@ -120,6 +119,12 @@ function Routed(props) {
 				<span>User Profile</span>
 			</>);
 		}
+		if (location.pathname.startsWith('/session/unitmanagement')) {
+			return (<>
+				<UnitManagementIcon />
+				<span>Unit Management</span>
+			</>);
+		}
 		if (location.pathname.startsWith('/session/issuemanagement')) {
 			return (<>
 				<IssueRequestManagementIcon />
@@ -137,7 +142,7 @@ function Routed(props) {
 
 	const fetchUserData = async (userid) => {
 		const response = await fetch(
-			`http://evm.iitbhilai.ac.in:8100/user/getNameFromUserID/${userid}`,
+			`${process.env.REACT_APP_API_SERVER}/user/getNameFromUserID/${userid}`,
 			{
 				method: "GET",
 				headers: {
@@ -150,13 +155,12 @@ function Routed(props) {
 	}
 
 	useEffect(() => {
-		console.log(sessionStorage.getItem('sessionToken'))
+		// console.log(sessionStorage.getItem('sessionToken'))
 		const flag = sessionStorage.getItem('sessionToken');
-		sessionStorage.setItem("log", null);
-		console.log(flag, null)
-		if (!localStorage.getItem('token')) {
-			console.log(flag)
-
+		// sessionStorage.setItem("log", null);
+		// console.log(flag, null)
+		if (!sessionStorage.getItem('sessionToken')) {
+			// console.log(flag)
 			window.location.href = '/login'
 
 		}
@@ -212,7 +216,9 @@ function Routed(props) {
 							<div><UserManagementIcon />User</div>
 							<ChevronRight className="chevron" />
 						</button>
-						<button className={window.location.pathname.startsWith("/session/unitmanagement") ? 'nav-button active' : 'nav-button'}>
+						<button className={window.location.pathname.startsWith("/session/unitmanagement") ? 'nav-button active' : 'nav-button'} onClick={() => {
+							navigate("/session/unitmanagement")
+						}}>
 							<div><UnitManagementIcon />Unit</div>
 							<ChevronRight className="chevron" />
 						</button>

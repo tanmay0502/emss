@@ -18,7 +18,7 @@ function Profile(props) {
 		const access_token=JSON.parse(token)["access_token"];
 		try {
       const response = await fetch(
-				"http://evm.iitbhilai.ac.in:8100/user/listAllUsers",
+				`${process.env.REACT_APP_API_SERVER}/user/listAllUsers`,
 				{
 					method: "GET",
 					headers: {

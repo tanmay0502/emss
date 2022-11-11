@@ -74,7 +74,7 @@ export default function EditView(){
             </div>
 
 
-           <div className="d-flex align-items-top">
+           <div className="edit-items-list-container d-flex align-items-top">
                 <div style={{margin : '10px 100px'}}>
                     <p className="tableCaption mt-2">Unit Status Cards</p>
                     <table className="UnitStateTable mt-2" style={{marginLeft : 'auto',marginRight : 'auto',width : '500px'}}>

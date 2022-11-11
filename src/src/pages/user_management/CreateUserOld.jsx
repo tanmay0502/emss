@@ -85,7 +85,7 @@ function CreateUser() {
     
     try {
       const response = await fetch(
-        "http://evm.iitbhilai.ac.in:8100/user/getStateList",
+        `${process.env.REACT_APP_API_SERVER}/user/getStateList",
         {
           method: "GET",
           headers: {
@@ -329,7 +329,7 @@ function CreateUser() {
       } else {
         try {
           const response = await fetch(
-            `http://evm.iitbhilai.ac.in:8100/user/getPCListbyState/${
+            `${process.env.REACT_APP_API_SERVER}/user/getPCListbyState/${
               statesCode[states.indexOf(st)]
             }`,
             {
@@ -366,7 +366,7 @@ function CreateUser() {
       } else {
         try {
           const response = await fetch(
-            `http://evm.iitbhilai.ac.in:8100/user/getACListbyStatePC/${state}`,
+            `${process.env.REACT_APP_API_SERVER}/user/getACListbyStatePC/${state}`,
             {
               method: "GET",
               headers: {
@@ -401,7 +401,7 @@ function CreateUser() {
     console.log(ACsCode[ACs.indexOf(st)]);
     try {
       const response = await fetch(
-        `http://evm.iitbhilai.ac.in:8100/user/getRoleList/`,
+        `${process.env.REACT_APP_API_SERVER}/user/getRoleList/`,
         {
           method: "GET",
           headers: {
@@ -519,7 +519,7 @@ function CreateUser() {
     console.log(userID)
     try {
       const response = await fetch(
-        "http://evm.iitbhilai.ac.in:8100/user/createUser",
+        `${process.env.REACT_APP_API_SERVER}/user/createUser",
         {
           method: "POST",
           headers: {

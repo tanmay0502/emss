@@ -49,7 +49,7 @@ function RequestList() {
     async function getrequestlist() {
         try {
             const response = await fetch(
-                `http://evm.iitbhilai.ac.in:8100/issue_requests/list_request/${UserID}`,
+                `${process.env.REACT_APP_API_SERVER}/issue_requests/list_request/${UserID}`,
                 {
                     method: "GET",
                     headers: {
