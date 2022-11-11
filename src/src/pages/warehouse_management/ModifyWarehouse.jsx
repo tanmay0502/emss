@@ -71,7 +71,7 @@ export default function ModifyWarehouse() {
     console.log(reqBody);
 
     const response = await fetch(
-      `http://evm.iitbhilai.ac.in:8100/warehouse/modifyWarehouse`,
+      `${process.env.REACT_APP_API_SERVER}/warehouse/modifyWarehouse`,
       {
         method: "POST",
         headers: {
@@ -103,7 +103,7 @@ export default function ModifyWarehouse() {
     setWarehouseId(myId);
     try {
       const response = await fetch(
-        `http://evm.iitbhilai.ac.in:8100/warehouse/warehouseDetails/${myId}`,
+        `${process.env.REACT_APP_API_SERVER}/warehouse/warehouseDetails/${myId}`,
         {
           method: "GET",
           headers: {

@@ -26,7 +26,7 @@ export default function CreateIssue() {
 
         try {
             const response = await fetch(
-                "http://evm.iitbhilai.ac.in:8100/issue_requests/register_issue",
+                `${process.env.REACT_APP_API_SERVER}/issue_requests/register_issue`,
                 {
                     method: "POST",
                     headers: {

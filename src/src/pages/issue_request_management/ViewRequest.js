@@ -25,7 +25,7 @@ export default function ViewRequest() {
         const myId = issueId();
         try {
             const response = await fetch(
-                `http://evm.iitbhilai.ac.in:8100/issue_requests/search_request/${myId}`,
+                `${process.env.REACT_APP_API_SERVER}/issue_requests/search_request/${myId}`,
                 {
                     method: "GET",
                     headers: {

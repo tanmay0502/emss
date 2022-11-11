@@ -23,6 +23,7 @@ import OrderTypes from './pages/order_management/OrderTypes';
 import GenerateOrder from './pages/order_management/GenarateOrder';
 import FillAvailability from './pages/order_management/FillAvailability';
 import EditView from './pages/home/EditView';
+import UnitList from './pages/unit_management/UnitList';
 function App() {
 
   const [sessionState, setSessionState] = useState({
@@ -57,6 +58,10 @@ function App() {
             <Route
               path="/session/usermanagement/createuser"
               element={<CreateUser />}
+            />
+            <Route
+              path="/session/unitmanagement/"
+              element={<UnitList />}
             />
             <Route
               path="/session/warehousemanagement/"

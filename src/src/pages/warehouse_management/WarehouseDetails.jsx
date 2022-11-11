@@ -17,7 +17,7 @@ export default function WarehouseDetails(){
     const myId = arr1[1];
         try {
             const response = await fetch(
-                `http://evm.iitbhilai.ac.in:8100/warehouse/warehouseDetails/${myId}`,
+                `${process.env.REACT_APP_API_SERVER}/warehouse/warehouseDetails/${myId}`,
                 {
                     method: "GET",
                     headers: {
@@ -53,7 +53,7 @@ export default function WarehouseDetails(){
     const getWarehouseType = async (code) =>{
             try {
                 const response = await fetch(
-                    `http://evm.iitbhilai.ac.in:8100/warehouse/warehouseTypes`,
+                    `${process.env.REACT_APP_API_SERVER}/warehouse/warehouseTypes`,
                     {
                         method: "GET",
                         headers: {
@@ -99,7 +99,7 @@ export default function WarehouseDetails(){
     const getPCName = async (state_code,pc_code,data) => {
         try {
             const response = await fetch(
-                `http://evm.iitbhilai.ac.in:8100/user/getPCListbyState/${state_code}`,
+                `${process.env.REACT_APP_API_SERVER}/user/getPCListbyState/${state_code}`,
                 {
                     method: "GET",
                     headers: {

@@ -8,6 +8,9 @@ import styles from "./styles/createuser.css";
 import 'antd/dist/antd.css'
 import { Switch } from "antd"
 
+function getKeyByValue(object, value) {
+  return Object.keys(object).find(key => object[key] === value);
+}
 
 var sha256 = require("js-sha256");
 class Queue {
@@ -51,8 +54,8 @@ function CreateUser() {
 
   const [isTemporary, setIsTemporary] = useState(false);
   const [state, setState] = useState([]);
-  const [states, setStates] = useState([]);
-  const [statesCode, setStatesCode] = useState([]);
+  const [states, setStates] = useState({});
+  const [statesCode, setStatesCode] = useState({});
   const [PCs, setPCs] = useState([]);
   const [PCsCode, setPCsCode] = useState(["00"]);
   const [ACs, setACs] = useState([]);
@@ -71,7 +74,7 @@ function CreateUser() {
   async function getRoleList() {
     try {
       const response = await fetch(
-        `http://evm.iitbhilai.ac.in:8100/user/getRoleList/`,
+        `${process.env.REACT_APP_API_SERVER}/user/getRoleList/`,
         {
           method: "GET",
           headers: {
@@ -80,7 +83,7 @@ function CreateUser() {
         }
       );
       const data2 = await response.json();
-      console.log(data2);
+      // console.log(data2);
       filterRoleList(data2);
     } catch (err) {
       console.log(err);
@@ -139,18 +142,18 @@ function CreateUser() {
 
       }
       rcode = [...new Set(rcode)];
-      console.log(rcode);
+      // console.log(rcode);
       let rc = [];
       let rname = []
       for (let i = 0; i < data2["roleCode"].length; i++) {
-        console.log(data2["roleCode"][i]);
+        // console.log(data2["roleCode"][i]);
         if (rcode.includes(data2["roleCode"][i])) {
-          console.log("hh");
+          // console.log("hh");
           rc.push(data2["roleCode"][i]);
           rname.push(data2["roleName"][i]);
         }
       }
-      console.log(rname, rc)
+      // console.log(rname, rc)
       setRoles(rname);
       setRolesCode(rc);
     }
@@ -158,7 +161,7 @@ function CreateUser() {
   async function getState() {
     try {
       const response = await fetch(
-        "http://evm.iitbhilai.ac.in:8100/user/getStateList",
+        `${process.env.REACT_APP_API_SERVER}/user/getStateList`,
         {
           method: "GET",
           headers: {
@@ -168,9 +171,8 @@ function CreateUser() {
       );
 
       const data2 = await response.json();
-      console.log(data2);
+      // console.log(data2);
       setStates(data2["states"]);
-      setStatesCode(data2["stcodes"]);
     } catch (err) {
       console.log(err);
     }
@@ -179,81 +181,57 @@ function CreateUser() {
     if (window.sessionStorage.getItem("sessionToken") === null) {
       window.location.pathname = "/session/home";
     }
-    // getState();
+    getState();
     getRoleList();
   }, []);
 
   useEffect(() => {
+    // console.log(states)
+    if(states && states != {}){
+      if (window.sessionStorage.getItem("sessionToken")) {
+        const statecode = window.sessionStorage.getItem("sessionToken").substring(0, 2);
+          
+        if (statecode in ['BL', 'IN', 'EL']) {
+          if (document.getElementById("input_state"))
+            document.getElementById("input_state").value = "";
+            document.getElementById("input_state").setAttribute('disabled', 'false')
+        } else{
+          setStateFunc(getKeyByValue(states, statecode));
+          setState(statecode)
+          
+          var LoggedUserStateName = getKeyByValue(
+            states,
+            statecode
+          );
 
-    console.log(states)
+          // console.log('State Name = "' + LoggedUserStateName + '"')
 
-    // console.log("session", window.sessionStorage.getItem("sessionToken"));
-    if (window.sessionStorage.getItem("sessionToken")) {
-      // console.log(window.sessionStorage.getItem("sessionToken"));
-
-      const statecode = window.sessionStorage
-        .getItem("sessionToken")
-        .substring(0, 2);
-      console.log(statecode, states);
-      if (
-        statesCode.indexOf(
-          window.sessionStorage.getItem("sessionToken").substring(0, 2)
-        ) != -1
-      ) {
-        console.log(
-          statesCode.indexOf(
-            window.sessionStorage.getItem("sessionToken").substring(0, 2)
-          )
-        );
-        if (1) {
-          // document.getElementById("stateDropdown").value =
-          //   states[
-          //   statesCode.indexOf(
-          //     window.sessionStorage
-          //       .getItem("sessionToken")
-          //       .substring(0, 2)
-          //   )
-          //   ];
-        }
-        setStateFunc(
-          states[statesCode.indexOf(window.sessionStorage.getItem("sessionToken").substring(0, 2))],
-          false
-        );
-      } else {
-        if (document.getElementById("stateDropdown"))
-          document.getElementById("stateDropdown").value = "Select:";
+          document.getElementById("input_state").value = LoggedUserStateName;
+          document.getElementById("input_state").setAttribute('disabled', 'true')
+        } 
       }
     }
   }, [states]);
 
   useEffect(() => {
-    console.log(PCs, PCsCode)
     if (window.sessionStorage.getItem("sessionToken")) {
-      // console.log(window.sessionStorage.getItem("sessionToken"));
-
-      var ppcode = parseInt(
-        window.sessionStorage.getItem("sessionToken").substring(2, 4)
-      ).toString();
       const pwpcode = window.sessionStorage
         .getItem("sessionToken")
         .substring(2, 4);
-      if (PCs[PCsCode.indexOf(pwpcode)] != -1) {
-        ppcode = pwpcode
-      } console.log("pc", ppcode);
-      if (1) {
-        console.log("pp", ppcode);
+      if (getKeyByValue(PCs, pwpcode) != -1) {
         if (1) {
-          // document.getElementById("pcDropdown").value =
-          //   PCs[PCsCode.indexOf(ppcode)];
+          console.log("pp", pwpcode);
         }
-        setPCFunc(PCs[PCsCode.indexOf(ppcode)], false);
-      } else {
-        if (document.getElementById("pcDropdown"))
-          document.getElementById("pcDropdown").value = "Select:";
+        setPCFunc(PCs[PCsCode.indexOf(pwpcode)]);
+        document.getElementById("input_state").setAttribute('disabled', 'true')
       }
+    } else {
+      if (document.getElementById("pcDropdown"))
+        document.getElementById("pcDropdown").value = "";
+        document.getElementById("input_state").setAttribute('disabled', 'false')
     }
-
   }, [PCs]);
+
   useEffect(() => {
     console.log(ACs, ACsCode)
     if (window.sessionStorage.getItem("sessionToken") && ACs && ACsCode) {
@@ -280,14 +258,7 @@ function CreateUser() {
           document.getElementById("acDropdown").value = "Select:";
       }
     }
-
-
-
   }, [ACs]);
-
-
-
-
 
   const onFormSubmit = async (e) => {
     e.preventDefault();
@@ -296,18 +267,20 @@ function CreateUser() {
   };
 
   async function setStateFunc(st, changeUserID = true, filterStr = window.sessionStorage.getItem("sessionToken").substring(7)) {
-    if (st !== "Select:") {
-      setState(statesCode[states.indexOf(st)]);
+    if (st !== "Select:" && states != {}) {
+      setState(states[st]);
+      // alert(states[st])
       if (role == 'CEO' || role == 'CEO-Office') return;
       if (
-        statesCode[states.indexOf(st)] == "IN" ||
-        statesCode[states.indexOf(st)] == "EL" ||
-        statesCode[states.indexOf(st)] == "BL"
+        states[st] == "IN" ||
+        states[st] == "EL" ||
+        states[st] == "BL"
       ) {
-      } else {
+      } 
+      else {
         try {
           const response = await fetch(
-            `http://evm.iitbhilai.ac.in:8100/user/getPCListbyState/${statesCode[states.indexOf(st)]
+            `${process.env.REACT_APP_API_SERVER}/user/getPCListbyState/${states[st]
             }`,
             {
               method: "GET",
@@ -317,9 +290,8 @@ function CreateUser() {
             }
           );
           const data2 = await response.json();
-          if (data2["pccode"] && data2["pcname"]) {
-            setPCs(data2["pcname"]);
-            setPCsCode(data2["pccode"]);
+          if (data2["PCs"]) {
+            setPCs(data2["PCs"]);
           }
         } catch (err) {
           console.log(err);
@@ -327,7 +299,7 @@ function CreateUser() {
       }
       if (changeUserID) {
         setUserID(
-          statesCode[states.indexOf(st)] + ("00" + PC).slice(-2) + AC + role
+          states[st] + ("00" + PC).slice(-2) + AC + role
         );
       }
     }
@@ -351,16 +323,16 @@ function CreateUser() {
 
 
   async function setPCFunc(st, changeUserID = true, filterStr = window.sessionStorage.getItem("sessionToken").substring(7)) {
-
-    setPC(PCsCode[PCs.indexOf(st)]);
+    setPC(PCs[st]);
 
     if ((filterStr == 'CEO' && role == 'DEO') || (filterStr == 'CEO' && role == 'DDEO')) return;
     if (state !== "Select:") {
       if (state == "IN" || state == "EL" || state == "BL") {
       } else {
+        console.log("State Val at setPCFunc: " + state)
         try {
           const response = await fetch(
-            `http://evm.iitbhilai.ac.in:8100/user/getACListbyStatePC/${state}`,
+            `${process.env.REACT_APP_API_SERVER}/user/getACListbyStatePC/${state}`,
             {
               method: "GET",
               headers: {
@@ -369,10 +341,7 @@ function CreateUser() {
             }
           );
           const data2 = await response.json();
-          console.log("ACs");
-          console.log(data2);
-          setACs(data2["acname"]);
-          setACsCode(data2["accode"]);
+          setACs(data2["ACs"]);
         } catch (err) {
           console.log(err);
         }
@@ -385,19 +354,15 @@ function CreateUser() {
     }
   }
 
-  async function setACFunc(
-    st,
-    changeUserID = true,
-
-  ) {
-    setAC(ACsCode[ACs.indexOf(st)]);
-    console.log(ACsCode[ACs.indexOf(st)]);
+  async function setACFunc(st, changeUserID = true,) {
+    setAC(ACs[st]);
+    // console.log(ACs[st]);
 
     if (changeUserID) {
       setUserID(
         state +
         ("00" + PC).slice(-2) +
-        ("000" + ACsCode[ACs.indexOf(st)]).slice(-3) +
+        ("000" + ACs[st]).slice(-3) +
         role
       );
     }
@@ -441,7 +406,7 @@ function CreateUser() {
 
       if (changeUserID) {
         setUserID(
-          state + (PC != undefined ?("00" + PC).slice(-2) : '00') + AC + rolesCode[roles.indexOf(st)]
+          state + (PC != undefined ? ("00" + PC).slice(-2) : '00') + AC + rolesCode[roles.indexOf(st)]
         );
       }
       console.log(userID);
@@ -451,7 +416,7 @@ function CreateUser() {
 
   useEffect(() => {
     setUserID(
-      state + (PC != undefined ?("00" + PC).slice(-2) : '00') + AC + role
+      state + (PC != undefined ? ("00" + PC).slice(-2) : '00') + AC + role
     );
   }, [state, AC, PC, role])
 
@@ -505,16 +470,11 @@ function CreateUser() {
 
 
     else {
-      let token = localStorage.getItem("token");
-		// const decode = jwt_decode(JSON.parse(token)["access_token"])
-        // console.log(decode)
-    	// console.log(JSON.parse(token));
-		const access_token=JSON.parse(token)["access_token"];
       try {
         let token = localStorage.getItem("token");
         const access_token = JSON.parse(token)["access_token"];
         const response = await fetch(
-          "http://evm.iitbhilai.ac.in:8100/user/createUser",
+          `${process.env.REACT_APP_API_SERVER}/user/createUser`,
           {
             method: "POST",
             headers: {
@@ -563,9 +523,8 @@ function CreateUser() {
     }
     return () => { };
   }, [isTemporary]);
-  console.log(isTemporary);
-  return (
 
+  return (
     <div className="flex-col justify-center align-middle">
       <form
         id="create-User-form"
@@ -668,7 +627,7 @@ function CreateUser() {
                 <option value="0" disabled selected>
                   --Select--
                 </option>
-                {states && states.map((st) => (
+                {states && states != {} && Object.keys(states).map((st) => (
                   <option value={st} className="text-black">
                     {st}
                   </option>
@@ -708,7 +667,7 @@ function CreateUser() {
                 <option value="" disabled selected>
                   --Select--
                 </option>
-                {PCs && PCs.map((st) => (
+                {PCs && PCs != {} && Object.keys(PCs).map((st) => (
                   <option value={st} className="text-black">
                     {st}
                   </option>
@@ -747,7 +706,7 @@ function CreateUser() {
                 <option value="" disabled selected>
                   --Select--
                 </option>
-                {ACs && ACs.map((st) => (
+                {ACs && ACs != {} && Object.keys(ACs).map((st) => (
                   <option value={st} className="text-black">
                     {st}
                   </option>

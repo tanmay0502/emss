@@ -29,17 +29,17 @@ function UserDetail(props) {
   const ResetPassword = async () => {
     const userId = props.detail[0];
 
-    if (window.confirm("Are you suer you want to reset password for this user ? ")) {
+    if (window.confirm("Are you suer you want to reset password for this user ?")) {
       let token = localStorage.getItem("token");
-		const access_token=JSON.parse(token)["access_token"];
+      const access_token = JSON.parse(token)["access_token"];
       try {
         const response = await fetch(
-          `http://evm.iitbhilai.ac.in:8100/user/resetPassword/${userId}`,
+          `${process.env.REACT_APP_API_SERVER}/user/resetPassword/${userId}`,
           {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-							'Authorization': 'Bearer ' + access_token,
+              'Authorization': 'Bearer ' + access_token,
             },
             mode: "cors"
           }

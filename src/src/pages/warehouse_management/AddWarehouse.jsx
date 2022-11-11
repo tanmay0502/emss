@@ -103,7 +103,7 @@ export default function AddWarehouse() {
       }
 
       const response = fetch(
-        `http://evm.iitbhilai.ac.in:8100/warehouse/createWarehouse`,
+        `${process.env.REACT_APP_API_SERVER}/warehouse/createWarehouse`,
         {
           method: "POST",
           headers: {
@@ -134,7 +134,7 @@ export default function AddWarehouse() {
   async function getState() {
     try {
       const response = await fetch(
-        "http://evm.iitbhilai.ac.in:8100/user/getStateList",
+        `${process.env.REACT_APP_API_SERVER}/user/getStateList`,
         {
           method: "GET",
           headers: {
@@ -145,7 +145,7 @@ export default function AddWarehouse() {
 
       try {
         const response = await fetch(
-          `http://evm.iitbhilai.ac.in:8100/user/getPCListbyState/${window.sessionStorage.getItem("sessionToken").substring(0, 2)}`,
+          `${process.env.REACT_APP_API_SERVER}/user/getPCListbyState/${window.sessionStorage.getItem("sessionToken").substring(0, 2)}`,
           {
             method: "GET",
             headers: {
@@ -190,7 +190,7 @@ export default function AddWarehouse() {
   async function generateWarehouseId() {
     try {
       const response = await fetch(
-        "http://evm.iitbhilai.ac.in:8100/warehouse/listWarehouses",
+        `${process.env.REACT_APP_API_SERVER}/warehouse/listWarehouses`,
         {
           method: "POST",
           headers: {
@@ -217,7 +217,7 @@ export default function AddWarehouse() {
 
       try {
         const response = await fetch(
-          `http://evm.iitbhilai.ac.in:8100/user/getPCListbyState/${selectedCode}`,
+          `${process.env.REACT_APP_API_SERVER}/user/getPCListbyState/${selectedCode}`,
           {
             method: "GET",
             headers: {
