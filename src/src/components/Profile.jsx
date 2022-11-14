@@ -14,8 +14,8 @@ function Profile(props) {
   
 
   async function getUser() {
-    let token = localStorage.getItem("token");
-		const access_token=JSON.parse(token)["access_token"];
+    // let token = localStorage.getItem("token");
+		// const access_token=JSON.parse(token)["access_token"];
 		try {
       const response = await fetch(
 				`${process.env.REACT_APP_API_SERVER}/user/listAllUsers`,
@@ -23,17 +23,19 @@ function Profile(props) {
 					method: "GET",
 					headers: {
 						"Content-Type": "application/json",
-						'Authorization': 'Bearer ' + access_token,
+						// 'Authorization': 'Bearer ' + access_token,
 					},
+          credentials: 'same-origin',
 					mode: "cors"
 				}
 			);
-		  const data2 = await response.json();
+		  const tmp = await response.json();
+      const data2 = tmp[0]
 		  // console.log(data2);
-		  if(data2["data"]!=undefined){
-			// console.log("helo")
+		  if( data2["data"] ){
+			  // console.log("helo")
 				for(let i=0;i<data2["data"].length;i++){
-					// console.log(data2["data"][i][0],userData.userId)
+					// console.log(data2["data"][i][0])
 					if(data2["data"][i][0]==sessionStorage.getItem('sessionToken')){
 						setProfileDetail(data2["data"][i]);
 						// console.log(data2["data"][i])
@@ -47,7 +49,7 @@ function Profile(props) {
 	  }
     useEffect(()=>{
       getUser();
-    })
+    }, [])
 
 
   const myFont = {

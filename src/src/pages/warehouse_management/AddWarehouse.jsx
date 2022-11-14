@@ -16,6 +16,8 @@ import { useState } from "react";
 import './css/AddWarehouse.css'
 import { useNavigate } from "react-router-dom";
 
+import {getKeyByValue} from '../../assets/helper/ObjectHelpers.js'
+
 export default function AddWarehouse() {
 
   const userId = sessionStorage.getItem('sessionToken');
@@ -68,8 +70,8 @@ export default function AddWarehouse() {
       const warehouseType = document.getElementById("input_warehousetype").value;
       const buildingType = document.getElementById("input_buildingtype").value;
       const state =
-        statesCode[states.indexOf(document.getElementById("input_state").value)];
-      const PC = PCcodes[PCs.indexOf(document.getElementById("input_PC").value)];
+      states[document.getElementById("input_state").value];
+      const PC = PCs[document.getElementById("input_PC").value];
 
       const lat = document.getElementById("input_lat").value;
       const lon = document.getElementById("input_lng").value;
@@ -109,6 +111,7 @@ export default function AddWarehouse() {
           headers: {
             "Content-Type": "application/json",
           },
+          credentials: 'same-origin',
           body: JSON.stringify(reqBody),
         }
       );
@@ -155,28 +158,32 @@ export default function AddWarehouse() {
         );
 
         const data = await response.json();
-        setPCs(data["pcname"]);
-        setPCcodes(data["pccode"]);
+        setPCs(data["PCs"]);
+        // setPCcodes(data["pccode"]);
       } catch (error) {
         console.log(error);
         setPCs(["00"]);
-        setPCcodes(["00"]);
+        // setPCcodes(["00"]);
       }
 
       const StateData = await response.json();
       // console.log(StateData)
 
-      const ans = StateData.states[StateData.stcodes.indexOf(first2)]
+      const ans = getKeyByValue(StateData['states'], first2)
+
+      console.log("Val")
 
       if (["EC", "ME", "MB"].includes(
         window.sessionStorage.getItem("sessionToken").substring(0, 2)
       )) {
         setStates(StateData['states']);
-        setStatesCode(StateData['stcodes']);
+        // setStatesCode(StateData['stcodes']);
       }
       else {
-        setStates([ans]);
-        setStatesCode([first2]);
+        setStates( {
+          [ans]: first2
+        } );
+        // setStatesCode([first2]);
       }
     } catch (error) {
       console.log(error);
@@ -188,6 +195,25 @@ export default function AddWarehouse() {
   }, []);
 
   async function generateWarehouseId() {
+<<<<<<< src/src/pages/warehouse_management/AddWarehouse.jsx
+    // try {
+    //   const response = await fetch(
+    //     `${process.env.REACT_APP_API_SERVER}/warehouse/listWarehouses`,
+    //     {
+    //       method: "POST",
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //       },
+    //       body: JSON.stringify({
+    //         stateCode: myState,
+    //         pcCode: myPCcode,
+    //       }),
+    //     }
+    //   );
+    // } catch (error) {
+    //   console.log(error);
+    // }
+=======
     try {
       const response = await fetch(
         `${process.env.REACT_APP_API_SERVER}/warehouse/listWarehouses`,
@@ -205,13 +231,14 @@ export default function AddWarehouse() {
     } catch (error) {
       console.log(error);
     }
+>>>>>>> src/src/pages/warehouse_management/AddWarehouse.jsx
 
     return myState + myPCcode + WarehouseType;
   }
   async function setStateFunc(st) {
     if (st !== "-1") {
       // console.log(st, states, statesCode);
-      const selectedCode = statesCode[states.indexOf(st)];
+      const selectedCode = states[st];
       setmyState(selectedCode);
       // console.log(selectedCode)
 
@@ -227,12 +254,12 @@ export default function AddWarehouse() {
         );
 
         const data = await response.json();
-        setPCs(data["pcname"]);
-        setPCcodes(data["pccode"]);
+        setPCs(data["PCs"]);
+        // setPCcodes(data["pccode"]);
       } catch (error) {
         console.log(error);
         setPCs(["00"]);
-        setPCcodes(["00"]);
+        // setPCcodes(["00"]);
       }
 
     }
@@ -240,7 +267,7 @@ export default function AddWarehouse() {
 
   async function setPcFunc(pc) {
     if (pc !== "-1") {
-      const pcCode = PCcodes[PCs.indexOf(pc)];
+      const pcCode = PCs[pc];
       setmyPCcode(pcCode);
     }
   }
@@ -355,7 +382,7 @@ export default function AddWarehouse() {
                     {/* <option value="" disabled selected>
                       --Select--
                     </option> */}
-                    {states && states.map((st) => (
+                    {states && Object.keys(states).map((st) => (
                       <option value={st} className="text-black" selected={st == first2 ? true : false}>
                         {st}
                       </option>
@@ -446,7 +473,7 @@ export default function AddWarehouse() {
                     onChange={(e) => setPcFunc(e.target.value)}
                   >
                     <option value="">--Select--</option>
-                    {PCs.map((pc) => (
+                    {Object.keys(PCs).map((pc) => (
                       <option value={pc} className="text-black">
                         {pc}
                       </option>

@@ -7,10 +7,15 @@ import "./styles/createuser.css";
 import styles from "./styles/createuser.css";
 import 'antd/dist/antd.css'
 import { Switch } from "antd"
+<<<<<<< src/src/pages/user_management/CreateUser.jsx
+import {getKeyByValue} from '../../assets/helper/ObjectHelpers.js'
+import { getBase64 } from "../../assets/helper/FileHelpers";
+=======
 
 function getKeyByValue(object, value) {
   return Object.keys(object).find(key => object[key] === value);
 }
+>>>>>>> src/src/pages/user_management/CreateUser.jsx
 
 var sha256 = require("js-sha256");
 class Queue {
@@ -53,7 +58,11 @@ function CreateUser() {
   };
 
   const [isTemporary, setIsTemporary] = useState(false);
+<<<<<<< src/src/pages/user_management/CreateUser.jsx
+  const [state, setState] = useState("");
+=======
   const [state, setState] = useState([]);
+>>>>>>> src/src/pages/user_management/CreateUser.jsx
   const [states, setStates] = useState({});
   const [statesCode, setStatesCode] = useState({});
   const [PCs, setPCs] = useState([]);
@@ -66,6 +75,8 @@ function CreateUser() {
   const [role, setRole] = useState("TU");
   const [roles, setRoles] = useState([]);
   const [rolesCode, setRolesCode] = useState([]);
+  const [photoFileName, setPhotoFileName] = useState("")
+  const [photoFileData, setPhotoFileData] = useState("")
 
   const [stateDisable, setStateDisable] = useState(false);
   const [pcDisable, setPcDisable] = useState(false);
@@ -74,7 +85,11 @@ function CreateUser() {
   async function getRoleList() {
     try {
       const response = await fetch(
+<<<<<<< src/src/pages/user_management/CreateUser.jsx
+        `${process.env.REACT_APP_API_SERVER}/user/getRoleList`,
+=======
         `${process.env.REACT_APP_API_SERVER}/user/getRoleList/`,
+>>>>>>> src/src/pages/user_management/CreateUser.jsx
         {
           method: "GET",
           headers: {
@@ -326,7 +341,7 @@ function CreateUser() {
     setPC(PCs[st]);
 
     if ((filterStr == 'CEO' && role == 'DEO') || (filterStr == 'CEO' && role == 'DDEO')) return;
-    if (state !== "Select:") {
+    if (state && state.trim() != "" && state !== "Select:") {
       if (state == "IN" || state == "EL" || state == "BL") {
       } else {
         console.log("State Val at setPCFunc: " + state)
@@ -348,7 +363,7 @@ function CreateUser() {
       }
       if (changeUserID) {
         setUserID(
-          state + ("00" + PCsCode[PCs.indexOf(st)]).slice(-2) + AC + role
+          state + ("00" + PCs[st]).slice(-2) + AC + role
         );
       }
     }
@@ -471,45 +486,49 @@ function CreateUser() {
 
     else {
       try {
-        let token = localStorage.getItem("token");
-        const access_token = JSON.parse(token)["access_token"];
+        // let token = localStorage.getItem("token");
+        // const access_token = JSON.parse(token)["access_token"];
+
+        const bodyData = {
+          userID: userID,
+          email: document.getElementById("formUserEmail").value,
+          name: document.getElementById("formUserName").value,
+          mobileNumber: document.getElementById("formUserMobileNumber").value,
+          address: document.getElementById("formUserAddress").value,
+          otherContactNum1: document.getElementById("formUserAltNumber1").value,
+          otherContactNum2: document.getElementById("formUserAltNumber2").value,
+          photoFilename: photoFileName,
+          photoFileData: photoFileData,
+          active: "A"
+          // createdBy: window.sessionStorage.getItem("sessionToken")
+        }
+
         const response = await fetch(
           `${process.env.REACT_APP_API_SERVER}/user/createUser`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
-              'Authorization': 'Bearer ' + access_token,
+              // 'Authorization': 'Bearer ' + access_token,
             },
-            body: JSON.stringify({
-              userID: userID,
-              email: document.getElementById("formUserEmail").value,
-              name: document.getElementById("formUserName").value,
-              mobileNumber: document.getElementById("formUserMobileNumber").value,
-              address: document.getElementById("formUserAddress").value,
-              othercontactnum1: document.getElementById("formUserAltNumber1").value,
-              othercontactnum2: document.getElementById("formUserAltNumber2").value,
-              active: isTemporary ? "I" : "A",
-              activationTime: new Date().toISOString(),
-              photofilename: "imagefile",
-              createdBy: window.sessionStorage.getItem("sessionToken"),
-              creationTime: new Date().toISOString()
-            }),
+            credentials: 'same-origin',
+            body: JSON.stringify(bodyData),
 
-            mode: 'no-cors'
+            mode: 'cors'
 
           }
         );
 
+        console.log(bodyData);
         console.log(response);
         const data2 = await response.json();
         console.log(data2);
-        if (data2["message"] === "User created successfully") {
+        if (response.status === 200) {
           alert("User Created Successfully");
-          window.location.pathname = "/session/usermanagement";
+          // window.location.pathname = "/session/usermanagement";
           // document.getElementById("createUserForm").reset();
         } else {
-          alert("User cannot be created");
+          alert("Unable to Create User.");
         }
       } catch (err) {
         console.log(err);
@@ -760,6 +779,11 @@ function CreateUser() {
               required={isTemporary}
               type="file"
               placeholder="Choose Image (Upto 5 MB)"
+              accept="image/*"
+              onChange={async (e)=>{
+                setPhotoFileName(e.target.value.replace(/^.*[\\\/]/, ''))
+                setPhotoFileData(await getBase64(e.target.files[0]))
+              }}
             />
           </div>
         </div>
