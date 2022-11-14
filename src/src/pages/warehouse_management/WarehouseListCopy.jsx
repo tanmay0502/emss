@@ -79,7 +79,7 @@ function WarehouseList() {
 		}
 	}
 
-	const [isDetail, setIsDetail] = useState(0);
+	const [isDetail, setIsDetail] = useState(1);
 
 	const [tableData, setTableData] = useState([])
 	const [tableFilter, setTableFilter] = useState("")
