@@ -123,7 +123,7 @@ function UserList() {
 				`${process.env.REACT_APP_API_SERVER}/user/getListofUsersByCreatorID`,
 				{
 					method: "POST",
-					credentials: 'include',
+					credentials: 'same-origin',
 					headers: {
 						"Content-Type": "application/json",
 						// 'Authorization': 'Bearer ' + access_token,
@@ -134,12 +134,18 @@ function UserList() {
 					mode: "cors"
 				}
 			);
-			const data2 = await response.json();
-			setNoOfActiveUsers(data2["active_users"]);
-			setNoOfInActiveUsers(data2["inactive_users"]);
-			setNoOfTotalUsers(data2["total_users"]);
-			console.log(data2);
-			setUsers(data2["data"]);
+			const tmp = await response.json();
+			
+			const data2 = tmp[0]
+
+			// console.log(data2)
+			if(tmp[1] == 200){
+				setNoOfActiveUsers(data2["active_users"]);
+				setNoOfInActiveUsers(data2["inactive_users"]);
+				setNoOfTotalUsers(data2["total_users"]);
+				// console.log(data2);
+				setUsers(data2["data"]);
+			}
 		} catch (err) {
 			console.log(err);
 		}
@@ -156,15 +162,17 @@ function UserList() {
 			// const access_token=JSON.parse(token)["access_token"];
 			try {
 				const response = await fetch(
-					`${process.env.REACT_APP_API_SERVER}/user/activateUser`,
+					`${process.env.REACT_APP_API_SERVER}/user/ModifyUserDetails`,
 					{
 						method: "POST",
 						headers: {
 							"Content-Type": "application/json",
 							// 'Authorization': 'Bearer ' + access_token,
 						},
+						credentials: 'same-origin',
 						body: JSON.stringify({
-							"userID": myId
+							"userID": myId,
+							"active": "A"
 						})
 					}
 				);
@@ -184,20 +192,22 @@ function UserList() {
 	}
 
 	const deactivateUser = async (myId) => {
-		if (window.confirm(`Are you sure you want to Dectivate user ${myId} ?`)) {
+		if (window.confirm(`Are you sure you want to Deactivate User: ${myId} ?`)) {
 			// let token = localStorage.getItem("token");
 			// const access_token=JSON.parse(token)["access_token"];
 			try {
 				const response = await fetch(
-					`${process.env.REACT_APP_API_SERVER}/user/deactivateUser`,
+					`${process.env.REACT_APP_API_SERVER}/user/ModifyUserDetails`,
 					{
 						method: "POST",
 						headers: {
 							"Content-Type": "application/json",
 							// 'Authorization': 'Bearer ' + access_token,
 						},
+						credentials: 'same-origin',
 						body: JSON.stringify({
-							"userID": myId
+							"userID": myId,
+							"active": "I"
 						})
 					}
 				);

@@ -46,7 +46,19 @@ function Routed(props) {
 	// }
 
 	function logOut() {
-		localStorage.removeItem("token", null);
+		const response = fetch(
+			`${process.env.REACT_APP_API_SERVER}/user/UserLogout`,
+			{
+			  method: "GET",
+			  credentials: 'same-origin',
+			  headers: {
+				"Content-Type": "application/json",
+			  },
+			  mode: 'no-cors'
+			}
+		  );
+
+		sessionStorage.removeItem("sessionToken", null);
 		props.SetSession(null)
 		setUserData(null)
 		// localStorage.setItem("token", null);
@@ -151,7 +163,7 @@ function Routed(props) {
 				mode: "cors"
 			}
 		);
-		return await response.json().then(val => val.name);
+		return await response.json().then(val => val[0].name);
 	}
 
 	useEffect(() => {
@@ -301,9 +313,9 @@ function Routed(props) {
 
 							</div>
 							<div style={{ display: "flex", "flexDirection": "column", alignItems: "center", "justifyContent": "center", overflowY: "visible", maxHeight: "100%" }}>
-								<span tyle={{ position: "relative" }}>Position: {userData.userId ? userData.userId.slice(7) : ""}
+								<span tyle={{ position: "relative" }}>{userData.userId ? userData.userId : ""}
 									<button3 tabIndex={1} className="navBarDropDownBtn" style={{ position: "relative", overflowY: "visible" }} onClick={() => {
-										console.log("Helloo!")
+										// console.log("Helloo!")
 										document.getElementsByClassName('navBarDropDownBtn')[0].focus()
 									}}>
 										<ChevronRight style={{ transform: "rotateZ(90deg)", maxWidth: "1.2em", marginLeft: "10px" }} />

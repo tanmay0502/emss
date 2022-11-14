@@ -29,9 +29,9 @@ function UserDetail(props) {
   const ResetPassword = async () => {
     const userId = props.detail[0];
 
-    if (window.confirm("Are you suer you want to reset password for this user ?")) {
-      let token = localStorage.getItem("token");
-      const access_token = JSON.parse(token)["access_token"];
+    if (window.confirm("Are you sure you want to reset password for this user?")) {
+      // let token = localStorage.getItem("token");
+      // const access_token = JSON.parse(token)["access_token"];
       try {
         const response = await fetch(
           `${process.env.REACT_APP_API_SERVER}/user/resetPassword/${userId}`,
@@ -39,8 +39,9 @@ function UserDetail(props) {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              'Authorization': 'Bearer ' + access_token,
+              // 'Authorization': 'Bearer ' + access_token,
             },
+            credentials: 'same-origin',
             mode: "cors"
           }
         )
@@ -70,6 +71,9 @@ function UserDetail(props) {
           <AiOutlineArrowLeft />
         </button>
         <div className=" flex justify-between">
+          <div className="right_btn" onClick={() => {window.location.href = `/session/usermanagement/edituser/userid=${props.detail[0]}`}}>
+            Edit User
+          </div>
           <div className="right_btn" onClick={() => ResetPassword()}>
             Reset Password
           </div>

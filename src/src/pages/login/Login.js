@@ -25,6 +25,7 @@ const Login = () => {
 	const [isMobile, setIsMobile] = useState(0);
 	const [passwordBlock, setPasswordBlock] = useState(0);
 	const [selectUserBlock, setSelectUserBlock] = useState(0);
+	const [nonce, setNonce] = useState(null)
 
 	// user Details
 
@@ -42,7 +43,7 @@ const Login = () => {
 	const [invalidMobile, setInvalidMobile] = useState("");
 	const [invalidUsers, setInvalidUsers] = useState("");
 
-	const [userIDs, setUserIds] = useState(["user1", "user2"]);
+	const [userIDs, setUserIds] = useState([]);
 	const [states, setStates] = useState({});
 	// const [statesCode, setStatesCode] = useState([]);
 	const [PCs, setPCs] = useState({});
@@ -372,7 +373,7 @@ const Login = () => {
 		setAC(ACs[st]);
 		try {
 			const response = await fetch(
-				`${process.env.REACT_APP_API_SERVER}/user/getRoleList/`,
+				`${process.env.REACT_APP_API_SERVER}/user/getRoleList`,
 				{
 					method: "GET",
 					headers: {
@@ -421,125 +422,160 @@ const Login = () => {
 			setInvalidUser("Invalid User ID");
 			console.log("none");
 		} else {
-			if (Number(userID)) {
-				setMobile(userID);
-				try {
-					const response = await fetch(
-						`${process.env.REACT_APP_API_SERVER}/user/getUserIDsByMobileNumber`,
-						{
-							method: "POST",
-							headers: {
-								"Content-Type": "application/json",
-							},
-							body: JSON.stringify({
-								mobileNumber: userID,
-							}),
-							mode: "cors",
-						}
-					);
-					const data2 = await response.json();
-					console.log(data2)
-					console.log(data2["userids"]);
-					setUserIds(data2["userids"]);
-					if (
-						data2["status"] == 404
-					) {
-						setInvalidMobile("Mobile Number is not provided");
-						console.log("not found")
-						setInvalidUser("");
-						setSelectUserBlock(0);
-						setPasswordBlock(0)
-						setIsOTPSent(0);
-					} else {
-						setInvalidMobile("");
-						setInvalidUser("");
-						try {
-							const response = await fetch(
-								`${process.env.REACT_APP_API_SERVER}/user/sendOTP`,
-								{
-									method: "POST",
-									headers: {
-										"Content-Type": "application/json",
-									},
-									body: JSON.stringify({
-										mobileNumber: userID,
-									}),
-									mode: "cors",
-								}
-							);
-							const data2 = await response.json();
-							console.log(data2);
+			// if (Number(userID)) {
+			// 	setMobile(userID);
+			// 	try {
+			// 		const response = await fetch(
+			// 			`${process.env.REACT_APP_API_SERVER}/user/getUserIDsByMobileNumber`,
+			// 			{
+			// 				method: "POST",
+			// 				headers: {
+			// 					"Content-Type": "application/json",
+			// 				},
+			// 				body: JSON.stringify({
+			// 					mobileNumber: userID,
+			// 				}),
+			// 				mode: "cors",
+			// 			}
+			// 		);
+			// 		const data2 = await response.json();
+			// 		console.log(data2)
+			// 		console.log(data2["userids"]);
+			// 		setUserIds(data2["userids"]);
+			// 		if (
+			// 			data2["status"] == 404
+			// 		) {
+			// 			setInvalidMobile("Mobile Number is not provided");
+			// 			console.log("not found")
+			// 			setInvalidUser("");
+			// 			setSelectUserBlock(0);
+			// 			setPasswordBlock(0)
+			// 			setIsOTPSent(0);
+			// 		} else {
+			// 			setInvalidMobile("");
+			// 			setInvalidUser("");
+			// 			try {
+			// 				const response = await fetch(
+			// 					`${process.env.REACT_APP_API_SERVER}/user/sendOTP`,
+			// 					{
+			// 						method: "POST",
+			// 						headers: {
+			// 							"Content-Type": "application/json",
+			// 						},
+			// 						body: JSON.stringify({
+			// 							mobileNumber: userID,
+			// 						}),
+			// 						mode: "cors",
+			// 					}
+			// 				);
+			// 				const data2 = await response.json();
+			// 				console.log(data2);
 
-							setIsOTPSent(1);
-							setPasswordBlock(1)
-							setSelectUserBlock(1);
-						} catch (err) {
-							console.log(err);
-						}
+			// 				setIsOTPSent(1);
+			// 				setPasswordBlock(1)
+			// 				setSelectUserBlock(1);
+			// 			} catch (err) {
+			// 				console.log(err);
+			// 			}
+			// 		}
+			// 	} catch (err) {
+			// 		console.log(err);
+			// 	}
+			// } else {
+			// 	console.log(userID)
+			// 	try {
+			// 		const response = await fetch(
+			// 			`${process.env.REACT_APP_API_SERVER}/user/getMobileFromUserID`,
+			// 			{
+			// 				method: "POST",
+			// 				headers: {
+			// 					"Content-Type": "application/json",
+			// 				},
+			// 				body: JSON.stringify({
+			// 					userID: userID,
+			// 				}),
+			// 				mode: "cors",
+			// 			}
+			// 		);
+			// 		const data = await response.json();
+			// 		console.log(data);
+
+			// 		if (data["status"] == 200) {
+			// 			setMobile(data["mobile"][0]);
+			// 			try {
+			// 				const response = await fetch(
+			// 					`${process.env.REACT_APP_API_SERVER}/user/sendOTP`,
+			// 					{
+			// 						method: "POST",
+			// 						headers: {
+			// 							"Content-Type": "application/json",
+			// 						},
+			// 						body: JSON.stringify({
+			// 							mobileNumber: data["mobile"][0],
+			// 						}),
+			// 						mode: "cors",
+			// 					}
+			// 				);
+			// 				const data2 = await response.json();
+			// 				console.log(data2);
+			// 				if (data2["status"] == 200) {
+
+			// 					setIsOTPSent(1);
+			// 					// setSelectUserBlock(1);
+			// 					setPasswordBlock(1);
+			// 				}
+			// 			} catch (err) {
+			// 				console.log(err);
+			// 			}
+			// 			setInvalidUser("");
+			// 			setInvalidMobile("");
+			// 		} else {
+			// 			setMobile(-1);
+			// 			if (invalidMobile == "") {
+			// 				setInvalidUser("Invalid User ID");
+			// 				// setInvalidMobile("");
+			// 			}
+			// 			// console.log(invalidMobile, invaliduser);
+			// 			else setInvalidUser("");
+			// 		}
+			// 	} catch (err) {
+			// 		console.log(err);
+			// 	}
+			// }
+			// textBox
+
+			try {
+				const response = await fetch(
+					`${process.env.REACT_APP_API_SERVER}/user/GenerateOTPRequest`,
+					{
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify({
+							textBox: userID,
+						}),
+						mode: "cors",
 					}
-				} catch (err) {
-					console.log(err);
-				}
-			} else {
-				console.log(userID)
-				try {
-					const response = await fetch(
-						`${process.env.REACT_APP_API_SERVER}/user/getMobileFromUserID`,
-						{
-							method: "POST",
-							headers: {
-								"Content-Type": "application/json",
-							},
-							body: JSON.stringify({
-								userID: userID,
-							}),
-							mode: "cors",
-						}
-					);
-					const data = await response.json();
-					console.log(data);
+				);
+				const data2 = await response.json();
+				console.log(data2);
 
-					if (data["status"] == 200) {
-						setMobile(data["mobile"][0]);
-						try {
-							const response = await fetch(
-								`${process.env.REACT_APP_API_SERVER}/user/sendOTP`,
-								{
-									method: "POST",
-									headers: {
-										"Content-Type": "application/json",
-									},
-									body: JSON.stringify({
-										mobileNumber: data["mobile"][0],
-									}),
-									mode: "cors",
-								}
-							);
-							const data2 = await response.json();
-							console.log(data2);
-							if (data2["status"] == 200) {
-
-								setIsOTPSent(1);
-								// setSelectUserBlock(1);
-								setPasswordBlock(1);
-							}
-						} catch (err) {
-							console.log(err);
-						}
-						setInvalidUser("");
-						setInvalidMobile("");
-					} else {
-						setMobile(-1);
-						if (invalidMobile == "") {
-							setInvalidUser("Invalid User ID");
-							// setInvalidMobile("");
-						}
-						// console.log(invalidMobile, invaliduser);
-						else setInvalidUser("");
+				if(response.status == 200 && data2['userID']){
+					setUserIds(data2['userID'])
+					setNonce(data2['nonce'])
+					if(data2['userID'].length !== 1){
+						setSelectUserBlock(1)
 					}
-				} catch (err) {
-					console.log(err);
+					else{
+						setSelectUserBlock(0)
+						setUserID(data2['userID'][0])
+					}
+					setIsOTPSent(1);
+					setPasswordBlock(1)
 				}
+			} catch (err) {
+				console.log(err);
 			}
 		}
 	}
@@ -593,28 +629,24 @@ const Login = () => {
 	//   }
 	// }
 
-	async function requestDashboard() {
+	async function requestDashboard(selectedID = null) {
 		console.log(userID, password);
 		try {
 			const response = await fetch(
-				`${process.env.REACT_APP_API_SERVER}/user/verifyOTPPassword`,
+				`${process.env.REACT_APP_API_SERVER}/user/VerifyOTPRequest`,
 				{
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",
 					},
-					// credentials: "include",
+					credentials: 'same-origin',
 					body: JSON.stringify({
-						'credentials': {
-							'userID': userID.toString(),
-							'password': password.toString()
-						},
-						'otp': {
-							'mobileNumber': mobile.toString(),
-							'otp': OTP.toString()
-						}
+						'userid': userID.toString(),
+						'password': password.toString(),
+						'nonce': nonce,
+						'otp': OTP.toString()
 					}),
-					// mode: "cors",
+					mode: "cors",
 				}
 			);
 			const data2 = await response.json();
@@ -726,48 +758,6 @@ const Login = () => {
 										style={{ border: "1px solid #717171" }}
 									>
 										<div id="dropDowns">
-											<div className="dropdown">
-												<p
-													htmlFor="role"
-													className="text-black ml-2 -mb-6 text-sm font-semibold"
-													style={{ fontFamily: "nunito sans" }}
-												>
-													{roles && roles.length == 0 ? <>Role</> : <span className="opacity-40">Role</span>}
-												</p>
-												{/* {roles.length == 0 && (
-													<select
-														className="pl-3 pr-3 mt-7 h-13 text-black outline-none rounded-md w-full mb-3 opacity-40"
-														disabled
-														id="roleDropdown"
-
-													><option value="0" className="text-black">
-															Select:
-														</option>
-													</select>
-												)} */}
-												{
-													<select
-														className="pl-3 pr-3 mt-7 h-13 text-black outline-none rounded-md w-full mb-3"
-														style={{ fontFamily: "nunito sans" }}
-														name="role"
-														disabled={roles && roles.length == 0}
-														id="roleDropdown"
-														// value={role}
-														onChange={(e) => setRoleFunc(e.target.value)}
-													>
-														<option value="0" className="text-black">
-															Select:
-														</option>
-														{roles &&
-															roles.map((st) => (
-																<option value={st} className="text-black">
-																	{st}
-																</option>
-															))}
-													</select>
-												}
-
-											</div>
 											<div className="dropdown">
 												<p
 													htmlFor="state"
@@ -886,6 +876,48 @@ const Login = () => {
 															))}
 													</select>
 												}
+											</div>
+											<div className="dropdown">
+												<p
+													htmlFor="role"
+													className="text-black ml-2 -mb-6 text-sm font-semibold"
+													style={{ fontFamily: "nunito sans" }}
+												>
+													{roles && roles.length == 0 ? <>Role</> : <span className="opacity-40">Role</span>}
+												</p>
+												{/* {roles.length == 0 && (
+													<select
+														className="pl-3 pr-3 mt-7 h-13 text-black outline-none rounded-md w-full mb-3 opacity-40"
+														disabled
+														id="roleDropdown"
+
+													><option value="0" className="text-black">
+															Select:
+														</option>
+													</select>
+												)} */}
+												{
+													<select
+														className="pl-3 pr-3 mt-7 h-13 text-black outline-none rounded-md w-full mb-3"
+														style={{ fontFamily: "nunito sans" }}
+														name="role"
+														disabled={roles && roles.length == 0}
+														id="roleDropdown"
+														// value={role}
+														onChange={(e) => setRoleFunc(e.target.value)}
+													>
+														<option value="0" className="text-black">
+															Select:
+														</option>
+														{roles &&
+															roles.map((st) => (
+																<option value={st} className="text-black">
+																	{st}
+																</option>
+															))}
+													</select>
+												}
+
 											</div>
 
 										</div>

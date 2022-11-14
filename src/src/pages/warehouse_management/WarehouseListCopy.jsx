@@ -88,7 +88,7 @@ function WarehouseList() {
 
 	const sortMapping = {
 		"None": null,
-		"Warehouse ID": "Warehouse ID",
+		"Warehouse ID": "warehouseid",
 		"Building Type": "BuildingType",
 		"Room Type": "Room Type",
 	}
@@ -143,13 +143,14 @@ function WarehouseList() {
 							<FaKey className='keyColor' />}
 					</span>
 					</Fragment>,
+				"warehouseid": val['warehouseid'],
 				"Room Type": warehouseMapping ? warehouseMapping["data"][val["warehousetype"]] : "",
 				// "Double Locked": val["doublelock"] ? "Yes" : "No",
 				Details: val,
 				Edit: <button className="modifyBtn p-2 text-white" disabled={true}>
 					<FaUserEdit style={{ transform: "translateX(1px)" }} />
 				</button>,
-				// "BuildingType": val["warehousebuildingtype"],
+				"BuildingType": val["warehousebuildingtype"],
 				// "Building Type": <ToggleButton userID={val["warehouseid"]} checked={val["warehousebuildingtype"] === 'P'} onToggle={(e) => {
 				// }} 
 				// customLabels={{
@@ -201,6 +202,7 @@ function WarehouseList() {
 						headers: {
 							"Content-Type": "application/json",
 						},
+						credentials: 'same-origin',
 					}
 				)
 
@@ -231,6 +233,7 @@ function WarehouseList() {
 						headers: {
 							"Content-Type": "application/json",
 						},
+						credentials: 'same-origin',
 					}
 				)
 
@@ -293,7 +296,7 @@ function WarehouseList() {
 
 				{isDetail == 0 ? <DynamicDataTable className="warehouses-table"
 					rows={tableData}
-					fieldsToExclude={["Details", "Edit", "BuildingType"]}
+					fieldsToExclude={["Details", "Edit", "BuildingType", "warehouseid"]}
 					orderByField={sortMapping[sortBy]}
 					orderByDirection={sortOrder}
 					onClick={(event, row) => {
@@ -301,7 +304,7 @@ function WarehouseList() {
 					}}
 					buttons={[]}
 					allowOrderingBy={[
-						'Warehouse ID', 'Room Type', 'BuildingType'
+						'warehouseid', 'Room Type', "BuildingType"
 					]} />
 					:
 					<WarehouseDetail detail={user} close={close} warehouseMapping={warehouseMapping} />
