@@ -195,7 +195,6 @@ export default function AddWarehouse() {
   }, []);
 
   async function generateWarehouseId() {
-<<<<<<< src/src/pages/warehouse_management/AddWarehouse.jsx
     // try {
     //   const response = await fetch(
     //     `${process.env.REACT_APP_API_SERVER}/warehouse/listWarehouses`,
@@ -213,25 +212,6 @@ export default function AddWarehouse() {
     // } catch (error) {
     //   console.log(error);
     // }
-=======
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_SERVER}/warehouse/listWarehouses`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            stateCode: myState,
-            pcCode: myPCcode,
-          }),
-        }
-      );
-    } catch (error) {
-      console.log(error);
-    }
->>>>>>> src/src/pages/warehouse_management/AddWarehouse.jsx
 
     return myState + myPCcode + WarehouseType;
   }
