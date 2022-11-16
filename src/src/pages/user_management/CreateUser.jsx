@@ -7,15 +7,8 @@ import "./styles/createuser.css";
 import styles from "./styles/createuser.css";
 import 'antd/dist/antd.css'
 import { Switch } from "antd"
-<<<<<<< src/src/pages/user_management/CreateUser.jsx
 import {getKeyByValue} from '../../assets/helper/ObjectHelpers.js'
 import { getBase64 } from "../../assets/helper/FileHelpers";
-=======
-
-function getKeyByValue(object, value) {
-  return Object.keys(object).find(key => object[key] === value);
-}
->>>>>>> src/src/pages/user_management/CreateUser.jsx
 
 var sha256 = require("js-sha256");
 class Queue {
@@ -58,11 +51,7 @@ function CreateUser() {
   };
 
   const [isTemporary, setIsTemporary] = useState(false);
-<<<<<<< src/src/pages/user_management/CreateUser.jsx
   const [state, setState] = useState("");
-=======
-  const [state, setState] = useState([]);
->>>>>>> src/src/pages/user_management/CreateUser.jsx
   const [states, setStates] = useState({});
   const [statesCode, setStatesCode] = useState({});
   const [PCs, setPCs] = useState([]);
@@ -85,11 +74,7 @@ function CreateUser() {
   async function getRoleList() {
     try {
       const response = await fetch(
-<<<<<<< src/src/pages/user_management/CreateUser.jsx
         `${process.env.REACT_APP_API_SERVER}/user/getRoleList`,
-=======
-        `${process.env.REACT_APP_API_SERVER}/user/getRoleList/`,
->>>>>>> src/src/pages/user_management/CreateUser.jsx
         {
           method: "GET",
           headers: {

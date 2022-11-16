@@ -120,7 +120,7 @@ function UserList() {
 		// const access_token=JSON.parse(token)["access_token"];
 		try {
 			const response = await fetch(
-				`${process.env.REACT_APP_API_SERVER}/user/getListofUsersByCreatorID`,
+				`${process.env.REACT_APP_API_SERVER}/user/listAllUsers`,
 				{
 					method: "POST",
 					credentials: 'same-origin',

@@ -654,7 +654,7 @@ const Login = () => {
 			if (response.status === 200) {
 				// window.localStorage.setItem("token",JSON.stringify(data2["token"]));
 
-				alert("You are logged In");
+				// alert("You are logged In");
 				setIsOTPSent(0);
 				setPasswordBlock(0);
 				setSelectUserBlock(0);
