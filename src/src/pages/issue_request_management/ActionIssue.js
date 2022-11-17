@@ -11,10 +11,35 @@ import styles from './styles/issue.module.css'
 import { AiOutlineArrowLeft } from 'react-icons/ai'
 import { useNavigate } from "react-router-dom";
 import { FaEdit } from 'react-icons/fa'
+import Modal from 'react-modal';
+
+
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+  },
+};
+Modal.setAppElement(document.getElementById('root'));
+
+
+
 
 export default function ActionIssue() {
-  const navigate = useNavigate();
+  const [baseImage, setBaseImage ] = useState("")
+  const navigate = useNavigate()
+  const fileNameArray = [];
+  const fileTypeArray = [];
+  const filebase64Array = [];
+  const [modalImage, setModalImage] = useState('')
   const [Details, setDetails] = useState({});
+  const [Documents, setDocuments] = useState([]);
+  
+
 
   const [remarks, setRemarks] = useState("");
   const [action, setAction] = useState("");
@@ -23,6 +48,34 @@ export default function ActionIssue() {
   const [supportingDoc, setSupportingDoc] = useState("");
   const [users, setUsers] = useState([]);
 
+      
+  const [fileNameArray2, setFileName] = React.useState([]);
+  const [fileTypeArray2, setFileType] = React.useState([]);
+  const [filebase64Array2, setFileData] = React.useState([]);
+
+
+// for showing document
+    // let subtitle;
+    const [modalIsOpen, setIsOpen] = React.useState(false);
+  
+    function openModal() {
+      setIsOpen(true);
+    }
+  
+    function afterOpenModal() {
+      // references are now sync'd and can be accessed.
+    //   subtitle.style.color = '#f00';
+    }
+  
+    function closeModal() {
+      setIsOpen(false);
+    }
+
+    function imageName(name){
+        setModalImage(name)
+    }
+  
+//END for showing documents
 
   const issueId = () => {
     const URL = window.location.href;
@@ -33,6 +86,7 @@ export default function ActionIssue() {
   }
 
   const getDetails = async () => {
+    
     const myId = issueId();
     try {
       const response = await fetch(
@@ -53,6 +107,40 @@ export default function ActionIssue() {
       console.log(error);
     }
   }
+  const getDocuments = async (docName) => {
+    const myId = issueId();
+    try {
+        const response = await fetch(
+            `http://evm.iitbhilai.ac.in:8100/issue_requests/getDocument/${myId}/${docName}`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                mode: 'cors'
+            }
+        )
+        const data = await response.json();
+
+        // let connectorLength = data['remarks'].map((e, index) => {
+        //     if (e[6] == "Y") return index != data['remarks'].length - 1 ? <ConnectorTwo /> : <ConnnectorOne />
+        // })
+        // connectorLength = connectorLength.filter((ele) => {
+        //     return ele !== undefined;
+        // })
+        // console.log(connectorLength);
+        // if (data['remarks'] != undefined && data['remarks'].length == 1 || data['remarks'].length == 0 || connectorLength.length == 1) connectorLength = '';
+
+        // data['ConnectorLength'] = connectorLength;
+        setDocuments(data);
+        // console.log({Documents})
+
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 
   const getList = async () => {
     let token = localStorage.getItem("token");
@@ -106,24 +194,25 @@ export default function ActionIssue() {
     setMMtype(mime.lookup(supportingDoc));
 
 
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_SERVER}/issue_requests/${action}_issue`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            issueID: parseInt(issueId()),
-            remarks: remarks,
-            supportingDocuments: supportingDoc,
-            MMType: mime.lookup(supportingDoc),
-            newrecipient: forwardedTo,
-          }),
-          mode: "cors"
-        }
-      );
+     try {
+       const response = await fetch(
+         `${process.env.REACT_APP_API_SERVER}/issue_requests/${action}_issue`,
+         {
+           method: "POST",
+           headers: {
+             "Content-Type": "application/json",
+           },
+           body: JSON.stringify({
+             issueID: parseInt(issueId()),
+             remarks: remarks,
+             SupportingDocuments: fileNameArray2,
+             MMType: fileTypeArray2,
+             SupportingDocumentsData: filebase64Array2,
+             newrecipient: forwardedTo,
+           }),
+           mode:"cors"
+         }
+       );
 
       const data = await response.json();
       console.log(data)
@@ -134,6 +223,151 @@ export default function ActionIssue() {
 
 
   };
+  const uploadImage = async (e) =>{
+    const files = e.target.files;
+    console.log(files)
+
+    const totalFiles = files.length;
+    console.log(totalFiles)
+    
+    var fileNumber = 0;
+    
+    while (fileNumber < totalFiles){
+        var x = fileNumber +1;
+        console.log("fileNumber: " + x)
+
+        const file = e.target.files[fileNumber];
+        const fullFileName = file.name;
+
+        var fileParts = fullFileName.split(".");
+
+        console.log("full file" + fileParts.length)
+        const fileArrayLength = fileParts.length;
+
+        const indexDot = fullFileName.indexOf(".");
+        // console.log("indexDot"+indexDot)
+
+        const fileNameo = fullFileName.slice(0, indexDot);
+        // console.log("fileName"+ fileNameo);
+
+        
+
+
+        window.fileType = fileParts[fileArrayLength -1];
+    
+        const filePartsNew = fileParts.pop();
+        console.log(fileParts);
+        const fileName = fileParts.join(".");
+        console.log("this file name: " + fileName);
+        console.log("fileParts New" + filePartsNew);
+        console.log("fileName = " + filePartsNew)
+        const convertedFile = await convertBase64(file);
+        setBaseImage(convertedFile)
+        console.log("FILE" + convertedFile)
+        // const indexC = convertedFile.indexOf(",")
+        
+        // var base64Converted = "";
+        // if(window.fileType === "JPG" || window.fileType === "jpeg" ){
+        //     var base64Converted = convertedFile.slice(indexC + 5)
+        // }else{
+         var base64Converted = convertedFile;
+        // }
+    
+        // console.log("base64-1" + window.base64Converted)
+        console.log("type:" + window.fileType)
+        fileNumber += 1;
+
+        fileNameArray.push(fileName);
+        fileTypeArray.push(window.fileType);
+        filebase64Array.push(base64Converted);
+
+        setFileName(arr => [...arr, fileName])
+        setFileType(arr => [...arr, window.fileType])
+        setFileData(arr => [...arr, base64Converted])
+
+        console.log("Arrays:-")
+        console.log("fileNameArray: " +fileNameArray);
+        console.log(fileTypeArray);
+        console.log(filebase64Array);
+        console.log(document.getElementById("formRemarks").value)
+        console.log(JSON.stringify(fileNameArray))
+    }
+}
+// console.log(uploadImage())
+const convertBase64 = (file) =>{
+    return new Promise((resolve,reject)=>{
+        const fileReader = new FileReader();
+        fileReader.readAsDataURL(file);
+
+        fileReader.onload = () =>{
+            resolve(fileReader.result);
+        }
+
+        fileReader.onerror = (error) => {
+            reject(error);
+        }
+    })
+}
+
+
+
+console.log(Documents["data"])
+let currDoc = ''
+if(Documents["data"] !== undefined){
+    currDoc = currDoc + Documents["data"];
+   
+    // console.log("DOCUMENT"+ currDoc)
+}else{
+    currDoc = "loding";
+    // console.log("DOCUMENT else"+ currDoc)
+}
+console.log("DOCUMENT else"+ currDoc)
+
+
+console.log({Details});
+let len = Details['remakrs'] !== undefined && Details['remarks'].length;
+
+
+const document = Details['supportingDocuments']
+console.log({document})
+// var documentID = '';
+var documentName = [];
+var index = 0;
+
+if (document !== undefined){
+    for (const [key, value] of Object.entries(document)) {
+        console.log("KEY: VALUE")
+        console.log(  `${key}: ${value}`);
+        // documentID = documentID + `${key}`;
+        // documentName = documentName + `${value}`
+        console.log(value.length)
+        if(index === 0){
+            for(const i in value){
+                documentName.push(value[i])
+                console.log(value[i])
+            }
+        }            
+
+        index = index+1;
+      }
+}
+else documentName = ['No Documents Found']
+
+// 
+// console.log("Document ID: " + documentID);
+// console.log("Document Name: " + documentName[0]);
+// var documentData2 = "data:" + Documents["data"].slice(5);
+// var documentData2 = Documents["data"];
+
+// var documentData2 = '';
+// if(documentName.slice(-3) === "png"){
+//     documentData2 = "data:image/png;base64," + Documents["data"];
+// }else if(documentName.slice(-3) === "jpg"){
+//     documentData2 = "data:image/jpeg;base64," + Documents["data"];
+// }else if(documentName.slice(-3) === "pdf"){
+//     documentData2 = "data:application/pdf;base64," + Documents["data"];
+// }
+
 
 
   return (
@@ -187,13 +421,65 @@ export default function ActionIssue() {
             </p>
           </div>
           <p className="text-left mt-4">
-            <span className="text-red-600">Remarks:</span>&nbsp;{" "}
+            <span className="text-red-600" >Remarks:</span>&nbsp;{" "}
             {Details.issue ? Details.issue[0][2] : ""}
           </p>
           <p className="text-left mt-4">
             <span className="text-red-600">Documents:</span>&nbsp;
-            {Details.issue && Details.issue[0][8] && Details.issue[0][8]}
-            {(!Details.issue || !Details.issue[0][8]) && " Data not found"}
+            {/* {Details.issue && Details.issue[0][8] && Details.issue[0][8]}
+            {(!Details.issue || !Details.issue[0][8]) && " Data not found"} */}
+                    
+                    <div className='p-2 grid grid-cols-3'>
+                        {documentName.map(
+                            (name) => {
+                               return( <> 
+                               
+                               <button onClick={() => {
+                                    openModal();
+                                    setModalImage(name); 
+                                    getDocuments(name);
+
+                               }} className='m-4 w-60 h-9' style={{ backgroundColor: "#F56A3F", color: "white", overflow:"hidden", display : 'flex',justifyContent : 'center', alignItems : 'center' }}>{name[0].length >= 20 ? name[0].slice(0,20)+"..." : name}</button>
+
+
+                                </>
+
+                               )
+                                                              
+
+                            
+                            }
+                            
+                        )}
+                        
+                        </div>
+                        <Modal        
+            isOpen={modalIsOpen}
+            onAfterOpen={afterOpenModal}
+            onRequestClose={closeModal}
+            style={customStyles}
+            contentLabel="Example Modal"
+        >
+            <div id="root" className=''>
+            <h4>{modalImage}</h4>
+            <div className='flex justify-center items-center'>
+                {/* <img className='p-10' src={currDoc} /> */}
+                
+                {   currDoc === "loding" ? <p className={`${styles.loader}`}></p>: <embed style={{width: "600px" ,height:"600px" , padding: "10px"}} src={`${currDoc.slice(0,-1)}`} />
+
+                }
+                {/* <img style={{width: "400px" , padding: "10px"}} src={`${currDoc}`} /> */}
+                            
+                
+
+                {/* {console.log("This should be shown:" + currDoc.slice(0,-1))} */}
+
+            </div>
+            
+            <button style={{  color: "white",}} onClick={closeModal}>Close</button>
+            </div>
+        </Modal>
+
           </p>
         </div>
       </div>
@@ -276,9 +562,16 @@ export default function ActionIssue() {
           </div>
           <div className="mt-5 text-left w-1/3">
             <label className="text-left">Supporting Documents</label>
+
             <input type="file" className="w-1/6"
-              value={supportingDoc}
-              onChange={(e) => setSupportingDoc(e.target.value)}
+            // value={supportingDoc}
+            id="formDocuments"
+            // required={isTemporary}
+            multiple
+            onChange={(e)=>{
+                uploadImage(e);
+            }}
+            required
             ></input>
           </div>
           <button

@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import "./styles/createIssue.css";
-import { decode as base64_decode, encode as base64_encode } from 'base-64';
+// import {decode as base64_decode, encode as base64_encode} from 'base-64';
 import { ReactComponent as CreateIssueIcon } from '../../assets/create_issue_request.svg';
 import { ReactComponent as SeverityIcon } from '../../assets/severity.svg';
 import { ReactComponent as LevelIcon } from '../../assets/level.svg';
@@ -12,14 +12,29 @@ import { AiOutlineArrowLeft } from 'react-icons/ai'
 import { useNavigate } from "react-router-dom";
 
 export default function CreateIssue() {
+    const [baseImage, setBaseImage ] = useState("")
+
+    const fileNameArray = [];
+    const fileTypeArray = [];
+    const filebase64Array = [];  
+    
     const navigate = useNavigate();
 
     const [tags, setTags] = React.useState([]);
+    
+    const [fileNameArray2, setFileName] = React.useState([]);
+    const [fileTypeArray2, setFileType] = React.useState([]);
+    const [filebase64Array2, setFileData] = React.useState([]);
+
     const onFormSubmit = async (e) => {
         e.preventDefault();
         console.log("submit button clicked")
-        console.log("base64" + window.base64Converted)
+        // console.log("base64" + window.base64Converted)
         addRequest();
+        console.log(tags)
+        console.log("SUBMITTING ARRAYS:")
+        console.log(fileNameArray2);
+        console.log(fileTypeArray2);
     };
 
     async function addRequest() {
@@ -40,19 +55,16 @@ export default function CreateIssue() {
                         IssueLevel: document.getElementById("formLevel").value.slice(-2),
                         LodgerUserID: window.sessionStorage.getItem("sessionToken"),
                         tags: tags,
-                        // tags: [
-                        //     // document.getElementById("formTo").value,
-                        //     document.getElementById("formTags").value
-                        // ],
-                        SupportingDocuments: window.fileName,
-                        MMType: window.fileType,
-                        SupportingDocumentsData: window.base64Converted,
+                        // SupportingDocuments: ["Name" ] ,
+                        SupportingDocuments: fileNameArray2,
+                        MMType: fileTypeArray2,
+                        SupportingDocumentsData: filebase64Array2,
                         RecipientUserID: document.getElementById("formTo").value
 
                     }),
                 }
             );
-
+  
             // var x = document.getElementById("formDocuments")
             // let encoded = base64_encode(x);
             // console.log("Encoded:- "+encoded +"x" +x);
@@ -62,13 +74,14 @@ export default function CreateIssue() {
             console.log(response);
             const data = await response.json();
             console.log("data" + data);
-            console.log("Message" + data["message"])
+            console.log("Message:" + data["message"])
             if (data["message"] === "Issue created successfully") {
                 document.getElementById("form").reset();
                 alert("Created Successfully");
                 window.location.pathname = "/session/issuemanagement/createIssue";
             } else {
                 alert("Failed!");
+            
             }
         } catch (err) {
             console.log(err);
@@ -80,20 +93,110 @@ export default function CreateIssue() {
 
     // const base64Converted = ''
 
-    const uploadImage = async (e) => {
-        const file = e.target.files[0];
-        const fullFileName = file.name;
-        const indexDot = fullFileName.indexOf(".");
-        console.log("indexDot" + indexDot)
-        window.fileName = fullFileName.slice(0, indexDot);
-        console.log("fileName" + window.fileName);
-        window.fileType = fullFileName.slice(indexDot + 1);
+    // const updatedFile = (file) => {
+
+    // }
+ 
+    const uploadImage = async (e) =>{
+        const files = e.target.files;
+        console.log(files)
+
+        const totalFiles = files.length;
+        console.log(totalFiles)
+        
+        var fileNumber = 0;
+        
+        while (fileNumber < totalFiles){
+            var x = fileNumber +1;
+            console.log("fileNumber: " + x)
+
+            const file = e.target.files[fileNumber];
+            const fullFileName = file.name;
+
+            var fileParts = fullFileName.split(".");
+
+            console.log("full file" + fileParts.length)
+            const fileArrayLength = fileParts.length;
+
+            const indexDot = fullFileName.indexOf(".");
+            // console.log("indexDot"+indexDot)
+
+            const fileNameo = fullFileName.slice(0, indexDot);
+            // console.log("fileName"+ fileNameo);
+
+            
+
+
+            window.fileType = fileParts[fileArrayLength -1];
+        
+            const filePartsNew = fileParts.pop();
+            console.log(fileParts);
+            const fileName = fileParts.join(".");
+            console.log("this file name: " + fileName);
+            console.log("fileParts New" + filePartsNew);
+            console.log("fileName = " + filePartsNew)
+            const convertedFile = await convertBase64(file);
+            setBaseImage(convertedFile)
+            console.log("FILE" + convertedFile)
+            // const indexC = convertedFile.indexOf(",")
+            
+            // var base64Converted = "";
+            // if(window.fileType === "JPG" || window.fileType === "jpeg" ){
+            //     var base64Converted = convertedFile.slice(indexC + 5)
+            // }else{
+             var base64Converted = convertedFile;
+            // }
+        
+            // console.log("base64-1" + window.base64Converted)
+            console.log("type:" + window.fileType)
+            fileNumber += 1;
+
+            fileNameArray.push(fileName);
+            fileTypeArray.push(window.fileType);
+            filebase64Array.push(base64Converted);
+
+            setFileName(arr => [...arr, fileName])
+            setFileType(arr => [...arr, window.fileType])
+            setFileData(arr => [...arr, base64Converted])
+
+            console.log("Arrays:-")
+            console.log("fileNameArray: " +fileNameArray);
+            console.log(fileTypeArray);
+            console.log(filebase64Array);
+            console.log(document.getElementById("formRemarks").value)
+            console.log(JSON.stringify(fileNameArray))
+        }
+
+
+        // const file = e.target.files[0];
+        // const fullFileName = file.name;
+        // const indexDot = fullFileName.indexOf(".");
+        // console.log("indexDot"+indexDot)
+        // window.fileName = fullFileName.slice(0, indexDot);
+        // console.log("fileName"+ window.fileName);
+        // window.fileType = fullFileName.slice(indexDot+1);
+        
+        // window.base64Converted = await convertBase64(file);
+        
+        // console.log("base64-1" + window.base64Converted)
+        // console.log("type:" + window.fileType)
+        
+
         // const file2 = e.target.files[1];
-        window.base64Converted = await convertBase64(file);
         // window.base64Converted2 = await convertBase64(file2);
-        console.log("base64-1" + window.base64Converted)
-        console.log("type:" + window.fileType)
+        // console.log("base64-2" + window.base64Converted2);
+
+        // const file2 = e.target.files[1];
+        // const fullFileName2 = file2.name;
+        // const indexDot2 = fullFileName2.indexOf(".");
+        // console.log("indexDot2"+indexDot2)
+        // window.fileName2 = fullFileName2.slice(0, indexDot2);
+        // console.log("fileName2"+ window.fileName2);
+        // window.fileType2 = fullFileName.slice(indexDot2+1);
+        
+        // window.base64Converted2 = await convertBase64(file2);
         // console.log("base64-2" + window.base64Converted2)
+        // console.log("type2:" + window.fileType2)
     }
     // console.log(uploadImage())
     const convertBase64 = (file) => {
@@ -110,30 +213,30 @@ export default function CreateIssue() {
             }
         })
     }
-    const [value, setValue] = useState()
+    // const [value, setValue] = useState()
 
-    const tagValue = (e) => {
+    // const tagValue = (e) => {
 
-        // let currentLen = document.getElementById("formTags").value.length
-        // console.log(currentLen)
-        // var y =  document.getElementById("formTags").value
-        // console.log("Value" + document.getElementById("formTags").value)
-        // y.replace("sd",  "ss");
-        // console.log("y" + y)
-        // if(currentLen!=0 && currentLen%11 === 0){
-        //     y.replace("sd",  "ss")
+    //     // let currentLen = document.getElementById("formTags").value.length
+    //     // console.log(currentLen)
+    //     // var y =  document.getElementById("formTags").value
+    //     // console.log("Value" + document.getElementById("formTags").value)
+    //     // y.replace("sd",  "ss");
+    //     // console.log("y" + y)
+    //     // if(currentLen!=0 && currentLen%11 === 0){
+    //     //     y.replace("sd",  "ss")
 
-        // }
-
-
-        let currValue = document.getElementById("formTags").value
-        let currentLen = document.getElementById("formTags").value.length
-        console.log(currentLen)
-        if (currentLen != 0 && currentLen % 11 === 0) {
+    //     // }
 
 
-        }
-    }
+    //     let currValue = document.getElementById("formTags").value
+    //     let currentLen = document.getElementById("formTags").value.length
+    //     console.log(currentLen)
+    //     if (currentLen != 0 && currentLen % 11 === 0) {
+
+
+    //     }
+    // }
 
     return (
         <div className="flex-col justify-center align-middle">
@@ -298,6 +401,7 @@ export default function CreateIssue() {
                                     uploadImage(e);
                                 }}
                             />
+                            {/* <img src={baseImage} height='2px'/> */}
                         </div>
                     </div>
 
@@ -315,7 +419,7 @@ export default function CreateIssue() {
                                     value={tags}
                                     id="formTags"
                                     onChange={setTags}
-                                    placeHolder="@DeoGwalior, @DEOBhopal"
+                                    placeHolder="WB00000CEO, AP00000DEO"
                                 />
                             </div>
                             {/* <div className="pt-1 pl-2 scale-90">
