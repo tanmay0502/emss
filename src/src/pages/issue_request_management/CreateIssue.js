@@ -96,7 +96,22 @@ export default function CreateIssue() {
     // const updatedFile = (file) => {
 
     // }
- 
+
+    function handleLength(){
+      let len = document.getElementById("formSubject").value.length;
+
+      if(len >= 127){
+        alert("Maximum Subject length is 128 Characters")
+      }
+    }
+    function remarkLen() {
+        let remarkLen = document.getElementById("formRemarks").value.length;
+        if(remarkLen >= 255){
+            alert("Maximum Remarks length is 256 Characters")
+        }
+
+      }
+
     const uploadImage = async (e) =>{
         const files = e.target.files;
         console.log(files)
@@ -373,15 +388,21 @@ export default function CreateIssue() {
                             // step="any"
                             className="subjectInput p-2"
                             placeholder="Subject"
+                            onChange={() => handleLength()}
+                            maxlength="128"
 
                         />
+
                         {/* <div className="pt-1 pl-2 scale-90">
                             <TagIcon/>
                         </div> */}
                         {/* </div>
                     <div className="w-full div3Container"> */}
                         <p className="text-lg flex" > Remarks<span className="text-orange-600">*</span></p>
-                        <textarea required className="textarea flex" id="formRemarks" name="w3review" rows="" cols="" placeholder="Text Input">
+                        <textarea required className="textarea flex" id="formRemarks" name="w3review" rows="" cols=""
+                        onChange={() => remarkLen()}
+                        maxlength="256"
+                        placeholder="Text Input">
 
                         </textarea>
                     </div>
