@@ -38,7 +38,7 @@ export default function ActionIssue() {
   const [modalImage, setModalImage] = useState('')
   const [Details, setDetails] = useState({});
   const [Documents, setDocuments] = useState([]);
-  
+  const [mergeInto, setmergeInto] = useState("");
 
 
   const [remarks, setRemarks] = useState("");
@@ -47,7 +47,7 @@ export default function ActionIssue() {
   const [forwardedTo, setForwardedTo] = useState("");
   const [supportingDoc, setSupportingDoc] = useState("");
   const [users, setUsers] = useState([]);
-
+  const [issue, setIssue] = useState([]);
       
   const [fileNameArray2, setFileName] = React.useState([]);
   const [fileTypeArray2, setFileType] = React.useState([]);
@@ -96,6 +96,7 @@ export default function ActionIssue() {
           headers: {
             "Content-Type": "application/json",
           },
+          credantials: 'same-origin',
           mode: 'cors'
         }
       )
@@ -142,6 +143,33 @@ export default function ActionIssue() {
 }
 
 
+const getOpenIssues = async () => {
+    
+  const UserID = sessionStorage.getItem('sessionToken')
+  try {
+    const response = await fetch(
+      `${process.env.REACT_APP_API_SERVER}/issue_requests/getOpenIssues/${UserID}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credantials: 'same-origin',
+        mode: 'cors'
+      }
+    )
+    const data = await response.json();
+    console.log(data)
+    setIssue(data);
+
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// console.log(issue["data"][0][0])
+// console.log(issue["data"][0][2])
+
   const getList = async () => {
     let token = localStorage.getItem("token");
         // console.log(decode)
@@ -157,6 +185,7 @@ export default function ActionIssue() {
 						"Content-Type": "application/json",
 						'Authorization': 'Bearer ' + access_token,
 					},
+          credantials: 'same-origin',
 					mode: "cors"
 				}
 			);
@@ -176,9 +205,10 @@ export default function ActionIssue() {
   useEffect(() => {
     getDetails();
     getList();
+    getOpenIssues();
   }, [])
 
-
+console.log(issue);
   function formatText(tag) {
     var selectedText = document.selection.createRange().text;
 
@@ -202,6 +232,7 @@ export default function ActionIssue() {
            headers: {
              "Content-Type": "application/json",
            },
+           credantials: 'same-origin',
            body: JSON.stringify({
              issueID: parseInt(issueId()),
              remarks: remarks,
@@ -209,6 +240,8 @@ export default function ActionIssue() {
              MMType: fileTypeArray2,
              SupportingDocumentsData: filebase64Array2,
              newrecipient: forwardedTo,
+             mergingIssueID: parseInt(issueId()),
+             mergingIntoIssueID: mergeInto.slice(0,3)
            }),
            mode:"cors"
          }
@@ -223,6 +256,8 @@ export default function ActionIssue() {
 
 
   };
+  console.log(mergeInto);
+
   const uploadImage = async (e) =>{
     const files = e.target.files;
     console.log(files)
@@ -495,9 +530,10 @@ else documentName = ['No Documents Found']
             <div className="w-3/5 flex">
               <div className="text-left w-full">
                 <label className="text-left ">
-                  Remarks<span className="text-red-600">*</span>
+                  Remarks<span className="text-red-600">{action !== "merge" ? "*" : ""}</span>
                 </label>
                 <br />
+
                 <textarea
                   className="w-5/6 h-4/5 p-2 border rounded-md mt-1"
                   placeholder="Text Input"
@@ -505,7 +541,8 @@ else documentName = ['No Documents Found']
                   onChange={(e) => {
                     setRemarks(e.target.value);
                   }}
-                  required
+                  disabled = {action === "merge" ? true : false}
+
                 ></textarea>
               </div>
             </div>
@@ -528,6 +565,7 @@ else documentName = ['No Documents Found']
                     <option value="reject">Reject</option>
                     <option value="reopen">Reopen</option>
                     <option value="resolve">Resolve</option>
+                    <option value="merge">Merge</option>
                   </select>
 
                   <TypeIcon className="ml-2" />
@@ -558,12 +596,43 @@ else documentName = ['No Documents Found']
                   </div>
                 </div>
               )}
+
+              {action === "merge" && (
+
+                <div className="text-left mt-4">
+                  <label className="text-left ">
+                    Merge Into? <span className="text-red-600">*</span>
+                  </label>
+                  <br />
+                  <div className="flex">
+
+                    <select
+                      type="text"
+                      className="w-4/5 h-10 mt-1 p-2 border rounded-md"
+                      value={mergeInto}
+                      onChange={(e) => (setmergeInto(e.target.value))}
+                      required
+                    >
+                      <option value="">Select</option>
+                      {issue["data"].map((issueData) => (
+                        <option>{issueData[0] + ": " + issueData[2]}</option>
+                      ))}
+
+                    </select>
+
+                    <TypeIcon className="ml-2" />
+                  </div>
+                </div>
+
+              )}
+
             </div>
           </div>
           <div className="mt-5 text-left w-1/3">
             <label className="text-left">Supporting Documents</label>
 
             <input type="file" className="w-1/6"
+            disabled = {action === "merge" ? true : false}
             // value={supportingDoc}
             id="formDocuments"
             // required={isTemporary}
@@ -571,7 +640,9 @@ else documentName = ['No Documents Found']
             onChange={(e)=>{
                 uploadImage(e);
             }}
-            required
+            
+
+            // required
             ></input>
           </div>
           <button

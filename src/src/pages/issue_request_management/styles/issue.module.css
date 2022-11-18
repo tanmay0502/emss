@@ -397,4 +397,12 @@ textarea {
 .remarks{
 	margin-left: 200px;
 }
+.greenText{
+	color: #50C878;
+	font-weight: bold;
+}
+.redText{
+	color: red;
+	font-weight: bold;
+}
 /*  Code Ends */

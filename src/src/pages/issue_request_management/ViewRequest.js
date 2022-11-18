@@ -71,6 +71,7 @@ export default function ViewRequest() {
                     headers: {
                         "Content-Type": "application/json",
                     },
+                    credantials: 'same-origin',
                     mode: 'cors'
                 }
             )
@@ -131,10 +132,12 @@ export default function ViewRequest() {
     const mapSeverity = (code) => code != undefined && code == "L" ? "Low" : code == "M" ? "Medium" : "High";
 
     const getTime = (str) => {
-        const myArr = str.split("T");
-        return myArr[0] + ' / ' + myArr[1].split(".")[0];
+        
+        // const myArr = str.split("T");
+        // return myArr[0] + ' / ' + myArr[1].split(".")[0];
+        return str;
     }
-
+    
     const checkAction = () => {
         const countEle = Details['remarks'].filter((val) => val[4] === "Y" && val)
         return countEle.length ? true : false;
@@ -232,10 +235,12 @@ export default function ViewRequest() {
     // }else if(documentName.slice(-3) === "pdf"){
     //     documentData2 = "data:application/pdf;base64," + Documents["data"];
     // }
-
+    // console.log(Details["issue"][0][2])
 
     return (
+
         <div className={styles.MyContainer}>
+        
             {/* <div className={styles.PageTitle}>
                 <div className={`${styles.RequestId} ${styles.myFlexBoxCenter}`} >
                     <FaEdit /> <span> Request ID : {issueId()}</span>
@@ -265,7 +270,7 @@ export default function ViewRequest() {
 
             <div className={`${styles.myCard}`} >
                 <div className={`${styles.myCardHeader} ${styles.myPadding}`} >
-                    Request
+                    Subject: {Details["issue"] != undefined && Details["issue"][0][2]}
                 </div>
                 <div className={`${styles.myCardBody} ${styles.myPadding} `}>
                     <div className={`${styles.myFlexBox} ${styles.myFlexWrap}`} >
@@ -288,7 +293,7 @@ export default function ViewRequest() {
                     </div>
                     
                     <div className='p-2 grid grid-cols-3'>
-                        {documentName.map(
+                        {documentName !== undefined && documentName.map(
                             (name) => {
                                return( <> 
                                
@@ -377,7 +382,7 @@ export default function ViewRequest() {
                                                 console.log((index/2)-1)
                                             }
                                             
-                                            {Object.values(actionDocuments)[(index/2)-1].map(
+                                            {Object.values(actionDocuments)[(index/2)-1] !== undefined && Object.values(actionDocuments)[(index/2)-1].map(
                                                 (name) => {
                                                 return( <> 
                                                 
@@ -399,7 +404,7 @@ export default function ViewRequest() {
                                         </div>
 
                                         
-                                        <Group LabelText='Remarks' className={`${styles.remarks}`} value={Details['remarks'][index][3]} />
+                                        <Group LabelText='Remarks' className={`${styles.remarks}`} value={Details['remarks'][index-1][3]} />
                                         
                                     </div>
 

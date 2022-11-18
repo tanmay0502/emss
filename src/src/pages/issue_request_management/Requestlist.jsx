@@ -55,6 +55,7 @@ function RequestList() {
                     headers: {
                         "Content-Type": "application/json",
                     },
+                    credentials: 'same-origin',
                     mode: "cors"
                 }
             );
@@ -68,8 +69,23 @@ function RequestList() {
 
     const Tagged = (type) =>  UserID === type ? "Recipient" : "Tagged"; 
 
+    var reverseK = Object.keys(request).reverse();
+    var reverseV = Object.values(request).reverse();
+
+    var reverse = []
+    
+    var i = 0;
+    while(i<reverseV.length){
+        reverse[i] = reverseV[i]
+
+        i = i +1;
+    }
+    // const reverselist = request 
+    console.log(reverse)
+    console.log(request)
+    
     async function renderremarkslist() {
-        var data = request.filter((elem) => {
+        var data = reverse.filter((elem) => {
             if (tableFilter === "") {
                 return true;
             }
@@ -114,7 +130,7 @@ function RequestList() {
     useEffect(() => {
         renderremarkslist();
     }, [request, tableFilter, sortBy, sortOrder]);
-
+    
     return (
         <div style={{height: "100%"}}>
             <div className="" style={{ background: "white", position: "relative", height: "100%", gridArea: "1 / 1 / 6 / 6", borderRadius: "20px" }}>
