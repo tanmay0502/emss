@@ -25,6 +25,15 @@ const customStyles = {
 
 export default function ViewRequest() {
 
+    function mystring(arr){
+        let ans=""
+        arr.map((v)=>{
+            ans=ans+v+" ";
+        })
+
+        return ans
+    }
+
 
     const navigate = useNavigate()
     const [modalImage, setModalImage] = useState('')
@@ -76,6 +85,8 @@ export default function ViewRequest() {
                 }
             )
             const data = await response.json();
+            // console.log(data["remarks"].reverse())
+            
 
             let connectorLength = data['remarks'].map((e, index) => {
                 if (e[4] === "Y") return index !== data['remarks'].length - 1 ? <ConnectorTwo /> : <ConnnectorOne />
@@ -154,7 +165,7 @@ export default function ViewRequest() {
     }, [Documents]);
     // const imageData = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFKSURBVHgB3VXtdYMwDLwR2KAegRE8QkZgg7IB3qDZIN2gI3gERmAERmhxIz3OQhSa9lfuPb3AWbZOHzHAM2JYbFrsU357s65r42K3xS74BUbZzDbtBLA+4ejwgZyjcLNwjePfLtZRwFm4Q/WRuCzcT2Uowa8UJOw5arqMJNyVOFWcJQPFO/GnA0Rnk+3BgDUTLWn0AujGF+JaOoj7UJ57WovCJ3m/eQE+UNf7lRTN8BudUGcY4E9e5az1zrQ5wEdDAhReqb8RjXMkNQ32MaFWbN8rqOrOvL/hn9ChVl2arH0YjG+DB2FVd9iOZKDAWXwvOHFdwKjunSATifBsxPaC3IBnvCfV9k9WxETcJzCjHutDJDqolKChbDL2Ve6OqQfOZEJ993iIWMt0GgF1acrzDfemtuZw9Ut4AB38j43X5D+hxdpUm1nC0+ELIayoHUrW/fUAAAAASUVORK5CYII='"
 
-    console.log(Documents["data"])
+    // console.log(Documents["data"])
     let currDoc = ''
     if(Documents["data"] !== undefined){
         currDoc = currDoc + Documents["data"];
@@ -164,7 +175,7 @@ export default function ViewRequest() {
         currDoc = "loding";
         // console.log("DOCUMENT else"+ currDoc)
     }
-    console.log("DOCUMENT else"+ currDoc)
+    // console.log("DOCUMENT else"+ currDoc)
     
 
     console.log({Details});
@@ -202,6 +213,7 @@ export default function ViewRequest() {
                     for(const i in value){
                         // actionDocsName.push(value[i])
                         console.log(value[i])
+                        console.log("here")
                         actionDocuments[actions] =  value[i];
                     }
                     
@@ -213,6 +225,7 @@ export default function ViewRequest() {
 
             index = index+1;
           }
+          console.log(actionDocuments)
 
     }
     else documentName = ['No Documents Found']
@@ -281,6 +294,10 @@ export default function ViewRequest() {
                     </div>
                     <div className={`${styles.myFlexBox} ${styles.myFlexWrap}`}>
                         <Group LabelText='Remarks' value={Details['remarks'] != undefined && Details['remarks'].length ? Details['remarks'][0][3] : "No Remarks Added"} />
+                        <Group LabelText='Status' value={Details['issue'] != undefined && Details['issue'].length ? (Details['issue'][0][6]=="A"? "Active":"Closed") : "Status not found"} />
+                    </div>
+                    <div className={`${styles.myFlexBox} ${styles.myFlexWrap}`}>
+                        <Group LabelText='Tagged Users' value={Details['tags'] != undefined && Details['tags'].length ? (mystring(Details["tags"])) : "No tags Added"} />
                     </div>
                     <div className={`${styles.myFlexBox} ${styles.myFlexWrap}`}>
                     {/* <Group LabelText='Documents' value={Details['remarks'] != undefined && Details['remarks'].length ? Details['remarks'][0][4] : "Document not found"} /> */}
@@ -373,8 +390,8 @@ export default function ViewRequest() {
                                         <Group LabelText='Date / Time' value={getTime(val[5])} />
                                         <Group LabelText='Severity' value={Details['issue'] != undefined && Details['issue'][0][5] == "L" ? "Low" : Details['issue'][0][5] == "M" ? "Medium" : "High"} class='first-child' />
                                     </div>
-                                    
-                                    <div className={`${styles.div2}`}>
+                                    <div className='flex justify-start mt-1'>
+                                    <div  className="inline-block text-left ">
                                     <div className='labelStyle pt-2'> Documents: </div>
                                         <div className='p-2 grid grid-cols-3'>
 
@@ -382,7 +399,7 @@ export default function ViewRequest() {
                                                 console.log((index/2)-1)
                                             }
                                             
-                                            {Object.values(actionDocuments)[(index/2)-1] !== undefined && Object.values(actionDocuments)[(index/2)-1].map(
+                                            {Object.values(actionDocuments)[(index/2)-2] !== undefined && Object.values(actionDocuments)[(index/2)-2].map(
                                                 (name) => {
                                                 return( <> 
                                                 
@@ -406,6 +423,7 @@ export default function ViewRequest() {
                                         
                                         <Group LabelText='Remarks' className={`${styles.remarks}`} value={Details['remarks'][index-1][3]} />
                                         
+                                    </div>
                                     </div>
 
                                     

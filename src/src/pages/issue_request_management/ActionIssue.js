@@ -30,6 +30,15 @@ Modal.setAppElement(document.getElementById('root'));
 
 
 export default function ActionIssue() {
+
+  function mystring(arr){
+    let ans=""
+    arr.map((v)=>{
+        ans=ans+v+" ";
+    })
+
+    return ans
+}
   const [baseImage, setBaseImage ] = useState("")
   const navigate = useNavigate()
   const fileNameArray = [];
@@ -173,9 +182,6 @@ const getOpenIssues = async () => {
   const getList = async () => {
     let token = localStorage.getItem("token");
         // console.log(decode)
-    	console.log(JSON.parse(token)["access_token"]);
-		const access_token=JSON.parse(token)["access_token"];
-    const myId = issueId();
     try {
       const response = await fetch(
 				`${process.env.REACT_APP_API_SERVER}/user/listAllUsers`,
@@ -183,17 +189,16 @@ const getOpenIssues = async () => {
 					method: "GET",
 					headers: {
 						"Content-Type": "application/json",
-						'Authorization': 'Bearer ' + access_token,
 					},
           credantials: 'same-origin',
 					mode: "cors"
 				}
 			);
       const data = await response.json();
-      console.log(data);
+      console.log(data[0]);
       let allUsers = []
-      for (let i = 0; i < data["data"].length; i++) {
-        allUsers.push(data["data"][i][0])
+      for (let i = 0; i < data[0]["data"].length; i++) {
+        allUsers.push(data[0]["data"][i][0])
       }
       console.log(allUsers)
       setUsers(allUsers)
@@ -435,29 +440,39 @@ else documentName = ['No Documents Found']
           <span className="text-white text-lg ml-5">Request</span>
         </div>
         <div className="p-4 pl-10">
-          <div className="flex mt-3 ">
-            <p className="w-1/4 text-left">
+          <div className="flex mt-3 justify-between ">
+            <p className=" text-left">
               <span className="text-red-600">Lodger:</span>{" "}
               {Details.issue ? Details["issue"][0][1] : ""}
             </p>
-            <p className="w-1/4 text-left">
+            <p className=" text-left">
               <span className="text-red-600">Recipient:</span>{" "}
               {Details.issue ? Details.issue[0][7] : ""}
             </p>
-            <p className="w-1/4 text-left">
+            <p className=" text-left">
               <span className="text-red-600">Date/Time:</span>{" "}
               {Details.issue ? Details.issue[0][9] : ""}
             </p>
-            <p className="w-1/4 text-left">
+            <p className=" text-left">
               <span className="text-red-600">Severity:</span>{" "}
               {Details.issue
                 ? { L: "Low", M: "Medium", H: "High" }[Details.issue[0][5]]
                 : ""}
             </p>
           </div>
+          <div className="flex justify-between">
           <p className="text-left mt-4">
             <span className="text-red-600" >Remarks:</span>&nbsp;{" "}
             {Details.issue ? Details.issue[0][2] : ""}
+          </p>
+          <p className="text-left mt-4">
+            <span className="text-red-600" >Status:</span>&nbsp;{" "}
+            {Details.issue ? (Details.issue[0][6]=="A"?"Active":"Closed") : "Status not found"}
+          </p>
+          </div>
+          <p className="text-left mt-4">
+            <span className="text-red-600" >Tagged Users:</span>&nbsp;{" "}
+            {Details.tags && Details.tags.length ? mystring(Details.tags) : "No tags added"}
           </p>
           <p className="text-left mt-4">
             <span className="text-red-600">Documents:</span>&nbsp;
@@ -553,20 +568,34 @@ else documentName = ['No Documents Found']
                 </label>
                 <br />
                 <div className="flex">
-                  <select
-                    type="text"
-                    className="w-4/5 h-10 mt-1 p-2 border rounded-md"
-                    value={action}
-                    onChange={(e) => setAction(e.target.value)}
-                    required
-                  >
-                    <option value="">Select</option>
-                    <option value="forward">Forward</option>
-                    <option value="reject">Reject</option>
-                    <option value="reopen">Reopen</option>
-                    <option value="resolve">Resolve</option>
-                    <option value="merge">Merge</option>
-                  </select>
+                {((Details && Details["issue"]) && Details["issue"][0][6]=="C") ?
+                    (<select
+                      type="text"
+                      className="w-4/5 h-10 mt-1 p-2 border rounded-md"
+                      value={action}
+                      onChange={(e) => setAction(e.target.value)}
+                      required
+                    >
+                     
+                      <option value="">Select</option>
+                      <option value="reopen">Reopen</option>
+                    </select>):
+                    (<select
+                      type="text"
+                      className="w-4/5 h-10 mt-1 p-2 border rounded-md"
+                      value={action}
+                      onChange={(e) => setAction(e.target.value)}
+                      required
+                    >
+                     
+                      <option value="">Select</option>
+                      <option value="forward">Forward</option>
+                      <option value="reject">Reject</option>
+                      <option value="resolve">Resolve</option>
+                      <option value="merge">Merge</option>
+                    </select>)
+                    }
+                 
 
                   <TypeIcon className="ml-2" />
                 </div>
