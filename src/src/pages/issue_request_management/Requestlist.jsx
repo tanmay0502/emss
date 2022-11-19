@@ -60,7 +60,10 @@ function RequestList() {
                 }
             );
             const data2 = await response.json();
-            setRequest(data2['data']);
+            console.log(data2)
+            if(data2["status"]!=404){
+                setRequest(data2['data']);
+            }
 
         } catch (err) {
             console.log(err);
@@ -69,8 +72,14 @@ function RequestList() {
 
     const Tagged = (type) =>  UserID === type ? "Recipient" : "Tagged"; 
 
-    var reverseK = Object.keys(request).reverse();
-    var reverseV = Object.values(request).reverse();
+    let reverseV = []
+    let reverseK =[]
+    if(request!=[] && request){
+
+        reverseK=Object.keys(request).reverse();
+        reverseV = Object.values(request).reverse();
+    }
+   
 
     var reverse = []
     
@@ -83,6 +92,8 @@ function RequestList() {
     // const reverselist = request 
     console.log(reverse)
     console.log(request)
+
+
     
     async function renderremarkslist() {
         var data = reverse.filter((elem) => {
@@ -106,14 +117,18 @@ function RequestList() {
 				}}/>,
                 "Subject": val['subject'],
                 "Tagged/Recipient" : Tagged(val['recipientuserid']),
-                "Details" : val
+                "Details" : val,
+                "status":(val["status"])=="A"?"Active":"Closed"
             }
         })
         data.sort(function (a, b) {
             if (sortMapping[sortBy] !== null) {
                 return a[sortMapping[sortBy]].localeCompare(b[sortMapping[sortBy]])
             }
-            else return 0;
+            else {
+               
+                return a["status"].localeCompare(b["status"])
+            }
         });
         if (sortMapping[sortBy] !== null && sortOrder === 'desc') {
             data.reverse();
