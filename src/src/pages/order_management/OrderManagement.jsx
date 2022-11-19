@@ -8,8 +8,8 @@ export default function OrderManagement(){
 
     const arr = [{text: 'Order Management', href: "/session/ordermanagement"},{text: 'Order List', href: "/session/ordermanagement"}];
     return (
-        <div>
-            <Navigator navicon={<GenOrderIcon/>}  navtext = {arr}/>
+        <div style={{height: "100%"}}>
+            {/* <Navigator navicon={<GenOrderIcon/>}  navtext = {arr}/> */}
             <OrderList/>
         </div>
     )

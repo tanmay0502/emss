@@ -1,0 +1,112 @@
+.optimisedAllocationTable{
+    position: relative;
+    padding: 1.5em 1.5em;
+    border: 2px solid #84587C;
+    width: 100%;
+    border-radius: 20px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1.5em;
+}
+
+.editAllocationButton{
+    position: absolute;
+    box-sizing: border-box;
+    padding: 0;
+    top: calc((-2.5em / 2) + 1px );
+    right: calc((-2.5em / 2) + 1px );
+    width: 2.5em;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: #DE0000;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.allocationLocationDetails{
+    width: 95%;
+
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.allocationLocationDetails img{
+    /* margin: 0 1em 0 0; */
+    height: 50%;
+    object-position: center;
+}
+
+.allocationLocationDetails p{
+    text-align: left;
+    margin: 0 1em;
+}
+
+.allocationLocationIcon{
+    /* height: 100%; */
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.allocationLocationArrow{
+    flex: 1;
+    border: 1px dashed #00000033;
+    margin: auto 1em;
+    position: relative;
+}
+
+.allocationLocationArrow::after{
+    content: '';
+    width: 1.2em;
+    height: 2.4em;
+    display: block;
+    background-image: url(../../../assets/ArrowTipRight.svg);
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translate(50%, -50%);
+}
+
+.allocationLocationDetailsSource, .allocationLocationDetailsDestination{
+    font-size: 1.1em;
+}
+
+.allocationDetailsTable{
+    width: 100%;
+    padding: .75em 1.5em;
+    background-color: #B5B7C01A;
+    border-radius: 15px;
+}
+
+.allocationDetailsTable > div > div{
+    padding-bottom: .5em !important;
+}
+
+.allocationDetailsTable table{
+    width: 100%;
+}
+
+.allocationDetailsTable table th{
+    color: #00000080 !important;
+    font-weight: 400 !important;
+    padding: .5em 0;
+}
+
+.allocationDetailsTable table td{
+    color: #000000B2 !important;
+    font-weight: 500 !important;
+    padding: .5em 0;
+}
