@@ -1,0 +1,24 @@
+.SCROLL_3{
+	overflow: scroll;
+	overflow-y: hidden !important;
+    overflow-x:  auto !important;
+	width: 100%;
+	padding: 20px;
+	
+}
+
+
+.myCard_unit{
+	width: 100%;
+	box-shadow: 0px 4px 24px rgba(0, 0, 0, 0.35);
+	border-radius: 25px;
+    /* margin-left: 5%; */
+}
+.unitdescription{
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	grid-template-rows: 1fr;
+	grid-column-gap: 24px;
+	grid-row-gap: 0px;
+	margin-left: 20%;
+}

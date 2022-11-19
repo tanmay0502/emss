@@ -122,15 +122,15 @@ function UserList() {
 			const response = await fetch(
 				`${process.env.REACT_APP_API_SERVER}/user/listAllUsers`,
 				{
-					method: "POST",
+					method: "GET",
 					credentials: 'same-origin',
 					headers: {
 						"Content-Type": "application/json",
 						// 'Authorization': 'Bearer ' + access_token,
 					},
-					body: JSON.stringify({
-						"userID": window.sessionStorage.getItem('sessionToken')
-					}),
+					// body: JSON.stringify({
+					// 	"userID": window.sessionStorage.getItem('sessionToken')
+					// }),
 					mode: "cors"
 				}
 			);

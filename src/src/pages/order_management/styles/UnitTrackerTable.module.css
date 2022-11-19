@@ -1,0 +1,32 @@
+.unitTrackerTable{
+    border-radius: 30px;
+    border: 2px solid #84587C;
+}
+
+.unitTrackerTableHeader{
+    border-radius: 28px 28px 0 0;
+    border: none;
+    border-bottom: 2px solid #84587C;
+    background: linear-gradient(180deg, #84587C 0%, #BA8BB1 100%);
+    padding: 0 2.5em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.unitTrackerTableHeader h4{
+    margin: 0.75em 0;
+    font-size: 1.5em !important;
+    color: white !important;
+}
+
+.unitTrackerTable > div > div{
+    padding-bottom: 0.75em !important;
+}
+
+.unitTrackerTableContainer{
+    box-sizing: border-box;
+    margin: .75em 1.25em;
+    width: calc(100% - 2.5em);
+}
