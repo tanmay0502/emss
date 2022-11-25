@@ -131,7 +131,7 @@ function Routed(props) {
 				<span>User Profile</span>
 			</>);
 		}
-		if (location.pathname.startsWith('/session/unitmanagement')) {
+		if (location.pathname === '/session/unitmanagement') {
 			return (<>
 				<UnitManagementIcon />
 				<span>Unit Management</span>
@@ -149,6 +149,31 @@ function Routed(props) {
 				<span>Order Management</span>
 			</>);
 		}
+		if (location.pathname === '/session/unitmanagement/election_scheduling' || location.pathname === '/session/unitmanagement/schedule_list') {
+			return (<>
+				<UnitManagementIcon />
+				<span>Election Scheduling</span>
+			</>);
+		}
+		if (location.pathname === '/session/unitmanagement/schedule_flc' || location.pathname === '/session/unitmanagement/flc_list') {
+			return (<>
+				<UnitManagementIcon />
+				<span>FLC Scheduling</span>
+			</>);
+		}
+		if (location.pathname === '/session/unitmanagement/schedule_varification_list' || location.pathname === '/session/unitmanagement/varification_scheduling') {
+			return (<>
+				<UnitManagementIcon />
+				<span>Physical Varification</span>
+			</>);
+		}
+		if (location.pathname === '/session/unitmanagement/schedule_tna_list' || location.pathname === '/session/unitmanagement/tna_scheduling') {
+			return (<>
+				<UnitManagementIcon />
+				<span>TnA Scheduling</span>
+			</>);
+		}
+
 		return <></>;
 	}
 
@@ -293,6 +318,7 @@ function Routed(props) {
 							<Switch onChange={handleChange} checked={checked} onColor="#F56A3F" uncheckedIcon={false}
 								checkedIcon={false} />
 						</div>
+						
 					</div>
 					{/* <div className="nav-panel-bottom">
 						<button className={window.location.pathname.startsWith("/session/home") ? 'nav-button active' : 'nav-button'} onClick={() => {
