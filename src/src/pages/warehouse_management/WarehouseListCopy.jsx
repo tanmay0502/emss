@@ -24,6 +24,7 @@ import { FaKey } from 'react-icons/fa'
 function WarehouseList() {
 	const navigate = useNavigate();
 	const [Details, setDetails] = React.useState([]);
+
 	const [warehouseMapping, setWarehouseMapping] = useState(null)
 	console.log(window.localStorage.getItem("token"))
 
@@ -114,12 +115,12 @@ function WarehouseList() {
 
 	useEffect(() => {
 		var data = Details.filter((elem) => {
-			if (tableFilter === "") {
+			if (tableFilter === "" && !tableFilter) {
 				return true;
 			}
 			else {
 				const filter = tableFilter.toLowerCase();
-				return (elem[0].toLowerCase().includes(filter) || elem[1].toLowerCase().includes(filter))
+				return (elem && elem[0] && (elem[0].toLowerCase().includes(filter) || elem[1].toLowerCase().includes(filter)))
 			}
 		}).map((val) => {
 			return {
@@ -172,13 +173,17 @@ function WarehouseList() {
 				/>
 			}
 		})
-		data.sort(function (a, b) {
-			if (sortMapping[sortBy] !== null) {
-				return a[sortMapping[sortBy]].localeCompare(b[sortMapping[sortBy]])
+		
+		
+		data.sort(function(a, b){ 
+			
+			if(sortMapping[sortBy] !== null && a[sortMapping[sortBy]]){
+				return a[sortMapping[sortBy]].localeCompare(b[sortMapping[sortBy]]) 
 			}
 			else return 0;
 		});
-		if (sortMapping[sortBy] !== null && sortOrder === 'desc') {
+		
+		if(sortMapping[sortBy] !== null && sortOrder === 'desc'){
 			data.reverse();
 		}
 		// console.log(data)
@@ -254,12 +259,13 @@ function WarehouseList() {
 		<div className="warehouse-list-grid">
 
 			<div className="myWrapper" style={{ position: "relative", height: "100%", gridArea: "1 / 1 / 6 / 2" }}>
-				<div className='label_list'>
-					<div className='label d-flex d-flex-center'><span><FaCircle className='PermaWarehouse' /></span> Permanent Warehouse</div>
-					<div className='label d-flex d-flex-center'><span><FaCircle className='TempWarehouse' /></span> Temporary Warehouse</div>
-					<div className='label d-flex d-flex-center'><span><Fragment><span className='d-flex d-flex-center'><FaKey className='keyColor' /><FaKey className='keyColor' /></span></Fragment></span> Double Lock Present</div>
-					<div className='label d-flex d-flex-center'><span><FaKey className='keyColor' /></span> Double Lock Absent</div>
+				{isDetail==0 && <div className='label_list'>
+					<div className='label d-flex d-flex-center'><span><FaCircle className='PermaWarehouse'/></span> Permanent Warehouse</div>
+					<div className='label d-flex d-flex-center'><span><FaCircle className='TempWarehouse'/></span> Temporary Warehouse</div>
+					<div className='label d-flex d-flex-center'><span><Fragment><span className='d-flex d-flex-center'><FaKey className='keyColor'/><FaKey className='keyColor'/></span></Fragment></span> Double Lock Present</div>
+					<div className='label d-flex d-flex-center'><span><FaKey className='keyColor'/></span> Double Lock Absent</div>
 				</div>
+				}
 				{isDetail == 0 ? <div style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between" }}>
 					<h4>Warehouses</h4>
 					<div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center" }}>
