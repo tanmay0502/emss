@@ -25,6 +25,15 @@ import GenerateOrder from './pages/order_management/GenarateOrder';
 import ViewOrderDetails from './pages/order_management/ViewOrderDetails';
 import EditView from './pages/home/EditView';
 import UnitList from './pages/unit_management/UnitList';
+import ScheduleElection from './pages/unit_management/ScheduleElection';
+import ScheduleList from './pages/unit_management/ScheduleList';
+import ScheduleTnaList from './pages/unit_management/TnaList';
+import ScheduleTna from './pages/unit_management/ScheduleTna'
+import PhysicalVarification from './pages/unit_management/PhysicalVar';
+import VarificationList from './pages/unit_management/PhysicalVarList';
+import ScheduleFLC from './pages/unit_management/ScheduleFlc';
+import FLCList from './pages/unit_management/FlcList'
+
 function App() {
 
   const [sessionState, setSessionState] = useState({
@@ -67,6 +76,42 @@ function App() {
             <Route
               path="/session/unitmanagement/"
               element={<UnitList />}
+            />
+            {/* <Route
+              path="/session/unitmanagement/statusHistory"
+              element={<kljfd />}
+            /> */}
+            <Route
+              path="/session/unitmanagement/election_scheduling"
+              element={<ScheduleElection />}
+            />
+            <Route
+              path="/session/unitmanagement/schedule_list"
+              element={<ScheduleList />}
+            />
+            <Route
+              path="/session/unitmanagement/schedule_tna_list"
+              element={<ScheduleTnaList />}
+            />
+            <Route
+              path="/session/unitmanagement/tna_scheduling"
+              element={<ScheduleTna />}
+            />
+            <Route
+              path="/session/unitmanagement/varification_scheduling"
+              element={<PhysicalVarification />}
+            />
+            <Route
+              path="/session/unitmanagement/schedule_varification_list"
+              element={<VarificationList />}
+            />
+            <Route
+              path="/session/unitmanagement/schedule_flc"
+              element={<ScheduleFLC />}
+            />
+            <Route
+              path="/session/unitmanagement/flc_list"
+              element={<FLCList />}
             />
             <Route
               path="/session/warehousemanagement/"
