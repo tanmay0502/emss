@@ -564,6 +564,7 @@ const Login = () => {
 				if(response.status == 200 && data2['userID']){
 					setUserIds(data2['userID'])
 					setNonce(data2['nonce'])
+					setMobile(data2['mobilenumber'])
 					if(data2['userID'].length !== 1){
 						setSelectUserBlock(1)
 					}
@@ -641,10 +642,11 @@ const Login = () => {
 					},
 					credentials: 'same-origin',
 					body: JSON.stringify({
+						'mobilenumber': mobile.toString(),
 						'userid': userID.toString(),
-						'password': password.toString(),
+						'otp': OTP.toString(),
 						'nonce': nonce,
-						'otp': OTP.toString()
+						'password': password.toString(),
 					}),
 					mode: "cors",
 				}
