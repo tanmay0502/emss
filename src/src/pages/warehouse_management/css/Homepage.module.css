@@ -1,0 +1,185 @@
+.parent {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: 1fr;
+    grid-column-gap: 50px;
+    grid-row-gap: 30px;
+}
+
+.parent2 {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(3, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    height: 100%;
+    overflow-y: scroll;
+    overflow-x: visible;
+
+}   
+
+.parent3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(4, 1fr);
+    grid-column-gap: 15px;
+    grid-row-gap: 15px;
+    height: 100%;
+    overflow-y: scroll;
+    overflow-x: visible;
+}    
+
+
+.myCardSample{
+    height: 385px;
+    width: 458px !important;
+    background-color: var(--background-secondary);
+    box-shadow: 0px 7px 60px rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    padding: 15px 30px;
+    text-align: left !important;
+    margin-top: 25px;
+}
+
+.myCardSample .card_title{
+    font-style: normal;
+    font-weight: 500;
+    font-size: 17.2741px;
+}
+
+
+.myCardSample select{
+    width: 372px;
+height: 41px;
+font-size: 16px;
+margin-left: auto;
+margin-right: auto;
+margin-top: 10px;
+border: 1px solid rgba(0, 0, 0, 0.28);
+}
+
+
+.card_title span:last-child,.card_title span:first-child{
+    font-weight: 500;
+    font-size: 24px;
+line-height: 36px;
+text-transform: capitalize;
+color: var(--second);
+text-shadow: 0px 4px 10px rgba(120, 62, 253, 0.15);
+margin: 0 10px;
+}
+.card_title span:first-child{
+    margin-left: 0 !important;
+}
+.card_title span:first-child{
+    color: var(--foreground-primary);
+}
+
+
+
+.table{
+    height: 80%;
+    /* background-color: #FFFFFF; */
+    /* margin-bottom: 200px; */
+    overflow: scroll;
+}
+.table :hover{
+    cursor: default;
+}
+
+.parent2 table{
+    width: 100%;
+	font-size: 0.95em;
+}
+
+
+.parent2 table thead th{
+	color: #e24a08 !important;
+	font-size: 1em !important;
+}
+
+.parent2 table th:first-child, .parent2 table td:first-child{
+	padding-left: 25px;
+}
+
+.parent2 table th:last-child, .parent2 table td:last-child{
+	padding-right: 25px;
+}
+
+.parent2 table td{
+	/* padding: 25px 0; */
+	color: #292D32;
+	font-size: 1.1em !important;
+}
+
+.parent2 table tbody td{
+    cursor: pointer;
+}
+
+.parent2 table tbody tr:hover td{
+    background-color: rgba(0, 0, 0, 0.15);
+}
+.parent3 table{
+    width: 100%;
+	font-size: 0.95em;
+}
+
+
+.parent3 table thead th{
+	color: #e24a08 !important;
+	font-size: 1em !important;
+}
+
+.parent3 table th:first-child, .parent3 table td:first-child{
+	padding-left: 25px;
+}
+
+.parent3 table th:last-child, .parent3 table td:last-child{
+	padding-right: 25px;
+}
+
+.parent3 table td{
+	/* padding: 25px 0; */
+	color: #292D32;
+	font-size: 1.1em !important;
+}
+
+.parent3 table tbody td{
+    cursor: pointer;
+}
+
+.parent3 table tbody tr:hover td{
+    background-color: rgba(0, 0, 0, 0.15);
+}
+
+
+.Box123{
+
+    width: 384px;
+    height: 85px;
+    padding: 10px;
+    background: #84587C;
+    border-radius: 14px;
+    margin-top: 4%;
+    padding:15px;
+    color:#ffffff;
+}
+
+.Line{
+    position: relative;
+}
+.Line:after {
+    content: '';
+    position: absolute;
+    right: 0;
+    border-right: 2px solid #ffffff;
+    top: 12%;
+    bottom: 12%;
+    
+}
+
+.LI_TAG{
+    width: 100%;
+    margin-top: 10%;
+    margin-left: 10%;
+}
