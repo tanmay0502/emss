@@ -130,22 +130,22 @@ function UserDetail(props) {
 
             <b>User ID : </b>
             <p className="text-md">
-              {props.detail[0]}
+              {props.detail["userid"]}
             </p>
 
             <b>Status : </b>
             <p className="text-md">
-              {props.detail[7] === "A" ? "Active" : "Inactive"}
+              {props.detail["active"] === "A" ? "Active" : "Inactive"}
             </p>
 
             <b>User Name : </b>
             <p className="text-md">
-              {props.detail[2]}
+              {props.detail["name"]}
             </p>
 
             <b>Mobile : </b>
             <p className="text-md">
-              {props.detail[3]}
+              {props.detail["mobilenumber"]}
             </p>
 
             <b>Created By : </b>
@@ -155,7 +155,7 @@ function UserDetail(props) {
 
             <b>Email : </b>
             <p className="text-md">
-              {props.detail[1]}
+              {props.detail["email"]}
             </p>
 
             <b>Alt Number 1 :</b>

@@ -85,8 +85,8 @@ function UserList() {
 					Edit: <button className="modifyBtn p-2 text-white" disabled={true}>
 						<FaUserEdit style={{ transform: "translateX(1px)" }} />
 					</button>,
-					"Status": <ToggleButton userID={val["userid"]} checked={val["status"] === 'A'} onToggle={(e) => {
-						if (val["status"] == "A") {
+					"Status": <ToggleButton userID={val["userid"]} checked={val["active"] == 'A'} onToggle={(e) => {
+						if (val["active"] == "A") {
 							deactivateUser(e)
 						}
 						else {
@@ -161,9 +161,8 @@ function UserList() {
 						method: "POST",
 						headers: {
 							"Content-Type": "application/json",
-							// 'Authorization': 'Bearer ' + access_token,
 						},
-						credentials: 'same-origin',
+						credentials: 'include',
 						body: JSON.stringify({
 							"userID": myId,
 							"active": "A"
@@ -173,7 +172,6 @@ function UserList() {
 				const status = response;
 				if (status.status == 200) {
 					alert("User Activated Successfully");
-					// window.location.href = '/session/usermanagement';
 					getUser();
 				}
 				else {
@@ -187,8 +185,6 @@ function UserList() {
 
 	const deactivateUser = async (myId) => {
 		if (window.confirm(`Are you sure you want to Deactivate User: ${myId} ?`)) {
-			// let token = localStorage.getItem("token");
-			// const access_token=JSON.parse(token)["access_token"];
 			try {
 				const response = await fetch(
 					`${process.env.REACT_APP_API_SERVER}/user/ModifyUserDetails`,
@@ -196,9 +192,9 @@ function UserList() {
 						method: "POST",
 						headers: {
 							"Content-Type": "application/json",
-							// 'Authorization': 'Bearer ' + access_token,
+							
 						},
-						credentials: 'same-origin',
+						credentials: 'include',
 						body: JSON.stringify({
 							"userID": myId,
 							"active": "I"
@@ -208,7 +204,7 @@ function UserList() {
 				const status = response;
 				if (status.status == 200) {
 					alert("User Deactivated Successfully");
-					// window.location.href = '/session/usermanagement';
+
 					getUser();
 				}
 				else {
