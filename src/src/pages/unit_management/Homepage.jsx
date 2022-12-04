@@ -1,33 +1,254 @@
 import React, { useEffect, useState } from "react";
 import styles from './styles/Homepage.module.css';
+import Data from './Data';
+import Card from './Card';
 
 
 export default function HomePage() {
 
+    let dataByStatus = [];
+    let dataByUnitType = [];
 
-    const data = [
-        {
-            Units: 'Ballot Unit',
-            ECIL: "100 M1",
-            BEL: "100 M1",
+    Data.map(function(statusVal){
+        statusVal.unit_types.map(function(unitObj){
+            if(dataByUnitType.length===0) {
+                if(unitObj.manufacturer==='E') {
+                    let E = [{
+                        model: unitObj.model,
+                        count: unitObj.count
+                    }];
+                    dataByUnitType.push({
+                        unit_type: unitObj.unit_type,
+                        ECIL: E,
+                        BEL: []
+                    });
+                }
+                else if(unitObj.manufacturer==='B') {
+                    let B = [{
+                        model: unitObj.model,
+                        count: unitObj.count
+                    }];
+                    dataByUnitType.push({
+                        unit_type: unitObj.unit_type,
+                        ECIL: [],
+                        BEL: B
+                    });
+                }
+            }
+            else {
+                let i = 0;
+                dataByUnitType.map(function(unitVal){
+                    if((unitVal.unit_type===unitObj.unit_type)) {
+                        i = 1;
+                        if(unitObj.manufacturer==='E') {
+                            let y = 0;
+                            unitVal.ECIL.map(function(o){
+                                if(o.model===unitObj.model) {
+                                    y = 1;
+                                    o.count = o.count + unitObj.count;
+                                }
+                            });
+                            if(y==0) {
+                                unitVal.ECIL.push({
+                                    model: unitObj.model,
+                                    count: unitObj.count
+                                });
+                            }
+                        }
+                        else if(unitObj.manufacturer==='B') {
+                            let y = 0;
+                            unitVal.BEL.map(function(o){
+                                if(o.model===unitObj.model) {
+                                    y = 1;
+                                    o.count = o.count + unitObj.count;
+                                }
+                            });
+                            if(y==0) {
+                                unitVal.BEL.push({
+                                    model: unitObj.model,
+                                    count: unitObj.count
+                                });
+                            }
+                        }
+                    }
+                    
+                });
+                if(i===0) {
+                    if(unitObj.manufacturer==='E') {
+                        let E = [{
+                            model: unitObj.model,
+                            count: unitObj.count
+                        }];
+                        dataByUnitType.push({
+                            unit_type: unitObj.unit_type,
+                            ECIL: E,
+                            BEL: []
+                        });
+                    }
+                    else if(unitObj.manufacturer==='B') {
+                        let B = [{
+                            model: unitObj.model,
+                            count: unitObj.count
+                        }];
+                        dataByUnitType.push({
+                            unit_type: unitObj.unit_type,
+                            ECIL: [],
+                            BEL: B
+                        });
+                }
+            }
+            }
+        });
+    });
 
-        },
-        {
-            Units: 'Control Unit',
-            ECIL: "100 M1",
-            BEL: "100 M1",
+    Data.map(function(statusVal){
+        statusVal.unit_types.map(function(unitVal){
+            if(dataByStatus.length===0) {
+                
+                if(unitVal.manufacturer==='E') {
+                    let E = [{
+                        model: unitVal.model,
+                        count: unitVal.count
+                    }];
+                    dataByStatus.push({
+                        status: statusVal.status,
+                        type: [{
+                            unit_type: unitVal.unit_type,
+                            ECIL: E,
+                            BEL: []
+                        }]
+                    });
+                }
+                else if(unitVal.manufacturer==='B') {
+                    let B = [{
+                        model: unitVal.model,
+                        count: unitVal.count
+                    }];
+                    dataByStatus.push({
+                        status: statusVal.status,
+                        type: [{
+                            unit_type: unitVal.unit_type,
+                            ECIL: [],
+                            BEL: B
+                        }]
+                    });
+                }
+            }
+            else {
+                let u = 0;
+                dataByStatus.map(function(sVal){
+                    if(sVal.status===statusVal.status) {
+                        u = 1;
+                        let p = 0;
 
-
-        },
-        {
-            Units: 'VVPAT',
-            ECIL: "100 M1",
-            BEL: "100 M1"
-
-        }
-    ]
+                        sVal.type.map(function(t){
+                            if(t.unit_type===unitVal.unit_type) {
+                                p = 1;
+                                if(unitVal.manufacturer==='E') {
+                                    let k = 0;
+                                    t.ECIL.map(function(eObj){
+                                        if(eObj.model===unitVal.model) {
+                                            k = 1;
+                                            eObj.count = eObj.count + unitVal.count
+                                        }
+                                    });
+                                    if(k===0) {
+                                        t.ECIL.push({
+                                            model: unitVal.model,
+                                            count: unitVal.count
+                                        })
+                                    }
+                                }
+                                else if(unitVal.manufacturer==='B') {
+                                    let k = 0;
+                                    t.BEL.map(function(eObj){
+                                        if(eObj.model===unitVal.model) {
+                                            k = 1;
+                                            eObj.count = eObj.count + unitVal.count
+                                        }
+                                    });
+                                    if(k===0) {
+                                        t.BEL.push({
+                                            model: unitVal.model,
+                                            count: unitVal.count
+                                        })
+                                    }
+                                }
+                            }
+                        });
+                        if(p===0) {
+                            if(unitVal.manufacturer==='E') {
+                                let E = [{
+                                    model: unitVal.model,
+                                    count: unitVal.count
+                                }];
+                                
+                                    sVal.type.push({
+                                        unit_type: unitVal.unit_type,
+                                        ECIL: E,
+                                        BEL: []
+                                    });
+                            }
+                            else if(unitVal.manufacturer==='B') {
+                                let B = [{
+                                    model: unitVal.model,
+                                    count: unitVal.count
+                                }];
+                               
+                                 
+                                    sVal.type.push({
+                                        unit_type: unitVal.unit_type,
+                                        ECIL: [],
+                                        BEL: B
+                                    });
+                                
+                            }
+                        }
+                    }
+                })
+                if(u===0) {
+                    if(unitVal.manufacturer==='E') {
+                        let E = [{
+                            model: unitVal.model,
+                            count: unitVal.count
+                        }];
+                        dataByStatus.push({
+                            status: statusVal.status,
+                            type: [{
+                                unit_type: unitVal.unit_type,
+                                ECIL: E,
+                                BEL: []
+                            }]
+                        });
+                    }
+                    else if(unitVal.manufacturer==='B') {
+                        let B = [{
+                            model: unitVal.model,
+                            count: unitVal.count
+                        }];
+                        dataByStatus.push({
+                            status: statusVal.status,
+                            type: [{
+                                unit_type: unitVal.unit_type,
+                                ECIL: [],
+                                BEL: B
+                            }]
+                        });
+                    }
+                }
+            }
+        });
+    });
 
     const rightArrow = ">";
+
+    function displayMachineCountByModel(val) {
+        return <div>{val.model} {val.count}</div>
+    }
+
+    function createCard(cardVal) {
+        return (<Card value={cardVal}/>);
+    }
 
     return (
 
@@ -57,23 +278,19 @@ export default function HomePage() {
                                     <th style={{ color: "#f56a3f", paddingLeft: "33px" }}>BEL</th>
                                 </tr>
                             </thead>
-                            {data != [] && data.length > 0 &&
-                                data.map((val, id) => {
+                            {dataByUnitType != [] && dataByUnitType.length > 0 &&
+                                dataByUnitType.map((val) => {
                                     return (
                                         <tbody >
                                             <tr>
                                                 <td className="text-black text-sm" style={{ textAlign: "left" }}>
-                                                    <div> {val['Units']}</div>
+                                                    <div> {val.unit_type}</div>
                                                 </td>
                                                 <td className="text-black text-sm mr-2 pl-5">
-                                                    <div>{val['ECIL']}</div>
-                                                    <div>{val['ECIL']}</div>
-
+                                                    {val.ECIL.map(displayMachineCountByModel)}
                                                 </td>
                                                 <td className="text-black text-sm pl-7">
-
-                                                    <div>{val['BEL']}</div>
-                                                    <div>{val['BEL']}</div>
+                                                    {val.BEL.map(displayMachineCountByModel)}
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -497,125 +714,7 @@ export default function HomePage() {
             </div>
 
             <div className={styles.parent2} >
-                <div className={styles.myCardSample}>
-                    <div className={styles.card_title}>
-                        <span>Units {rightArrow} Available For Use</span>
-                    </div>
-
-                    <div className="cardSampleBody">
-                        <table >
-                            <thead >
-                                <tr>
-                                    <th style={{ color: "#f56a3f", paddingLeft: "33px", textAlign: "left" }}>Units</th>
-                                    <th style={{ color: "#f56a3f", paddingLeft: "33px" }}>ECIL</th>
-                                    <th style={{ color: "#f56a3f", paddingLeft: "33px" }}>BEL</th>
-                                </tr>
-                            </thead>
-                            {data != [] && data.length > 0 &&
-                                data.map((val, id) => {
-                                    return (
-                                        <tbody >
-                                            <tr>
-                                                <td className="text-black text-sm" style={{ textAlign: "left" }}>
-                                                    <div> {val['Units']}</div>
-                                                </td>
-                                                <td className="text-black text-sm mr-2 pl-5">
-                                                    <div>{val['ECIL']}</div>
-                                                    <div>{val['ECIL']}</div>
-
-                                                </td>
-                                                <td className="text-black text-sm pl-7">
-
-                                                    <div>{val['BEL']}</div>
-                                                    <div>{val['BEL']}</div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    )
-                                })}
-                        </table>
-                    </div>
-                </div>
-
-
-                <div className={styles.myCardSample}>
-                    <div className={styles.card_title}>
-                        <span>Units {rightArrow} EP</span>
-                    </div>
-
-                    <div className="cardSampleBody">
-                        <table >
-                            <thead >
-                                <tr>
-                                    <th style={{ color: "#f56a3f", paddingLeft: "33px", textAlign: "left" }}>Units</th>
-                                    <th style={{ color: "#f56a3f", paddingLeft: "33px" }}>ECIL</th>
-                                    <th style={{ color: "#f56a3f", paddingLeft: "33px" }}>BEL</th>
-                                </tr>
-                            </thead>
-                            {data != [] && data.length > 0 &&
-                                data.map((val, id) => {
-                                    return (
-                                        <tbody >
-                                            <tr>
-                                                <td className="text-black text-sm" style={{ textAlign: "left" }}>
-                                                    <div> {val['Units']}</div>
-                                                </td>
-                                                <td className="text-black text-sm mr-2 pl-5">
-                                                    <div>{val['ECIL']}</div>
-                                                    <div>{val['ECIL']}</div>
-
-                                                </td>
-                                                <td className="text-black text-sm pl-7">
-
-                                                    <div>{val['BEL']}</div>
-                                                    <div>{val['BEL']}</div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    )
-                                })}
-                        </table>
-                    </div>
-                </div>
-
-                <div className={styles.myCardSample}>
-                    <div className={styles.card_title}>
-                        <span>Units {rightArrow} Defective</span>
-                    </div>
-                    <div className="cardSampleBody">
-                        <table >
-                            <thead >
-                                <tr>
-                                    <th style={{ color: "#f56a3f", paddingLeft: "33px", textAlign: "left" }}>Units</th>
-                                    <th style={{ color: "#f56a3f", paddingLeft: "33px" }}>ECIL</th>
-                                    <th style={{ color: "#f56a3f", paddingLeft: "33px" }}>BEL</th>
-                                </tr>
-                            </thead>
-                            {data != [] && data.length > 0 &&
-                                data.map((val, id) => {
-                                    return (
-                                        <tbody >
-                                            <tr>
-                                                <td className="text-black text-sm" style={{ textAlign: "left" }}>
-                                                    <div> {val['Units']}</div>
-                                                </td>
-                                                <td className="text-black text-sm mr-2 pl-5">
-                                                    <div>{val['ECIL']}</div>
-                                                    <div>{val['ECIL']}</div>
-
-                                                </td>
-                                                <td className="text-black text-sm pl-7">
-
-                                                    <div>{val['BEL']}</div>
-                                                    <div>{val['BEL']}</div>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    )
-                                })}
-                        </table>
-                    </div>
-                </div>
+               {dataByStatus.map(createCard)};
             </div>
         </div >
     );
