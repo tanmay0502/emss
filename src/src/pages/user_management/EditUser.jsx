@@ -108,6 +108,7 @@ function EditUser(props) {
 
   async function modUser() {
 
+    console.log("HELLOOOOOOo")
     console.log(userID)
     if (ValidateEmail(document.getElementById("formUserEmail").value) == false) {
       document.getElementById("formUserEmail").value = ''
@@ -130,9 +131,7 @@ function EditUser(props) {
         return;
       }
 
-    }
-
-    else {
+    }else {
       try {
         const bodyData = {
           userID: userID,
@@ -155,10 +154,8 @@ function EditUser(props) {
               "Content-Type": "application/json",
               // 'Authorization': 'Bearer ' + access_token,
             },
-            credentials: 'same-origin',
+            credentials: 'include',
             body: JSON.stringify(bodyData),
-
-            mode: 'cors'
 
           }
         );

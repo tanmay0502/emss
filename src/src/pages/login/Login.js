@@ -811,8 +811,8 @@ const Login = () => {
 													className="text-black ml-2 -mb-6 text-sm font-semibold"
 													style={{ fontFamily: "nunito sans" }}
 												>
-													{(PCs === {} || flag1 == 1) && <span className="opacity-40">PC</span>}
-													{(PCs !== {} && flag1 == 0) && <>PC</>}
+													{(PCs === {} || flag1 == 1) && <span className="opacity-40">District Code</span>}
+													{(PCs !== {} && flag1 == 0) && <>District Code</>}
 												</p>
 												{PCs == {} && <div>
 													<select className="pl-3 pr-3 mt-7 h-13 text-black outline-none rounded-md w-full mb-5 opacity-40" disabled
