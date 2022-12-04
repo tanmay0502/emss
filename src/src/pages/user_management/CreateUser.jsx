@@ -7,7 +7,7 @@ import "./styles/createuser.css";
 import styles from "./styles/createuser.css";
 import 'antd/dist/antd.css'
 import { Switch } from "antd"
-import {getKeyByValue} from '../../assets/helper/ObjectHelpers.js'
+import { getKeyByValue } from '../../assets/helper/ObjectHelpers.js'
 import { getBase64 } from "../../assets/helper/FileHelpers";
 
 var sha256 = require("js-sha256");
@@ -70,6 +70,7 @@ function CreateUser() {
   const [stateDisable, setStateDisable] = useState(false);
   const [pcDisable, setPcDisable] = useState(false);
   const [acDisable, setAcDisable] = useState(false);
+  const [realm, setRealm] = useState();
 
   async function getRoleList() {
     try {
@@ -86,6 +87,33 @@ function CreateUser() {
       const data2 = await response.json();
       // console.log(data2);
       filterRoleList(data2);
+    } catch (err) {
+      console.log(err);
+    }
+
+
+  }
+
+  async function getRealm() {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_SERVER}/user/getRealm`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: 'include',
+        }
+      );
+      const data2 = await response.json();
+
+
+      console.log(response);
+
+
+      console.log(data2);
+      setRealm(data2)
     } catch (err) {
       console.log(err);
     }
@@ -184,22 +212,23 @@ function CreateUser() {
     }
     getState();
     getRoleList();
+    getRealm();
   }, []);
 
   useEffect(() => {
     // console.log(states)
-    if(states && states != {}){
+    if (states && states != {}) {
       if (window.sessionStorage.getItem("sessionToken")) {
         const statecode = window.sessionStorage.getItem("sessionToken").substring(0, 2);
-          
-        if (statecode in ['BL', 'IN', 'EL']) {
+
+        if (statecode in ['BL', 'IN', 'EL'] && 0) {
           if (document.getElementById("input_state"))
-            document.getElementById("input_state").value = "";
+            // document.getElementById("input_state").value = "";
             document.getElementById("input_state").setAttribute('disabled', 'false')
-        } else{
+        } else {
           setStateFunc(getKeyByValue(states, statecode));
           setState(statecode)
-          
+
           var LoggedUserStateName = getKeyByValue(
             states,
             statecode
@@ -207,9 +236,9 @@ function CreateUser() {
 
           // console.log('State Name = "' + LoggedUserStateName + '"')
 
-          document.getElementById("input_state").value = LoggedUserStateName;
-          document.getElementById("input_state").setAttribute('disabled', 'true')
-        } 
+          // document.getElementById("input_state").value = LoggedUserStateName;
+          // document.getElementById("input_state").setAttribute('disabled', 'true')
+        }
       }
     }
   }, [states]);
@@ -224,12 +253,12 @@ function CreateUser() {
           console.log("pp", pwpcode);
         }
         setPCFunc(PCs[PCsCode.indexOf(pwpcode)]);
-        document.getElementById("input_state").setAttribute('disabled', 'true')
+        // document.getElementById("input_state").setAttribute('disabled', 'true')
       }
     } else {
       if (document.getElementById("pcDropdown"))
         document.getElementById("pcDropdown").value = "";
-        document.getElementById("input_state").setAttribute('disabled', 'false')
+      document.getElementById("input_state").setAttribute('disabled', 'false')
     }
   }, [PCs]);
 
@@ -277,7 +306,7 @@ function CreateUser() {
         states[st] == "EL" ||
         states[st] == "BL"
       ) {
-      } 
+      }
       else {
         try {
           const response = await fetch(
@@ -445,81 +474,88 @@ function CreateUser() {
 
   async function addUser() {
 
-    console.log(userID)
+    // console.log(userID)
+    const id = document.getElementById("input_state").value + document.getElementById("input_PC").value + document.getElementById("input_AC").value + document.getElementById("input_Roles").value;
+    console.log(id)
     if (ValidateEmail(document.getElementById("formUserEmail").value) == false) {
+      console.log("Invalid Email")
       document.getElementById("formUserEmail").value = ''
       return;
     }
     else if (validate_number(document.getElementById("formUserMobileNumber").value) == false) {
+      console.log("Invalid Mobile Number")
       document.getElementById("formUserMobileNumber").value = ''
       return;
     }
     if (document.getElementById("formUserAltNumber1").value != '') {
+
       if (!validate_number(document.getElementById("formUserAltNumber1").value)) {
+        console.log("Invalid Mobile Number1")
         document.getElementById("formUserAltNumber1").value = ''
         return;
       }
 
     }
     if (document.getElementById("formUserAltNumber2").value != '') {
+
       if (!validate_number(document.getElementById("formUserAltNumber2").value)) {
+        console.log("Invalid Mobile Number2")
         document.getElementById("formUserAltNumber2").value = ''
         return;
       }
 
     }
 
+    try {
+      // let token = localStorage.getItem("token");
+      // const access_token = JSON.parse(token)["access_token"];
 
-    else {
-      try {
-        // let token = localStorage.getItem("token");
-        // const access_token = JSON.parse(token)["access_token"];
-
-        const bodyData = {
-          userID: userID,
-          email: document.getElementById("formUserEmail").value,
-          name: document.getElementById("formUserName").value,
-          mobileNumber: document.getElementById("formUserMobileNumber").value,
-          address: document.getElementById("formUserAddress").value,
-          otherContactNum1: document.getElementById("formUserAltNumber1").value,
-          otherContactNum2: document.getElementById("formUserAltNumber2").value,
-          photoFilename: photoFileName,
-          photoFileData: photoFileData,
-          active: "A"
-          // createdBy: window.sessionStorage.getItem("sessionToken")
-        }
-
-        const response = await fetch(
-          `${process.env.REACT_APP_API_SERVER}/user/createUser`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              // 'Authorization': 'Bearer ' + access_token,
-            },
-            credentials: 'include',
-            body: JSON.stringify(bodyData),
-
-            mode: 'cors'
-
-          }
-        );
-
-        console.log(bodyData);
-        console.log(response);
-        const data2 = await response.json();
-        console.log(data2);
-        if (response.status === 200) {
-          alert("User Created Successfully");
-          // window.location.pathname = "/session/usermanagement";
-          // document.getElementById("createUserForm").reset();
-        } else {
-          alert("Unable to Create User.");
-        }
-      } catch (err) {
-        console.log(err);
+      const bodyData = {
+        userID: id,
+        email: document.getElementById("formUserEmail").value,
+        name: document.getElementById("formUserName").value,
+        mobileNumber: document.getElementById("formUserMobileNumber").value,
+        address: document.getElementById("formUserAddress").value,
+        otherContactNum1: document.getElementById("formUserAltNumber1").value,
+        otherContactNum2: document.getElementById("formUserAltNumber2").value,
+        photoFilename: photoFileName,
+        photoFileData: photoFileData,
+        active: "A"
+        // createdBy: window.sessionStorage.getItem("sessionToken")
       }
+      console.log(bodyData)
+
+      const response = await fetch(
+        `${process.env.REACT_APP_API_SERVER}/user/createUser`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            // 'Authorization': 'Bearer ' + access_token,
+          },
+          credentials: 'include',
+          body: JSON.stringify(bodyData),
+
+          mode: 'cors'
+
+        }
+      );
+
+      console.log(bodyData);
+      console.log(response);
+      const data2 = await response.json();
+      console.log(data2);
+      if (response.status === 200) {
+        alert("User Created Successfully");
+        // window.location.pathname = "/session/usermanagement";
+        // document.getElementById("createUserForm").reset();
+      } else {
+        alert("Unable to Create User.");
+      }
+    } catch (err) {
+      console.log(err);
     }
+
   }
   useEffect(() => {
     if (isTemporary) {
@@ -591,11 +627,19 @@ function CreateUser() {
                 <option value="" disabled selected>
                   --Select--
                 </option>
-                {roles && roles.map((st) => (
+                {/* {roles && roles.map((st) => (
                   <option value={st} className="text-black">
                     {st}
                   </option>
-                ))}
+                ))} */}
+                {
+                  realm && realm["roles"] && realm["roles"].map((val) => (
+                    <option value={val} className="text-black">
+                      {val}
+                    </option>
+                  ))
+                }
+
               </select>
             </div>
           </div>
@@ -629,14 +673,22 @@ function CreateUser() {
                 id="input_state"
                 onChange={(e) => setStateFunc(e.target.value)}
               >
-                <option value="0" disabled selected>
+                <option value="0" selected>
                   --Select--
                 </option>
-                {states && states != {} && Object.keys(states).map((st) => (
+                {/* {states && states != {} && Object.keys(states).map((st) => (
                   <option value={st} className="text-black">
                     {st}
                   </option>
-                ))}
+                ))} */}
+                {/* {realm && realm["state"] && realm["state"].length} */}
+                {
+                  realm && realm["state"] && realm["state"].map((val) => (
+                    <option value={val} className="text-black">
+                      {val}
+                    </option>
+                  ))
+                }
               </select>
             </div>
           </div>
@@ -659,7 +711,7 @@ function CreateUser() {
           </div>
 
           <div className="form_label">
-            <label htmlFor="">PC:<span className="text-red-500 text-lg">*</span></label>
+            <label htmlFor="">District:<span className="text-red-500 text-lg">*</span></label>
           </div>
           <div className="form_group">
             <div className="form_select">
@@ -672,11 +724,18 @@ function CreateUser() {
                 <option value="" disabled selected>
                   --Select--
                 </option>
-                {PCs && PCs != {} && Object.keys(PCs).map((st) => (
+                {/* {PCs && PCs != {} && Object.keys(PCs).map((st) => (
                   <option value={st} className="text-black">
                     {st}
                   </option>
-                ))}
+                ))} */}
+                {
+                  realm && realm["dist"] && realm["dist"].map((val) => (
+                    <option value={val} className="text-black">
+                      {val}
+                    </option>
+                  ))
+                }
               </select>
             </div>
           </div>
@@ -711,11 +770,18 @@ function CreateUser() {
                 <option value="" disabled selected>
                   --Select--
                 </option>
-                {ACs && ACs != {} && Object.keys(ACs).map((st) => (
+                {/* {ACs && ACs != {} && Object.keys(ACs).map((st) => (
                   <option value={st} className="text-black">
                     {st}
                   </option>
-                ))}
+                ))} */}
+                {
+                  realm && realm["ac"] && realm["ac"].map((val) => (
+                    <option value={val} className="text-black">
+                      {val}
+                    </option>
+                  ))
+                }
               </select>
             </div>
           </div>
@@ -766,7 +832,7 @@ function CreateUser() {
               type="file"
               placeholder="Choose Image (Upto 5 MB)"
               accept="image/*"
-              onChange={async (e)=>{
+              onChange={async (e) => {
                 setPhotoFileName(e.target.value.replace(/^.*[\\\/]/, ''))
                 setPhotoFileData(await getBase64(e.target.files[0]))
               }}
