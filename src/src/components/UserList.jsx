@@ -63,29 +63,30 @@ function UserList() {
 	useEffect(() => {
 		if (users) {
 
+			console.log({users})
+
+
 			var data = users.filter((elem) => {
 				if (tableFilter === "") {
 					return true;
 				}
 				else {
 					const filter = tableFilter.toLowerCase();
-					// console.log(elem[2])
-					// return true
-					return (elem[0].toLowerCase().includes(filter) || elem[2].toLowerCase().includes(filter))
+					return (elem["userid"].toLowerCase().includes(filter) || elem["name"].toLowerCase().includes(filter))
 				}
 			}).map((val) => {
 				return {
-					"User ID": val[0],
+					"User ID": val["userid"],
 					"": <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", paddingRight: "15px" }}><img src={UserImageTest} /></div>,
-					"User Name": val[2],
-					"Phone Number": val[3].substring(0, 3) + " " + val[3].substring(3, 6) + " " + val[3].substring(6),
-					"Role": val[0].slice(7),
+					"User Name": val["name"],
+					"Phone Number": val["mobilenumber"].substring(0, 3) + " " + val["mobilenumber"].substring(3, 6) + " " + val["mobilenumber"].substring(6),
+					"Role": val["userid"].slice(8),
 					Details: val,
 					Edit: <button className="modifyBtn p-2 text-white" disabled={true}>
 						<FaUserEdit style={{ transform: "translateX(1px)" }} />
 					</button>,
-					"Status": <ToggleButton userID={val[0]} checked={val[7] === 'A'} onToggle={(e) => {
-						if (val[7] == "A") {
+					"Status": <ToggleButton userID={val["userid"]} checked={val["status"] === 'A'} onToggle={(e) => {
+						if (val["status"] == "A") {
 							deactivateUser(e)
 						}
 						else {
@@ -94,15 +95,15 @@ function UserList() {
 					}} />
 				}
 			})
-			data.sort(function (a, b) {
-				if (sortMapping[sortBy] !== null) {
-					return a[sortMapping[sortBy]].localeCompare(b[sortMapping[sortBy]])
-				}
-				else return 0;
-			});
-			if (sortMapping[sortBy] !== null && sortOrder === 'desc') {
-				data.reverse();
-			}
+			// data.sort(function (a, b) {
+			// 	if (sortMapping[sortBy] !== null) {
+			// 		return a[sortMapping[sortBy]].localeCompare(b[sortMapping[sortBy]])
+			// 	}
+			// 	else return 0;
+			// });
+			// if (sortMapping[sortBy] !== null && sortOrder === 'desc') {
+			// 	data.reverse();
+			// }
 			// console.log(data)
 
 			setTableData(data)
@@ -120,32 +121,25 @@ function UserList() {
 		// const access_token=JSON.parse(token)["access_token"];
 		try {
 			const response = await fetch(
-				`${process.env.REACT_APP_API_SERVER}/user/listAllUsers`,
+				`${process.env.REACT_APP_API_SERVER}/user/getSubordinateUsers`,
 				{
-					method: "GET",
-					credentials: 'same-origin',
+					method: "POST",
 					headers: {
 						"Content-Type": "application/json",
-						// 'Authorization': 'Bearer ' + access_token,
 					},
-					// body: JSON.stringify({
-					// 	"userID": window.sessionStorage.getItem('sessionToken')
-					// }),
-					mode: "cors"
+					credentials:'include'
 				}
 			);
 			const tmp = await response.json();
 			
-			const data2 = tmp[0]
 
-			// console.log(data2)
-			if(tmp[1] == 200){
-				setNoOfActiveUsers(data2["active_users"]);
-				setNoOfInActiveUsers(data2["inactive_users"]);
-				setNoOfTotalUsers(data2["total_users"]);
-				// console.log(data2);
-				setUsers(data2["data"]);
-			}
+			console.log({tmp})
+
+			setNoOfActiveUsers(tmp["active_users"]);
+			setNoOfInActiveUsers(tmp["inactive_users"]);
+			setNoOfTotalUsers(tmp["total_users"]);
+			setUsers(tmp["users"]);
+			
 		} catch (err) {
 			console.log(err);
 		}
