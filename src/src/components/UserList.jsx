@@ -17,11 +17,13 @@ import DynamicDataTable from "@langleyfoxall/react-dynamic-data-table";
 import ToggleButton from './ToggleButton';
 
 import UserImageTest from '../assets/UserImageTest.png'
+import EditUser from '../pages/user_management/EditUser';
 
 function UserList() {
 	const navigate = useNavigate();
 
 	const [isDetail, setIsDetail] = useState(0);
+	const [isEdit, setIsEdit] = useState(0);
 
 	const [users, setUsers] = useState([]);
 	const [tableData, setTableData] = useState([])
@@ -58,6 +60,11 @@ function UserList() {
 	function close() {
 		setIsDetail(0);
 		setUser(null)
+	}
+
+	function editPage(){
+		setIsEdit(1)
+		setIsDetail(0)
 	}
 
 	useEffect(() => {
@@ -219,7 +226,8 @@ function UserList() {
 	return (
 		<div className="user-list-grid">
 			<div className="myWrapper" style={{ position: "relative", height: "100%", gridArea: "1 / 1 / 6 / 2" }}>
-				{isDetail == 0 ? <div style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between" }}>
+
+				{isDetail == 0 && isEdit == 0 ? <div style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between" }}>
 					<h4>Users</h4>
 					<div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center" }}>
 						<button className='createUserBtn' onClick={() => {
@@ -249,7 +257,7 @@ function UserList() {
 					</div>
 
 				</div> : <></>}
-				{isDetail == 0 ? <DynamicDataTable className="users-table"
+				{isDetail == 0 && isEdit == 0? <DynamicDataTable className="users-table"
 					rows={tableData}
 					fieldsToExclude={["Details", "Edit"]}
 					orderByField={sortMapping[sortBy]}
@@ -266,7 +274,20 @@ function UserList() {
 						'User ID', 'User Name', 'Role'
 					]} />
 					:
-					<UserDetail detail={user} close={close} />
+					<></>
+				}
+
+				{
+					isDetail == 1 ? <UserDetail detail={user} close={close} editPage={editPage} />
+					:
+					<></>
+				}
+
+				{
+					isEdit ==  1 ? <EditUser userdata={user} />
+					:
+					<></>
+					
 				}
 			</div>
 			<div className='myWrapper' style={{ "gridArea": "1 / 2 / 3 / 3", display: "flex", flexDirection: "column", "alignItems": "center", "justifyContent": "center" }}>

@@ -71,7 +71,7 @@ function UserDetail(props) {
           <AiOutlineArrowLeft />
         </button>
         <div className=" flex justify-between">
-          <div className="right_btn" onClick={() => {window.location.href = `/session/usermanagement/edituser/userid=${props.detail[0]}`}}>
+          <div className="right_btn" onClick={() => {props.editPage()}}>
             Edit User
           </div>
           <div className="right_btn" onClick={() => ResetPassword()}>
