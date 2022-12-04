@@ -928,8 +928,8 @@ const Login = () => {
 										<button
 											onClick={requestOTP}
 											type="button"
-											className="pl-3 pr-3 mt-7 h-12 outline-none rounded-md w-full text-white"
-											style={{ backgroundColor: "#F58220" }}
+											className="pl-3 pr-3 mt-7 h-12 outline-none rounded-md w-full text-white bg-violet-500 hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300"
+											
 										>
 											Request OTP
 										</button>
