@@ -640,7 +640,8 @@ const Login = () => {
 					headers: {
 						"Content-Type": "application/json",
 					},
-					credentials: 'same-origin',
+					credentials: 'include',
+					
 					body: JSON.stringify({
 						'mobilenumber': mobile.toString(),
 						'userid': userID.toString(),
@@ -655,6 +656,7 @@ const Login = () => {
 			// console.log(data2["token"], "hehgegiugigfk");
 			if (response.status === 200) {
 				// window.localStorage.setItem("token",JSON.stringify(data2["token"]));
+				// document.cookie = "username=John Ricks"
 
 				// alert("You are logged In");
 				setIsOTPSent(0);

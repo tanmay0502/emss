@@ -76,10 +76,11 @@ function CreateUser() {
       const response = await fetch(
         `${process.env.REACT_APP_API_SERVER}/user/getRoleList`,
         {
-          method: "GET",
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
+          credentials: 'include',
         }
       );
       const data2 = await response.json();
@@ -496,7 +497,7 @@ function CreateUser() {
               "Content-Type": "application/json",
               // 'Authorization': 'Bearer ' + access_token,
             },
-            credentials: 'same-origin',
+            credentials: 'include',
             body: JSON.stringify(bodyData),
 
             mode: 'cors'
