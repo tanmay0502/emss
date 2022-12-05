@@ -21,10 +21,9 @@ function EditUser(props) {
   const [details, setDetails] = useState({})
 
   useEffect(() => {
-    setUserID(window.location.pathname.split("=")[1]);
-    getUser();
+    
 
-    // console.log(window.location.pathname.split("=")[1])
+    setDetails(props.userdata)
   
     return () => {
       
@@ -109,6 +108,7 @@ function EditUser(props) {
 
   async function modUser() {
 
+    console.log("HELLOOOOOOo")
     console.log(userID)
     if (ValidateEmail(document.getElementById("formUserEmail").value) == false) {
       document.getElementById("formUserEmail").value = ''
@@ -132,11 +132,9 @@ function EditUser(props) {
       }
 
     }
-
-    else {
-      try {
+    
         const bodyData = {
-          userID: userID,
+          userID: details["userid"],
           email: document.getElementById("formUserEmail").value,
           name: document.getElementById("formUserName").value,
           mobileNumber: document.getElementById("formUserMobileNumber").value,
@@ -156,10 +154,8 @@ function EditUser(props) {
               "Content-Type": "application/json",
               // 'Authorization': 'Bearer ' + access_token,
             },
-            credentials: 'same-origin',
+            credentials: 'include',
             body: JSON.stringify(bodyData),
-
-            mode: 'cors'
 
           }
         );
@@ -175,11 +171,9 @@ function EditUser(props) {
         } else {
           alert("Unable to Modify User.");
         }
-      } catch (err) {
-        console.log(err);
-      }
+     
     }
-  }
+  
 
   return (
     <div className="flex-col justify-center align-middle">
@@ -221,7 +215,7 @@ function EditUser(props) {
                 required
                 name=""
                 id="input_userid"
-                defaultValue={userID}
+                defaultValue={details["userid"]}
               />
             </div>
           </div>
@@ -239,7 +233,7 @@ function EditUser(props) {
                 name=""
                 className=""
                 placeholder="Full Name"
-                defaultValue={details[2]}
+                defaultValue={details["name"]}
               />
             </div>
           </div>
@@ -257,7 +251,7 @@ function EditUser(props) {
                 name=""
                 className=""
                 placeholder="Email Address"
-                defaultValue={details[1]}
+                defaultValue={details["email"]}
               />
             </div>
           </div>
@@ -275,7 +269,7 @@ function EditUser(props) {
                 name=""
                 className=""
                 placeholder="00000 00000"
-                defaultValue={details[3]}
+                defaultValue={details["mobilenumber"]}
               />
             </div>
           </div>
@@ -292,7 +286,7 @@ function EditUser(props) {
                 name=""
                 className=""
                 placeholder="00000 00000"
-                defaultValue={details[5]}
+                defaultValue={details["mobilenumber"]}
               />
             </div>
           </div>
@@ -309,7 +303,7 @@ function EditUser(props) {
                 name=""
                 className=""
                 placeholder="00000 00000"
-                defaultValue={details[6]}
+                defaultValue={details["mobilenumber"]}
               />
             </div>
           </div>
@@ -327,7 +321,7 @@ function EditUser(props) {
                 name=""
                 className=""
                 placeholder="Address"
-                defaultValue={details[4]}
+                defaultValue={details["address"]}
               />
             </div>
           </div>
