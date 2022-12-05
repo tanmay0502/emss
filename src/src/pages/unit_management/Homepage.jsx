@@ -3,250 +3,381 @@ import styles from './styles/Homepage.module.css';
 import Data from './Data';
 import Card from './Card';
 
+// const uri = process.env.REACT_APP_API_SERVER+"/unit/total_counts?oprnd=IN000000ADM&access_token="
+const uri = "http://localhost:8100/unit/total_counts?oprnd=IN000000ADM"
 
 export default function HomePage() {
+    const [data, setData] = useState([]);
+    const [formatedData, setFormatedData] = useState([]);
 
-    let dataByStatus = [];
-    let dataByUnitType = [];
 
-    Data.map(function(statusVal){
-        statusVal.unit_types.map(function(unitObj){
-            if(dataByUnitType.length===0) {
-                if(unitObj.manufacturer==='E') {
-                    let E = [{
-                        model: unitObj.model,
-                        count: unitObj.count
-                    }];
-                    dataByUnitType.push({
-                        unit_type: unitObj.unit_type,
-                        ECIL: E,
-                        BEL: []
-                    });
-                }
-                else if(unitObj.manufacturer==='B') {
-                    let B = [{
-                        model: unitObj.model,
-                        count: unitObj.count
-                    }];
-                    dataByUnitType.push({
-                        unit_type: unitObj.unit_type,
-                        ECIL: [],
-                        BEL: B
-                    });
-                }
-            }
-            else {
-                let i = 0;
-                dataByUnitType.map(function(unitVal){
-                    if((unitVal.unit_type===unitObj.unit_type)) {
-                        i = 1;
-                        if(unitObj.manufacturer==='E') {
-                            let y = 0;
-                            unitVal.ECIL.map(function(o){
-                                if(o.model===unitObj.model) {
-                                    y = 1;
-                                    o.count = o.count + unitObj.count;
-                                }
-                            });
-                            if(y==0) {
-                                unitVal.ECIL.push({
-                                    model: unitObj.model,
-                                    count: unitObj.count
-                                });
-                            }
-                        }
-                        else if(unitObj.manufacturer==='B') {
-                            let y = 0;
-                            unitVal.BEL.map(function(o){
-                                if(o.model===unitObj.model) {
-                                    y = 1;
-                                    o.count = o.count + unitObj.count;
-                                }
-                            });
-                            if(y==0) {
-                                unitVal.BEL.push({
-                                    model: unitObj.model,
-                                    count: unitObj.count
-                                });
-                            }
-                        }
+    useEffect(()=>{
+        let getData = () => {
+            try {
+            //   const response = await fetch(
+            //     uri,
+            //     {
+            //       method: "GET",
+            //       headers: {
+            //         "Content-Type": "application/json",
+            //       },
+            //       credentials:'include'
+            //     }
+            //   );
+            //     let data2 = await response.json();
+            //     console.log("Data fetched", data2);
+                // console.log("Data fetched", data2['data']);
+                // let data = data2['data'];
+                let data = Data;
+                let finalData = [
+                    {
+                        unit_type: "CU",
+                        BEL: [],
+                        ECIL: []
+                    },
+                    {
+                        unit_type: "VT",
+                        BEL: [],
+                        ECIL: []
+                    },
+                    {
+                        unit_type: "BU",
+                        BEL: [],
+                        ECIL: []
                     }
-                    
-                });
-                if(i===0) {
-                    if(unitObj.manufacturer==='E') {
-                        let E = [{
-                            model: unitObj.model,
-                            count: unitObj.count
-                        }];
-                        dataByUnitType.push({
-                            unit_type: unitObj.unit_type,
-                            ECIL: E,
-                            BEL: []
-                        });
-                    }
-                    else if(unitObj.manufacturer==='B') {
-                        let B = [{
-                            model: unitObj.model,
-                            count: unitObj.count
-                        }];
-                        dataByUnitType.push({
-                            unit_type: unitObj.unit_type,
-                            ECIL: [],
-                            BEL: B
-                        });
-                }
-            }
-            }
-        });
-    });
-
-    Data.map(function(statusVal){
-        statusVal.unit_types.map(function(unitVal){
-            if(dataByStatus.length===0) {
+                ]
                 
-                if(unitVal.manufacturer==='E') {
-                    let E = [{
-                        model: unitVal.model,
-                        count: unitVal.count
-                    }];
-                    dataByStatus.push({
-                        status: statusVal.status,
-                        type: [{
-                            unit_type: unitVal.unit_type,
-                            ECIL: E,
-                            BEL: []
-                        }]
-                    });
-                }
-                else if(unitVal.manufacturer==='B') {
-                    let B = [{
-                        model: unitVal.model,
-                        count: unitVal.count
-                    }];
-                    dataByStatus.push({
-                        status: statusVal.status,
-                        type: [{
-                            unit_type: unitVal.unit_type,
-                            ECIL: [],
-                            BEL: B
-                        }]
-                    });
-                }
-            }
-            else {
-                let u = 0;
-                dataByStatus.map(function(sVal){
-                    if(sVal.status===statusVal.status) {
-                        u = 1;
-                        let p = 0;
+                for (let i = 0; i < data.length; i++) {
+                    const ele = data[i];
+                    if(ele.unit_type === 'CU') {
+                        if(ele.manufacturer === 'E'){
+                            finalData[0].ECIL.push({
+                                status: ele.status,
+                                model: ele.model,
+                                count: ele.count
+                            })
+                        }
+                        if(ele.manufacturer === 'B'){
+                            finalData[0].BEL.push({
+                                status: ele.status,
+                                model: ele.model,
+                                count: ele.count
+                            })
+                        }
+                    }
+                    if(ele.unit_type === 'VT') {
+                        if(ele.manufacturer === 'E'){
+                            finalData[1].ECIL.push({
+                                status: ele.status,
+                                model: ele.model,
+                                count: ele.count
+                            })
+                        }
+                        if(ele.manufacturer === 'B'){
+                            finalData[1].BEL.push({
+                                status: ele.status,
+                                model: ele.model,
+                                count: ele.count
+                            })
+                        }
+                    }
+                    if(ele.unit_type === 'BU') {
+                        if(ele.manufacturer === 'E'){
+                            finalData[2].ECIL.push({
+                                status: ele.status,
+                                model: ele.model,
+                                count: ele.count
+                            })
+                        }
+                        if(ele.manufacturer === 'B'){
+                            finalData[2].BEL.push({
+                                status: ele.status,
+                                model: ele.model,
+                                count: ele.count
+                            })
+                        }
+                    }
 
-                        sVal.type.map(function(t){
-                            if(t.unit_type===unitVal.unit_type) {
-                                p = 1;
-                                if(unitVal.manufacturer==='E') {
-                                    let k = 0;
-                                    t.ECIL.map(function(eObj){
-                                        if(eObj.model===unitVal.model) {
-                                            k = 1;
-                                            eObj.count = eObj.count + unitVal.count
-                                        }
-                                    });
-                                    if(k===0) {
-                                        t.ECIL.push({
-                                            model: unitVal.model,
-                                            count: unitVal.count
-                                        })
-                                    }
-                                }
-                                else if(unitVal.manufacturer==='B') {
-                                    let k = 0;
-                                    t.BEL.map(function(eObj){
-                                        if(eObj.model===unitVal.model) {
-                                            k = 1;
-                                            eObj.count = eObj.count + unitVal.count
-                                        }
-                                    });
-                                    if(k===0) {
-                                        t.BEL.push({
-                                            model: unitVal.model,
-                                            count: unitVal.count
-                                        })
-                                    }
-                                }
-                            }
-                        });
-                        if(p===0) {
-                            if(unitVal.manufacturer==='E') {
-                                let E = [{
-                                    model: unitVal.model,
-                                    count: unitVal.count
-                                }];
+                }
+                for (let i = 0; i < finalData.length; i++) {
+                    console.log(finalData[i])
+                    if(!finalData[i].BEL.length){
+                        finalData[i].BEL.push({
+                            model: "0",
+                            count: "0"
+                        })
+                    }
+                    if(!finalData[i].ECIL.length){
+                        finalData[i].ECIL.push({
+                            model: "0",
+                            count: "0"
+                        })
+                    }
+                }
+                console.log(finalData)
+                
+                let statusData = [];
+                for (let i = 0; i < finalData.length; i++) {
+                    
+                }
+                return finalData;
+        
+            } catch (err) {
+              console.log(err);
+              return 0;
+            }
+          }
+        //   console.log(getData())
+        //   console.log(formatedData)
+          
+          setData(getData())
+        },[])
+        console.log(data)
+        
+    let dataByStatus = [];
+    // let dataByUnitType = [];
+    let dataByUnitType = data;
+
+    // data.map(function(statusVal){
+    //     statusVal.unit_types.map(function(unitObj){
+    //         if(dataByUnitType.length===0) {
+    //             // console.log()
+    //             if(unitObj.manufacturer==='E') {
+    //                 let E = [{
+    //                     model: unitObj.model,
+    //                     count: unitObj.count
+    //                 }];
+    //                 dataByUnitType.push({
+    //                     unit_type: unitObj.unit_type,
+    //                     ECIL: E,
+    //                     BEL: []
+    //                 });
+    //             }
+    //             else if(unitObj.manufacturer==='B') {
+    //                 let B = [{
+    //                     model: unitObj.model,
+    //                     count: unitObj.count
+    //                 }];
+    //                 dataByUnitType.push({
+    //                     unit_type: unitObj.unit_type,
+    //                     ECIL: [],
+    //                     BEL: B
+    //                 });
+    //             }
+    //         }
+    //         else {
+    //             let i = 0;
+    //             dataByUnitType.map(function(unitVal){
+    //                 if((unitVal.unit_type===unitObj.unit_type)) {
+    //                     i = 1;
+    //                     if(unitObj.manufacturer==='E') {
+    //                         let y = 0;
+    //                         unitVal.ECIL.map(function(o){
+    //                             if(o.model===unitObj.model) {
+    //                                 y = 1;
+    //                                 o.count = o.count + unitObj.count;
+    //                             }
+    //                         });
+    //                         if(y==0) {
+    //                             unitVal.ECIL.push({
+    //                                 model: unitObj.model,
+    //                                 count: unitObj.count
+    //                             });
+    //                         }
+    //                     }
+    //                     else if(unitObj.manufacturer==='B') {
+    //                         let y = 0;
+    //                         unitVal.BEL.map(function(o){
+    //                             if(o.model===unitObj.model) {
+    //                                 y = 1;
+    //                                 o.count = o.count + unitObj.count;
+    //                             }
+    //                         });
+    //                         if(y==0) {
+    //                             unitVal.BEL.push({
+    //                                 model: unitObj.model,
+    //                                 count: unitObj.count
+    //                             });
+    //                         }
+    //                     }
+    //                 }
+                    
+    //             });
+    //             if(i===0) {
+    //                 if(unitObj.manufacturer==='E') {
+    //                     let E = [{
+    //                         model: unitObj.model,
+    //                         count: unitObj.count
+    //                     }];
+    //                     dataByUnitType.push({
+    //                         unit_type: unitObj.unit_type,
+    //                         ECIL: E,
+    //                         BEL: []
+    //                     });
+    //                 }
+    //                 else if(unitObj.manufacturer==='B') {
+    //                     let B = [{
+    //                         model: unitObj.model,
+    //                         count: unitObj.count
+    //                     }];
+    //                     dataByUnitType.push({
+    //                         unit_type: unitObj.unit_type,
+    //                         ECIL: [],
+    //                         BEL: B
+    //                     });
+    //             }
+    //         }
+    //         }
+    //     });
+    // });
+
+    // Data.map(function(statusVal){
+    //     statusVal.unit_types.map(function(unitVal){
+    //         if(dataByStatus.length===0) {
+                
+    //             if(unitVal.manufacturer==='E') {
+    //                 let E = [{
+    //                     model: unitVal.model,
+    //                     count: unitVal.count
+    //                 }];
+    //                 dataByStatus.push({
+    //                     status: statusVal.status,
+    //                     type: [{
+    //                         unit_type: unitVal.unit_type,
+    //                         ECIL: E,
+    //                         BEL: []
+    //                     }]
+    //                 });
+    //             }
+    //             else if(unitVal.manufacturer==='B') {
+    //                 let B = [{
+    //                     model: unitVal.model,
+    //                     count: unitVal.count
+    //                 }];
+    //                 dataByStatus.push({
+    //                     status: statusVal.status,
+    //                     type: [{
+    //                         unit_type: unitVal.unit_type,
+    //                         ECIL: [],
+    //                         BEL: B
+    //                     }]
+    //                 });
+    //             }
+    //         }
+    //         else {
+    //             let u = 0;
+    //             dataByStatus.map(function(sVal){
+    //                 if(sVal.status===statusVal.status) {
+    //                     u = 1;
+    //                     let p = 0;
+
+    //                     sVal.type.map(function(t){
+    //                         if(t.unit_type===unitVal.unit_type) {
+    //                             p = 1;
+    //                             if(unitVal.manufacturer==='E') {
+    //                                 let k = 0;
+    //                                 t.ECIL.map(function(eObj){
+    //                                     if(eObj.model===unitVal.model) {
+    //                                         k = 1;
+    //                                         eObj.count = eObj.count + unitVal.count
+    //                                     }
+    //                                 });
+    //                                 if(k===0) {
+    //                                     t.ECIL.push({
+    //                                         model: unitVal.model,
+    //                                         count: unitVal.count
+    //                                     })
+    //                                 }
+    //                             }
+    //                             else if(unitVal.manufacturer==='B') {
+    //                                 let k = 0;
+    //                                 t.BEL.map(function(eObj){
+    //                                     if(eObj.model===unitVal.model) {
+    //                                         k = 1;
+    //                                         eObj.count = eObj.count + unitVal.count
+    //                                     }
+    //                                 });
+    //                                 if(k===0) {
+    //                                     t.BEL.push({
+    //                                         model: unitVal.model,
+    //                                         count: unitVal.count
+    //                                     })
+    //                                 }
+    //                             }
+    //                         }
+    //                     });
+    //                     if(p===0) {
+    //                         if(unitVal.manufacturer==='E') {
+    //                             let E = [{
+    //                                 model: unitVal.model,
+    //                                 count: unitVal.count
+    //                             }];
                                 
-                                    sVal.type.push({
-                                        unit_type: unitVal.unit_type,
-                                        ECIL: E,
-                                        BEL: []
-                                    });
-                            }
-                            else if(unitVal.manufacturer==='B') {
-                                let B = [{
-                                    model: unitVal.model,
-                                    count: unitVal.count
-                                }];
+    //                                 sVal.type.push({
+    //                                     unit_type: unitVal.unit_type,
+    //                                     ECIL: E,
+    //                                     BEL: []
+    //                                 });
+    //                         }
+    //                         else if(unitVal.manufacturer==='B') {
+    //                             let B = [{
+    //                                 model: unitVal.model,
+    //                                 count: unitVal.count
+    //                             }];
                                
                                  
-                                    sVal.type.push({
-                                        unit_type: unitVal.unit_type,
-                                        ECIL: [],
-                                        BEL: B
-                                    });
+    //                                 sVal.type.push({
+    //                                     unit_type: unitVal.unit_type,
+    //                                     ECIL: [],
+    //                                     BEL: B
+    //                                 });
                                 
-                            }
-                        }
-                    }
-                })
-                if(u===0) {
-                    if(unitVal.manufacturer==='E') {
-                        let E = [{
-                            model: unitVal.model,
-                            count: unitVal.count
-                        }];
-                        dataByStatus.push({
-                            status: statusVal.status,
-                            type: [{
-                                unit_type: unitVal.unit_type,
-                                ECIL: E,
-                                BEL: []
-                            }]
-                        });
-                    }
-                    else if(unitVal.manufacturer==='B') {
-                        let B = [{
-                            model: unitVal.model,
-                            count: unitVal.count
-                        }];
-                        dataByStatus.push({
-                            status: statusVal.status,
-                            type: [{
-                                unit_type: unitVal.unit_type,
-                                ECIL: [],
-                                BEL: B
-                            }]
-                        });
-                    }
-                }
-            }
-        });
-    });
+    //                         }
+    //                     }
+    //                 }
+    //             })
+    //             if(u===0) {
+    //                 if(unitVal.manufacturer==='E') {
+    //                     let E = [{
+    //                         model: unitVal.model,
+    //                         count: unitVal.count
+    //                     }];
+    //                     dataByStatus.push({
+    //                         status: statusVal.status,
+    //                         type: [{
+    //                             unit_type: unitVal.unit_type,
+    //                             ECIL: E,
+    //                             BEL: []
+    //                         }]
+    //                     });
+    //                 }
+    //                 else if(unitVal.manufacturer==='B') {
+    //                     let B = [{
+    //                         model: unitVal.model,
+    //                         count: unitVal.count
+    //                     }];
+    //                     dataByStatus.push({
+    //                         status: statusVal.status,
+    //                         type: [{
+    //                             unit_type: unitVal.unit_type,
+    //                             ECIL: [],
+    //                             BEL: B
+    //                         }]
+    //                     });
+    //                 }
+    //             }
+    //         }
+    //     });
+    // });
 
     const rightArrow = ">";
 
-    function displayMachineCountByModel(val) {
-        return <div>{val.model} {val.count}</div>
+    function DisplayMachineCountByModel({val}) {
+        return <div>{val?val.model+val.count:"0 0"}</div>
     }
 
     function createCard(cardVal) {
+        console.log(cardVal)
         return (<Card value={cardVal}/>);
     }
 
@@ -255,7 +386,7 @@ export default function HomePage() {
         <div className={styles.parent}>
             <div className={styles.parent3}>
                 <div className={styles.myCardSample}>
-                    <div className={styles.card_title}>
+                    <div className={styles.s}>
                         <span>State Wise Unit Count</span>
                     </div>
                     <div>
@@ -280,6 +411,7 @@ export default function HomePage() {
                             </thead>
                             {dataByUnitType != [] && dataByUnitType.length > 0 &&
                                 dataByUnitType.map((val) => {
+                                    // console.log(val)
                                     return (
                                         <tbody >
                                             <tr>
@@ -287,10 +419,16 @@ export default function HomePage() {
                                                     <div> {val.unit_type}</div>
                                                 </td>
                                                 <td className="text-black text-sm mr-2 pl-5">
-                                                    {val.ECIL.map(displayMachineCountByModel)}
+                                                    {val.ECIL.map((val,ind)=>{
+                                                        return(
+                                                            <DisplayMachineCountByModel val={val}/>
+                                                        )})}
                                                 </td>
                                                 <td className="text-black text-sm pl-7">
-                                                    {val.BEL.map(displayMachineCountByModel)}
+                                                    {val.BEL.map((val,ind)=>{
+                                                        return(
+                                                            <DisplayMachineCountByModel val={val}/>
+                                                        )})}
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -714,7 +852,8 @@ export default function HomePage() {
             </div>
 
             <div className={styles.parent2} >
-               {dataByStatus.map(createCard)};
+               {/* {dataByStatus.map(createCard)}; */}
+               {/* {console.log(dataByStatus)} */}
             </div>
         </div >
     );
