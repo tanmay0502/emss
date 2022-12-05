@@ -27,35 +27,31 @@ function UserDetail(props) {
   }
 
   const ResetPassword = async () => {
-    const userId = props.detail[0];
+    const userId = props.detail["userid"];
 
     if (window.confirm("Are you sure you want to reset password for this user?")) {
       // let token = localStorage.getItem("token");
       // const access_token = JSON.parse(token)["access_token"];
-      try {
         const response = await fetch(
-          `${process.env.REACT_APP_API_SERVER}/user/resetPassword/${userId}`,
+          `${process.env.REACT_APP_API_SERVER}/user/resetPassword`,
           {
-            method: "GET",
+            method: "POST",
+            credentials:"include",
             headers: {
               "Content-Type": "application/json",
-              // 'Authorization': 'Bearer ' + access_token,
             },
-            credentials: 'same-origin',
-            mode: "cors"
+            body: JSON.stringify({"userID":userId}),
           }
         )
         const msg = await response.json();
-        if (msg['message'] = 'Password reset successfully') {
-          alert(msg['message']);
-          window.location = window.location.href;
-        }
-        else {
-          alert('Error in resetting password, Please try again');
-        }
-      } catch (error) {
-        console.log(error)
-      }
+        console.log(msg)
+        // if (msg['message'] = 'Password reset successfully') {
+        //   alert(msg['message']);
+        //   window.location = window.location.href;
+        // }
+        // else {
+        //   alert('Error in resetting password, Please try again');
+        // }
     }
   }
 

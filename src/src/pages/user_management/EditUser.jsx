@@ -131,10 +131,10 @@ function EditUser(props) {
         return;
       }
 
-    }else {
-      try {
+    }
+    
         const bodyData = {
-          userID: userID,
+          userID: details["userid"],
           email: document.getElementById("formUserEmail").value,
           name: document.getElementById("formUserName").value,
           mobileNumber: document.getElementById("formUserMobileNumber").value,
@@ -171,11 +171,9 @@ function EditUser(props) {
         } else {
           alert("Unable to Modify User.");
         }
-      } catch (err) {
-        console.log(err);
-      }
+     
     }
-  }
+  
 
   return (
     <div className="flex-col justify-center align-middle">
@@ -323,7 +321,7 @@ function EditUser(props) {
                 name=""
                 className=""
                 placeholder="Address"
-                defaultValue={details[4]}
+                defaultValue={details["address"]}
               />
             </div>
           </div>
