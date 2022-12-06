@@ -7,7 +7,8 @@ import Card from './Card';
 const uri = "http://localhost:8100/unit/total_counts?oprnd=IN000000ADM"
 
 export default function HomePage() {
-    const [data, setData] = useState([]);
+    const [unitData, setUnitData] = useState([]);
+    const [statusData, setStatusData] = useState([]);
     const [formatedData, setFormatedData] = useState([]);
 
 
@@ -29,6 +30,7 @@ export default function HomePage() {
                 // console.log("Data fetched", data2['data']);
                 // let data = data2['data'];
                 let data = Data;
+                // let data = [];
                 let finalData = [
                     {
                         unit_type: "CU",
@@ -117,28 +119,70 @@ export default function HomePage() {
                 console.log(finalData)
                 
                 let statusData = [];
-                for (let i = 0; i < finalData.length; i++) {
-                    
+                for (let i = 0; i < data.length; i++) {
+                    statusData.push({
+                        status: data[i].status,
+                        type: []
+                    })
                 }
-                return finalData;
-        
+                for (let i = 0; i < data.length; i++) {
+                    let ele = data[i];
+                    for (let j = 0; j < statusData.length; j++) {
+                        if (ele.status === statusData[i].status) {
+                            let found = false;
+                            for (let k = 0; k < statusData[i].type.length; k++) {
+                                const e = statusData[i].type[k];
+                                if (e.unit_type === ele.unit_type) {
+                                    found = true;
+                                    if (ele.manufacturer === "E") {
+                                        statusData[i].type[k].ECIL.push({model: ele.model, count: ele.count})
+                                    }
+                                    if (ele.manufacturer === "B") {
+                                        statusData[i].type[k].BEL.push({model: ele.model, count: ele.count})
+                                    }
+                                    break;
+                                }
+                            }
+                            if (!found) {
+                                let temp = {
+                                    unit_type: ele.unit_type,
+                                    ECIL: [],
+                                    BEL: []
+                                }
+                                if (ele.manufacturer === "E") {
+                                    temp.ECIL.push({model: ele.model, count: ele.count})
+                                }
+                                if (ele.manufacturer === "B") {
+                                    temp.BEL.push({model: ele.model, count: ele.count})
+                                }
+                                statusData[i].type.push(temp);
+                                break;
+                            }
+                            break;
+                        }
+                    }
+                }
+                return [finalData, statusData];
             } catch (err) {
               console.log(err);
-              return 0;
+              return [[],[]];
             }
           }
         //   console.log(getData())
         //   console.log(formatedData)
           
-          setData(getData())
+          setUnitData(getData()[0])
+          setStatusData(getData()[1])
         },[])
-        console.log(data)
+        console.log({statusData})
+        console.log({unitData})
         
-    let dataByStatus = [];
+    // let dataByStatus = [];
     // let dataByUnitType = [];
-    let dataByUnitType = data;
+    let dataByStatus = statusData;
+    let dataByUnitType = unitData;
 
-    // data.map(function(statusVal){
+    // Data.map(function(statusVal){
     //     statusVal.unit_types.map(function(unitObj){
     //         if(dataByUnitType.length===0) {
     //             // console.log()
@@ -852,7 +896,7 @@ export default function HomePage() {
             </div>
 
             <div className={styles.parent2} >
-               {/* {dataByStatus.map(createCard)}; */}
+               {dataByStatus.map(createCard)};
                {/* {console.log(dataByStatus)} */}
             </div>
         </div >
