@@ -1,22 +1,22 @@
-import { DynamicDataTable } from "@langleyfoxall/react-dynamic-data-table";
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "./styles/UnitList.module.css";
 
+import { DynamicDataTable } from "@langleyfoxall/react-dynamic-data-table";
 import {
   AiOutlineSortAscending,
   AiOutlineSortDescending,
 } from "react-icons/ai";
 import { ReactComponent as OptionsIndicator } from "../../assets/Options_Indicator.svg";
-
-import { useNavigate } from "react-router-dom";
 import { ReactComponent as SearchInputElement } from "../../assets/searchInputIcon.svg";
 import { ReactComponent as ChevronDown } from "../../assets/ChevronDown.svg";
-import { useEffect } from "react";
+
+const userID = sessionStorage.getItem("sessionToken");
 
 export default function UnitList() {
-  const userID = sessionStorage.getItem("sessionToken");
   const [cardVisibility, setCardVisibility] = useState({
     replacementForm: false,
+    firstRandomisationForm: false,
+    secondRandomisationForm: false,
   });
   const [inputValue, setInputValue] = useState("");
 
@@ -43,8 +43,13 @@ export default function UnitList() {
       />
       <ReplacementForm
         isVisible={cardVisibility.replacementForm}
-        userID={userID}
         unitID={inputValue}
+      />
+      <FirstRandomisationForm
+        isVisible={cardVisibility.firstRandomisationForm}
+      />
+      <SecondRandomisationForm
+        isVisible={cardVisibility.secondRandomisationForm}
       />
     </>
   );
@@ -285,8 +290,16 @@ const StatusUpdate = ({ inputValue, handleInputChange, onButtonClick }) => {
             <ActionButton text="Unit UnBlock" onClick={onButtonClick} />
             <ActionButton text="Mark Defective" onClick={onButtonClick} />
             <ActionButton text="Unit Destruction" onClick={onButtonClick} />
-            <ActionButton text="1st Randomisation" onClick={onButtonClick} />
-            <ActionButton text="2nd Randomisation" onClick={onButtonClick} />
+            <ActionButton
+              text="1st Randomisation"
+              name="firstRandomisationForm"
+              onClick={onButtonClick}
+            />
+            <ActionButton
+              text="2nd Randomisation"
+              name="secondRandomisationForm"
+              onClick={onButtonClick}
+            />
           </div>
         </div>
       </div>
@@ -304,7 +317,6 @@ const ActionButton = ({ active, text, name, onClick }) => {
 
   useEffect(() => {
     setIsActive(active);
-    console.log(name);
   }, []);
 
   return (
@@ -320,7 +332,8 @@ const ActionButton = ({ active, text, name, onClick }) => {
   );
 };
 
-const ReplacementForm = ({ isVisible, userID, unitID }) => {
+// Unit Replacement Card
+const ReplacementForm = ({ isVisible, unitID }) => {
   const initialValues = {
     replacedId: "",
     replacingId: "",
@@ -452,6 +465,179 @@ const ReplacementForm = ({ isVisible, userID, unitID }) => {
           >
             Submit
           </button>
+        </div>
+      )}
+    </>
+  );
+};
+
+// 1st Randomisation Card
+const FirstRandomisationForm = ({ isVisible }) => {
+  const [assemblyData, setAssemblyData] = useState([
+    {
+      assemblyId: "",
+      unitCount: "",
+    },
+  ]);
+
+  const handleInputChange = (e) => {
+    const { name, value, dataset } = e.target;
+    const update = [...assemblyData];
+    update[dataset.id][name] = value;
+    setAssemblyData(update);
+  };
+
+  const handleAddButtonClick = () => {
+    setAssemblyData([...assemblyData, { assemblyId: "", unitCount: "" }]);
+  };
+
+  const handleSubtractButtonClick = () => {
+    if (assemblyData.length > 1) {
+      setAssemblyData([...assemblyData].slice(0, -1));
+    }
+  };
+
+  return (
+    <>
+      {isVisible && (
+        <div className={styles.unit_list_container}>
+          <div className={styles.unit_list_header}>
+            <h4>First Randomisation</h4>
+          </div>
+          <div className="mt-2 w-full bg-white p-6">
+            <div className="flex flex-col">
+              <div className="flex w-full flex-row justify-evenly">
+                <div className="mb-8 flex w-3/8 flex-col text-left">
+                  <label className="mb-2 w-full text-base">
+                    Warehouse ID<span className="text-red-600">*</span>
+                  </label>
+                  <div className="relative text-gray-800">
+                    <input
+                      className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                      name="warehouseId"
+                      placeholder="TS08I1"
+                    />
+                  </div>
+                </div>
+                <div className="mb-8 flex w-3/8 flex-col text-left">
+                  <label className="mb-2 w-full text-base">
+                    Unit Type<span className="text-red-600">*</span>
+                  </label>
+                  <div className="relative text-[#494A59]">
+                    <select
+                      className="relative h-10 w-full rounded-md border p-2"
+                      name="unitType"
+                      placeholder="Select"
+                    >
+                      {" "}
+                      <option hidden>Select</option>
+                      <option>CU</option>
+                      <option>BU</option>
+                      <option>TC</option>
+                    </select>
+                    <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1/2" />
+                  </div>
+                </div>
+              </div>
+              {assemblyData.map((data, id) => (
+                <div className="mb-8 flex w-full justify-evenly" key={id}>
+                  <div className="flex w-3/8 flex-col text-left">
+                    <label className="mb-2 w-full text-base">
+                      Assembly ID {id + 1}
+                      <span className="text-red-600"> *</span>
+                    </label>
+                    <div className="relative text-gray-800">
+                      <input
+                        className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                        name="assemblyId"
+                        placeholder={`Assembly ${id + 1}`}
+                        value={data.assemblyId.toUpperCase()}
+                        onChange={handleInputChange}
+                        data-id={id}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex w-3/8 flex-col text-left">
+                    <label className="mb-2 w-full text-base">
+                      Unit Count {id + 1}
+                      <span className="text-red-600"> *</span>
+                    </label>
+                    <div className="relative text-gray-800">
+                      <input
+                        className="h-10 w-full rounded-md border-0 bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                        type="number"
+                        name="unitCount"
+                        placeholder={`Count ${id + 1}`}
+                        value={data.unitCount}
+                        onChange={handleInputChange}
+                        data-id={id}
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+              <div className="w-full">
+                <button
+                  className="mr-5 inline-flex h-8 w-8 items-center justify-center !rounded-full border-[1px] border-dashed border-zinc-500 bg-white p-1.5 text-zinc-500 hover:bg-zinc-500 hover:text-white"
+                  onClick={handleAddButtonClick}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="h-6 w-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 4.5v15m7.5-7.5h-15"
+                    />
+                  </svg>
+                </button>
+                <button
+                  className="inline-flex h-8 w-8 items-center justify-center !rounded-full border-[1px] border-dashed border-zinc-500 bg-white p-1.5 text-zinc-500 hover:bg-zinc-500 hover:text-white"
+                  onClick={handleSubtractButtonClick}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="h-6 w-6"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M19.5 12h-15"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+          <button className="font-semibold text-white">Randomise</button>
+        </div>
+      )}
+    </>
+  );
+};
+
+// 2nd Randomisation Card
+const SecondRandomisationForm = ({ isVisible }) => {
+  return (
+    <>
+      {isVisible && (
+        <div className={styles.unit_list_container}>
+          <div className={styles.unit_list_header}>
+            <h4>Second Randomisation</h4>
+          </div>
+          <div className="mt-2 w-full bg-white p-6">
+            <div className="grid grid-cols-3"></div>
+          </div>
+          <button className="font-semibold text-white">Randomise</button>
         </div>
       )}
     </>
