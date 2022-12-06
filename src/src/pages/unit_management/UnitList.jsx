@@ -13,23 +13,49 @@ import { ReactComponent as SearchInputElement } from "../../assets/searchInputIc
 import { ReactComponent as ChevronDown } from "../../assets/ChevronDown.svg";
 import { useEffect } from "react";
 
-function UnitList() {
-  const navigate = useNavigate();
+export default function UnitList() {
+  const userID = sessionStorage.getItem("sessionToken");
+  const [cardVisibility, setCardVisibility] = useState({
+    replacementForm: false,
+  });
+  const [inputValue, setInputValue] = useState("");
 
+  const handleInputChange = (e) => {
+    setInputValue(e.target.value);
+  };
+
+  const handleButtonClick = (e) => {
+    // alert(`Button Clicked: ${e.target.name}`);
+    const { name } = e.target;
+    setCardVisibility({
+      ...cardVisibility,
+      [name]: !cardVisibility[name],
+    });
+  };
+
+  return (
+    <>
+      <UnitListTable />
+      <StatusUpdate
+        inputValue={inputValue}
+        handleInputChange={handleInputChange}
+        onButtonClick={handleButtonClick}
+      />
+      <ReplacementForm
+        isVisible={cardVisibility.replacementForm}
+        userID={userID}
+        unitID={inputValue}
+      />
+    </>
+  );
+}
+
+// Unit List Table
+const UnitListTable = () => {
   const [tableFilter, setTableFilter] = useState("");
   const [sortBy, setSortBy] = useState("None");
   const [sortOrder, setSortOrder] = useState("asc");
   const [tableData, setTableData] = useState([]);
-
-  const userID = sessionStorage.getItem("sessionToken");
-  const initialFormValues = {
-    replacedId: "",
-    replacingId: "",
-    replacementLevel: "",
-    defecDestId: "",
-  };
-
-  const [inputValues, setInputValues] = useState(initialFormValues);
 
   const sortMapping = {
     None: null,
@@ -71,8 +97,6 @@ function UnitList() {
             return true;
           } else {
             const filter = tableFilter.toLowerCase();
-            // console.log(elem[2])
-            // return true
             return (
               elem["ID"].toLowerCase().includes(filter) ||
               elem["Location"].toLowerCase().includes(filter) ||
@@ -113,46 +137,12 @@ function UnitList() {
     }
   }
 
-  // useEffect(() => {
-  //   userID = sessionStorage.getItem("sessionToken");
-  // }, []);
-
   useEffect(() => {
     formatData();
   }, [tableFilter, sortBy, sortOrder]);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setInputValues({
-      ...inputValues,
-      [name]: value,
-    });
-  };
-
-  const handleReplacementFormSubmit = async (e) => {
-    const formData = {
-      userID: userID,
-      replacedUnitID: inputValues.replacedId,
-      replacingUnitID: inputValues.replacingId,
-      replacementLevel: inputValues.replacementLevel,
-      defectiveDstWarehouseID: inputValues.defecDestId,
-    };
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    };
-
-    const baseUrl = "http://localhost:8100/unit";
-    const response = await fetch(`${baseUrl}/replace_unit`, requestOptions);
-    const data = await response.json();
-    console.log(data);
-    setInputValues(initialFormValues);
-  };
-
   return (
     <>
-      {/* Unit List */}
       <div className={styles.unit_list_container}>
         <div className={styles.unit_list_header}>
           <h4>Unit List</h4>
@@ -173,8 +163,8 @@ function UnitList() {
                 style={{ margin: "0 7.5px", width: "20px" }}
               />
               <input
-                type={"search"}
-                defaultValue={tableFilter}
+                type="search"
+                value={tableFilter}
                 onChange={(e) => {
                   setTableFilter(e.target.value);
                 }}
@@ -192,7 +182,7 @@ function UnitList() {
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "center",
-                background: "var(--lightGrayBG )",
+                background: "var(--lightGrayBG)",
                 borderRadius: "10px",
                 padding: "7.5px",
                 fontSize: "0.8em",
@@ -219,10 +209,10 @@ function UnitList() {
                 }}
                 onChange={(e) => setSortBy(e.target.value)}
               >
-                <option value={"None"}>None</option>
-                <option value={"ID"}>ID</option>
-                <option value={"Location"}>Location</option>
-                <option value={"Time"}>Status Update Time</option>
+                <option value="None">None</option>
+                <option value="ID">ID</option>
+                <option value="Location">Location</option>
+                <option value="Time">Status Update Time</option>
               </select>
               <ChevronDown />
               <button
@@ -265,145 +255,205 @@ function UnitList() {
           orderByDirection={sortOrder}
         />
       </div>
-      {/* Status Update */}
+    </>
+  );
+};
+
+// Status Update Card
+const StatusUpdate = ({ inputValue, handleInputChange, onButtonClick }) => {
+  return (
+    <>
       <div className={styles.unit_list_container}>
         <div className={styles.unit_list_header}>
           <h4>Status Update</h4>
         </div>
-        <div className="bg-white p-6 mt-2 w-full">
+        <div className="mt-2 w-full bg-white p-6">
           <div className="grid grid-cols-4">
             <input
-              className="w-auto mx-8 mb-8 col-span-4 h-20 px-5 pb-8 rounded-md bg-zinc-100 text-gray-400 outline-none"
-              value="EBUAA01234"
-              readOnly
-              disabled
+              className="col-span-4 mx-8 mb-8 h-20 w-auto rounded-md bg-zinc-100 px-5 pb-8 text-gray-500 focus:text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary"
+              placeholder="EBUAA01234"
+              value={inputValue}
+              onChange={handleInputChange}
             />
-            <button className="text-secondary font-medium w-4/5 mb-8 mx-auto border-solid border-[1px] border-secondary bg-white hover:bg-secondary hover:text-white">
-              EP Unmark
-            </button>
-            <button className="text-white font-medium w-4/5 mb-8 mx-auto border-solid border-[1px] border-secondary bg-secondary hover:bg-secondary hover:text-white">
-              Unit Replacement
-            </button>
-            <button className="text-secondary font-medium w-4/5 mb-8 mx-auto border-solid border-[1px] border-secondary bg-white hover:bg-secondary hover:text-white">
-              Unit Block
-            </button>
-            <button className="text-secondary font-medium w-4/5 mb-8 mx-auto border-solid border-[1px] border-secondary bg-white hover:bg-secondary hover:text-white">
-              Unit UnBlock
-            </button>
-            <button className="text-secondary font-medium w-4/5 mb-8 mx-auto border-solid border-[1px] border-secondary bg-white hover:bg-secondary hover:text-white">
-              Mark Defective
-            </button>
-            <button className="text-secondary font-medium w-4/5 mb-8 mx-auto border-solid border-[1px] border-secondary bg-white hover:bg-secondary hover:text-white">
-              Unit Destruction
-            </button>
-            <button className="text-secondary font-medium w-4/5 mb-8 mx-auto border-solid border-[1px] border-secondary bg-white hover:bg-secondary hover:text-white">
-              1st Randomisation
-            </button>
-            <button className="text-secondary font-medium w-4/5 mb-8 mx-auto border-solid border-[1px] border-secondary bg-white hover:bg-secondary hover:text-white">
-              2nd Randomisation
-            </button>
+            <ActionButton text="EP Unmark" onClick={onButtonClick} />
+            <ActionButton
+              text="Unit Replacement"
+              name="replacementForm"
+              onClick={onButtonClick}
+            />
+            <ActionButton text="Unit Block" onClick={onButtonClick} />
+            <ActionButton text="Unit UnBlock" onClick={onButtonClick} />
+            <ActionButton text="Mark Defective" onClick={onButtonClick} />
+            <ActionButton text="Unit Destruction" onClick={onButtonClick} />
+            <ActionButton text="1st Randomisation" onClick={onButtonClick} />
+            <ActionButton text="2nd Randomisation" onClick={onButtonClick} />
           </div>
         </div>
-      </div>
-      {/* Unit Replacement */}
-      <div className={styles.unit_list_container}>
-        <div className={styles.unit_list_header}>
-          <h4>Unit Replacement</h4>
-        </div>
-        <div className="bg-white p-6 mt-2 w-full">
-          <div className="grid grid-cols-3">
-            {/* <div className="flex flex-col text-left w-3/5 mx-auto mb-8">
-              <label className="w-full mb-2 text-base">
-                User ID<span className="text-red-600">*</span>
-              </label>
-              <div className="relative text-[#494A59]">
-								<select
-									className="w-full h-10 p-2 border rounded-md relative"
-									placeholder="Type"
-								>
-									{" "}
-									<option>Select</option>
-									<option>option</option>
-									<option>option</option>
-								</select>
-              	<ChevronDown className="right-0 top-1/2 -translate-y-1/2 -translate-x-1/2 absolute" />
-							</div>
-            </div> */}
-            <div className="flex flex-col text-left w-3/4 mx-auto mb-8">
-              <label className="w-full mb-2 text-base">
-                Replaced Unit ID<span className="text-red-600">*</span>
-              </label>
-              <div className="relative text-gray-800">
-                <input
-                  className="w-full h-10 p-2 px-5 rounded-md bg-zinc-100 placeholder:text-gray-400 focus:ring-2 focus:ring-[#84587C] focus:outline-none"
-                  name="replacedId"
-                  placeholder="Old Unit ID"
-                  value={inputValues.replacedId}
-                  onChange={handleInputChange}
-                />
-              </div>
-            </div>
-            <div className="flex flex-col text-left w-3/4 mx-auto mb-8">
-              <label className="w-full mb-2 text-base">
-                Replacing Unit ID<span className="text-red-600">*</span>
-              </label>
-              <div className="relative text-gray-800">
-                <input
-                  className="w-full h-10 p-2 px-5 rounded-md bg-zinc-100 placeholder:text-gray-400 focus:ring-2 focus:ring-[#84587C] focus:outline-none"
-                  name="replacingId"
-                  placeholder="New Unit ID"
-                  value={inputValues.replacingId}
-                  onChange={handleInputChange}
-                />
-              </div>
-            </div>
-            <div className="flex flex-col text-left w-3/4 mx-auto mb-8">
-              <label className="w-full mb-2 text-base">
-                Replacement Level<span className="text-red-600">*</span>
-              </label>
-              <div className="relative text-[#494A59]">
-                <select
-                  className="w-full h-10 p-2 border rounded-md relative"
-                  name="replacementLevel"
-                  placeholder="Select"
-                  value={inputValues.replacementLevel}
-                  onChange={handleInputChange}
-                >
-                  {" "}
-                  <option hidden>Select</option>
-                  <option>Commissioning</option>
-                  <option>Distribution</option>
-                  <option>Mock Polling</option>
-                  <option>Actual Polling</option>
-                </select>
-                <ChevronDown className="right-0 top-1/2 -translate-y-1/2 -translate-x-1/2 absolute" />
-              </div>
-            </div>
-            <div className="flex flex-col text-left w-3/4 mx-auto mb-8">
-              <label className="w-full mb-2 text-base">
-                Warehouse Dest ID<span className="text-red-600">*</span>
-              </label>
-              <div className="relative text-gray-800">
-                <input
-                  className="w-full h-10 p-2 px-5 rounded-md bg-zinc-100 placeholder:text-gray-400 focus:ring-2 focus:ring-[#84587C] focus:outline-none"
-                  name="defecDestId"
-                  placeholder="Defective Location ID"
-                  value={inputValues.defecDestId}
-                  onChange={handleInputChange}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-        <button
-          style={{ color: "white", fontWeight: "600" }}
-          onClick={handleReplacementFormSubmit}
-        >
-          Submit
-        </button>
       </div>
     </>
   );
-}
+};
 
-export default UnitList;
+const ActionButton = ({ active, text, name, onClick }) => {
+  const [isActive, setIsActive] = useState(false);
+
+  const handleClick = (e) => {
+    setIsActive(!isActive);
+    onClick(e);
+  };
+
+  useEffect(() => {
+    setIsActive(active);
+    console.log(name);
+  }, []);
+
+  return (
+    <button
+      className={`font-mediumisActive mx-auto mb-8 w-4/5 border-[1px] border-solid border-secondary hover:bg-secondary hover:text-white ${
+        isActive ? "bg-secondary text-white" : "bg-white  text-secondary"
+      }`}
+      name={name ? name : text}
+      onClick={handleClick}
+    >
+      {text}
+    </button>
+  );
+};
+
+const ReplacementForm = ({ isVisible, userID, unitID }) => {
+  const initialValues = {
+    replacedId: "",
+    replacingId: "",
+    replacementLevel: "",
+    defecDestId: "",
+  };
+  const [inputValues, setInputValues] = useState(initialValues);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setInputValues({
+      ...inputValues,
+      [name]: value,
+    });
+  };
+
+  const handleFormSubmit = async (e) => {
+    const formData = {
+      userID,
+      replacedUnitID: inputValues.replacedId,
+      replacingUnitID: inputValues.replacingId,
+      replacementLevel: inputValues.replacementLevel,
+      defectiveDstWarehouseID: inputValues.defecDestId,
+    };
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    };
+
+    const baseUrl = "http://localhost:8100/unit";
+    try {
+      const response = await fetch(`${baseUrl}/replace_unit`, requestOptions);
+      const data = await response.json();
+      console.log(data);
+      if (data.status == 200) {
+        alert("Unit Replaced Successfully");
+      } else {
+        alert("Could not replace the unit");
+      }
+    } catch (err) {
+      alert(`Error occured: ${err}`);
+    }
+    setInputValues(initialValues);
+  };
+
+  useEffect(() => {
+    setInputValues({ ...inputValues, replacedId: unitID });
+  }, [unitID]);
+
+  return (
+    <>
+      {isVisible && (
+        <div className={styles.unit_list_container}>
+          <div className={styles.unit_list_header}>
+            <h4>Unit Replacement</h4>
+          </div>
+          <div className="mt-2 w-full bg-white p-6">
+            <div className="grid grid-cols-3">
+              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+                <label className="mb-2 w-full text-base">
+                  Replaced Unit ID<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-gray-800">
+                  <input
+                    className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                    name="replacedId"
+                    placeholder="Old Unit ID"
+                    value={inputValues.replacedId}
+                    onChange={handleInputChange}
+                  />
+                </div>
+              </div>
+              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+                <label className="mb-2 w-full text-base">
+                  Replacing Unit ID<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-gray-800">
+                  <input
+                    className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                    name="replacingId"
+                    placeholder="New Unit ID"
+                    value={inputValues.replacingId}
+                    onChange={handleInputChange}
+                  />
+                </div>
+              </div>
+              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+                <label className="mb-2 w-full text-base">
+                  Replacement Level<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-[#494A59]">
+                  <select
+                    className="relative h-10 w-full rounded-md border p-2"
+                    name="replacementLevel"
+                    placeholder="Select"
+                    value={inputValues.replacementLevel}
+                    onChange={handleInputChange}
+                  >
+                    {" "}
+                    <option hidden>Select</option>
+                    <option>Commissioning</option>
+                    <option>Distribution</option>
+                    <option>Mock Polling</option>
+                    <option>Actual Polling</option>
+                  </select>
+                  <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1/2" />
+                </div>
+              </div>
+              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+                <label className="mb-2 w-full text-base">
+                  Warehouse Dest ID<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-gray-800">
+                  <input
+                    className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                    name="defecDestId"
+                    placeholder="Defective Location ID"
+                    value={inputValues.defecDestId}
+                    onChange={handleInputChange}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <button
+            className="font-semibold text-white"
+            onClick={handleFormSubmit}
+          >
+            Submit
+          </button>
+        </div>
+      )}
+    </>
+  );
+};
