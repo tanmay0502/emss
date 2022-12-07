@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import styles from './styles/Homepage.module.css';
+import ListCard from './ListCard';
+import Popup from 'reactjs-popup';
+import 'reactjs-popup/dist/index.css';
 
 function Card(props) {
 
@@ -10,10 +13,18 @@ function Card(props) {
         return <div>{val.count!="0"?val.count+" "+val.model:"0"}</div>
     }
 
+    function creatListCard(val) {
+        return <ListCard type={val.props.value.status} value={val.props.value.unitList}/>
+    }
+
     return (
         <div className={styles.myCardSample}>
                     <div className={styles.card_title}>
-                        <span>Units {rightArrow} {props.value.status}</span>
+                    
+                        <Popup trigger={<span>Units {rightArrow} {props.value.status}</span>} position="left top"> 
+                             <div>{creatListCard({props})}</div>
+                        </Popup>
+
                     </div>
 
                     <div className="cardSampleBody">

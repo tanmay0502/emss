@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import styles from './styles/Homepage.module.css';
 import Data from './Data';
 import Card from './Card';
+import Popup from 'reactjs-popup';
+import 'reactjs-popup/dist/index.css';
+import ListCard from './ListCard';
 
 // const uri = process.env.REACT_APP_API_SERVER+"/unit/total_counts?oprnd=IN000000ADM&access_token="
 const uri = "http://localhost:8100/unit/total_counts?oprnd=IN000000ADM"
@@ -9,8 +12,22 @@ const uri = "http://localhost:8100/unit/total_counts?oprnd=IN000000ADM"
 export default function HomePage() {
     const [unitData, setUnitData] = useState([]);
     const [statusData, setStatusData] = useState([]);
-    const [formatedData, setFormatedData] = useState([]);
+    const [cDat,setCDat] = useState([]);
+    const [bDat,setBDat] = useState([]);
+    const [vDat,setVDat] = useState([]);
 
+    function creatListCard(val) {
+        if(val.val.unit_type==="CU") {
+            return <ListCard type='Control Unit' value={cDat}/>
+        }
+        else if(val.val.unit_type==="BU") {
+            return <ListCard type='Ballot Unit' value={bDat}/>
+        }
+        else if(val.val.unit_type==="VT") {
+            return <ListCard type='VVPAT' value={vDat}/>
+        }
+        else    return <div></div>
+    };
 
     useEffect(()=>{
         let getData = () => {
@@ -48,6 +65,36 @@ export default function HomePage() {
                         ECIL: []
                     }
                 ]
+
+                let cuDat = [];
+                let buDat = [];
+                let vtDat = [];
+                data.map(function(val){
+                    if(val.unit_type==='CU') {
+                        cuDat.push({
+                            modelId: val.unit_list[0],
+                            modelStatus: val.unit_list[1],
+                            modelType: val.unit_list[2],
+                            model_Id: val.unit_list[3]
+                        });
+                    }
+                    else if(val.unit_type==='BU') {
+                        buDat.push({
+                            modelId: val.unit_list[0],
+                            modelStatus: val.unit_list[1],
+                            modelType: val.unit_list[2],
+                            model_Id: val.unit_list[3]
+                        });
+                    }
+                    else if(val.unit_type==='VT') {
+                        vtDat.push({
+                            modelId: val.unit_list[0],
+                            modelStatus: val.unit_list[1],
+                            modelType: val.unit_list[2],
+                            model_Id: val.unit_list[3]
+                        });
+                    }
+                });
                 
                 for (let i = 0; i < data.length; i++) {
                     const ele = data[i];
@@ -134,7 +181,8 @@ export default function HomePage() {
                                 {unit_type: "CU", ECIL: [], BEL: []},
                                 {unit_type: "VT", ECIL: [], BEL: []},
                                 {unit_type: "BU", ECIL: [], BEL: []}
-                            ]
+                            ],
+                            unitList: []
                         })
                     }
                 }
@@ -156,6 +204,12 @@ export default function HomePage() {
                                     break;
                                 }
                             }
+                            statusData[j].unitList.push({
+                                modelId : data[i].unit_list[0],
+                                modelStatus: data[i].unit_list[1],
+                                modelType: data[i].unit_list[2],
+                                model_Id: data[i].unit_list[3]
+                            });
                             if (!found) {
                                 let temp = {
                                     unit_type: ele.unit_type,
@@ -194,7 +248,7 @@ export default function HomePage() {
                     }
                     
                 }
-                return [finalData, statusData];
+                return [finalData, statusData, cuDat, buDat, vtDat];
             } catch (err) {
               console.log(err);
               return [[],[]];
@@ -203,8 +257,12 @@ export default function HomePage() {
         //   console.log(getData())
         //   console.log(formatedData)
           
-          setUnitData(getData()[0])
-          setStatusData(getData()[1])
+        setUnitData(getData()[0])
+        setStatusData(getData()[1])
+        setCDat(getData()[2])
+        setBDat(getData()[3])
+        setVDat(getData()[4])
+        
         },[])
         // console.log({statusData})
         // console.log({unitData})
@@ -222,7 +280,6 @@ export default function HomePage() {
     }
 
     function createCard(cardVal) {
-        console.log(cardVal)
         return (<Card value={cardVal}/>);
     }
 
@@ -261,7 +318,9 @@ export default function HomePage() {
                                         <tbody >
                                             <tr>
                                                 <td className="text-black text-sm" style={{ textAlign: "left" }}>
-                                                    <div> {val.unit_type}</div>
+                                                <Popup trigger={<div> {val.unit_type}</div>} position="right center">
+                                                        <div>{creatListCard({val})}</div>
+                                                    </Popup>
                                                 </td>
                                                 <td className="text-black text-sm mr-2 pl-5">
                                                     {val.ECIL.map((val,ind)=>{

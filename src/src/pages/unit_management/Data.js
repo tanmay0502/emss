@@ -207,7 +207,7 @@
       'manufacturer': 'B',
       'model': 'M1',
       'count': 1,
-      'unit_list': [('EBUM200000', 'FLC Assembly', 'M2', 'TS011C00801')]
+      'unit_list': ['EBUM200000', 'FLC Assembly', 'M2', 'TS011C00801']
     },
     {
       'unit_type': 'VT',
@@ -215,7 +215,7 @@
       'manufacturer': 'E',
       'model': 'M2',
       'count': 1,
-      'unit_list': [('EBUM200000', 'FLC Assembly', 'M2', 'TS011C00801')]
+      'unit_list': ['EBUM200000', 'FLC Assembly', 'M2', 'TS011C00801']
     },
     {
      'unit_type': 'CU',
@@ -223,7 +223,7 @@
      'manufacturer': 'B', 
      'model': 'M1', 
      'count': 1, 
-     'unit_list': [('BCUM200001', 'Under T&A', 'M2', 'TS011C00801')]  
+     'unit_list': ['BCUM200001', 'Under T&A', 'M2', 'TS011C00801']  
     } 
     ]
 
