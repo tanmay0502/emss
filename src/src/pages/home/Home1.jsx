@@ -18,7 +18,7 @@ import { ReactComponent as OtherServicesIcon } from '../../assets/OtherServices.
 import { useNavigate } from 'react-router-dom';
 import UnitCard from './UnitCard';
 import { PieChart } from 'react-minimal-pie-chart';
-
+import Data from './Data';
 
 
 function Home1() {
@@ -43,6 +43,25 @@ function Home1() {
 	const [STName, setSTName] = useState("")
 	const [show, setShow] = useState(false);
 	const [show2, setShow2] = useState(true);
+	const [totalCU, setTotalCU] = useState(0);
+	const [totalBU, setTotalBU] = useState(0);
+	const [totalVT, setTotalVT] = useState(0);
+	useEffect(()=>{
+		data = Data;
+		let countCU = 0;
+		let countBU = 0;
+		let countVT = 0;
+		for (let i = 0; i < data.length; i++) {
+			const ele = data[i];
+			ele.unit_type==="BU"?countBU+=ele.count:ele.unit_type=="VT"?countVT+=ele.count:countCU+=ele.count;
+		}
+		// console.log(countBU)
+		// console.log(countCU)
+		// console.log(countVT)
+		setTotalBU(countBU)
+		setTotalCU(countCU)
+		setTotalVT(countVT)
+	},[])
 
 
 	const handleClose = () => setIndiaMap(1);
@@ -127,7 +146,7 @@ function Home1() {
 						<img src={CUImg} alt="" />
 					</div>
 					<div className="right_sec">
-						<p>45,00,512</p>
+						<p>{totalCU}</p>
 						<p>Control Units</p>
 					</div>
 				</div>
@@ -136,7 +155,7 @@ function Home1() {
 						<img src={BUImg} alt="" />
 					</div>
 					<div className="right_sec">
-						<p>51,06,525</p>
+						<p>{totalBU}</p>
 						<p>Ballot Units</p>
 					</div>
 				</div>
@@ -145,7 +164,7 @@ function Home1() {
 						<img src={VVPAT} alt="" />
 					</div>
 					<div className="right_sec">
-						<p>31,79,532</p>
+						<p>{totalVT}</p>
 						<p>VVPAT</p>
 					</div>
 				</div>
