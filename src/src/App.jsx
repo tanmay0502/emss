@@ -78,6 +78,11 @@ function App() {
               path="/session/unitmanagement/"
               element={<HomePageUnit />}
             />
+
+            <Route
+              path="/session/unitmanagement/unitlist"
+              element={<UnitList />}
+            />    
             {/* <Route
               path="/session/unitmanagement/statusHistory"
               element={<kljfd />}
