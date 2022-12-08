@@ -1,12 +1,27 @@
 import React from "react";
 import { ReactComponent as ChevronRight } from '../../assets/chevron-right.svg';
 
-export default function UnitCard(props){
-    const data = props.data;
+export default function UnitCard({title, statusData}){
+    let displayData = [['Ballot Units', 0, 0], ['Control Units', 0, 0], ['VVPAT', 0, 0]];
+    // console.log(title, statusData)
+    let data = statusData.filter(val=>(val.status===title))
+    // console.log(data)
+    for (let i = 0; i < data.length; i++) {
+        const ele = data[i];
+        for (let j = 0; j < ele.data.length; j++) {
+            const e = ele.data[j];
+            if (e.unit_type === "BU" && e.manufacturer === "E") displayData[0][1]+=e.count;
+            if (e.unit_type === "BU" && e.manufacturer === "B") displayData[0][2]+=e.count;
+            if (e.unit_type === "CU" && e.manufacturer === "E") displayData[1][1]+=e.count;
+            if (e.unit_type === "CU" && e.manufacturer === "B") displayData[1][2]+=e.count;
+            if (e.unit_type === "VT" && e.manufacturer === "E") displayData[2][1]+=e.count;
+            if (e.unit_type === "VT" && e.manufacturer === "B") displayData[2][2]+=e.count;
+        }
+    }
     return (
         <div className="myCardSample">
             <div className="card_title d-flex justify-content-start pd-custom">
-                <span>Units</span> <ChevronRight className="chevron" /> <span>{props.title}</span> 
+                <span>Units</span> <ChevronRight className="chevron" /> <span>{title}</span> 
             </div>
             <table className='w-100 '>
                 <thead>
@@ -17,7 +32,7 @@ export default function UnitCard(props){
                 </tr>
                 </thead>
                 <tbody>
-                    {data.map(val => (
+                    {displayData.map(val => (
                         <tr>
                             <td>{val[0]}</td>
                             <td>{val[1]}</td>
