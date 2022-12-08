@@ -7,6 +7,8 @@ import 'reactjs-popup/dist/index.css';
 function Card(props) {
 
     const rightArrow = ">";
+    const VV = 'VV';
+    const data = [[VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20]]
 
     function DisplayMachineCountByModel({val}) {
         // console.log(val)
@@ -27,7 +29,56 @@ function Card(props) {
 
                     </div>
 
-                    <div className="cardSampleBody">
+                    <div className={styles.Scroll}>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Units</th>
+                            <th>ECIL</th>
+                            <th>BEL</th>
+                        </tr>
+                    </thead>
+                    {/* {data != [] && data.length > 0 &&
+                        data.map((val) => {
+                            return (
+                                <tbody>
+                                    <td>{val[0]}</td>
+                                    <td>{val[1]}</td>
+                                    <td>{val[2]}</td>
+
+                                </tbody>
+                            )
+                        })
+                    } */}
+                    {props.value.type != [] && props.value.type.length > 0 &&
+                        props.value.type.map((val) => {
+                            return (
+                                <tbody >
+                                    <tr>
+                                        <td>{val.unit_type}</td>
+                                        <td>
+                                            {val.ECIL.map((val, ind) => {
+                                                return (
+                                                    <DisplayMachineCountByModel val={val} />
+                                                )
+                                            })}
+
+                                        </td>
+                                        <td>
+                                            {val.BEL.map((val, ind) => {
+                                                return (
+                                                    <DisplayMachineCountByModel val={val} />
+                                                )
+                                            })}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            )
+                        })}
+                </table>
+            </div>
+
+                    {/* <div className="cardSampleBody">
                         <table >
                             <thead >
                                 <tr>
@@ -62,7 +113,7 @@ function Card(props) {
                                     )
                                 })}
                         </table>
-                    </div>
+                    </div> */}
                 </div>
     );
 }
