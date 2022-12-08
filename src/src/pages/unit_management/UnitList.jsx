@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import styles from "./styles/UnitList.module.css";
-
 import { DynamicDataTable } from "@langleyfoxall/react-dynamic-data-table";
 import {
   AiOutlineSortAscending,
@@ -9,19 +8,28 @@ import {
 import { ReactComponent as OptionsIndicator } from "../../assets/Options_Indicator.svg";
 import { ReactComponent as SearchInputElement } from "../../assets/searchInputIcon.svg";
 import { ReactComponent as ChevronDown } from "../../assets/ChevronDown.svg";
+import {expD} from "./Homepage";
 
 const userID = sessionStorage.getItem("sessionToken");
 
+
 export default function UnitList() {
+  // console.log(expD);
   const [cardVisibility, setCardVisibility] = useState({
     replacementForm: false,
+    epForm: false,
     firstRandomisationForm: false,
     secondRandomisationForm: false,
   });
   const [inputValue, setInputValue] = useState("");
+  const [epValue,setEpValue] = useState("");
 
   const handleInputChange = (e) => {
     setInputValue(e.target.value);
+  };
+
+  const handleInputChange2 = (e) => {
+    setEpValue(e.target.value);
   };
 
   const handleButtonClick = (e) => {
@@ -39,8 +47,10 @@ export default function UnitList() {
       <StatusUpdate
         inputValue={inputValue}
         handleInputChange={handleInputChange}
+        handleInputChange2={handleInputChange2}
         onButtonClick={handleButtonClick}
       />
+      <EPForm isVisible={cardVisibility.epForm} unitID={epValue}/>
       <ReplacementForm
         isVisible={cardVisibility.replacementForm}
         unitID={inputValue}
@@ -70,29 +80,7 @@ const UnitListTable = () => {
     Time: "Status Update Time",
   };
 
-  const data = [
-    {
-      ID: "EBUAA01234",
-      Status: "In Poll",
-      Remarks: "Remarks will be added according to the status of the unit.",
-      Location: "Bhopal",
-      "Status Update Time": "22-09-2021, 22:40 HRS",
-    },
-    {
-      ID: "EBUAA12345",
-      Status: "In Poll",
-      Remarks: "Remarks will be added according to the status of the unit.",
-      Location: "Lahore",
-      "Status Update Time": "22-09-2021, 22:40 HRS",
-    },
-    {
-      ID: "EBUAA23456",
-      Status: "In Poll",
-      Remarks: "Remarks will be added according to the status of the unit.",
-      Location: "Lucknow",
-      "Status Update Time": "22-09-2021, 22:40 HRS",
-    },
-  ];
+  const data = expD;
 
   function formatData() {
     if (data) {
@@ -111,9 +99,9 @@ const UnitListTable = () => {
         })
         .map((val) => {
           return {
-            ID: val["ID"],
-            Status_Hidden: val["Status"],
-            Status: <div className={styles.unit_status}>{val["Status"]}</div>,
+            ID: val["modelId"],
+            Status_Hidden: val["modelStatus"],
+            Status: <div className={styles.unit_status}>{val["modelStatus"]}</div>,
             Remarks: val["Remarks"],
             Location: val["Location"],
             "Status Update Time": val["Status Update Time"],
@@ -265,7 +253,7 @@ const UnitListTable = () => {
 };
 
 // Status Update Card
-const StatusUpdate = ({ inputValue, handleInputChange, onButtonClick }) => {
+const StatusUpdate = ({ inputValue, handleInputChange, handleInputChange2 ,onButtonClick }) => {
   return (
     <>
       <div className={styles.unit_list_container}>
@@ -280,6 +268,7 @@ const StatusUpdate = ({ inputValue, handleInputChange, onButtonClick }) => {
               value={inputValue}
               onChange={handleInputChange}
             />
+            <ActionButton text="EP Mark" name="epForm" onClick={onButtonClick} />
             <ActionButton text="EP Unmark" onClick={onButtonClick} />
             <ActionButton
               text="Unit Replacement"
@@ -368,7 +357,7 @@ const ReplacementForm = ({ isVisible, unitID }) => {
     try {
       const response = await fetch(`${baseUrl}/replace_unit`, requestOptions);
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
       if (data.status == 200) {
         alert("Unit Replaced Successfully");
       } else {
@@ -454,6 +443,177 @@ const ReplacementForm = ({ isVisible, unitID }) => {
                     placeholder="Defective Location ID"
                     value={inputValues.defecDestId}
                     onChange={handleInputChange}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <button
+            className="font-semibold text-white"
+            onClick={handleFormSubmit}
+          >
+            Submit
+          </button>
+        </div>
+      )}
+    </>
+  );
+};
+
+const EPForm = ({ isVisible, unitID }) => {
+  const initialValues = {
+    bulk: "",
+    destinationLocation: "",
+    acLocation: "",
+    unitList: "",
+    remarks: ""
+  };
+  const [inputValues, setInputValues] = useState(initialValues);
+
+  const handleInputChange2 = (e) => {
+    const { name, value } = e.target;
+    setInputValues({
+      ...inputValues,
+      [name]: value,
+    });
+  };
+
+  const handleFormSubmit = async (e) => {
+    const formData = {
+      userID,
+      bulk: inputValues.bulk,
+      destinationLocation: inputValues.destinationLocation,
+      acLocation: inputValues.acLocation,
+      unitList: inputValues.unitList,
+      remarks: inputValues.remarks
+    };
+    // console.log(formData);
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    };
+
+    // const baseUrl = "http://localhost:8100/unit";
+    // try {
+    //   const response = await fetch(`${baseUrl}/replace_unit`, requestOptions);
+    //   const data = await response.json();
+    //   console.log(data);
+    //   if (data.status == 200) {
+    //     alert("Unit Replaced Successfully");
+    //   } else {
+    //     alert("Could not replace the unit");
+    //   }
+    // } catch (err) {
+    //   alert(`Error occured: ${err}`);
+    // }
+    // setInputValues(initialValues);
+  };
+
+  useEffect(() => {
+    setInputValues({ ...inputValues, replacedId: unitID });
+  }, [unitID]);
+
+  function ACNum() {
+    return (
+      <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+                <label className="mb-2 w-full text-base">
+                  AC Location<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-gray-800">
+                  <input
+                    className="h-10 w-200 rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                    name="acLocation"
+                    placeholder="AC Location"
+                    value={inputValues.acLocation}
+                    onChange={handleInputChange2}
+                  />
+                </div>
+              </div>
+    );
+  }
+
+  function UList(){
+    return  (
+              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+                <label className="mb-2 w-full text-base">
+                  Unit Lists<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-gray-800">
+                  <input
+                    className="h-10 w-200 rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                    name="unitList"
+                    placeholder="Unit Lists"
+                    value={inputValues.unitList}
+                    onChange={handleInputChange2}
+                  />
+                </div>
+              </div>
+    );
+  };
+
+  function UaCList(val) {
+    if(val==='Select')  return<div></div>
+    else if(val==='Yes') return <ACNum/>
+    else if(val==='No') return <UList/>
+    else  return <div></div>
+  }
+
+  return (
+    <>
+      {isVisible && (
+        <div className={styles.unit_list_container}>
+          <div className={styles.unit_list_header}>
+            <h4>EP Mark</h4>
+          </div>
+          <div className="mt-2 w-full bg-white p-6">
+            <div className="grid grid-cols-3">
+              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+                <label className="mb-2 w-full text-base">
+                  Bulk<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-[#494A59]">
+                  <select
+                    className="relative h-10 w-full rounded-md border p-2"
+                    name="bulk"
+                    placeholder="Select"
+                    value={inputValues.bulk}
+                    onChange={handleInputChange2}
+                  >
+                    {" "}
+                    <option hidden>Select</option>
+                    <option>Yes</option>
+                    <option>No</option>
+                  </select>
+                  <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1/2" />
+                </div>
+              </div>
+              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+                <label className="mb-2 w-full text-base">
+                  Destination Location<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-gray-800">
+                  <input
+                    className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                    name="destinationLocation"
+                    placeholder="Location"
+                    value={inputValues.destinationLocation}
+                    onChange={handleInputChange2}
+                  />
+                </div>
+              </div>
+              {UaCList(inputValues.bulk)}
+              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+                <label className="mb-2 w-full text-base">
+                  Remarks<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-gray-800">
+                  <input
+                    className="h-40 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                    name="remarks"
+                    placeholder="Remarks"
+                    value={inputValues.remarks}
+                    onChange={handleInputChange2}
                   />
                 </div>
               </div>
