@@ -179,7 +179,7 @@ function Home1() {
 						<option value=""></option>
 					</select>
 
-					<div style={{ height: '70%', overflow: 'hidden' }}>
+					<div style={{ height: '100%', overflow: '' }}>
 						<span className="heading" style={{ maxWidth: "100%", display: "block", "textOverflow": "ellipsis", "whiteSpace": "nowrap" }}> India: {content2}</span>
 						<div className='map' >
 							{indiaMap == 0 && <MapDialog show={show} StateName={STName} closeModal={handleClose} />}
