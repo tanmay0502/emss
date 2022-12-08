@@ -11,7 +11,7 @@ import ManageUsers from './pages/user_management/ManageUsers';
 import WarehouseManagement from './pages/warehouse_management/WarehouseManagement'
 import AddWarehouse from './pages/warehouse_management/AddWarehouse';
 import ModifyWarehouse from './pages/warehouse_management/ModifyWarehouse';
-
+import HomePage from './pages/unit_management/Homepage'
 import Login from './pages/login/Login';
 import Routed from './Router';
 import { useEffect, useState } from 'react';
@@ -25,7 +25,6 @@ import GenerateOrder from './pages/order_management/GenarateOrder';
 import ViewOrderDetails from './pages/order_management/ViewOrderDetails';
 import EditView from './pages/home/EditView';
 import UnitList from './pages/unit_management/UnitList';
-import HomePageUnit from './pages/unit_management/Homepage';
 import ScheduleElection from './pages/unit_management/ScheduleElection';
 import ScheduleList from './pages/unit_management/ScheduleList';
 import ScheduleTnaList from './pages/unit_management/TnaList';
@@ -35,6 +34,14 @@ import VarificationList from './pages/unit_management/PhysicalVarList';
 import ScheduleFLC from './pages/unit_management/ScheduleFlc';
 import FLCList from './pages/unit_management/FlcList'
 
+import Schedule_List_CDP from './pages/unit_management/Schedule_List_CDP';
+import ScheduleCDP_edit from './pages/unit_management/ScheduleCDP_edit';
+import ScheduleCDP from './pages/unit_management/ScheduleCDP';
+
+import EditFLC from './pages/unit_management/EditFlc'
+import EditTna from './pages/unit_management/EditTna';
+import EditElection from './pages/unit_management/EditElection';
+import HomePageUnit from './pages/unit_management/Homepage';
 function App() {
 
   const [sessionState, setSessionState] = useState({
@@ -59,7 +66,10 @@ function App() {
           <Route path="/session/" element={<Routed Session={sessionState} SetSession={setSessionState} />}>
             <Route path="/session/home" element={<Home1 />} />{" "}
             Dashboard Component goes here
-
+            <Route
+              path="/session/unitmanagement/HomePage"
+              element={<HomePage />}
+            />
             <Route
               path="/session/home/editview"
               element={<EditView />}
@@ -74,14 +84,14 @@ function App() {
               path="/session/usermanagement/edituser/:userid"
               element={<EditUser />}
             />
+            {/* <Route
+              path="/session/unitmanagement/"
+              element={<UnitList />}
+            /> */}
             <Route
               path="/session/unitmanagement/"
               element={<HomePageUnit />}
             />
-            {/* <Route
-              path="/session/unitmanagement/statusHistory"
-              element={<kljfd />}
-            /> */}
             <Route
               path="/session/unitmanagement/election_scheduling"
               element={<ScheduleElection />}
@@ -91,12 +101,20 @@ function App() {
               element={<ScheduleList />}
             />
             <Route
+              path="/session/unitmanagement/edit_election/:id"
+              element={<EditElection />}
+            />
+            <Route
               path="/session/unitmanagement/schedule_tna_list"
               element={<ScheduleTnaList />}
             />
             <Route
               path="/session/unitmanagement/tna_scheduling"
               element={<ScheduleTna />}
+            />
+                        <Route
+              path="/session/unitmanagement/edit_tna/:id"
+              element={<EditTna />}
             />
             <Route
               path="/session/unitmanagement/varification_scheduling"
@@ -114,6 +132,25 @@ function App() {
               path="/session/unitmanagement/flc_list"
               element={<FLCList />}
             />
+            <Route
+              path="/session/unitmanagement/editflc/:id"
+              element={<EditFLC />}
+            />
+
+            <Route
+              path="/session/unitmanagement/ScheduleCDP"
+              element={<ScheduleCDP />}
+            />
+            <Route
+              path="/session/unitmanagement/ScheduleCDP_edit"
+              element={<ScheduleCDP_edit />}
+            />
+            <Route
+              path="/session/unitmanagement/Schedule_List_CDP"
+              element={<Schedule_List_CDP />}
+            />
+
+
             <Route
               path="/session/warehousemanagement/"
               element={<WarehouseManagement />}
