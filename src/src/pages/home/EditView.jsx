@@ -9,7 +9,7 @@ export default function EditView(){
     const [states,setStates] = useState([]);
     const [others,setOthers] = useState([]);
 
-    const UnitStates = ['Counting','In Poll','In Reserve', 'In EP Period', 'EP Marked', 'Counting Defective', 'Dispersal Defective', 'Commissioning Defective', 'Polled Defective','Unpolled Defective', 'In Election', 'FLC OK', 'Under T&aA', 'FLC Assembly', 'Available for Use', 'In Transit', 'Manufacturer New Stock', 'Manufacturer Repaired Stock', 'Manufacturer Under Repair','Under FIR','Block' ,'FLC Not OK','Under Loan', 'Write-off & Destroyed'];
+    const UnitStates = ['Counting','In Poll','In Reserve', 'In EP Period', 'EP Marked', 'Counting Defective', 'Dispersal Defective', 'Commissioning Defective', 'Polled Defective','Unpolled Defective', 'In Election', 'FLC OK', 'Under T&A', 'FLC Assembly', 'Available for Use', 'In Transit', 'Manufacturer New Stock', 'Manufacturer Repaired Stock', 'Manufacturer Under Repair','Under FIR','Block' ,'FLC Not OK','Under Loan', 'Write-off & Destroyed'];
 
     const otherComponents = ['District','Warehouse','Notifications','Order Status','Recent Issues'];
 

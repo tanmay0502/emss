@@ -6,8 +6,8 @@ import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import ListCard from './ListCard';
 
-// const uri = process.env.REACT_APP_API_SERVER+"/unit/total_counts?oprnd=IN000000ADM&access_token="
-const uri = "http://localhost:8100/unit/total_counts?oprnd=IN000000ADM"
+const uri = process.env.REACT_APP_API_SERVER+"/unit/total_counts?oprnd="
+// const uri = "http://localhost:8100/unit/total_counts?oprnd=CH000000CEO"
 
 export default function HomePage() {
     const [unitData, setUnitData] = useState([]);
@@ -30,23 +30,24 @@ export default function HomePage() {
     };
 
     useEffect(()=>{
-        let getData = () => {
+        let getData = async () => {
             try {
-            //   const response = await fetch(
-            //     uri,
-            //     {
-            //       method: "GET",
-            //       headers: {
-            //         "Content-Type": "application/json",
-            //       },
-            //       credentials:'include'
-            //     }
-            //   );
-            //     let data2 = await response.json();
-            //     console.log("Data fetched", data2);
+                const ID = window.sessionStorage.getItem('sessionToken');
+                const response = await fetch(
+                uri+ID,
+                {
+                  method: "GET",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  credentials:'include'
+                }
+              );
+                let data2 = await response.json();
+                // console.log("Data fetched", data2);
                 // console.log("Data fetched", data2['data']);
-                // let data = data2['data'];
-                let data = Data;
+                let data = data2['data'];
+                // let data = Data;
                 // let data = [];
                 let finalData = [
                     {
@@ -100,50 +101,104 @@ export default function HomePage() {
                     const ele = data[i];
                     if(ele.unit_type === 'CU') {
                         if(ele.manufacturer === 'E'){
-                            finalData[0].ECIL.push({
-                                status: ele.status,
-                                model: ele.model,
-                                count: ele.count
-                            })
+                            let found= false;
+                            for (let a = 0; a < finalData[0].ECIL.length; a++) {
+                                if (finalData[0].ECIL[a].model === ele.model) {
+                                    found = true;
+                                    finalData[0].ECIL[a].count += ele.count;
+                                }
+                            }
+                            if (!found) {
+                                finalData[0].ECIL.push({
+                                    status: ele.status,
+                                    model: ele.model,
+                                    count: ele.count
+                                })
+                            }
                         }
                         if(ele.manufacturer === 'B'){
-                            finalData[0].BEL.push({
-                                status: ele.status,
-                                model: ele.model,
-                                count: ele.count
-                            })
+                            let found= false;
+                            for (let a = 0; a < finalData[0].BEL.length; a++) {
+                                if (finalData[0].BEL[a].model === ele.model) {
+                                    found = true;
+                                    finalData[0].BEL[a].count += ele.count;
+                                }
+                            }
+                            if (!found) {
+                                finalData[0].BEL.push({
+                                    status: ele.status,
+                                    model: ele.model,
+                                    count: ele.count
+                                })
+                            }
                         }
                     }
                     if(ele.unit_type === 'VT') {
                         if(ele.manufacturer === 'E'){
-                            finalData[1].ECIL.push({
-                                status: ele.status,
-                                model: ele.model,
-                                count: ele.count
-                            })
+                            let found= false;
+                            for (let a = 0; a < finalData[1].ECIL.length; a++) {
+                                if (finalData[1].ECIL[a].model === ele.model) {
+                                    found = true;
+                                    finalData[1].ECIL[a].count += ele.count;
+                                }
+                            }
+                            if (!found) {
+                                finalData[1].ECIL.push({
+                                    status: ele.status,
+                                    model: ele.model,
+                                    count: ele.count
+                                })
+                            }
                         }
                         if(ele.manufacturer === 'B'){
-                            finalData[1].BEL.push({
-                                status: ele.status,
-                                model: ele.model,
-                                count: ele.count
-                            })
+                            let found= false;
+                            for (let a = 0; a < finalData[1].BEL.length; a++) {
+                                if (finalData[1].BEL[a].model === ele.model) {
+                                    found = true;
+                                    finalData[1].BEL[a].count += ele.count;
+                                }
+                            }
+                            if (!found) {
+                                finalData[1].BEL.push({
+                                    status: ele.status,
+                                    model: ele.model,
+                                    count: ele.count
+                                })
+                            }
                         }
                     }
                     if(ele.unit_type === 'BU') {
                         if(ele.manufacturer === 'E'){
-                            finalData[2].ECIL.push({
-                                status: ele.status,
-                                model: ele.model,
-                                count: ele.count
-                            })
+                            let found= false;
+                            for (let a = 0; a < finalData[2].ECIL.length; a++) {
+                                if (finalData[2].ECIL[a].model === ele.model) {
+                                    found = true;
+                                    finalData[2].ECIL[a].count += ele.count;
+                                }
+                            }
+                            if (!found) {
+                                finalData[2].ECIL.push({
+                                    status: ele.status,
+                                    model: ele.model,
+                                    count: ele.count
+                                })
+                            }
                         }
                         if(ele.manufacturer === 'B'){
-                            finalData[2].BEL.push({
-                                status: ele.status,
-                                model: ele.model,
-                                count: ele.count
-                            })
+                            let found= false;
+                            for (let a = 0; a < finalData[2].BEL.length; a++) {
+                                if (finalData[2].BEL[a].model === ele.model) {
+                                    found = true;
+                                    finalData[2].BEL[a].count += ele.count;
+                                }
+                            }
+                            if (!found) {
+                                finalData[2].BEL.push({
+                                    status: ele.status,
+                                    model: ele.model,
+                                    count: ele.count
+                                })
+                            }
                         }
                     }
 
@@ -217,9 +272,30 @@ export default function HomePage() {
                                     BEL: []
                                 }
                                 if (ele.manufacturer === "E") {
-                                    temp.ECIL.push({model: ele.model, count: ele.count})
+                                    let found = false;
+                                    for (let a = 0; a < temp.ECIL.length; a++) {
+                                        if (temp.ECIL[i].model === ele.model) {
+                                            found = true;
+                                            temp.ECIL[i].count += ele.count;
+                                            break;
+                                        }
+                                    }
+                                    if (!found) {
+                                        temp.ECIL.push({model: ele.model, count: ele.count})
+                                    }
                                 }
                                 if (ele.manufacturer === "B") {
+                                    let found = false;
+                                    for (let a = 0; a < temp.BEL.length; a++) {
+                                        if (temp.BEL[i].model === ele.model) {
+                                            found = true;
+                                            temp.BEL[i].count += ele.count;
+                                            break;
+                                        }
+                                    }
+                                    if (!found) {
+                                        temp.BEL.push({model: ele.model, count: ele.count})
+                                    }
                                     temp.BEL.push({model: ele.model, count: ele.count})
                                 }
                                 statusData[j].type.push(temp);
@@ -248,25 +324,20 @@ export default function HomePage() {
                     }
                     
                 }
+                setUnitData(finalData)
+                setStatusData(statusData)
+                setCDat(cuDat)
+                setBDat(buDat)
+                setVDat(vtDat)
                 return [finalData, statusData, cuDat, buDat, vtDat];
             } catch (err) {
               console.log(err);
               return [[],[]];
             }
           }
-        //   console.log(getData())
-        //   console.log(formatedData)
-          
-        setUnitData(getData()[0])
-        setStatusData(getData()[1])
-        setCDat(getData()[2])
-        setBDat(getData()[3])
-        setVDat(getData()[4])
+          console.log(getData());
         
-        },[])
-        // console.log({statusData})
-        // console.log({unitData})
-        
+        },[])        
 
     let dataByStatus = statusData;
     let dataByUnitType = unitData;

@@ -9,7 +9,7 @@ function Card(props) {
     const rightArrow = ">";
 
     function DisplayMachineCountByModel({val}) {
-        console.log(val)
+        // console.log(val)
         return <div>{val.count!="0"?val.count+" "+val.model:"0"}</div>
     }
 

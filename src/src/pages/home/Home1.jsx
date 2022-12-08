@@ -36,7 +36,7 @@ function Home1() {
 	const bu = Number(compost.split(',')[1]).toLocaleString();
 	const cu = Number(compost.split(',')[2]).toLocaleString();
 	const vvpat = Number(compost.split(',')[3]).toLocaleString();
-	console.log("compost: " + compost);
+	// console.log("compost: " + compost);
 
 
 	const [content2, setContent2] = useState("");
@@ -46,22 +46,76 @@ function Home1() {
 	const [totalCU, setTotalCU] = useState(0);
 	const [totalBU, setTotalBU] = useState(0);
 	const [totalVT, setTotalVT] = useState(0);
+	const [statusData, setStatusData] = useState([]);
+	const [fetchData, setFetchData] = useState([]);
+
+	const uri = process.env.REACT_APP_API_SERVER+"/unit/total_counts?oprnd="
+
 	useEffect(()=>{
-		data = Data;
+		let getData = async ()=>{
+			try {
+				const ID = window.sessionStorage.getItem('sessionToken');
+				const response = await fetch(
+					uri+ID,
+					{
+					  method: "GET",
+					  headers: {
+						"Content-Type": "application/json",
+					  },
+					  credentials:'include'
+					}
+				  );
+					let data2 = await response.json();
+					// console.log("Data fetched", data2);
+					// console.log("Data fetched", data2['data']);
+					let data = data2['data'];
+					setFetchData(data);
+			} catch (err) {
+				console.log(err);
+			}
+		}
+		getData();
+	}, [])
+	
+	useEffect(()=>{
+		data = fetchData;
 		let countCU = 0;
 		let countBU = 0;
 		let countVT = 0;
+		// count the number of unit type in use
 		for (let i = 0; i < data.length; i++) {
 			const ele = data[i];
 			ele.unit_type==="BU"?countBU+=ele.count:ele.unit_type=="VT"?countVT+=ele.count:countCU+=ele.count;
 		}
-		// console.log(countBU)
-		// console.log(countCU)
-		// console.log(countVT)
 		setTotalBU(countBU)
 		setTotalCU(countCU)
 		setTotalVT(countVT)
-	},[])
+		// find the total status available in data
+		let status = [];
+		for (let i = 0; i < data.length; i++) {
+			let found = false;
+			for (let j = 0; j < status.length; j++) {
+				if (status[j] === data[i].status) {
+					found = true;
+				}
+			}
+			if (!found) {
+				status.push(data[i].status);
+			}			
+		}
+
+		// sort the data according to their status
+		let statusData = [];
+		for (let i = 0; i < status.length; i++) {
+			let ele = status[i];
+			statusData.push({
+				status:ele,
+				data:data.filter((val)=>{return(val.status === ele)})
+			})	
+		}
+		// console.log(statusData)
+		setStatusData(statusData);
+	},[fetchData])
 
 
 	const handleClose = () => setIndiaMap(1);
@@ -70,20 +124,6 @@ function Home1() {
 
 	const [indiaMap, setIndiaMap] = useState(1);
 
-	const blocked = [
-		['Ballot Units', 1, 2], ['Control Units', 1, 2], ['VVPAT', 3, 5]
-	]
-
-	const ep = [
-		['Ballot Units', 200, 0], ['Control Units', 200, 0], ['VVPAT', 400, 0]
-	]
-
-	const defective = [
-		['Ballot Units', 400, 20], ['Control Units', 500, 10], ['VVPAT', 800, 50]
-	]
-	const available = [
-		['Ballot Units', 6349, 278], ['Control Units', 4299, 288], ['VVPAT', 13747, 90]
-	]
 
 	var obj = window.localStorage.getItem(window.sessionStorage.getItem('sessionToken'));
 	var data = [];
@@ -116,11 +156,12 @@ function Home1() {
 
 		const respJSON = await response.json();
 		var data = respJSON['data'].slice(-10);
+		console.log(data)
 		// data.reverse();
 		data = data.sort((a,b) => {
 			return (new Date(a['createdon'])).getTime() - (new Date(b['createdon'])).getTime()
 		})
-		console.log(data)
+		// console.log(data)
 		setIssues(data)
 	}
 
@@ -171,7 +212,7 @@ function Home1() {
 			</div>
 
 			<div className='w-100 gridCustom  pb-10'>
-				{otherElements.includes("District") && <div className="myCardSample">
+				{otherElements.includes("District") && <div className="myCardSample" style={{padding:"15px 30px 0"}}>
 					<div className="card_title">
 						District
 					</div>
@@ -179,7 +220,7 @@ function Home1() {
 						<option value=""></option>
 					</select>
 
-					<div style={{ height: '100%', overflow: '' }}>
+					<div style={{ height: '75%', overflow: 'hidden' }}>
 						<span className="heading" style={{ maxWidth: "100%", display: "block", "textOverflow": "ellipsis", "whiteSpace": "nowrap" }}> India: {content2}</span>
 						<div className='map' >
 							{indiaMap == 0 && <MapDialog show={show} StateName={STName} closeModal={handleClose} />}
@@ -189,7 +230,7 @@ function Home1() {
 				</div>}
 
 				{data.length && data.map(val => (
-					<UnitCard title={val} data={defective} />
+					<UnitCard title={val} statusData={statusData} />
 				))}
 
 

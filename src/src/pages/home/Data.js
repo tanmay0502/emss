@@ -4,7 +4,7 @@ const Data = [
       'status': 'Available for Use',
       'manufacturer': 'B',
       'model': 'M1',
-      'count': 5,
+      'count': 6,
       'unit_list': ['EBUM200000', 'FLC Assembly', 'M2', 'TS011C00801']
     },
     {
