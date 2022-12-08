@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from "react";
 import styles from './styles/Homepage.module.css';
-import Data from './Data';
-import Card from './Card';
-import Popup from 'reactjs-popup';
-import 'reactjs-popup/dist/index.css';
-import ListCard from './ListCard';
+import { useNavigate } from 'react-router-dom';
+
 
 const uri = process.env.REACT_APP_API_SERVER+"/unit/total_counts?oprnd="
 // const uri = "http://localhost:8100/unit/total_counts?oprnd=CH000000CEO"
+
+let expD = [];
+function fun(dat) {
+    expD = dat;
+}
+
+export {expD};
+
 
 export default function HomePage() {
     const [unitData, setUnitData] = useState([]);
@@ -15,23 +20,9 @@ export default function HomePage() {
     const [cDat,setCDat] = useState([]);
     const [bDat,setBDat] = useState([]);
     const [vDat,setVDat] = useState([]);
+    const [stDat,setStDat] = useState([]);
+    const navigate = useNavigate();
 
-    const VV = 'VV';
-    const data = [[VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20]]
-
-
-    function creatListCard(val) {
-        if(val.val.unit_type==="CU") {
-            return <ListCard type='Control Unit' value={cDat}/>
-        }
-        else if(val.val.unit_type==="BU") {
-            return <ListCard type='Ballot Unit' value={bDat}/>
-        }
-        else if(val.val.unit_type==="VT") {
-            return <ListCard type='VVPAT' value={vDat}/>
-        }
-        else    return <div></div>
-    };
 
     useEffect(()=>{
         let getData = async () => {
@@ -51,6 +42,8 @@ export default function HomePage() {
                 // console.log("Data fetched", data2);
                 // console.log("Data fetched", data2['data']);
                 let data = data2['data'];
+
+                // console.log(data);
                 // let data = Data;
                 // let data = [];
                 let finalData = [
@@ -74,29 +67,68 @@ export default function HomePage() {
                 let cuDat = [];
                 let buDat = [];
                 let vtDat = [];
+                let sDat = [];
                 data.map(function(val){
                     if(val.unit_type==='CU') {
-                        cuDat.push({
-                            modelId: val.unit_list[0],
-                            modelStatus: val.unit_list[1],
-                            modelType: val.unit_list[2],
-                            model_Id: val.unit_list[3]
-                        });
+                        val.unit_list.map(function(v){
+                            cuDat.push({
+                                modelId: v[0],
+                                modelStatus: v[1],
+                                modelType: v[2],
+                                model_Id: v[3]
+                            });
+                        }); 
                     }
                     else if(val.unit_type==='BU') {
-                        buDat.push({
-                            modelId: val.unit_list[0],
-                            modelStatus: val.unit_list[1],
-                            modelType: val.unit_list[2],
-                            model_Id: val.unit_list[3]
-                        });
+                        val.unit_list.map(function(v){
+                            buDat.push({
+                                modelId: v[0],
+                                modelStatus: v[1],
+                                modelType: v[2],
+                                model_Id: v[3]
+                            });
+                        }); 
                     }
                     else if(val.unit_type==='VT') {
-                        vtDat.push({
-                            modelId: val.unit_list[0],
-                            modelStatus: val.unit_list[1],
-                            modelType: val.unit_list[2],
-                            model_Id: val.unit_list[3]
+                        val.unit_list.map(function(v){
+                            vtDat.push({
+                                modelId: v[0],
+                                modelStatus: v[1],
+                                modelType: v[2],
+                                model_Id: v[3]
+                            });
+                        }); 
+                    }
+                });
+
+                data.map(function(val){
+                    let k = 0;
+                    sDat.map(function(v){
+                        if(v.status===val.status) {
+                            k = 1;
+                            val.unit_list.map(function(o){
+                                v.type.push({
+                                    modelId: o[0],
+                                    modelStatus: o[1],
+                                    modelType: o[2],
+                                    model_Id: o[3]
+                                });
+                            });
+                        }
+                    });
+                    if(k==0) {
+                        let T = [];
+                        val.unit_list.map(function(o){
+                            T.push({
+                                modelId: o[0],
+                                modelStatus: o[1],
+                                modelType: o[2],
+                                model_Id: o[3]
+                            });
+                        });
+                        sDat.push({
+                            status: val.status,
+                            type: T
                         });
                     }
                 });
@@ -333,7 +365,8 @@ export default function HomePage() {
                 setCDat(cuDat)
                 setBDat(buDat)
                 setVDat(vtDat)
-                return [finalData, statusData, cuDat, buDat, vtDat];
+                setStDat(sDat)
+                return [finalData, statusData, cuDat, buDat, vtDat, sDat];
             } catch (err) {
               console.log(err);
               return [[],[]];
@@ -355,8 +388,80 @@ export default function HomePage() {
     }
 
     function createCard(cardVal) {
-        return (<Card value={cardVal}/>);
+        let exp = [];
+        stDat.map(function(v){
+            if(cardVal.status===v.status) {
+                exp = v.type;
+            }
+        });
+        return (
+            <div className={styles.myCardSample}>
+                    <div className={styles.card_title}>
+                    
+                        <button onClick={handleButtonClick} name={cardVal.status} style={{backgroundColor:'white'}}>Units {rightArrow} {cardVal.status}</button>
+                             
+
+                    </div>
+
+                    <div className="cardSampleBody">
+                        <table >
+                            <thead >
+                                <tr>
+                                    <th style={{ color: "#f56a3f", paddingLeft: "33px", textAlign: "left" }}>Units</th>
+                                    <th style={{ color: "#f56a3f", paddingLeft: "33px" }}>ECIL</th>
+                                    <th style={{ color: "#f56a3f", paddingLeft: "33px" }}>BEL</th>
+                                </tr>
+                            </thead>
+                            {cardVal.type != [] && cardVal.type.length > 0 &&
+                                cardVal.type.map((val) => {
+                                    return (
+                                        <tbody >
+                                            <tr>
+                                                <td className="text-black text-sm" style={{ textAlign: "left" }}>
+                                                    <div>{val.unit_type}</div>
+                                                </td>
+                                                <td className="text-black text-sm mr-2 pl-5">
+                                                    {val.ECIL.map((val,ind)=>{
+                                                        return(
+                                                            <DisplayMachineCountByModel val={val}/>
+                                                        )})}
+
+                                                </td>
+                                                <td className="text-black text-sm pl-7">
+                                                    {val.BEL.map((val,ind)=>{
+                                                        return(
+                                                            <DisplayMachineCountByModel val={val}/>
+                                                        )})}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    )
+                                })}
+                        </table>
+                    </div>
+                </div>
+        );
     }
+
+
+    const handleButtonClick = (e) => {
+        // console.log("clicked" + e.target.name);
+        if(e.target.name==='CU')    fun(cDat);
+        else if(e.target.name==='BU')   fun(bDat);
+        else if(e.target.name==='VT')   fun(vDat);
+        else {
+            stDat.map(function(val){
+                if(val.status===e.target.name) {
+                    fun(val.type);
+                }
+            })
+        }
+        navigate('/session/unitmanagement/unitlist');
+      };
+
+    
+
+
 
     return (
 
@@ -377,51 +482,8 @@ export default function HomePage() {
                                 Select
                             </option>
                         </select>
-                    </div>
-                    <div className={styles.Scroll1}>
 
-                    <table className='w-100 '>
-                        <thead >
-                            <tr>
-                                <th>Units</th>
-                                <th>ECIL</th>
-                                <th>BEL</th>
-                            </tr>
-                        </thead>
-
-                        {dataByUnitType != [] && dataByUnitType.length > 0 &&
-                            dataByUnitType.map((val) => {
-
-                                return (
-                                    <tbody >
-                                        <tr>
-                                            <td>
-                                                {val.unit_type}
-                                            </td>
-                                            <td>
-                                                {val.ECIL.map((val, ind) => {
-                                                    return (
-                                                        <DisplayMachineCountByModel val={val} />
-                                                    )
-                                                })}
-                                            </td>
-                                            <td >
-                                                {val.BEL.map((val, ind) => {
-                                                    return (
-                                                        <DisplayMachineCountByModel val={val} />
-                                                    )
-                                                })}
-                                            </td>
-                                        </tr>
-
-                                    </tbody>
-                                )
-                            })}
-                    </table>
-                    </div>           
-
-
-                        {/* <table >
+                        <table >
                             <thead >
                                 <tr>
                                     <th style={{ color: "#f56a3f", paddingLeft: "33px", textAlign: "left" }}>Units</th>
@@ -436,9 +498,11 @@ export default function HomePage() {
                                         <tbody >
                                             <tr>
                                                 <td className="text-black text-sm" style={{ textAlign: "left" }}>
-                                                <Popup trigger={<div> {val.unit_type}</div>} position="right center">
-                                                        <div>{creatListCard({val})}</div>
-                                                    </Popup>
+                                            
+                                                    <div> <button name={val.unit_type} style={{backgroundColor: 'white'}} onClick={handleButtonClick}>{val.unit_type}</button></div>
+                                                
+                                                        
+                                              
                                                 </td>
                                                 <td className="text-black text-sm mr-2 pl-5">
                                                     {val.ECIL.map((val,ind)=>{
@@ -456,8 +520,8 @@ export default function HomePage() {
                                         </tbody>
                                     )
                                 })}
-                        </table> */}
-                    {/* </div> */}
+                        </table>
+                    </div>
                 </div>
 
 
@@ -874,7 +938,7 @@ export default function HomePage() {
             </div>
 
             <div className={styles.parent2} >
-               {dataByStatus.map(createCard)}
+               {dataByStatus.map(createCard)};
                {/* {console.log(dataByStatus)} */}
             </div>
         </div >
