@@ -34,6 +34,7 @@
     "react-table": "^7.8.0",
     "react-tag-input-component": "^2.0.2",
     "react-tooltip": "^4.4.0",
+    "reactjs-popup": "^2.0.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
