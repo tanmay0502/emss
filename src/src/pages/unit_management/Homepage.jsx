@@ -16,6 +16,10 @@ export default function HomePage() {
     const [bDat,setBDat] = useState([]);
     const [vDat,setVDat] = useState([]);
 
+    const VV = 'VV';
+    const data = [[VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20], [VV, 50, 20]]
+
+
     function creatListCard(val) {
         if(val.val.unit_type==="CU") {
             return <ListCard type='Control Unit' value={cDat}/>
@@ -373,8 +377,51 @@ export default function HomePage() {
                                 Select
                             </option>
                         </select>
+                    </div>
+                    <div className={styles.Scroll1}>
 
-                        <table >
+                    <table className='w-100 '>
+                        <thead >
+                            <tr>
+                                <th>Units</th>
+                                <th>ECIL</th>
+                                <th>BEL</th>
+                            </tr>
+                        </thead>
+
+                        {dataByUnitType != [] && dataByUnitType.length > 0 &&
+                            dataByUnitType.map((val) => {
+
+                                return (
+                                    <tbody >
+                                        <tr>
+                                            <td>
+                                                {val.unit_type}
+                                            </td>
+                                            <td>
+                                                {val.ECIL.map((val, ind) => {
+                                                    return (
+                                                        <DisplayMachineCountByModel val={val} />
+                                                    )
+                                                })}
+                                            </td>
+                                            <td >
+                                                {val.BEL.map((val, ind) => {
+                                                    return (
+                                                        <DisplayMachineCountByModel val={val} />
+                                                    )
+                                                })}
+                                            </td>
+                                        </tr>
+
+                                    </tbody>
+                                )
+                            })}
+                    </table>
+                    </div>           
+
+
+                        {/* <table >
                             <thead >
                                 <tr>
                                     <th style={{ color: "#f56a3f", paddingLeft: "33px", textAlign: "left" }}>Units</th>
@@ -409,8 +456,8 @@ export default function HomePage() {
                                         </tbody>
                                     )
                                 })}
-                        </table>
-                    </div>
+                        </table> */}
+                    {/* </div> */}
                 </div>
 
 
@@ -827,7 +874,7 @@ export default function HomePage() {
             </div>
 
             <div className={styles.parent2} >
-               {dataByStatus.map(createCard)};
+               {dataByStatus.map(createCard)}
                {/* {console.log(dataByStatus)} */}
             </div>
         </div >
