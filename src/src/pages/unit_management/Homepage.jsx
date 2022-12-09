@@ -1,13 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from './styles/Homepage.module.css';
-import Data from './Data';
-import Card from './Card';
-import Popup from 'reactjs-popup';
-import 'reactjs-popup/dist/index.css';
-import ListCard from './ListCard';
 
-const uri = process.env.REACT_APP_API_SERVER+"/unit/total_counts?oprnd="
-// const uri = "http://localhost:8100/unit/total_counts?oprnd=CH000000CEO"
 
 export default function HomePage() {
     const [unitData, setUnitData] = useState([]);
@@ -348,22 +341,37 @@ export default function HomePage() {
 
  
 
+
+    const data = [
+        {
+            Units: 'Ballot Unit',
+            ECIL: "100 M1",
+            BEL: "100 M1",
+
+        },
+        {
+            Units: 'Control Unit',
+            ECIL: "100 M1",
+            BEL: "100 M1",
+
+
+        },
+        {
+            Units: 'VVPAT',
+            ECIL: "100 M1",
+            BEL: "100 M1"
+
+        }
+    ]
+
     const rightArrow = ">";
-
-    function DisplayMachineCountByModel({val}) {
-        return <div>{val.count!="0"?val.count+" "+val.model:"0"}</div>
-    }
-
-    function createCard(cardVal) {
-        return (<Card value={cardVal}/>);
-    }
 
     return (
 
         <div className={styles.parent}>
             <div className={styles.parent3}>
                 <div className={styles.myCardSample}>
-                    <div className={styles.s}>
+                    <div className={styles.card_title}>
                         <span>State Wise Unit Count</span>
                     </div>
                     <div>
@@ -429,28 +437,23 @@ export default function HomePage() {
                                     <th style={{ color: "#f56a3f", paddingLeft: "33px" }}>BEL</th>
                                 </tr>
                             </thead>
-                            {dataByUnitType != [] && dataByUnitType.length > 0 &&
-                                dataByUnitType.map((val) => {
-                                    // console.log(val)
+                            {data != [] && data.length > 0 &&
+                                data.map((val, id) => {
                                     return (
                                         <tbody >
                                             <tr>
                                                 <td className="text-black text-sm" style={{ textAlign: "left" }}>
-                                                <Popup trigger={<div> {val.unit_type}</div>} position="right center">
-                                                        <div>{creatListCard({val})}</div>
-                                                    </Popup>
+                                                    <div> {val['Units']}</div>
                                                 </td>
                                                 <td className="text-black text-sm mr-2 pl-5">
-                                                    {val.ECIL.map((val,ind)=>{
-                                                        return(
-                                                            <DisplayMachineCountByModel val={val}/>
-                                                        )})}
+                                                    <div>{val['ECIL']}</div>
+                                                    <div>{val['ECIL']}</div>
+
                                                 </td>
                                                 <td className="text-black text-sm pl-7">
-                                                    {val.BEL.map((val,ind)=>{
-                                                        return(
-                                                            <DisplayMachineCountByModel val={val}/>
-                                                        )})}
+
+                                                    <div>{val['BEL']}</div>
+                                                    <div>{val['BEL']}</div>
                                                 </td>
                                             </tr>
                                         </tbody>

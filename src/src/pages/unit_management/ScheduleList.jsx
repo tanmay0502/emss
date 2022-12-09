@@ -1,6 +1,6 @@
 import React from "react";
 import DynamicDataTable from "@langleyfoxall/react-dynamic-data-table";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom'
 import Edit from '../../assets/editBtn.png';
 import styles from './styles/ScheduleList.module.css';
@@ -15,6 +15,40 @@ export default function ScheduleList() {
     const [sortBy, setSortBy] = useState("None");
     const [isDetail, setIsDetail] = useState(0);
     const [tableFilter, setTableFilter] = useState("");
+    
+    const [elections, setElections] = useState([])
+    const [electionList, setElectionList] = useState([])
+
+    async function getElectionList() {
+        try {
+            const response = await fetch(
+                `${process.env.REACT_APP_API_SERVER}/unit/listElection`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: 'same-origin',
+                    mode: "cors"
+                }
+            );
+            const data = await response.json();
+            console.log(data['data'])
+            if(data["data"]!=404){
+                setElections(data['data']);
+                
+            }
+            
+        } catch (err) {
+            console.log({err});
+        }
+    }
+   
+
+    // {
+    //     elections !== undefined && console.log(elections[0])
+    // }
+
 
     const sortMapping = {
         "None": null,
@@ -63,7 +97,12 @@ export default function ScheduleList() {
             <img src={Edit} />
         </div>
     }
-    const data = [row1, row2, row3, row2, row1, row2,row1, row2, row3, row2, row1, row2,];
+    const dummydata = [row1, row2, row3, row2, row1, row2,row1, row2, row3, row2, row1, row2,];
+    console.log(dummydata[0])
+
+
+
+
     // const data1 = [row1, row2, row1];
 
     // const Table = [
@@ -72,6 +111,56 @@ export default function ScheduleList() {
     //     <Collapse orderId='XYZ/14' data={data1} time='2-05-2021' bottom={true} />
     // ]
 
+    
+
+    function makeElctionList(elections){
+        let eList = []
+        for( const i in elections){
+            console.log("i " + i + "data: " + elections[i][0])
+            const row = {
+                'State': elections[i][0],
+                'PC': elections[i][1],
+                "AC": elections[i][2],
+                "Election Type": elections[i][3],
+                "Start Date": elections[i][4].slice(0,10),
+                "End Date": elections[i][5].slice(0,10),
+                "Edit":
+                <div className={styles.editBtn}
+                onClick={() => {
+                    navigate(`/session/unitmanagement/edit_election/id=${i}`)
+                }}
+                >
+                    <img src={Edit} />
+                    
+                </div>
+            }  
+            console.log({row})
+            eList.push(row);
+              
+        }
+        console.log({eList})
+        setElectionList(eList)
+    }
+
+
+        // if(elections !== undefined){
+        //     useEffect(() => {
+        //             makeElctionList(elections);
+        //     }, []);
+        // }
+    useEffect(() => {
+        getElectionList();
+        // s(elections)
+    }, []);
+
+    useEffect(()=>{
+        if(elections !== undefined){
+            makeElctionList(elections);
+        }
+    }, [elections])
+
+
+    // console.log({electionList})
     return (
         <div className={`${styles.myWrapper1}`} style={{ position: "relative", height: "100%" }}>
             {isDetail == 0 ? <div className='MainHeader pd-5 ' style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between", "alignItems": "center" }}>
@@ -112,11 +201,13 @@ export default function ScheduleList() {
                     </div>
                 </div>
             </div> : <></>}
-            {isDetail === 0 ? 
+            {isDetail !== 0 ? 
             <div class={styles.table}>
             
             <DynamicDataTable 
-                rows={data}
+                rows={
+                    electionList
+                }
                 buttons={[]} 
                 // onClick={(event, row) => {
                 //     navigate(`/session/ordermanagement/orderdetails`)

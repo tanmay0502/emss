@@ -1,6 +1,6 @@
 import React from "react";
 import DynamicDataTable from "@langleyfoxall/react-dynamic-data-table";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { useNavigate } from 'react-router-dom'
 import Edit from '../../assets/editBtn.png';
 import styles from './styles/TnaList.module.css';
@@ -15,6 +15,38 @@ export default function FLCList() {
     const [sortBy, setSortBy] = useState("None");
     const [isDetail, setIsDetail] = useState(0);
     const [tableFilter, setTableFilter] = useState("");
+
+    const [flc, setFlc] = useState([])
+    const [flcValue, setFlcValue] = useState([])
+
+    async function getElectionList() {
+        try {
+            const response = await fetch(
+                `${process.env.REACT_APP_API_SERVER}/unit/listFLC`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: 'same-origin',
+                    mode: "cors"
+                }
+            );
+            const data = await response.json();
+            console.log(data['data'])
+            if(data["data"]!=404){
+                setFlc(data);       
+            }
+            
+        } catch (err) {
+            console.log({err});
+        }
+    }
+   
+
+    {
+        flc !== undefined && console.log(flc)
+    }
 
     const sortMapping = {
         "None": null,
@@ -62,6 +94,50 @@ export default function FLCList() {
     //     <Collapse orderId='XYZ/12' data={data} time='12-12-2021' />,
     //     <Collapse orderId='XYZ/14' data={data1} time='2-05-2021' bottom={true} />
     // ]
+    function makeFlcList(props){
+        let eList = []
+        for( const i in props){
+            console.log("i " + i + "data: " + props[i])
+            var start ='';
+            var end = '';
+            // console.log(props[i]['startdate'])
+            if(props[i]['startdate'] !== undefined){
+                start = props[i]['startdate'].slice(0,10);
+                end = props[i]['enddate'].slice(0,10)
+            }
+           
+
+            const row = {
+                'Warehouse ID': props[i]['flcwarehouse'],
+                'Manufacturer Name': props[i]['manufacturername'],
+                "Warehouse Supervisor's UserID": props[i]['warehousesupervisor'],
+                "ECI Supervisor's Name": props[i]['ecisupervisor'],
+                "No. Of Engineers": props[i]['numengineers'],
+                "Start Date Of FLC": start,
+                "End Date Of FLC": end,
+                "ID":props[i]['flcid']
+            }  
+            console.log({row})
+            eList.push(row);
+              
+        }
+        console.log({eList})
+        setFlcValue(eList)
+    }
+
+
+
+    useEffect(() => {
+        getElectionList();
+        // s(elections);
+        
+    }, []);
+
+    useEffect(()=>{
+        if(flc !== undefined){
+            makeFlcList(flc);
+        }
+    }, [flc])
 
     return (
         <div className={`${styles.myWrapper1}`} style={{ position: "relative", height: "100%" }}>
@@ -105,11 +181,13 @@ export default function FLCList() {
             <div class={styles.table}>
             
             <DynamicDataTable 
-                rows={data}
+                rows={flcValue !== undefined ? flcValue: "No Data"}
+                fieldsToExclude={["ID"]}
                 buttons={[]} 
-                // onClick={(event, row) => {
-                //     navigate(`/session/ordermanagement/orderdetails`)
-                // }}
+                onClick={(event, row) => {
+                    console.log("row ID: "+ row["ID"])
+                    navigate(`/session/unitmanagement/editFlc/id=${row["ID"]}`)
+                }}
                 
                 />
                 </div>

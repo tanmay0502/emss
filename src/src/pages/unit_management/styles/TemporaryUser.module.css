@@ -1,0 +1,73 @@
+.Schedule_container2{
+    margin: 50px auto 0px auto ;
+    width: 50%;
+    border-radius: 25px;
+    background: #FFFFFF;
+    box-shadow: 0px 10px 60px rgba(226, 236, 249, 0.5);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 25px;
+    /* box-shadow: 200px ; */
+    box-shadow: 0px 8px 45px 10px rgba(0,0,0,0.2);
+}
+.Schedule_header2{
+    height: 10vh;
+    background: linear-gradient(180deg, #84587C 0%, #BA8BB1 100%);
+    border-radius: 25px 25px 0 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5vh;
+    width: 100%;
+}
+.Schedule_header2 h4{
+    margin-bottom: 0 !important;
+    color: white !important;
+    font-size:22px ;
+}
+
+.Schedule_CDP_table{
+    width: 100%;
+    padding: .75em 1.5em;
+    background-color: #B5B7C01A;
+    border-radius: 15px;
+    overflow: scroll;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    height: 100%;
+}
+
+.Schedule_CDP_table > div > div{
+    padding-bottom: .5em !important;
+}
+
+.Schedule_CDP_table table{
+    width: 100%;
+}
+
+.Schedule_CDP_table table th{
+    color: #00000080 !important;
+    font-weight: 400 !important;
+    padding: .5em 0;
+}
+
+.Schedule_CDP_table table td{
+    color: #000000B2 !important;
+    font-weight: 500 !important;
+    padding: .5em 0;
+}
+
+.Assigned_Engineer_Tr {
+    box-sizing: border-box;
+    width: 60%;
+    padding: 7.5px 10px;
+    border-radius: var(--border-radius);
+    border: 2px solid #84587C;
+    font-family: 'Nunito Sans';
+    outline: none;
+}
+
