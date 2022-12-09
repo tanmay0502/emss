@@ -32,6 +32,8 @@ export default function AddWarehouse() {
   const [statesCode, setStatesCode] = useState([]);
   const [PCs, setPCs] = useState([]);
   const [PCcodes, setPCcodes] = useState([]);
+  const [Dists, setDists] = useState([]);
+  const [ACs, setACs] = useState([]);
 
   // const [userid_1, setUserId_1] = useState('');
   // const [userid_2, setUserId_2] = useState('');
@@ -43,17 +45,21 @@ export default function AddWarehouse() {
   const [myPCcode, setmyPCcode] = useState("");
   const [WarehouseType, setWarehouseType] = useState("");
   const [userState, setUserState] = useState("");
+    const [realm, setRealm] = useState();
+  
   //Form filed states end....
 
   const onFormSubmit = async (e) => {
     e.preventDefault()
 
-    if (validate(document.getElementById("input_personName_1").value, "") == false) {
+      if (validate(document.getElementById("input_personName_1").value, "") == false) {
+	  console.log(document.getElementById("input_personName_1").value)
       document.getElementById("input_personName_1").value = '';
       document.getElementById("input_personName_2").value = '';
     }
 
     else if (doubleLockSystem && validate(document.getElementById("input_personName_2").value) == false) {
+	  console.log('person 2')
       document.getElementById("input_personName_2").value = '';
       document.getElementById("input_personName_1").value = '';
     }
@@ -69,9 +75,9 @@ export default function AddWarehouse() {
     else {
       const warehouseType = document.getElementById("input_warehousetype").value;
       const buildingType = document.getElementById("input_buildingtype").value;
-      const state =
-      states[document.getElementById("input_state").value];
-      const PC = PCs[document.getElementById("input_PC").value];
+      const state = document.getElementById("input_state").value;
+      const dist = document.getElementById("input_dist").value;
+      const AC = document.getElementById("input_AC").value;
 
       const lat = document.getElementById("input_lat").value;
       const lon = document.getElementById("input_lng").value;
@@ -82,7 +88,7 @@ export default function AddWarehouse() {
       const person1_ID = document.getElementById("input_personName_1").value;
       const person2_ID = double_lock ? document.getElementById("input_personName_2").value : "";
 
-      const sealed = document.getElementById("input_sealed").value;
+      //const sealed = document.getElementById("input_sealed").value;
 
 
 
@@ -90,14 +96,15 @@ export default function AddWarehouse() {
         warehouseType: warehouseType,
         warehouseBuildingType: buildingType,
         warehouseState: state,
-        warehousePC: PC,
+        warehouseDist: dist,
+        warehouseAC: AC,
         warehouseLatLong: [lat, lon],
         warehouseAddress: address,
         doubleLock: double_lock.toString().toUpperCase(),
         UIDKey1: person1_ID,
         updateTime: new Date().toISOString(),
         updatedByUID: window.sessionStorage.getItem("sessionToken"),
-        warehouseStatus: sealed,
+        warehouseStatus: "A",
       };
 
       if (double_lock) {
@@ -131,6 +138,33 @@ export default function AddWarehouse() {
 
 
   };
+  async function getRealm() {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_SERVER}/warehouse/getRealm`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+            credentials: 'include',
+	    body: JSON.stringify({})
+        }
+      );
+      const data2 = await response.json();
+
+
+      console.log(response);
+
+
+      console.log(data2);
+      setRealm(data2)
+    } catch (err) {
+      console.log(err);
+    }
+
+
+  }
 
   //Get state list
 
@@ -191,7 +225,8 @@ export default function AddWarehouse() {
   }
 
   useEffect(() => {
-    getState();
+      getState();
+      getRealm();
   }, []);
 
   async function generateWarehouseId() {
@@ -216,46 +251,49 @@ export default function AddWarehouse() {
     return myState + myPCcode + WarehouseType;
   }
   async function setStateFunc(st) {
-    if (st !== "-1") {
-      // console.log(st, states, statesCode);
-      const selectedCode = states[st];
-      setmyState(selectedCode);
-      // console.log(selectedCode)
+      if (st !== "-1") {
+	  try{
+	      // console.log(st, states, statesCode);
+	      const selectedCode = document.getElementById("input_state").value;
+              setDists(realm["dist"].filter(function (dt)
+				      {
+					  return dt.stcode===document.getElementById("input_state").value;
+				      }
+				     ));
+              // setPCcodes(data["pccode"]);
+	  } catch (error) {
+              console.log(error);
+              setDists(["000"]);
+              // setPCcodes(["00"]);
+	  }
 
-      try {
-        const response = await fetch(
-          `${process.env.REACT_APP_API_SERVER}/user/getPCListbyState/${selectedCode}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        const data = await response.json();
-        setPCs(data["PCs"]);
-        // setPCcodes(data["pccode"]);
-      } catch (error) {
-        console.log(error);
-        setPCs(["00"]);
-        // setPCcodes(["00"]);
       }
-
-    }
   }
 
-  async function setPcFunc(pc) {
-    if (pc !== "-1") {
-      const pcCode = PCs[pc];
-      setmyPCcode(pcCode);
+  async function setDistFunc(dist) {
+      if (dist !== "-1") {
+	  try {
+	      const stateCode = document.getElementById("input_state").value;
+	      const distCode = document.getElementById("input_dist").value;
+              setACs(realm["ac"].filter(function (dt)
+				      {
+					  return dt.stcode===document.getElementById("input_state").value && dt.dist_no===document.getElementById("input_dist").value;
+					  
+				      }
+				     ));
+              // setPCcodes(data["pccode"]);
+	  } catch (error) {
+        console.log(error);
+        setACs(["000"]);
+        // setPCcodes(["00"]);
+	  }
     }
   }
 
 
   function validate(ID) {
 
-    if (/^[A-Z]{2}[0-9]{5}[A-Z]{3,10}$/.test(ID)) {
+    if (/^[A-Z]{2}[0-9]{6}[A-Z]*$/.test(ID)) {
       return (true)
     }
     alert("You have entered invalid UserId!")
@@ -357,16 +395,22 @@ export default function AddWarehouse() {
                     onChange={(e) => {
                       setStateFunc(e.target.value)
                     }}
-                    disabled={true}
                   >
-                    {/* <option value="" disabled selected>
+                    { <option value="" disabled selected>
                       --Select--
-                    </option> */}
-                    {states && Object.keys(states).map((st) => (
+                    </option> }
+                    {/*states && Object.keys(states).map((st) => (
                       <option value={st} className="text-black" selected={st == first2 ? true : false}>
                         {st}
                       </option>
-                    ))}
+                    ))*/}
+		      {
+			  realm && realm["state"] && realm["state"].map((st) => (
+			      <option value={st.statecode} className="text-black">
+				  {st.statename}
+			      </option>
+			  ))
+                      }
                   </select>
                   <div className="input_icon">
                     <FaMapMarkedAlt size="1em" />
@@ -421,54 +465,6 @@ export default function AddWarehouse() {
               </div>
               <div className="form_group">
                 <div className="form_label">
-                  <label htmlFor="">Sealed</label>
-                </div>
-                <div className="form_select">
-                  <select
-                    required
-                    name=""
-                    id="input_sealed"
-                  >
-                    <option value="" className="FirstOption">
-                      --Select--
-                    </option>
-                    <option value="I">Yes</option>
-                    <option value="A">No</option>
-                  </select>
-                  <div className="input_icon">
-                    <BsShieldLockFill size="1em" />
-                  </div>
-                </div>
-              </div>
-
-              <div className="form_group">
-                <div className="form_label">
-                  <label htmlFor="">PC Code</label>
-                </div>
-                <div className="form_select">
-                  <select
-                    required
-                    name=""
-                    id="input_PC"
-                    onChange={(e) => setPcFunc(e.target.value)}
-                  >
-                    <option value="">--Select--</option>
-                    {Object.keys(PCs).map((pc) => (
-                      <option value={pc} className="text-black">
-                        {pc}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="input_icon">
-                    <FaLaptopHouse size="1em" />
-                  </div>
-                </div>
-              </div>
-              {/* <div></div>
-              <div className="three-column-grid">----------------------------------------------- */}
-
-              <div className="form_group">
-                <div className="form_label">
                   <label htmlFor="">Latitude</label>
                 </div>
                 <div className="form_input">
@@ -489,6 +485,39 @@ export default function AddWarehouse() {
 
               <div className="form_group">
                 <div className="form_label">
+                  <label htmlFor="">District</label>
+                </div>
+                <div className="form_select">
+                  <select
+                    required
+                    name=""
+                    id="input_dist"
+                    onChange={(e) => setDistFunc(e.target.value)}
+                  >
+                    <option value="000">--Select--</option>
+                    {/*Object.keys(PCs).map((pc) => (
+                      <option value={pc} className="text-black">
+                        {pc}
+                      </option>
+                    ))*/}
+                      {
+			  Dists && Dists.map((val) => (
+			      <option value={val.dist_no} className="text-black">
+				  {val.dist_name}
+			      </option>
+			  ))
+                      }
+                  </select>
+                  <div className="input_icon">
+                    <FaLaptopHouse size="1em" />
+                  </div>
+                </div>
+              </div>
+              {/* <div></div>
+              <div className="three-column-grid">----------------------------------------------- */}
+
+              <div className="form_group">
+                <div className="form_label">
                   <label htmlFor="">Longitude</label>
                 </div>
                 <div className="form_input">
@@ -501,6 +530,35 @@ export default function AddWarehouse() {
                     className=""
                     placeholder="Longitude"
                   />
+                  <div className="input_icon">
+                    <FaLaptopHouse size="1em" />
+                  </div>
+                </div>
+              </div>
+              <div className="form_group">
+                <div className="form_label">
+                  <label htmlFor="">AC</label>
+                </div>
+                <div className="form_select">
+                  <select
+                    required
+                    name=""
+                    id="input_AC"
+                  >
+                    <option value="000">--Select--</option>
+                    {/*Object.keys(PCs).map((pc) => (
+                      <option value={pc} className="text-black">
+                        {pc}
+                      </option>
+                    ))*/}
+                      {
+			  ACs && ACs.map((val) => (
+			      <option value={val.ac_no} className="text-black">
+				  {val.ac_name}
+			      </option>
+			  ))
+                      }
+                  </select>
                   <div className="input_icon">
                     <FaLaptopHouse size="1em" />
                   </div>

@@ -30,8 +30,8 @@ function WarehouseList() {
 
 	async function getList() {
 		let userId = sessionStorage.getItem('sessionToken');
-		const code = userId.slice(0, 2);
-		console.log(code);
+		//const code = userId.slice(0, 2);
+		//console.log(code);
 		try {
 			const response = await fetch(
 				`${process.env.REACT_APP_API_SERVER}/warehouse/listWarehouses`,
@@ -40,13 +40,11 @@ function WarehouseList() {
 					headers: {
 						"Content-Type": "application/json",
 					},
-					body: JSON.stringify({
-						"stateCode": code
-					}),
+					body: JSON.stringify({}),
 				})
 
 			const data = await response.json();
-			setDetails(data["data"])
+			setDetails(data["warehouses"])
 		} catch (error) {
 			console.log(error)
 		}
@@ -60,7 +58,7 @@ function WarehouseList() {
 	const MapWarehouseTypes = async () => {
 		try {
 			const response = await fetch(
-				'http://evm.iitbhilai.ac.in:8100/warehouse/warehouseTypes',
+				`${process.env.REACT_APP_API_SERVER}/warehouse/warehouseTypes`,
 				{
 					method: "GET",
 					headers: {
@@ -124,7 +122,7 @@ function WarehouseList() {
 			}
 		}).map((val) => {
 			return {
-				"Warehouse ID": val["warehousebuildingtype"] == 'P' ?
+				"Warehouse ID": val["type"] == 'P' ?
 					<Fragment><span style={{ display: 'flex', justifyContent: 'left', alignItems: 'left', marginLeft: "35%" }}>
 						<FaCircle size='0.8em' className='PermaWarehouse' />
 						<span style={{ marginLeft: '10px', marginRight: '10px' }}>
@@ -145,13 +143,13 @@ function WarehouseList() {
 					</span>
 					</Fragment>,
 				"warehouseid": val['warehouseid'],
-				"Room Type": warehouseMapping ? warehouseMapping["data"][val["warehousetype"]] : "",
+			    "Room Type": warehouseMapping ? warehouseMapping["data"][val["warehouseid"].substring(8,9)] : "",
 				// "Double Locked": val["doublelock"] ? "Yes" : "No",
 				Details: val,
 				Edit: <button className="modifyBtn p-2 text-white" disabled={true}>
 					<FaUserEdit style={{ transform: "translateX(1px)" }} />
 				</button>,
-				"BuildingType": val["warehousebuildingtype"],
+				"BuildingType": val["type"],
 				// "Building Type": <ToggleButton userID={val["warehouseid"]} checked={val["warehousebuildingtype"] === 'P'} onToggle={(e) => {
 				// }} 
 				// customLabels={{
@@ -159,8 +157,8 @@ function WarehouseList() {
 				// 	"inactive": "Temporary"
 				// }
 				// }/>,
-				"Status": <ToggleButton userID={val["warehouseid"]} checked={val["warehousestatus"] === 'A'} onToggle={(e) => {
-					if (val["warehousestatus"] !== "A") {
+				"Status": <ToggleButton userID={val["warehouseid"]} checked={val["status"] === 'A'} onToggle={(e) => {
+					if (val["status"] !== "A") {
 						ActivateWarehouse(e)
 					}
 					else {
@@ -201,13 +199,14 @@ function WarehouseList() {
 			try {
 
 				const response = await fetch(
-					`${process.env.REACT_APP_API_SERVER}/warehouse/activateWarehouse/${myId}`,
+					`${process.env.REACT_APP_API_SERVER}/warehouse/activateWarehouse`,
 					{
-						method: "GET",
+						method: "POST",
 						headers: {
 							"Content-Type": "application/json",
 						},
-						credentials: 'same-origin',
+					    credentials: 'same-origin',
+					    body: JSON.stringify({"warehouseID":myId})
 					}
 				)
 
@@ -232,13 +231,14 @@ function WarehouseList() {
 			try {
 
 				const response = await fetch(
-					`${process.env.REACT_APP_API_SERVER}/warehouse/deactivateWarehouse/${myId}`,
+					`${process.env.REACT_APP_API_SERVER}/warehouse/deactivateWarehouse`,
 					{
-						method: "GET",
+						method: "POST",
 						headers: {
 							"Content-Type": "application/json",
 						},
-						credentials: 'same-origin',
+					    credentials: 'same-origin',
+					    body: JSON.stringify({"warehouseID":myId})
 					}
 				)
 
