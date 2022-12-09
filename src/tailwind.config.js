@@ -8,6 +8,7 @@ module.exports = {
         secondary: "#f56a3f",
       },
       width: {
+        "1/8": "12.5%",
         "3/8": "37.5%",
       },
     },
