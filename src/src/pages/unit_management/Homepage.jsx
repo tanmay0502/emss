@@ -571,8 +571,11 @@ export default function HomePage() {
                     {/* </div> */}
                 </div>
 
-
-                <div className={styles.myCardSample}>
+                <div className={styles.myCardSampleFlc}
+                                    onClick={() => {
+                                        navigate(`/session/unitmanagement/flc_list`)
+                                    }}
+                >
                     <div className={styles.card_title}>
                         <span>FLC Scheduling</span>
                     </div>
