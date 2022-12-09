@@ -8,53 +8,40 @@ import {
 import { ReactComponent as OptionsIndicator } from "../../assets/Options_Indicator.svg";
 import { ReactComponent as SearchInputElement } from "../../assets/searchInputIcon.svg";
 import { ReactComponent as ChevronDown } from "../../assets/ChevronDown.svg";
-import {expD} from "./Homepage";
+import { expD } from "./Homepage";
 
 const userID = sessionStorage.getItem("sessionToken");
-
+const baseUrl = "http://localhost:8100/unit";
 
 export default function UnitList() {
-  // console.log(expD);
-  const [cardVisibility, setCardVisibility] = useState({
+  const initialVisibilityValues = {
     replacementForm: false,
     epForm: false,
     firstRandomisationForm: false,
     secondRandomisationForm: false,
-  });
-  const [inputValue, setInputValue] = useState("");
-  const [epValue,setEpValue] = useState("");
-
-  const handleInputChange = (e) => {
-    setInputValue(e.target.value);
   };
-
-  const handleInputChange2 = (e) => {
-    setEpValue(e.target.value);
-  };
+  const [cardVisibility, setCardVisibility] = useState(initialVisibilityValues);
 
   const handleButtonClick = (e) => {
-    // alert(`Button Clicked: ${e.target.name}`);
-    const { name } = e.target;
-    setCardVisibility({
-      ...cardVisibility,
-      [name]: !cardVisibility[name],
-    });
+    const { name } = e.currentTarget;
+    const update = { ...initialVisibilityValues };
+    if (cardVisibility[name]) {
+      update[name] = false;
+    } else {
+      update[name] = true;
+    }
+    setCardVisibility(update);
   };
 
   return (
     <>
       <UnitListTable />
       <StatusUpdate
-        inputValue={inputValue}
-        handleInputChange={handleInputChange}
-        handleInputChange2={handleInputChange2}
+        activeButtons={cardVisibility}
         onButtonClick={handleButtonClick}
       />
-      <EPForm isVisible={cardVisibility.epForm} unitID={epValue}/>
-      <ReplacementForm
-        isVisible={cardVisibility.replacementForm}
-        unitID={inputValue}
-      />
+      <EPForm isVisible={cardVisibility.epForm} />
+      <ReplacementForm isVisible={cardVisibility.replacementForm} />
       <FirstRandomisationForm
         isVisible={cardVisibility.firstRandomisationForm}
       />
@@ -101,7 +88,9 @@ const UnitListTable = () => {
           return {
             ID: val["modelId"],
             Status_Hidden: val["modelStatus"],
-            Status: <div className={styles.unit_status}>{val["modelStatus"]}</div>,
+            Status: (
+              <div className={styles.unit_status}>{val["modelStatus"]}</div>
+            ),
             Remarks: val["Remarks"],
             Location: val["Location"],
             "Status Update Time": val["Status Update Time"],
@@ -253,7 +242,21 @@ const UnitListTable = () => {
 };
 
 // Status Update Card
-const StatusUpdate = ({ inputValue, handleInputChange, handleInputChange2 ,onButtonClick }) => {
+const ActionButton = ({ isActive, text, name, onClick }) => {
+  return (
+    <button
+      className={`font-mediumisActive mx-auto mb-8 w-4/5 border-[1px] border-solid border-secondary hover:bg-secondary hover:text-white ${
+        isActive ? "bg-secondary text-white" : "bg-white  text-secondary"
+      }`}
+      name={name ? name : text}
+      onClick={onClick}
+    >
+      {text}
+    </button>
+  );
+};
+
+const StatusUpdate = ({ activeButtons, onButtonClick }) => {
   return (
     <>
       <div className={styles.unit_list_container}>
@@ -262,15 +265,21 @@ const StatusUpdate = ({ inputValue, handleInputChange, handleInputChange2 ,onBut
         </div>
         <div className="mt-2 w-full bg-white p-6">
           <div className="grid grid-cols-4">
-            <input
+            {/* <input
               className="col-span-4 mx-8 mb-8 h-20 w-auto rounded-md bg-zinc-100 px-5 pb-8 text-gray-500 focus:text-gray-800 focus:outline-none focus:ring-2 focus:ring-primary"
               placeholder="EBUAA01234"
               value={inputValue}
               onChange={handleInputChange}
+            /> */}
+            <ActionButton
+              isActive={activeButtons.epForm}
+              text="EP Mark"
+              name="epForm"
+              onClick={onButtonClick}
             />
-            <ActionButton text="EP Mark" name="epForm" onClick={onButtonClick} />
             <ActionButton text="EP Unmark" onClick={onButtonClick} />
             <ActionButton
+              isActive={activeButtons.replacementForm}
               text="Unit Replacement"
               name="replacementForm"
               onClick={onButtonClick}
@@ -280,11 +289,13 @@ const StatusUpdate = ({ inputValue, handleInputChange, handleInputChange2 ,onBut
             <ActionButton text="Mark Defective" onClick={onButtonClick} />
             <ActionButton text="Unit Destruction" onClick={onButtonClick} />
             <ActionButton
+              isActive={activeButtons.firstRandomisationForm}
               text="1st Randomisation"
               name="firstRandomisationForm"
               onClick={onButtonClick}
             />
             <ActionButton
+              isActive={activeButtons.secondRandomisationForm}
               text="2nd Randomisation"
               name="secondRandomisationForm"
               onClick={onButtonClick}
@@ -296,40 +307,15 @@ const StatusUpdate = ({ inputValue, handleInputChange, handleInputChange2 ,onBut
   );
 };
 
-const ActionButton = ({ active, text, name, onClick }) => {
-  const [isActive, setIsActive] = useState(false);
-
-  const handleClick = (e) => {
-    setIsActive(!isActive);
-    onClick(e);
-  };
-
-  useEffect(() => {
-    setIsActive(active);
-  }, []);
-
-  return (
-    <button
-      className={`font-mediumisActive mx-auto mb-8 w-4/5 border-[1px] border-solid border-secondary hover:bg-secondary hover:text-white ${
-        isActive ? "bg-secondary text-white" : "bg-white  text-secondary"
-      }`}
-      name={name ? name : text}
-      onClick={handleClick}
-    >
-      {text}
-    </button>
-  );
-};
-
 // Unit Replacement Card
-const ReplacementForm = ({ isVisible, unitID }) => {
-  const initialValues = {
-    replacedId: "",
-    replacingId: "",
+const ReplacementForm = ({ isVisible }) => {
+  const initialInputValues = {
+    replacedUnitID: "",
+    replacingUnitID: "",
     replacementLevel: "",
-    defecDestId: "",
+    defectiveDstWarehouseID: "",
   };
-  const [inputValues, setInputValues] = useState(initialValues);
+  const [inputValues, setInputValues] = useState(initialInputValues);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -340,38 +326,23 @@ const ReplacementForm = ({ isVisible, unitID }) => {
   };
 
   const handleFormSubmit = async (e) => {
-    const formData = {
-      userID,
-      replacedUnitID: inputValues.replacedId,
-      replacingUnitID: inputValues.replacingId,
-      replacementLevel: inputValues.replacementLevel,
-      defectiveDstWarehouseID: inputValues.defecDestId,
-    };
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    };
-
-    const baseUrl = "http://localhost:8100/unit";
     try {
-      const response = await fetch(`${baseUrl}/replace_unit`, requestOptions);
+      const response = await fetch(`${baseUrl}/replace_unit`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userID, ...inputValues }),
+      });
       const data = await response.json();
-      // console.log(data);
       if (data.status == 200) {
-        alert("Unit Replaced Successfully");
+        console.log("Unit Replaced Successfully", data);
       } else {
-        alert("Could not replace the unit");
+        console.log("Could not replace the unit");
       }
     } catch (err) {
       alert(`Error occured: ${err}`);
     }
-    setInputValues(initialValues);
+    setInputValues(initialInputValues);
   };
-
-  useEffect(() => {
-    setInputValues({ ...inputValues, replacedId: unitID });
-  }, [unitID]);
 
   return (
     <>
@@ -389,9 +360,9 @@ const ReplacementForm = ({ isVisible, unitID }) => {
                 <div className="relative text-gray-800">
                   <input
                     className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-                    name="replacedId"
+                    name="replacedUnitID"
                     placeholder="Old Unit ID"
-                    value={inputValues.replacedId}
+                    value={inputValues.replacedUnitID}
                     onChange={handleInputChange}
                   />
                 </div>
@@ -403,9 +374,9 @@ const ReplacementForm = ({ isVisible, unitID }) => {
                 <div className="relative text-gray-800">
                   <input
                     className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-                    name="replacingId"
+                    name="replacingUnitID"
                     placeholder="New Unit ID"
-                    value={inputValues.replacingId}
+                    value={inputValues.replacingUnitID}
                     onChange={handleInputChange}
                   />
                 </div>
@@ -439,9 +410,9 @@ const ReplacementForm = ({ isVisible, unitID }) => {
                 <div className="relative text-gray-800">
                   <input
                     className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-                    name="defecDestId"
+                    name="defectiveDstWarehouseID"
                     placeholder="Defective Location ID"
-                    value={inputValues.defecDestId}
+                    value={inputValues.defectiveDstWarehouseID}
                     onChange={handleInputChange}
                   />
                 </div>
@@ -460,17 +431,18 @@ const ReplacementForm = ({ isVisible, unitID }) => {
   );
 };
 
-const EPForm = ({ isVisible, unitID }) => {
+// EP Marking Form
+const EPForm = ({ isVisible }) => {
   const initialValues = {
     bulk: "",
     destinationLocation: "",
     acLocation: "",
     unitList: "",
-    remarks: ""
+    remarks: "",
   };
   const [inputValues, setInputValues] = useState(initialValues);
 
-  const handleInputChange2 = (e) => {
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
     setInputValues({
       ...inputValues,
@@ -481,11 +453,7 @@ const EPForm = ({ isVisible, unitID }) => {
   const handleFormSubmit = async (e) => {
     const formData = {
       userID,
-      bulk: inputValues.bulk,
-      destinationLocation: inputValues.destinationLocation,
-      acLocation: inputValues.acLocation,
-      unitList: inputValues.unitList,
-      remarks: inputValues.remarks
+      ...inputValues,
     };
     // console.log(formData);
     const requestOptions = {
@@ -510,53 +478,53 @@ const EPForm = ({ isVisible, unitID }) => {
     // setInputValues(initialValues);
   };
 
-  useEffect(() => {
-    setInputValues({ ...inputValues, replacedId: unitID });
-  }, [unitID]);
-
   function ACNum() {
     return (
       <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
-                <label className="mb-2 w-full text-base">
-                  AC Location<span className="text-red-600">*</span>
-                </label>
-                <div className="relative text-gray-800">
-                  <input
-                    className="h-10 w-200 rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-                    name="acLocation"
-                    placeholder="AC Location"
-                    value={inputValues.acLocation}
-                    onChange={handleInputChange2}
-                  />
-                </div>
-              </div>
+        <label className="mb-2 w-full text-base">
+          AC Location<span className="text-red-600">*</span>
+        </label>
+        <div className="relative text-gray-800">
+          <input
+            className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+            name="acLocation"
+            placeholder="AC Location"
+            value={inputValues.acLocation}
+            onChange={handleInputChange}
+          />
+        </div>
+      </div>
     );
   }
 
-  function UList(){
-    return  (
-              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
-                <label className="mb-2 w-full text-base">
-                  Unit Lists<span className="text-red-600">*</span>
-                </label>
-                <div className="relative text-gray-800">
-                  <input
-                    className="h-10 w-200 rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-                    name="unitList"
-                    placeholder="Unit Lists"
-                    value={inputValues.unitList}
-                    onChange={handleInputChange2}
-                  />
-                </div>
-              </div>
+  function UList() {
+    return (
+      <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+        <label className="mb-2 w-full text-base">
+          Unit Lists<span className="text-red-600">*</span>
+        </label>
+        <div className="relative text-gray-800">
+          <input
+            className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+            name="unitList"
+            placeholder="Unit Lists"
+            value={inputValues.unitList}
+            onChange={handleInputChange}
+          />
+        </div>
+      </div>
     );
-  };
+  }
 
   function UaCList(val) {
-    if(val==='Select')  return<div></div>
-    else if(val==='Yes') return <ACNum/>
-    else if(val==='No') return <UList/>
-    else  return <div></div>
+    switch (val) {
+      case "Yes":
+        return <ACNum />;
+      case "No":
+        return <UList />;
+      default:
+        return <div></div>;
+    }
   }
 
   return (
@@ -578,7 +546,7 @@ const EPForm = ({ isVisible, unitID }) => {
                     name="bulk"
                     placeholder="Select"
                     value={inputValues.bulk}
-                    onChange={handleInputChange2}
+                    onChange={handleInputChange}
                   >
                     {" "}
                     <option hidden>Select</option>
@@ -598,7 +566,7 @@ const EPForm = ({ isVisible, unitID }) => {
                     name="destinationLocation"
                     placeholder="Location"
                     value={inputValues.destinationLocation}
-                    onChange={handleInputChange2}
+                    onChange={handleInputChange}
                   />
                 </div>
               </div>
@@ -613,7 +581,7 @@ const EPForm = ({ isVisible, unitID }) => {
                     name="remarks"
                     placeholder="Remarks"
                     value={inputValues.remarks}
-                    onChange={handleInputChange2}
+                    onChange={handleInputChange}
                   />
                 </div>
               </div>
@@ -633,29 +601,99 @@ const EPForm = ({ isVisible, unitID }) => {
 
 // 1st Randomisation Card
 const FirstRandomisationForm = ({ isVisible }) => {
+  const warehouse_id = "TS08I1"; // calc from userId
   const [assemblyData, setAssemblyData] = useState([
     {
-      assemblyId: "",
-      unitCount: "",
+      ac_name: "",
+      cu_count: "",
+      bu_count: "",
+      vvpat_count: "",
     },
   ]);
+  const [isFetching, setIsFetching] = useState(true);
 
   const handleInputChange = (e) => {
-    const { name, value, dataset } = e.target;
+    const { name, value, dataset } = e.currentTarget;
     const update = [...assemblyData];
     update[dataset.id][name] = value;
     setAssemblyData(update);
   };
 
-  const handleAddButtonClick = () => {
-    setAssemblyData([...assemblyData, { assemblyId: "", unitCount: "" }]);
+  const handleAddButtonClick = (e) => {
+    const id = parseInt(e.currentTarget.dataset.id);
+    setAssemblyData([
+      ...assemblyData.slice(0, id + 1),
+      {
+        ac_name: "",
+        cu_count: "",
+        bu_count: "",
+        vvpat_count: "",
+      },
+      ...assemblyData.slice(id + 1),
+    ]);
   };
 
-  const handleSubtractButtonClick = () => {
+  const handleSubtractButtonClick = (e) => {
+    const id = parseInt(e.currentTarget.dataset.id);
     if (assemblyData.length > 1) {
-      setAssemblyData([...assemblyData].slice(0, -1));
+      setAssemblyData(assemblyData.filter((a, i) => i !== id));
     }
   };
+
+  const handleFormSubmit = async (e) => {
+    const units_requirement = assemblyData
+      .filter((d) => d.ac_name)
+      .map((d) => {
+        d.cu_count = d.cu_count ? parseInt(d.cu_count) : 0;
+        d.bu_count = d.bu_count ? parseInt(d.bu_count) : 0;
+        d.vvpat_count = d.vvpat_count ? parseInt(d.vvpat_count) : 0;
+        return d;
+      });
+    // console.log(
+    //   JSON.stringify({
+    //     warehouse_id,
+    //     units_requirement,
+    //   })
+    // );
+    // fetch request
+    try {
+      const response = await fetch(`${baseUrl}/executeRandomisation`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          warehouse_id,
+          units_requirement,
+        }),
+      });
+      const data = await response.json();
+      if (data.status == 200) {
+        console.log("Radomisation results: ", data);
+      } else {
+        console.log("Could not fetch radomisation results");
+      }
+    } catch (err) {
+      alert(`Error occured: ${err}`);
+    }
+  };
+
+  useEffect(() => {
+    // Initial fetching of any previous available user inputs
+    if (isVisible) {
+      setIsFetching(true);
+      (async () => {
+        try {
+          const response = await fetch(`${baseUrl}/fetchRandomisationInput/`);
+          const data = await response.json();
+          if (response.status == 200) {
+            setAssemblyData(data.units_requirement);
+          }
+        } catch (err) {
+          alert(`Error occured: ${err}`);
+        }
+      })();
+      setIsFetching(false);
+    }
+  }, [isVisible]);
 
   return (
     <>
@@ -664,22 +702,25 @@ const FirstRandomisationForm = ({ isVisible }) => {
           <div className={styles.unit_list_header}>
             <h4>First Randomisation</h4>
           </div>
-          <div className="mt-2 w-full bg-white p-6">
-            <div className="flex flex-col">
-              <div className="flex w-full flex-row justify-evenly">
-                <div className="mb-8 flex w-3/8 flex-col text-left">
-                  <label className="mb-2 w-full text-base">
-                    Warehouse ID<span className="text-red-600">*</span>
-                  </label>
-                  <div className="relative text-gray-800">
-                    <input
-                      className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-                      name="warehouseId"
-                      placeholder="TS08I1"
-                    />
+          {!isFetching && (
+            <div className="mt-2 w-full bg-white p-6">
+              <div className="flex flex-col">
+                <div className="mb-5 flex w-full flex-row justify-evenly">
+                  <div className="flex w-3/8 flex-col text-left">
+                    <label className="mb-2 w-full text-base">
+                      Warehouse ID<span className="text-red-600">*</span>
+                    </label>
+                    <div className="relative text-gray-600">
+                      <input
+                        className="h-10 w-full cursor-not-allowed rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                        name="warehouseId"
+                        value={warehouse_id}
+                        readOnly
+                        disabled
+                      />
+                    </div>
                   </div>
-                </div>
-                <div className="mb-8 flex w-3/8 flex-col text-left">
+                  {/* <div className="flex w-3/8 flex-col text-left">
                   <label className="mb-2 w-full text-base">
                     Unit Type<span className="text-red-600">*</span>
                   </label>
@@ -697,92 +738,155 @@ const FirstRandomisationForm = ({ isVisible }) => {
                     </select>
                     <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1/2" />
                   </div>
+                </div> */}
                 </div>
-              </div>
-              {assemblyData.map((data, id) => (
-                <div className="mb-8 flex w-full justify-evenly" key={id}>
-                  <div className="flex w-3/8 flex-col text-left">
-                    <label className="mb-2 w-full text-base">
-                      Assembly ID {id + 1}
-                      <span className="text-red-600"> *</span>
-                    </label>
-                    <div className="relative text-gray-800">
-                      <input
-                        className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-                        name="assemblyId"
-                        placeholder={`Assembly ${id + 1}`}
-                        value={data.assemblyId.toUpperCase()}
-                        onChange={handleInputChange}
+                {assemblyData.map((data, id) => (
+                  <div
+                    className="group mb-5 flex w-full justify-evenly"
+                    key={id}
+                  >
+                    <div className="-mr-16 hidden w-10 flex-col items-center justify-end group-hover:flex">
+                      <button
+                        className="mb-0.5 inline-flex h-[22px] w-[22px] items-center justify-center !rounded-full border-[1px] border-rose-600 bg-white p-0.5 text-red-600 hover:border-dashed hover:bg-rose-50"
+                        onClick={handleSubtractButtonClick}
                         data-id={id}
-                      />
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="h-6 w-6"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M19.5 12h-15"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        className="inline-flex h-[22px] w-[22px] items-center justify-center !rounded-full border-[1px]  border-lime-600 bg-white p-0.5 text-lime-600 hover:border-dashed hover:bg-lime-50"
+                        onClick={handleAddButtonClick}
+                        data-id={id}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="h-6 w-6"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M12 4.5v15m7.5-7.5h-15"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                    <div className="-mr-16 w-10 group-hover:hidden"></div>
+                    <div className="mr-8 flex w-3/8 flex-col text-left">
+                      <label className="mb-2 w-full text-base">
+                        Assembly ID {id + 1}
+                        <span className="text-red-600"> *</span>
+                      </label>
+                      <div className="relative text-gray-800">
+                        <input
+                          className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                          name="ac_name"
+                          placeholder={`Assembly ${id + 1}`}
+                          value={data.ac_name.toUpperCase()}
+                          onChange={handleInputChange}
+                          data-id={id}
+                        />
+                      </div>
+                    </div>
+                    <div className="flex w-3/8 flex-col text-left">
+                      <label className="mb-2 w-full text-base">
+                        Unit Count {id + 1}
+                        <span className="text-red-600"> *</span>
+                      </label>
+                      <div className="flex w-full justify-between gap-2 text-gray-800">
+                        <input
+                          className="h-10 w-1/3 rounded-md border-0 bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                          type="number"
+                          name="cu_count"
+                          placeholder="CU"
+                          value={data.cu_count}
+                          onChange={handleInputChange}
+                          data-id={id}
+                        />
+                        <input
+                          className="h-10 w-1/3 rounded-md border-0 bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                          type="number"
+                          name="bu_count"
+                          placeholder="BU"
+                          value={data.bu_count}
+                          onChange={handleInputChange}
+                          data-id={id}
+                        />
+                        <input
+                          className="h-10 w-1/3 rounded-md border-0 bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                          type="number"
+                          name="vvpat_count"
+                          placeholder="VVPAT"
+                          value={data.vvpat_count}
+                          onChange={handleInputChange}
+                          data-id={id}
+                        />
+                      </div>
                     </div>
                   </div>
-                  <div className="flex w-3/8 flex-col text-left">
-                    <label className="mb-2 w-full text-base">
-                      Unit Count {id + 1}
-                      <span className="text-red-600"> *</span>
-                    </label>
-                    <div className="relative text-gray-800">
-                      <input
-                        className="h-10 w-full rounded-md border-0 bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-                        type="number"
-                        name="unitCount"
-                        placeholder={`Count ${id + 1}`}
-                        value={data.unitCount}
-                        onChange={handleInputChange}
-                        data-id={id}
-                      />
-                    </div>
-                  </div>
-                </div>
-              ))}
-              <div className="w-full">
-                <button
-                  className="mr-5 inline-flex h-8 w-8 items-center justify-center !rounded-full border-[1px] border-dashed border-zinc-500 bg-white p-1.5 text-zinc-500 hover:bg-zinc-500 hover:text-white"
-                  onClick={handleAddButtonClick}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="h-6 w-6"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M12 4.5v15m7.5-7.5h-15"
-                    />
-                  </svg>
-                </button>
-                <button
-                  className="inline-flex h-8 w-8 items-center justify-center !rounded-full border-[1px] border-dashed border-zinc-500 bg-white p-1.5 text-zinc-500 hover:bg-zinc-500 hover:text-white"
-                  onClick={handleSubtractButtonClick}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="h-6 w-6"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M19.5 12h-15"
-                    />
-                  </svg>
-                </button>
+                ))}
               </div>
             </div>
-          </div>
-          <button className="font-semibold text-white">Randomise</button>
+          )}
+          <button
+            className="font-semibold text-white"
+            onClick={handleFormSubmit}
+          >
+            Randomise
+          </button>
+          <RandomisationOutput />
         </div>
       )}
     </>
   );
+};
+
+const RandomisationOutput = () => {
+  const rndResponse = {
+    iteration_index: "1",
+    alloted_units: {
+      AC1: {
+        cu: [
+          "BCUM1000011",
+          "BCUM1000011",
+          "BCUM1000011",
+          "BCUM1000011",
+          "BCUM1000011",
+        ],
+        bu: ["BCUM1000011", "BCUM1000011", "BCUM1000011", "BCUM1000011"],
+        vvpat: ["BCUM1000011", "BCUM1000011", "BCUM1000011"],
+      },
+      AC2: {
+        cu: [
+          "BCUM1000011",
+          "BCUM1000011",
+          "BCUM1000011",
+          "BCUM1000011",
+          "BCUM1000011",
+        ],
+        bu: ["BCUM1000011", "BCUM1000011", "BCUM1000011", "BCUM1000011"],
+        vvpat: ["BCUM1000011", "BCUM1000011", "BCUM1000011"],
+      },
+    },
+  };
+
+  return <>{/* <div>Hello World</div> */}</>;
 };
 
 // 2nd Randomisation Card
