@@ -201,7 +201,7 @@ export default function ScheduleList() {
                     </div>
                 </div>
             </div> : <></>}
-            {isDetail !== 0 ? 
+            {isDetail === 0 ? 
             <div class={styles.table}>
             
             <DynamicDataTable 

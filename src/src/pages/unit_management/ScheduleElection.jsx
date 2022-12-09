@@ -142,9 +142,8 @@ function ScheduleElection() {
     console.log(states[state])
     // getPCListbyState()
     useEffect(() => {
-        getState();
-        // getPCListbyState()
-        // console.log(states)
+        // getState();
+
     },[])
 
     useEffect(() => {

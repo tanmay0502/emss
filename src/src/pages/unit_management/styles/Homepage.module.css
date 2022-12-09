@@ -57,7 +57,21 @@ margin-right: auto;
 margin-top: 10px;
 border: 1px solid rgba(0, 0, 0, 0.28);
 }
-
+.myCardSampleFlc{
+    height: 385px;
+    width: 458px !important;
+    background-color: var(--background-secondary);
+    box-shadow: 0px 7px 60px rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    padding: 15px 30px;
+    text-align: left !important;
+    margin-top: 25px;
+}
+.myCardSampleFlc:hover{
+    cursor: pointer;
+    scale: 1.02;
+    transition: 0.2s;
+}
 
 .card_title span:last-child,.card_title span:first-child{
     font-weight: 500;
