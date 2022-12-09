@@ -3,7 +3,14 @@ import React, { useEffect, useState } from 'react'
 import styles from './styles/ScheduleNew.module.css'
 
 
-function ScheduleElection() {
+function EditElection() {
+    const Id = () => {
+        const URL = window.location.href;
+        const arr = URL.split("/");
+        const param = arr[arr.length - 1];
+        const arr1 = param.split("=");
+        return arr1[1];
+      }
     
     var currentdate = new Date(); 
     var hrs = currentdate.getHours();
@@ -27,13 +34,40 @@ function ScheduleElection() {
 
     // console.log(time)
 
-
+    
     const [PC, setPC] = useState("");
     const [PCs, setPCs] = useState("");
     const [AC, setAC] = useState("");
 
     const [state, setState] = useState("");
     const [states, setStates] = useState({});
+    const [elections, setElections] = useState([]);
+
+    async function getElectionList() {
+        try {
+            const response = await fetch(
+                `${process.env.REACT_APP_API_SERVER}/unit/listElection`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: 'same-origin',
+                    mode: "cors"
+                }
+            );
+            const data = await response.json();
+            console.log(data['data'])
+            if(data["data"]!=404){
+                setElections(data['data']);
+                
+            }
+            
+        } catch (err) {
+            console.log({err});
+        }
+    }
+   
 
 
     async function postFlc() {
@@ -133,7 +167,7 @@ function ScheduleElection() {
               setAC(data2["ACs"]);
             }
           } catch (err) {
-            console.log(err);
+            console.log("AC",err);
           }
     }
 
@@ -143,6 +177,7 @@ function ScheduleElection() {
     // getPCListbyState()
     useEffect(() => {
         getState();
+        getElectionList();
         // getPCListbyState()
         // console.log(states)
     },[])
@@ -151,7 +186,8 @@ function ScheduleElection() {
         getPCListbyState()
         getACListbyState()
     },[state])
-
+    // getPCListbyState()
+    // getACListbyState()
     console.log({PCs})
 
     
@@ -223,9 +259,75 @@ function ScheduleElection() {
         // console.log("times: " + Date.now().getHours())
     };
 
+    // const [currData, setCurrData] = useState([]);
+    let id = Id();
+    
+    // console.log(elections[5][5])
+    // function setData(props){
+    //     try{
+    //         // var i = 0;
+    //         // while(i<=5){
+    //             // currData.push(elections[props][i])
+    //             // console.log(elections[5][5])
+    //             // i = i+1;
+    //         // }
+    //         console.log(elections)
+    //     }catch{
+    //         console.log(elections[props][0])
+    //     }
 
+        
+    // }
+
+    const [currState,setCurrState] = useState("")
+    const [currPC,setCurrPC] = useState("")
+    const [currAC,setCurrAC] = useState("")
+    const [currType,setCurrType] = useState("")
+    const [currStart,setCurrStart]= useState("")
+    const [currEnd,setCurrEnd]= useState("")
+
+    
+
+
+    useEffect(() => {
+        try{
+            if(elections !== undefined){
+                setCurrState(elections[id][0]);
+                setCurrPC(elections[id][1]);
+                setCurrAC(elections[id][2]);
+                setCurrType(elections[id][3]);
+                setCurrStart(elections[id][4].slice(0,10));
+                setCurrEnd(elections[id][5].slice(0,10));
+                console.log(currEnd)
+                
+            }
+
+        }catch{
+            console.log("err")
+        }
+
+    },[elections])
+    const [edit, setEdit] = useState(false)
+    console.log({AC})
+    useEffect(() => {
+        try{
+            if(elections !== undefined){
+        setState(elections[id][0])
+    }
+
+    }catch{
+        console.log("err2")
+    }
+        },[edit])
+
+    
     return(
         <>
+        <button className={styles.editBtn} 
+            onClick = {() => { setEdit(true)}}
+        >
+            Edit Flc Schedule
+        </button>
         <form onSubmit={onFormSubmit} id="form">
         <div className={styles.Schedule_container}>
             <div className={styles.Schedule_header}>
@@ -237,12 +339,24 @@ function ScheduleElection() {
 
                 <div class={styles.div1}>
                     <p> State</p>
+                    {edit === false ?
+                    <input 
+                    class={styles.dateInput}
+                    disabled = {true}
+                    defaultValue={currState}
+                    type = "text"
+                    className=" selectBox"
+                    
+                    ></input>:
+
+                
                     <select
                         //   required={!isTemporary}
                         required
                         name=""
                         id="1"
                         className=" selectBox"
+                        defaultValue={currState}
                         onChange={(e) => {setState(e.target.value)}}
                     >
 
@@ -256,16 +370,26 @@ function ScheduleElection() {
                   </option>
                 ))}
                 </select>
-
+                }
                 </div>
 
                 <div class={styles.div2}> 
                 <p> PC</p>
+                {edit === false ?
+                    <input 
+                    class={styles.dateInput}
+                    disabled = {true}
+                    defaultValue={currPC}
+                    type = "text"
+                    className=" selectBox"
+                    
+                    ></input>:
                     <select
                         //   required={!isTemporary}
                         required
                         name=""
                         id="2"
+                        defaultValue={currPC}
                         className=" selectBox"
                     //   onChange={(e) => setRoleFunc(e.target.value)}
                     >
@@ -285,17 +409,27 @@ function ScheduleElection() {
                         ))} */}
 
                     </select>
-                    
+                    }
                 </div>
 
                 <div class={styles.div3}> 
                 <p> AC</p>
+                {edit === false ?
+                    <input 
+                    class={styles.dateInput}
+                    disabled = {true}
+                    defaultValue={currAC}
+                    type = "text"
+                    className=" selectBox"
+                    
+                    ></input>:
                     <select
                         //   required={!isTemporary}
                         required
                         name=""
                         id="3"
                         className=" selectBox"
+                        defaultValue={currAC}
                     //   onChange={(e) => setRoleFunc(e.target.value)}
                     >
                         <option value="" disabled selected>
@@ -308,16 +442,26 @@ function ScheduleElection() {
                         ))}
 
                     </select>
-                
+                    }
                 </div>
 
                 <div class={styles.div4}> 
                 <p> Election Type</p>
+                {edit === false ?
+                    <input 
+                    class={styles.dateInput}
+                    disabled = {true}
+                    defaultValue={currType}
+                    type = "text"
+                    className=" selectBox"
+                    
+                    ></input>:
                     <select
                         //   required={!isTemporary}
                         required
                         name=""
                         id="4"
+                        defaultValue={currType}
                         className=" selectBox"
                     //   onChange={(e) => setRoleFunc(e.target.value)}
                     >
@@ -340,36 +484,61 @@ function ScheduleElection() {
                         ))} */}
 
                     </select>
-                
+                    }
                 </div>
 
                 <div class={styles.div5}> 
                 <p> Start date</p>
+                {edit === false ?
+                    <input 
+                    class={styles.dateInput}
+                    disabled = {true}
+                    defaultValue={currStart}
+                    type = "text"
+                    className=" selectBox"
+                    
+                    ></input>:
                     <input  
                     class={styles.dateInput}
                     type="date"
                     id="5"
                     className=" selectBox"
+                    defaultValue={currStart}
                     ></input>
-                
+                    }
                 </div>
 
                 <div class={styles.div6}> 
                 <p> End date</p>
+                {edit === false ?
                     <input 
                     class={styles.dateInput}
+                    disabled = {true}
+                    defaultValue={currEnd}
+                    type = "text"
+                    className=" selectBox"
+                    
+                    ></input>:
+                    <input 
+                    class={styles.dateInput}
+                    defaultValue={currEnd}
                     type = "date"
                     id = "6"
                     className=" selectBox"
                     ></input>
+                }
                 </div>
             </div>
             
         </div>
+        {edit === true ?
             <button class={styles.submitBtn} type='submit' > Submit </button>
+            : " "
+        }
             </form>
+        
         </>
     )
 }
 
-export default ScheduleElection
+export default EditElection

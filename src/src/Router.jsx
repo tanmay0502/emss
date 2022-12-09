@@ -155,7 +155,7 @@ function Routed(props) {
 				<span>Election Scheduling</span>
 			</>);
 		}
-		if (location.pathname === '/session/unitmanagement/schedule_flc' || location.pathname === '/session/unitmanagement/flc_list') {
+		if (location.pathname === '/session/unitmanagement/schedule_flc' || location.pathname === '/session/unitmanagement/flc_list' || location.pathname.startsWith('/session/unitmanagement/editFlc')) {
 			return (<>
 				<UnitManagementIcon />
 				<span>FLC Scheduling</span>
@@ -167,7 +167,7 @@ function Routed(props) {
 				<span>Physical Varification</span>
 			</>);
 		}
-		if (location.pathname === '/session/unitmanagement/schedule_tna_list' || location.pathname === '/session/unitmanagement/tna_scheduling') {
+		if (location.pathname === '/session/unitmanagement/schedule_tna_list' || location.pathname === '/session/unitmanagement/tna_scheduling' || location.pathname.startsWith('/session/unitmanagement/edit_tna')) {
 			return (<>
 				<UnitManagementIcon />
 				<span>TnA Scheduling</span>

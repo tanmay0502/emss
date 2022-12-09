@@ -26,10 +26,12 @@
     padding: 0 5vh;
     width: 100%;
 }
+
 .Schedule_header h4{
     margin-bottom: 0 !important;
     color: white !important;
 }
+
 .parent {
     /* padding-top: 15px; */
     width: 100%;
@@ -46,8 +48,7 @@
 
 .div1 { 
     grid-area: 1 / 1 / 2 / 2;
-    margin: 5% 15%;
-    
+    margin: 5% 15%;   
 }
 
 .div2 { 
@@ -72,6 +73,20 @@
     grid-area: 2 / 3 / 3 / 4;
     margin: 5% 15%;
 }
+
+.div7 { 
+    grid-area: 3 / 1 / 4 / 2;
+    margin: 5% 15%;   
+}
+
+.div8 { 
+    grid-area: 3 / 2 / 4 /  3; 
+    margin: 5% 15%;
+    width: 176%;
+}
+
+
+
 .submitBtn{
     margin-top:30px;
     background-color: #F56A3F;
@@ -104,6 +119,17 @@ input[type="number"]{
     font-family: 'Nunito Sans';
     outline: none;
 }
+input[type="text"]{
+    box-sizing: border-box;
+    width: 100%;
+    padding: 12.5px 10px;
+    border-radius: var(--border-radius);
+    border: 2px solid #84587C;
+    font-family: 'Nunito Sans';
+    outline: none;
+}
+
+
 input[type="date"]{
     box-sizing: border-box;
     width: 100%;
@@ -112,21 +138,6 @@ input[type="date"]{
     border: 2px solid #84587C;
     font-family: 'Nunito Sans';
     outline: none; 
-}
-.div5Tna{
-    grid-area: 2 / 2 / 3 / 4;
-    margin: 2% 7.5%;
-}
-.editBtn{
-    display: flex;
-    margin-left: 87%;
-    margin-bottom:15px;
-    background-color: #F56A3F;
-    color: white
-}
-.mainDiv{
-    /* display: flex; */
-    /* justify-content: center; */
 }
 /* -webkit-box-shadow:{ 0px 8px 45px 10px rgba(0,0,0,0.75)}; */
 /* -moz-box-shadow: 0px 8px 45px 10px rgba(0,0,0,0.75); */
