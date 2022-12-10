@@ -80,9 +80,9 @@
   height: min-content;
 }
 
-.unit_list_container table tr:hover td {
-  /* background-color: #b5b7c0bf; */
-}
+/* .unit_list_container table tr:hover td {
+  background-color: #b5b7c0bf;
+} */
 
 .unit_list_container table input[type="checkbox"] {
   margin-left: 25px;
