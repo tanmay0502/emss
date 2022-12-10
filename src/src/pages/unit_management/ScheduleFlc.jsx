@@ -1,7 +1,7 @@
 import { DynamicDataTable } from '@langleyfoxall/react-dynamic-data-table'
 import React, { useState } from 'react'
 import styles from './styles/ScheduleFlc.module.css'
-
+import { useNavigate } from 'react-router-dom';
 
 
 
@@ -12,6 +12,7 @@ function ScheduleFLC() {
     var hrs = currentdate.getHours();
     var mins = currentdate.getMinutes();
     var secs = currentdate.getSeconds();
+    const navigate = useNavigate();
 
     if (hrs <10){
         hrs = "0" + hrs;
@@ -105,15 +106,23 @@ function ScheduleFLC() {
         // console.log("times: " + Date.now().getHours())
     };
 
+    const handleButtonClick = (e) => {
+        // console.log("clicked" + e.target.name);
+        navigate('/session/unitmanagement/flc_list');
+      };
+
 
     return(
         <>
         <form onSubmit={onFormSubmit} id="form">
+       
         <div className={styles.Schedule_container}>
             <div className={styles.Schedule_header}>
+             
                 <h4>
                 Schedule FLC
                 </h4> 
+                <button className="font-semibold text-black" style={{backgroundColor: 'white'}} onClick={handleButtonClick}>Go Back</button>
             </div>
             <div class={styles.parent}>
 
