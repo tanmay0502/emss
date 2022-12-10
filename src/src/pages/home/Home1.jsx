@@ -49,7 +49,7 @@ function Home1() {
 	const [totalVT, setTotalVT] = useState(0);
 	const [statusData, setStatusData] = useState([]);
 	const [fetchData, setFetchData] = useState([]);
-	const [indiaMap, setIndiaMap] = useState(1);
+	const [indiaMap, setIndiaMap] = useState(0);
 
 	const uri = process.env.REACT_APP_API_SERVER+"/unit/total_counts?oprnd="
 
@@ -67,6 +67,7 @@ function Home1() {
 			// console.log(ID)
 			let getData = async ()=>{
 				try {
+					console.log("GET "+uri+ID)
 					const response = await fetch(
 						uri+ID,
 						{
@@ -81,6 +82,7 @@ function Home1() {
 						// console.log("Data fetched", data2);
 						// console.log("Data fetched", data2['data']);
 						let data = data2['data'];
+						// console.log(data2)
 						setFetchData(data);
 				} catch (err) {
 					console.log(err);
@@ -90,11 +92,11 @@ function Home1() {
 		}
 	},[content2,indiaMap])
 	useEffect(()=>{
-		if (indiaMap)
-		{let getData = async ()=>{
+		if (indiaMap) {
+			let getData = async ()=>{
 			try {
 				const ID = "IN"+window.sessionStorage.getItem('sessionToken').slice(2,11);
-				// console.log(ID)
+				console.log("GET "+uri+ID)
 				const response = await fetch(
 					uri+ID,
 					{
@@ -107,12 +109,15 @@ function Home1() {
 				  );
 					let data2 = await response.json();
 					let data = data2['data'];
+					// console.log(data2)
 					setFetchData(data);
-			} catch (err) {
-				console.log(err);
+				} catch (err) {
+					console.log(err);
+				}
 			}
+			getData();
+			setContent2("")
 		}
-		getData();}
 	}, [indiaMap])
 	
 	useEffect(()=>{
