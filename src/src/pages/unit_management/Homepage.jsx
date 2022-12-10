@@ -505,7 +505,7 @@ export default function HomePage() {
                                     <tbody >
                                         <tr>
                                             <td>
-                                                {val.unit_type}
+                                            <button style={{backgroundColor:'white'}} onClick={handleButtonClick} name={val.unit_type}>{val.unit_type}</button>
                                             </td>
                                             <td>
                                                 {val.ECIL.map((val, ind) => {

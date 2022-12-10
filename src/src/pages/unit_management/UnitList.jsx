@@ -17,6 +17,7 @@ export default function UnitList() {
   const initialVisibilityValues = {
     replacementForm: false,
     epForm: false,
+    epUnmarkForm: false,
     firstRandomisationForm: false,
     secondRandomisationForm: false,
   };
@@ -41,6 +42,7 @@ export default function UnitList() {
         onButtonClick={handleButtonClick}
       />
       <EPForm isVisible={cardVisibility.epForm} />
+      <EPUnmarkForm isVisible={cardVisibility.epUnmarkForm} />
       <ReplacementForm isVisible={cardVisibility.replacementForm} />
       <FirstRandomisationForm
         isVisible={cardVisibility.firstRandomisationForm}
@@ -78,9 +80,9 @@ const UnitListTable = () => {
           } else {
             const filter = tableFilter.toLowerCase();
             return (
-              elem["ID"].toLowerCase().includes(filter) ||
-              elem["Location"].toLowerCase().includes(filter) ||
-              elem["Status"].toLowerCase().includes(filter)
+              elem["modelID"].toLowerCase().includes(filter) ||
+              elem["modelLocation"].toLowerCase().includes(filter) ||
+              elem["modelStatus"].toLowerCase().includes(filter)
             );
           }
         })
@@ -91,8 +93,8 @@ const UnitListTable = () => {
             Status: (
               <div className={styles.unit_status}>{val["modelStatus"]}</div>
             ),
-            Remarks: val["Remarks"],
-            Location: val["Location"],
+            Remarks: val["modelRemarks"],
+            Location: val["modelLocation"],
             "Status Update Time": val["Status Update Time"],
             "": (
               <button className={styles.optionsButton}>
@@ -277,7 +279,11 @@ const StatusUpdate = ({ activeButtons, onButtonClick }) => {
               name="epForm"
               onClick={onButtonClick}
             />
-            <ActionButton text="EP Unmark" onClick={onButtonClick} />
+            <ActionButton 
+              isActive={activeButtons.epUnmarkForm}
+              text="EP Unmark"
+              name="epUnmarkForm"
+              onClick={onButtonClick} />
             <ActionButton
               isActive={activeButtons.replacementForm}
               text="Unit Replacement"
@@ -462,6 +468,7 @@ const EPForm = ({ isVisible }) => {
       body: JSON.stringify(formData),
     };
 
+
     // const baseUrl = "http://localhost:8100/unit";
     // try {
     //   const response = await fetch(`${baseUrl}/replace_unit`, requestOptions);
@@ -476,6 +483,22 @@ const EPForm = ({ isVisible }) => {
     //   alert(`Error occured: ${err}`);
     // }
     // setInputValues(initialValues);
+  };
+
+  const handleFinalFormSubmit = async (e) => {
+    const formData = {
+      userID,
+      bulk: inputValues.bulk,
+      destinationLocation: inputValues.destinationLocation,
+      acLocation: inputValues.acLocation,
+      unitList: inputValues.unitList,
+      remarks: inputValues.remarks
+    };
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    };
   };
 
   function ACNum() {
@@ -532,7 +555,178 @@ const EPForm = ({ isVisible }) => {
       {isVisible && (
         <div className={styles.unit_list_container}>
           <div className={styles.unit_list_header}>
-            <h4>EP Mark</h4>
+            <h4>EP Mark</h4> <button className="font-semibold text-black"
+            onClick={handleFinalFormSubmit} style={{backgroundColor: 'white'}}>Final Submit</button>
+          </div>
+          <div className="mt-2 w-full bg-white p-6">
+            <div className="grid grid-cols-3">
+              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+                <label className="mb-2 w-full text-base">
+                  Bulk<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-[#494A59]">
+                  <select
+                    className="relative h-10 w-full rounded-md border p-2"
+                    name="bulk"
+                    placeholder="Select"
+                    value={inputValues.bulk}
+                    onChange={handleInputChange}
+                  >
+                    {" "}
+                    <option hidden>Select</option>
+                    <option>Yes</option>
+                    <option>No</option>
+                  </select>
+                  <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1/2" />
+                </div>
+              </div>
+              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+                <label className="mb-2 w-full text-base">
+                  Destination Location<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-gray-800">
+                  <input
+                    className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                    name="destinationLocation"
+                    placeholder="Location"
+                    value={inputValues.destinationLocation}
+                    onChange={handleInputChange}
+                  />
+                </div>
+              </div>
+              {UaCList(inputValues.bulk)}
+              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+                <label className="mb-2 w-full text-base">
+                  Remarks<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-gray-800">
+                  <input
+                    className="h-40 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                    name="remarks"
+                    placeholder="Remarks"
+                    value={inputValues.remarks}
+                    onChange={handleInputChange}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <button
+            className="font-semibold text-white"
+            onClick={handleFormSubmit}
+          >
+            Submit
+          </button>
+        </div>
+      )}
+    </>
+  );
+};
+
+//EP Unmarking Form
+const EPUnmarkForm = ({ isVisible }) => {
+  const initialValues = {
+    bulk: "",
+    destinationLocation: "",
+    acLocation: "",
+    unitList: "",
+    remarks: "",
+  };
+  const [inputValues, setInputValues] = useState(initialValues);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setInputValues({
+      ...inputValues,
+      [name]: value,
+    });
+  };
+
+  const handleFormSubmit = async (e) => {
+    const formData = {
+      userID,
+      ...inputValues,
+    };
+    // console.log(formData);
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    };
+
+
+    // const baseUrl = "http://localhost:8100/unit";
+    // try {
+    //   const response = await fetch(`${baseUrl}/replace_unit`, requestOptions);
+    //   const data = await response.json();
+    //   console.log(data);
+    //   if (data.status == 200) {
+    //     alert("Unit Replaced Successfully");
+    //   } else {
+    //     alert("Could not replace the unit");
+    //   }
+    // } catch (err) {
+    //   alert(`Error occured: ${err}`);
+    // }
+    // setInputValues(initialValues);
+  };
+
+
+  function ACNum() {
+    return (
+      <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+        <label className="mb-2 w-full text-base">
+          AC Location<span className="text-red-600">*</span>
+        </label>
+        <div className="relative text-gray-800">
+          <input
+            className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+            name="acLocation"
+            placeholder="AC Location"
+            value={inputValues.acLocation}
+            onChange={handleInputChange}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  function UList() {
+    return (
+      <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+        <label className="mb-2 w-full text-base">
+          Unit Lists<span className="text-red-600">*</span>
+        </label>
+        <div className="relative text-gray-800">
+          <input
+            className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+            name="unitList"
+            placeholder="Unit Lists"
+            value={inputValues.unitList}
+            onChange={handleInputChange}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  function UaCList(val) {
+    switch (val) {
+      case "Yes":
+        return <ACNum />;
+      case "No":
+        return <UList />;
+      default:
+        return <div></div>;
+    }
+  }
+
+  return (
+    <>
+      {isVisible && (
+        <div className={styles.unit_list_container}>
+          <div className={styles.unit_list_header}>
+            <h4>EP Unmark</h4> 
           </div>
           <div className="mt-2 w-full bg-white p-6">
             <div className="grid grid-cols-3">
