@@ -149,6 +149,12 @@ function Routed(props) {
 				<span>Order Management</span>
 			</>);
 		}
+		if (location.pathname === '/session/unitmanagement') {
+			return (<>
+				<UnitManagementIcon />
+				<span>Unit Management</span>
+			</>);
+		}
 		if (location.pathname === '/session/unitmanagement/election_scheduling' || location.pathname === '/session/unitmanagement/schedule_list') {
 			return (<>
 				<UnitManagementIcon />

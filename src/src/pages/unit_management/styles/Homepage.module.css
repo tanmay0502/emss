@@ -4,6 +4,7 @@
     grid-template-rows: 1fr;
     grid-column-gap: 50px;
     grid-row-gap: 30px;
+    height: 100%;
 }
 
 .parent2 {
