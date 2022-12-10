@@ -37,6 +37,8 @@ import FLCList from './pages/unit_management/FlcList'
 import Schedule_List_CDP from './pages/unit_management/Schedule_List_CDP';
 import ScheduleCDP_edit from './pages/unit_management/ScheduleCDP_edit';
 import ScheduleCDP from './pages/unit_management/ScheduleCDP';
+import First_Randomisation_Scheduling from './pages/unit_management/first_Randomisation_Scheduling'
+import Second_Randomisation_Scheduling from './pages/unit_management/second_Randomisation_Scheduling'
 
 import EditFLC from './pages/unit_management/EditFlc'
 import EditTna from './pages/unit_management/EditTna';
@@ -104,6 +106,14 @@ function App() {
             <Route
               path="/session/unitmanagement/election_scheduling"
               element={<ScheduleElection />}
+            />
+            <Route
+              path="/session/unitmanagement/first_randomisation_scheduling"
+              element={<First_Randomisation_Scheduling />}
+            />
+            <Route
+              path="/session/unitmanagement/second_randomisation_scheduling"
+              element={<Second_Randomisation_Scheduling />}
             />
             <Route
               path="/session/unitmanagement/schedule_list"
