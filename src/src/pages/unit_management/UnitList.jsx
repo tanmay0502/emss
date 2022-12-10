@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import styles from "./styles/UnitList.module.css";
+import { useTable } from "react-table";
 import { DynamicDataTable } from "@langleyfoxall/react-dynamic-data-table";
 import {
   AiOutlineSortAscending,
@@ -11,8 +12,6 @@ import { ReactComponent as OptionsIndicator } from "../../assets/Options_Indicat
 import { ReactComponent as SearchInputElement } from "../../assets/searchInputIcon.svg";
 import { ReactComponent as ChevronDown } from "../../assets/ChevronDown.svg";
 import { expD } from "./Homepage";
-
-
 
 const userID = sessionStorage.getItem("sessionToken");
 const baseUrl = "http://localhost:8100/unit";
@@ -251,8 +250,9 @@ const UnitListTable = () => {
 const ActionButton = ({ isActive, text, name, onClick }) => {
   return (
     <button
-      className={`font-mediumisActive mx-auto mb-8 w-4/5 border-[1px] border-solid border-secondary hover:bg-secondary hover:text-white ${isActive ? "bg-secondary text-white" : "bg-white  text-secondary"
-        }`}
+      className={`font-mediumisActive mx-auto mb-8 w-4/5 border-[1px] border-solid border-secondary hover:bg-secondary hover:text-white ${
+        isActive ? "bg-secondary text-white" : "bg-white  text-secondary"
+      }`}
       name={name ? name : text}
       onClick={onClick}
     >
@@ -286,7 +286,8 @@ const StatusUpdate = ({ activeButtons, onButtonClick }) => {
               isActive={activeButtons.epUnmarkForm}
               text="EP Unmark"
               name="epUnmarkForm"
-              onClick={onButtonClick} />
+              onClick={onButtonClick}
+            />
             <ActionButton
               isActive={activeButtons.replacementForm}
               text="Unit Replacement"
@@ -316,6 +317,462 @@ const StatusUpdate = ({ activeButtons, onButtonClick }) => {
   );
 };
 
+// EP Marking Form
+const EPForm = ({ isVisible }) => {
+  const initialValues = {
+    bulk: "",
+    destinationLocation: "",
+    acLocation: "",
+    unitIDs: "",
+    remarks: "",
+  };
+  const [inputValues, setInputValues] = useState(initialValues);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setInputValues({
+      ...inputValues,
+      [name]: value,
+    });
+  };
+
+  const baseUrl = "http://localhost:8100/unit";
+
+  const handleFinalFormSubmit = async (e) => {
+    try {
+      const response = await fetch(`${baseUrl}/marking_complete`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userID, ...inputValues }),
+      });
+      const data = await response.json();
+      if (data.status == 200) {
+        alert(data.message);
+      } else {
+        alert(data.message);
+      }
+    } catch (err) {
+      alert(`Error occured: ${err}`);
+    }
+    setInputValues(initialValues);
+  };
+
+  const handleFormSubmit = async (e) => {
+    try {
+      const response = await fetch(`${baseUrl}/ep_mark`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ ...inputValues }),
+      });
+      console.log(response);
+      console.log(JSON.stringify({ ...inputValues }));
+      const data = await response.json();
+      if (data.status == 200) {
+        alert(data.message);
+      } else {
+        alert(data.message);
+      }
+    } catch (err) {
+      alert(`Error occured: ${err}`);
+    }
+    setInputValues(initialValues);
+  };
+
+  function ACNum() {
+    return (
+      <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+        <label className="mb-2 w-full text-base">
+          AC Location<span className="text-red-600">*</span>
+        </label>
+        <div className="relative text-gray-800">
+          <input
+            className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+            name="acLocation"
+            placeholder="AC Location"
+            value={inputValues.acLocation}
+            onChange={handleInputChange}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  function UList() {
+    return (
+      <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+        <label className="mb-2 w-full text-base">
+          Unit IDs<span className="text-red-600">*</span>
+        </label>
+        <div className="relative text-gray-800">
+          <input
+            className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+            name="unitIDs"
+            placeholder="Unit IDs"
+            value={inputValues.unitIDs}
+            onChange={handleInputChange}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  function UaCList(val) {
+    switch (val) {
+      case "Yes":
+        return <ACNum />;
+      case "No":
+        return <UList />;
+      default:
+        return <div></div>;
+    }
+  }
+
+  return (
+    <>
+      {isVisible && (
+        <div className={styles.unit_list_container}>
+          <div className={styles.unit_list_header}>
+            <h4>EP Mark</h4>{" "}
+            <button
+              className="font-semibold text-black"
+              onClick={handleFinalFormSubmit}
+              style={{ backgroundColor: "white" }}
+            >
+              Final Submit
+            </button>
+          </div>
+          <div className="mt-2 w-full bg-white p-6">
+            <div className="grid grid-cols-3">
+              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+                <label className="mb-2 w-full text-base">
+                  Bulk<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-[#494A59]">
+                  <select
+                    className="relative h-10 w-full rounded-md border p-2"
+                    name="bulk"
+                    placeholder="Select"
+                    value={inputValues.bulk}
+                    onChange={handleInputChange}
+                  >
+                    {" "}
+                    <option hidden>Select</option>
+                    <option>Yes</option>
+                    <option>No</option>
+                  </select>
+                  <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1/2" />
+                </div>
+              </div>
+              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+                <label className="mb-2 w-full text-base">
+                  Destination Location<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-gray-800">
+                  <input
+                    className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                    name="destinationLocation"
+                    placeholder="Location"
+                    value={inputValues.destinationLocation}
+                    onChange={handleInputChange}
+                  />
+                </div>
+              </div>
+              {UaCList(inputValues.bulk)}
+              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+                <label className="mb-2 w-full text-base">
+                  Remarks<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-gray-800">
+                  <input
+                    className="h-40 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                    name="remarks"
+                    placeholder="Remarks"
+                    value={inputValues.remarks}
+                    onChange={handleInputChange}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <button
+            className="font-semibold text-white"
+            onClick={handleFormSubmit}
+          >
+            Submit
+          </button>
+        </div>
+      )}
+    </>
+  );
+};
+
+// EP Unmarking Form
+const EPUnmarkForm = ({ isVisible }) => {
+  const initialValues = {
+    bulk: "",
+    destinationLocation: "",
+    acLocation: "",
+    remarks: "",
+  };
+  const [inputValues, setInputValues] = useState(initialValues);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setInputValues({
+      ...inputValues,
+      [name]: value,
+    });
+  };
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_SERVER}/unit/ep_unmark`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credantials: "same-origin",
+          body: JSON.stringify({
+            bulk: true,
+            destinationLocation: "string",
+            unitIDs: "string",
+            acLocation: "string",
+            remarks: "string",
+            courtorderdata: JSON.stringify(filebase64Array2),
+          }),
+          mode: "cors",
+        }
+      );
+
+      const data = await response.json();
+      alert("Submitted Successfully");
+    } catch (err) {
+      console.log(err);
+      console.log("22222");
+    }
+  };
+
+  function ACNum() {
+    return (
+      <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+        <label className="mb-2 w-full text-base">
+          AC Location<span className="text-red-600">*</span>
+        </label>
+        <div className="relative text-gray-800">
+          <input
+            className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+            name="acLocation"
+            placeholder="AC Location"
+            value={inputValues.acLocation}
+            onChange={handleInputChange}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  function UList() {
+    return (
+      <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+        <label className="mb-2 w-full text-base">
+          Unit Lists<span className="text-red-600">*</span>
+        </label>
+        <div className="relative text-gray-800">
+          <input
+            className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+            name="unitList"
+            placeholder="Unit Lists"
+            value={inputValues.unitList}
+            onChange={handleInputChange}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  function UaCList(val) {
+    switch (val) {
+      case "Yes":
+        return <ACNum />;
+      case "No":
+        return <UList />;
+      default:
+        return <div></div>;
+    }
+  }
+
+  // const [baseImage, setBaseImage] = useState("")
+  const navigate = useNavigate();
+  const fileNameArray = [];
+  const fileTypeArray = [];
+  const filebase64Array = [];
+  const [fileNameArray2, setFileName] = useState([]);
+  const [fileTypeArray2, setFileType] = useState([]);
+  const [filebase64Array2, setFileData] = useState([]);
+  const [action, setAction] = useState("");
+
+  const court_order_data = async (e) => {
+    const files = e.target.files;
+    console.log(files);
+
+    const totalFiles = files.length;
+    console.log(totalFiles);
+
+    var fileNumber = 0;
+
+    while (fileNumber < totalFiles) {
+      var x = fileNumber + 1;
+      console.log("fileNumber: " + x);
+
+      const file = e.target.files[fileNumber];
+      const fullFileName = file.name;
+
+      var fileParts = fullFileName.split(".");
+
+      console.log("full file" + fileParts.length);
+      const fileArrayLength = fileParts.length;
+
+      const indexDot = fullFileName.indexOf(".");
+      // console.log("indexDot"+indexDot)
+
+      const fileNameo = fullFileName.slice(0, indexDot);
+      // console.log("fileName"+ fileNameo);
+
+      window.fileType = fileParts[fileArrayLength - 1];
+
+      const filePartsNew = fileParts.pop();
+      // console.log(fileParts);
+      const fileName = fileParts.join(".");
+      // console.log("this file name: " + fileName);
+      // console.log("fileParts New" + filePartsNew);
+      // console.log("fileName = " + filePartsNew)
+      console.log(file, "FILE");
+      const convertedFile = await convertBase64(file);
+
+      var base64Converted = convertedFile;
+      fileNumber += 1;
+
+      fileNameArray.push(fileName);
+      fileTypeArray.push(window.fileType);
+      filebase64Array.push(base64Converted);
+
+      setFileName((arr) => [...arr, fileName]);
+      setFileType((arr) => [...arr, window.fileType]);
+      setFileData((arr) => [...arr, base64Converted]);
+    }
+  };
+
+  const convertBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      };
+
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };
+
+  return (
+    <>
+      {isVisible && (
+        <div className={styles.unit_list_container}>
+          <div className={styles.unit_list_header}>
+            <h4>EP Unmark</h4>
+          </div>
+          <div className="mt-2 w-full bg-white p-6">
+            <div className="grid grid-cols-3">
+              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+                <label className="mb-2 w-full text-base">
+                  Bulk<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-[#494A59]">
+                  <select
+                    className="relative h-10 w-full rounded-md border p-2"
+                    name="bulk"
+                    placeholder="Select"
+                    value={inputValues.bulk}
+                    onChange={handleInputChange}
+                  >
+                    {" "}
+                    <option hidden>Select</option>
+                    <option>Yes</option>
+                    <option>No</option>
+                  </select>
+                  <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1/2" />
+                </div>
+              </div>
+
+              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+                <label className="mb-2 w-full text-base">
+                  Destination Location<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-gray-800">
+                  <input
+                    className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                    name="destinationLocation"
+                    placeholder="Location"
+                    value={inputValues.destinationLocation}
+                    onChange={handleInputChange}
+                  />
+                </div>
+              </div>
+
+              {UaCList(inputValues.bulk)}
+              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+                <label className="mb-2 w-full text-base">
+                  Remarks<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-gray-800">
+                  <input
+                    className="h-40 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                    name="remarks"
+                    placeholder="Remarks"
+                    value={inputValues.remarks}
+                    onChange={handleInputChange}
+                  />
+                </div>
+              </div>
+
+              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+                <label className="mb-2 w-full text-base">
+                  Supporting Documents <span className="text-red-600">*</span>
+                </label>
+
+                <input
+                  type="file"
+                  className="w-1/6"
+                  disabled={action === "merge" ? true : false}
+                  id="formDocuments"
+                  multiple
+                  onChange={(e) => {
+                    court_order_data(e);
+                  }}
+                ></input>
+              </div>
+            </div>
+          </div>
+
+          <button
+            className="font-semibold text-white"
+            onClick={handleFormSubmit}
+          >
+            Submit
+          </button>
+        </div>
+      )}
+    </>
+  );
+};
+
 // Unit Replacement Card
 const ReplacementForm = ({ isVisible }) => {
   const initialInputValues = {
@@ -339,9 +796,8 @@ const ReplacementForm = ({ isVisible }) => {
       const response = await fetch(`${baseUrl}/replace_unit`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials:'include',
+        credentials: "include",
         body: JSON.stringify({ userID, ...inputValues }),
-      
       });
       console.log(response);
       const data = await response.json();
@@ -443,477 +899,39 @@ const ReplacementForm = ({ isVisible }) => {
   );
 };
 
-// EP Marking Form
-const EPForm = ({ isVisible }) => {
-  const initialValues = {
-    bulk: "",
-    destinationLocation: "",
-    acLocation: "",
-    unitIDs: "",
-    remarks: "",
-  };
-  const [inputValues, setInputValues] = useState(initialValues);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setInputValues({
-      ...inputValues,
-      [name]: value,
-    });
-  };
-
-  const baseUrl = "http://localhost:8100/unit";
-
-  const handleFinalFormSubmit = async (e) => {
-    try {
-      const response = await fetch(`${baseUrl}/marking_complete`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userID, ...inputValues }),
-        
-      });
-      const data = await response.json();
-      if (data.status == 200) {
-        alert(data.message);
-      } else {
-        alert(data.message);
-      }
-    } catch (err) {
-      alert(`Error occured: ${err}`);
-    }
-    setInputValues(initialValues);
-  };
-
-  const handleFormSubmit = async (e) => {
-    try {
-      const response = await fetch(`${baseUrl}/ep_mark`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials:'include',
-        body: JSON.stringify({...inputValues })
-      });
-      console.log(response);
-      console.log(JSON.stringify({...inputValues }));
-      const data = await response.json();
-      if (data.status == 200) {
-        alert(data.message);
-      } else {
-        alert(data.message);
-      }
-    } catch (err) {
-      alert(`Error occured: ${err}`);
-    }
-    setInputValues(initialValues);
-  };
-
-  function ACNum() {
-    return (
-      <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
-        <label className="mb-2 w-full text-base">
-          AC Location<span className="text-red-600">*</span>
-        </label>
-        <div className="relative text-gray-800">
-          <input
-            className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-            name="acLocation"
-            placeholder="AC Location"
-            value={inputValues.acLocation}
-            onChange={handleInputChange}
-          />
-        </div>
-      </div>
-    );
-  }
-
-  function UList() {
-    return (
-      <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
-        <label className="mb-2 w-full text-base">
-          Unit IDs<span className="text-red-600">*</span>
-        </label>
-        <div className="relative text-gray-800">
-          <input
-            className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-            name="unitIDs"
-            placeholder="Unit IDs"
-            value={inputValues.unitIDs}
-            onChange={handleInputChange}
-          />
-        </div>
-      </div>
-    );
-  }
-
-  function UaCList(val) {
-    switch (val) {
-      case "Yes":
-        return <ACNum />;
-      case "No":
-        return <UList />;
-      default:
-        return <div></div>;
-    }
-  }
-
-  return (
-    <>
-      {isVisible && (
-        <div className={styles.unit_list_container}>
-          <div className={styles.unit_list_header}>
-            <h4>EP Mark</h4> <button className="font-semibold text-black"
-              onClick={handleFinalFormSubmit} style={{ backgroundColor: 'white' }}>Final Submit</button>
-          </div>
-          <div className="mt-2 w-full bg-white p-6">
-            <div className="grid grid-cols-3">
-              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
-                <label className="mb-2 w-full text-base">
-                  Bulk<span className="text-red-600">*</span>
-                </label>
-                <div className="relative text-[#494A59]">
-                  <select
-                    className="relative h-10 w-full rounded-md border p-2"
-                    name="bulk"
-                    placeholder="Select"
-                    value={inputValues.bulk}
-                    onChange={handleInputChange}
-                  >
-                    {" "}
-                    <option hidden>Select</option>
-                    <option>Yes</option>
-                    <option>No</option>
-                  </select>
-                  <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1/2" />
-                </div>
-              </div>
-              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
-                <label className="mb-2 w-full text-base">
-                  Destination Location<span className="text-red-600">*</span>
-                </label>
-                <div className="relative text-gray-800">
-                  <input
-                    className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-                    name="destinationLocation"
-                    placeholder="Location"
-                    value={inputValues.destinationLocation}
-                    onChange={handleInputChange}
-                  />
-                </div>
-              </div>
-              {UaCList(inputValues.bulk)}
-              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
-                <label className="mb-2 w-full text-base">
-                  Remarks<span className="text-red-600">*</span>
-                </label>
-                <div className="relative text-gray-800">
-                  <input
-                    className="h-40 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-                    name="remarks"
-                    placeholder="Remarks"
-                    value={inputValues.remarks}
-                    onChange={handleInputChange}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          <button
-            className="font-semibold text-white"
-            onClick={handleFormSubmit}
-          >
-            Submit
-          </button>
-        </div>
-      )}
-    </>
-  );
-};
-
-//EP Unmarking Form
-const EPUnmarkForm = ({ isVisible }) => {
-  const initialValues = {
-    bulk: "",
-    destinationLocation: "",
-    acLocation: "",
-    remarks: "",
-  };
-  const [inputValues, setInputValues] = useState(initialValues);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setInputValues({
-      ...inputValues,
-      [name]: value,
-    });
-  };
-
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_SERVER}/unit/ep_unmark`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credantials: 'same-origin',
-          body: JSON.stringify({
-            bulk: true,
-            destinationLocation: "string",
-            unitIDs: "string",
-            acLocation: "string",
-            remarks: "string",
-            courtorderdata: JSON.stringify(filebase64Array2)
-          }),
-          mode: "cors"
-        }
-      );
-
-      const data = await response.json();
-      alert('Submitted Successfully')
-    } catch (err) {
-      console.log(err);
-      console.log("22222")
-    }
-  };
-
-
-  function ACNum() {
-    return (
-      <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
-        <label className="mb-2 w-full text-base">
-          AC Location<span className="text-red-600">*</span>
-        </label>
-        <div className="relative text-gray-800">
-          <input
-            className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-            name="acLocation"
-            placeholder="AC Location"
-            value={inputValues.acLocation}
-            onChange={handleInputChange}
-          />
-        </div>
-      </div>
-    );
-  }
-
-  function UList() {
-    return (
-      <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
-        <label className="mb-2 w-full text-base">
-          Unit Lists<span className="text-red-600">*</span>
-        </label>
-        <div className="relative text-gray-800">
-          <input
-            className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-            name="unitList"
-            placeholder="Unit Lists"
-            value={inputValues.unitList}
-            onChange={handleInputChange}
-          />
-        </div>
-      </div>
-    );
-  }
-
-  function UaCList(val) {
-    switch (val) {
-      case "Yes":
-        return <ACNum />;
-      case "No":
-        return <UList />;
-      default:
-        return <div></div>;
-    }
-  }
-
-
-  // const [baseImage, setBaseImage] = useState("")
-  const navigate = useNavigate()
-  const fileNameArray = [];
-  const fileTypeArray = [];
-  const filebase64Array = [];
-  const [fileNameArray2, setFileName] = React.useState([]);
-  const [fileTypeArray2, setFileType] = React.useState([]);
-  const [filebase64Array2, setFileData] = React.useState([]);
-  const [action, setAction] = useState("");
-
-  const court_order_data = async (e) => {
-    const files = e.target.files;
-    console.log(files)
-
-    const totalFiles = files.length;
-    console.log(totalFiles)
-
-    var fileNumber = 0;
-
-    while (fileNumber < totalFiles) {
-      var x = fileNumber + 1;
-      console.log("fileNumber: " + x)
-
-      const file = e.target.files[fileNumber];
-      const fullFileName = file.name;
-
-      var fileParts = fullFileName.split(".");
-
-      console.log("full file" + fileParts.length)
-      const fileArrayLength = fileParts.length;
-
-      const indexDot = fullFileName.indexOf(".");
-      // console.log("indexDot"+indexDot)
-
-      const fileNameo = fullFileName.slice(0, indexDot);
-      // console.log("fileName"+ fileNameo);
-
-
-
-
-      window.fileType = fileParts[fileArrayLength - 1];
-
-      const filePartsNew = fileParts.pop();
-      // console.log(fileParts);
-      const fileName = fileParts.join(".");
-      // console.log("this file name: " + fileName);
-      // console.log("fileParts New" + filePartsNew);
-      // console.log("fileName = " + filePartsNew)
-      console.log(file, 'FILE')
-      const convertedFile = await convertBase64(file);
-
-      var base64Converted = convertedFile;
-      fileNumber += 1;
-
-      fileNameArray.push(fileName);
-      fileTypeArray.push(window.fileType);
-      filebase64Array.push(base64Converted);
-
-      setFileName(arr => [...arr, fileName])
-      setFileType(arr => [...arr, window.fileType])
-      setFileData(arr => [...arr, base64Converted])
-
-    }
-  }
-
-
-
-  const convertBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(file);
-
-      fileReader.onload = () => {
-        resolve(fileReader.result);
-      }
-
-      fileReader.onerror = (error) => {
-        reject(error);
-      }
-    })
-  }
-
-
-  return (
-    <>
-      {isVisible && (
-        <div className={styles.unit_list_container}>
-          <div className={styles.unit_list_header}>
-            <h4>EP Unmark</h4>
-          </div>
-          <div className="mt-2 w-full bg-white p-6">
-            <div className="grid grid-cols-3">
-              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
-                <label className="mb-2 w-full text-base">
-                  Bulk<span className="text-red-600">*</span>
-                </label>
-                <div className="relative text-[#494A59]">
-                  <select
-                    className="relative h-10 w-full rounded-md border p-2"
-                    name="bulk"
-                    placeholder="Select"
-                    value={inputValues.bulk}
-                    onChange={handleInputChange}
-                  >
-                    {" "}
-                    <option hidden>Select</option>
-                    <option>Yes</option>
-                    <option>No</option>
-                  </select>
-                  <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1/2" />
-                </div>
-              </div>
-
-
-              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
-                <label className="mb-2 w-full text-base">
-                  Destination Location<span className="text-red-600">*</span>
-                </label>
-                <div className="relative text-gray-800">
-                  <input
-                    className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-                    name="destinationLocation"
-                    placeholder="Location"
-                    value={inputValues.destinationLocation}
-                    onChange={handleInputChange}
-                  />
-                </div>
-              </div>
-
-
-              {UaCList(inputValues.bulk)}
-              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
-                <label className="mb-2 w-full text-base">
-                  Remarks<span className="text-red-600">*</span>
-                </label>
-                <div className="relative text-gray-800">
-                  <input
-                    className="h-40 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-                    name="remarks"
-                    placeholder="Remarks"
-                    value={inputValues.remarks}
-                    onChange={handleInputChange}
-                  />
-                </div>
-              </div>
-
-
-              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
-                <label className="mb-2 w-full text-base">Supporting Documents <span className="text-red-600">*</span></label>
-
-                <input type="file" className="w-1/6"
-                  disabled={action === "merge" ? true : false}
-                  id="formDocuments"
-                  multiple
-                  onChange={(e) => {
-                    court_order_data(e);
-                  }}
-                ></input>
-              </div>
-            </div>
-          </div>
-
-          <button
-            className="font-semibold text-white"
-            onClick={handleFormSubmit}
-          >
-            Submit
-          </button>
-        </div>
-      )}
-    </>
-  );
-};
-
 // 1st Randomisation Card
 const FirstRandomisationForm = ({ isVisible }) => {
   const warehouse_id = "TS08I1"; // calc from userId
+  // const [assemblyData, setAssemblyData] = useState([
+  //   {
+  //     ac_name: "",
+  //     cu_count: "",
+  //     bu_count: "",
+  //     vt_count: "",
+  //   },
+  // ]);
   const [assemblyData, setAssemblyData] = useState([
     {
-      ac_name: "",
-      cu_count: "",
-      bu_count: "",
-      vvpat_count: "",
+      ac_name: "AC1",
+      cu_count: 8,
+      bu_count: 10,
+      vt_count: 24,
+    },
+    {
+      ac_name: "AC2",
+      cu_count: 18,
+      bu_count: 12,
+      vt_count: 14,
+    },
+    {
+      ac_name: "AC3",
+      cu_count: 48,
+      bu_count: 56,
+      vt_count: 42,
     },
   ]);
   const [isFetching, setIsFetching] = useState(true);
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleInputChange = (e) => {
     const { name, value, dataset } = e.currentTarget;
@@ -930,7 +948,7 @@ const FirstRandomisationForm = ({ isVisible }) => {
         ac_name: "",
         cu_count: "",
         bu_count: "",
-        vvpat_count: "",
+        vt_count: "",
       },
       ...assemblyData.slice(id + 1),
     ]);
@@ -949,7 +967,7 @@ const FirstRandomisationForm = ({ isVisible }) => {
       .map((d) => {
         d.cu_count = d.cu_count ? parseInt(d.cu_count) : 0;
         d.bu_count = d.bu_count ? parseInt(d.bu_count) : 0;
-        d.vvpat_count = d.vvpat_count ? parseInt(d.vvpat_count) : 0;
+        d.vt_count = d.vt_count ? parseInt(d.vt_count) : 0;
         return d;
       });
     // console.log(
@@ -959,6 +977,7 @@ const FirstRandomisationForm = ({ isVisible }) => {
     //   })
     // );
     // fetch request
+    setIsSubmitted(false);
     try {
       const response = await fetch(`${baseUrl}/executeRandomisation`, {
         method: "POST",
@@ -970,13 +989,17 @@ const FirstRandomisationForm = ({ isVisible }) => {
       });
       const data = await response.json();
       if (data.status == 200) {
-        console.log("Radomisation results: ", data);
+        console.log("Randomisation results: ", data);
+        // setIsSubmitted(true);
+        // useMemo and cache the output result
+        // pass the data to child component & re-render
       } else {
-        console.log("Could not fetch radomisation results");
+        console.log("Could not fetch randomisation results");
       }
     } catch (err) {
       alert(`Error occured: ${err}`);
     }
+    setIsSubmitted(true);
   };
 
   useEffect(() => {
@@ -1001,7 +1024,7 @@ const FirstRandomisationForm = ({ isVisible }) => {
   return (
     <>
       {isVisible && (
-        <div className={styles.unit_list_container}>
+        <div className="mb-10 flex h-auto w-full flex-col items-center justify-center overflow-hidden rounded-[25px] bg-white pb-[25px]">
           <div className={styles.unit_list_header}>
             <h4>First Randomisation</h4>
           </div>
@@ -1134,9 +1157,9 @@ const FirstRandomisationForm = ({ isVisible }) => {
                         <input
                           className="h-10 w-1/3 rounded-md border-0 bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
                           type="number"
-                          name="vvpat_count"
-                          placeholder="VVPAT"
-                          value={data.vvpat_count}
+                          name="vt_count"
+                          placeholder="VT"
+                          value={data.vt_count}
                           onChange={handleInputChange}
                           data-id={id}
                         />
@@ -1148,19 +1171,20 @@ const FirstRandomisationForm = ({ isVisible }) => {
             </div>
           )}
           <button
-            className="font-semibold text-white"
+            className="mb-8 font-semibold text-white"
             onClick={handleFormSubmit}
           >
             Randomise
           </button>
-          <RandomisationOutput />
+          {isSubmitted && <RandomisationOutput assemblyData={assemblyData} />}
         </div>
       )}
     </>
   );
 };
 
-const RandomisationOutput = () => {
+const RandomisationOutput = ({ assemblyData }) => {
+  const [iterationIndex, setIterationIndex] = useState(0);
   const rndResponse = {
     iteration_index: "1",
     alloted_units: {
@@ -1173,7 +1197,7 @@ const RandomisationOutput = () => {
           "BCUM1000011",
         ],
         bu: ["BCUM1000011", "BCUM1000011", "BCUM1000011", "BCUM1000011"],
-        vvpat: ["BCUM1000011", "BCUM1000011", "BCUM1000011"],
+        vt: ["BCUM1000011", "BCUM1000011", "BCUM1000011"],
       },
       AC2: {
         cu: [
@@ -1184,12 +1208,173 @@ const RandomisationOutput = () => {
           "BCUM1000011",
         ],
         bu: ["BCUM1000011", "BCUM1000011", "BCUM1000011", "BCUM1000011"],
-        vvpat: ["BCUM1000011", "BCUM1000011", "BCUM1000011"],
+        vt: ["BCUM1000011", "BCUM1000011", "BCUM1000011"],
       },
     },
   };
 
-  return <>{/* <div>Hello World</div> */}</>;
+  const response = useMemo(() => rndResponse.alloted_units, [rndResponse]);
+  const data = useMemo(() => assemblyData, [assemblyData]);
+  const columns = useMemo(
+    () => [
+      {
+        Header: "Assembly Segment",
+        accessor: "ac_name", // accessor is the "key" in the data
+      },
+      {
+        Header: "CU Count",
+        accessor: "cu_count",
+      },
+      {
+        Header: "BU Count",
+        accessor: "bu_count",
+      },
+      {
+        Header: "VT Count",
+        accessor: "vt_count",
+      },
+    ],
+    []
+  );
+
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
+    useTable({ columns, data });
+
+  const iterationText = ["First", "Second", "Third"];
+
+  return (
+    <>
+      {/* Iteration Count */}
+      <div className="flex w-full flex-row items-center justify-between px-16">
+        <button className="h-8 rounded-md border-2 border-solid border-zinc-300 bg-zinc-50 px-5 py-0 text-sm text-gray-800 hover:bg-zinc-100">
+          {"< Prev"}
+        </button>
+        <h3 className="font-sans font-semibold">
+          {iterationText[iterationIndex]} Iteration
+        </h3>
+        <button className="h-8 rounded-md border-2 border-solid border-zinc-300 bg-zinc-50 px-5 py-0 text-sm text-gray-800 hover:bg-zinc-100">
+          {"Next >"}
+        </button>
+      </div>
+      {/* Arrow Buttons */}
+      <table {...getTableProps()} className="mb-8 w-11/12">
+        <thead>
+          {headerGroups.map((headerGroup) => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map((column) => (
+                <th
+                  {...column.getHeaderProps()}
+                  className="border-b-2 border-solid border-gray-300 bg-white text-xl font-semibold !text-gray-900"
+                >
+                  {column.render("Header")}
+                </th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+        <tbody {...getTableBodyProps()}>
+          {rows.map((row) => {
+            prepareRow(row);
+            return (
+              <AssemblyTableRow
+                row={row}
+                unitData={response[row.cells[0].value]}
+              />
+            );
+          })}
+        </tbody>
+      </table>
+    </>
+  );
+};
+
+const AssemblyTableRow = ({ row, unitData }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const toggleExpander = (e) => {
+    // if (e.target.type === 'checkbox') return;
+
+    // if (!this.state.expanded) {
+    //   this.setState(
+    //     { expanded: true },
+    //     () => {
+    //       if (this.refs.expanderBody) {
+    //         slideDown(this.refs.expanderBody);
+    //       }
+    //     }
+    //   );
+    // } else {
+    //   slideUp(this.refs.expanderBody, {
+    //     onComplete: () => { this.setState({ expanded: false }); }
+    //   });
+    // }
+    setIsExpanded(!isExpanded);
+  };
+
+  return (
+    <>
+      <tr {...row.getRowProps()} onClick={toggleExpander}>
+        {row.cells.map((cell) => {
+          return (
+            <td
+              {...cell.getCellProps()}
+              className="relative border-b border-solid border-gray-200 bg-white p-2 text-lg text-gray-600"
+            >
+              {cell.column.Header == "Assembly Segment" && (
+                <ChevronDown
+                  className={`absolute left-0 top-1/2 ml-7 h-5 w-5 -translate-y-1/2 translate-x-1/2 transition-transform ease-in-out ${
+                    !isExpanded && "-rotate-90"
+                  }`}
+                />
+              )}
+              {cell.render("Cell")}
+            </td>
+          );
+        })}
+      </tr>
+      {isExpanded && (
+        <tr onClick={toggleExpander}>
+          <td className="bg-zinc-50 py-2 px-6" colSpan={4}>
+            <div className="px-4 text-left">
+              <h6 className="text-lg">CU</h6>
+              <div className="mx-auto mb-2 grid grid-cols-7 text-center font-sans text-base">
+                {/* {unitData.cu.map((unit) => (
+                  <p className="m-0 mr-2 text-base">{unit}</p>
+                ))} */}
+                {[...Array(row.values.cu_count).keys()].map((unit) => (
+                  <p className="m-0">
+                    BCUM1000{unit.toString().padStart(3, 0)}
+                  </p>
+                ))}
+              </div>
+              <h6 className="text-lg">BU</h6>
+              <div className="mx-auto mb-2 grid grid-cols-7 text-center font-sans text-base">
+                {/* {unitData.bu.map((unit) => (
+                  <p className="m-0 mr-2 text-base">{unit}</p>
+                ))} */}
+                {[...Array(row.values.bu_count).keys()].map((unit) => (
+                  <p className="m-0">
+                    BCUM1000{unit.toString().padStart(3, 0)}
+                  </p>
+                ))}
+              </div>
+              <h6 className="text-lg">VT</h6>
+              <div className="mx-auto mb-2 grid grid-cols-7 text-center font-sans text-base">
+                {/* {unitData.vt.map((unit) => (
+                  <p className="m-0 mr-2 text-base">{unit}</p>
+                ))} */}
+                {[...Array(row.values.vt_count).keys()].map((unit) => (
+                  <p className="m-0">
+                    BCUM1000{unit.toString().padStart(3, 0)}
+                  </p>
+                ))}
+              </div>
+            </div>
+          </td>
+        </tr>
+      )}
+    </>
+  );
 };
 
 // 2nd Randomisation Card
