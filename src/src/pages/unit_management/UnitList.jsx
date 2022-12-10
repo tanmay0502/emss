@@ -634,7 +634,6 @@ const EPUnmarkForm = ({ isVisible }) => {
     bulk: "",
     destinationLocation: "",
     acLocation: "",
-    unitIDs: "",
     remarks: "",
   };
   const [inputValues, setInputValues] = useState(initialValues);
@@ -648,20 +647,35 @@ const EPUnmarkForm = ({ isVisible }) => {
   };
 
   const handleFormSubmit = async (e) => {
-    const formData = {
-      userID,
-      ...inputValues,
-    };
-    // console.log(formData);
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    };
+    e.preventDefault();
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_SERVER}/unit/ep_unmark`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credantials: 'same-origin',
+          body: JSON.stringify({
+            bulk: true,
+            destinationLocation: "string",
+            unitIDs: "string",
+            acLocation: "string",
+            remarks: "string",
+            courtorderdata: JSON.stringify(filebase64Array2)
+          }),
+          mode: "cors"
+        }
+      );
 
-
-    const baseUrl = "http://localhost:8100/unit";
-  }
+      const data = await response.json();
+      alert('Submitted Successfully')
+    } catch (err) {
+      console.log(err);
+      console.log("22222")
+    }
+  };
 
 
   function ACNum() {
@@ -692,9 +706,9 @@ const EPUnmarkForm = ({ isVisible }) => {
         <div className="relative text-gray-800">
           <input
             className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-            name="unitIDs"
-            placeholder="Unit IDs"
-            value={inputValues.unitIDs}
+            name="unitList"
+            placeholder="Unit Lists"
+            value={inputValues.unitList}
             onChange={handleInputChange}
           />
         </div>
@@ -714,7 +728,7 @@ const EPUnmarkForm = ({ isVisible }) => {
   }
 
 
-  const [baseImage, setBaseImage] = useState("")
+  // const [baseImage, setBaseImage] = useState("")
   const navigate = useNavigate()
   const fileNameArray = [];
   const fileTypeArray = [];
@@ -724,7 +738,7 @@ const EPUnmarkForm = ({ isVisible }) => {
   const [filebase64Array2, setFileData] = React.useState([]);
   const [action, setAction] = useState("");
 
-  const uploadImage = async (e) => {
+  const court_order_data = async (e) => {
     const files = e.target.files;
     console.log(files)
 
@@ -757,25 +771,15 @@ const EPUnmarkForm = ({ isVisible }) => {
       window.fileType = fileParts[fileArrayLength - 1];
 
       const filePartsNew = fileParts.pop();
-      console.log(fileParts);
+      // console.log(fileParts);
       const fileName = fileParts.join(".");
-      console.log("this file name: " + fileName);
-      console.log("fileParts New" + filePartsNew);
-      console.log("fileName = " + filePartsNew)
+      // console.log("this file name: " + fileName);
+      // console.log("fileParts New" + filePartsNew);
+      // console.log("fileName = " + filePartsNew)
+      console.log(file, 'FILE')
       const convertedFile = await convertBase64(file);
-      setBaseImage(convertedFile)
-      console.log("FILE" + convertedFile)
-      // const indexC = convertedFile.indexOf(",")
 
-      // var base64Converted = "";
-      // if(window.fileType === "JPG" || window.fileType === "jpeg" ){
-      //     var base64Converted = convertedFile.slice(indexC + 5)
-      // }else{
       var base64Converted = convertedFile;
-      // }
-
-      // console.log("base64-1" + window.base64Converted)
-      console.log("type:" + window.fileType)
       fileNumber += 1;
 
       fileNameArray.push(fileName);
@@ -786,12 +790,6 @@ const EPUnmarkForm = ({ isVisible }) => {
       setFileType(arr => [...arr, window.fileType])
       setFileData(arr => [...arr, base64Converted])
 
-      console.log("Arrays:-")
-      console.log("fileNameArray: " + fileNameArray);
-      console.log(fileTypeArray);
-      console.log(filebase64Array);
-      console.log(document.getElementById("formRemarks").value)
-      console.log(JSON.stringify(fileNameArray))
     }
   }
 
@@ -885,12 +883,13 @@ const EPUnmarkForm = ({ isVisible }) => {
                   id="formDocuments"
                   multiple
                   onChange={(e) => {
-                    uploadImage(e);
+                    court_order_data(e);
                   }}
                 ></input>
               </div>
             </div>
           </div>
+
           <button
             className="font-semibold text-white"
             onClick={handleFormSubmit}
