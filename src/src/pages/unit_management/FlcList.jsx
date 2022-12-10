@@ -139,6 +139,11 @@ export default function FLCList() {
         }
     }, [flc])
 
+    const handleButtonClick = (e) => {
+        // console.log("clicked" + e.target.name);
+        navigate('/session/unitmanagement');
+      };
+
     return (
         <div className={`${styles.myWrapper1}`} style={{ position: "relative", height: "100%" }}>
             {isDetail == 0 ? <div className='MainHeader pd-5 ' style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between", "alignItems": "center" }}>
@@ -175,6 +180,11 @@ export default function FLCList() {
                             {sortOrder === 'asc' ? <AiOutlineSortAscending /> : <AiOutlineSortDescending />}
                         </button>
                     </div>
+
+                    
+                    <button onClick={handleButtonClick} className="font-semibold text-black" style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center", background: "#F9FBFF", borderRadius: "10px", padding: "7.5px 15px 7.5px 15px", fontSize: "0.8em", marginLeft:"5px" }}>Go Back</button>
+                    
+
                 </div>
             </div> : <></>}
             {isDetail === 0 ? 
