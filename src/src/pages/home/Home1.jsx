@@ -19,6 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import UnitCard from './UnitCard';
 import { PieChart } from 'react-minimal-pie-chart';
 import Data from './Data';
+import statesCode from './StatesCode.js';
 
 
 function Home1() {
@@ -37,8 +38,8 @@ function Home1() {
 	const cu = Number(compost.split(',')[2]).toLocaleString();
 	const vvpat = Number(compost.split(',')[3]).toLocaleString();
 	// console.log("compost: " + compost);
-
-
+	
+	
 	const [content2, setContent2] = useState("");
 	const [STName, setSTName] = useState("")
 	const [show, setShow] = useState(false);
@@ -48,13 +49,52 @@ function Home1() {
 	const [totalVT, setTotalVT] = useState(0);
 	const [statusData, setStatusData] = useState([]);
 	const [fetchData, setFetchData] = useState([]);
+	const [indiaMap, setIndiaMap] = useState(1);
 
 	const uri = process.env.REACT_APP_API_SERVER+"/unit/total_counts?oprnd="
 
+	const stateID = window.sessionStorage.getItem('sessionToken').slice(0,2)
+
 	useEffect(()=>{
-		let getData = async ()=>{
+		if(stateID!="IN"){
+			setIndiaMap(0);
+			setSTName(statesCode.find(e=>e.code==stateID).state)
+		}
+	},[stateID])
+	useEffect(()=>{
+		if(content2&&statesCode.find(e=>e.state==content2)&&!indiaMap){
+			const ID = statesCode.find(e=>e.state==content2).code+window.sessionStorage.getItem('sessionToken').slice(2,11);
+			// console.log(ID)
+			let getData = async ()=>{
+				try {
+					const response = await fetch(
+						uri+ID,
+						{
+						  method: "GET",
+						  headers: {
+							"Content-Type": "application/json",
+						  },
+						  credentials:'include'
+						}
+					  );
+						let data2 = await response.json();
+						// console.log("Data fetched", data2);
+						// console.log("Data fetched", data2['data']);
+						let data = data2['data'];
+						setFetchData(data);
+				} catch (err) {
+					console.log(err);
+				}
+			}
+			getData();
+		}
+	},[content2,indiaMap])
+	useEffect(()=>{
+		if (indiaMap)
+		{let getData = async ()=>{
 			try {
-				const ID = window.sessionStorage.getItem('sessionToken');
+				const ID = "IN"+window.sessionStorage.getItem('sessionToken').slice(2,11);
+				// console.log(ID)
 				const response = await fetch(
 					uri+ID,
 					{
@@ -66,16 +106,14 @@ function Home1() {
 					}
 				  );
 					let data2 = await response.json();
-					// console.log("Data fetched", data2);
-					// console.log("Data fetched", data2['data']);
 					let data = data2['data'];
 					setFetchData(data);
 			} catch (err) {
 				console.log(err);
 			}
 		}
-		getData();
-	}, [])
+		getData();}
+	}, [indiaMap])
 	
 	useEffect(()=>{
 		data = fetchData;
@@ -122,7 +160,6 @@ function Home1() {
 	const handleOpen = () => setIndiaMap(0);
 
 
-	const [indiaMap, setIndiaMap] = useState(1);
 
 
 	var obj = window.localStorage.getItem(window.sessionStorage.getItem('sessionToken'));
@@ -213,17 +250,22 @@ function Home1() {
 
 			<div className='w-100 gridCustom  pb-10'>
 				{otherElements.includes("District") && <div className="myCardSample" style={{padding:"15px 30px 0"}}>
-					<div className="card_title">
-						District
+					{stateID==="IN"?<><div className="card_title">
+						State
 					</div>
 					<select name="" id="">
-						<option value=""></option>
-					</select>
+					<option value="none" selected disabled hidden>Select State</option>
+						{statesCode.map((val, ind)=>{
+							return(
+								<option onClick={()=>{setSTName(val.state);setIndiaMap(0);show2();setContent2(val.state)}}>{val.state}</option>
+							)
+						})}
+					</select></>:""}
 
 					<div style={{ height: '75%', overflow: 'hidden' }}>
-						<span className="heading" style={{ maxWidth: "100%", display: "block", "textOverflow": "ellipsis", "whiteSpace": "nowrap" }}> India: {content2}</span>
+						<span className="heading" style={{ maxWidth: "100%", display: "block", "textOverflow": "ellipsis", "whiteSpace": "nowrap" }}> {"India:" + content2 }</span>
 						<div className='map' >
-							{indiaMap == 0 && <MapDialog show={show} StateName={STName} closeModal={handleClose} />}
+							{indiaMap == 0 && <MapDialog show={show} StateName={STName} closeModal={handleClose} setTooltipContent={setContent2} />}
 							{indiaMap == 1 && <MapIndia show2={show2} closeModal2={handleOpen} setTooltipContent={setContent2} setStateName={setSTName} setShowDistrict={setShow} showInfo={setContent} />}
 						</div>
 					</div>
