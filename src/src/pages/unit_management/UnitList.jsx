@@ -1,14 +1,18 @@
-import { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./styles/UnitList.module.css";
 import { DynamicDataTable } from "@langleyfoxall/react-dynamic-data-table";
 import {
   AiOutlineSortAscending,
   AiOutlineSortDescending,
 } from "react-icons/ai";
+
+import { useNavigate } from "react-router-dom";
 import { ReactComponent as OptionsIndicator } from "../../assets/Options_Indicator.svg";
 import { ReactComponent as SearchInputElement } from "../../assets/searchInputIcon.svg";
 import { ReactComponent as ChevronDown } from "../../assets/ChevronDown.svg";
 import { expD } from "./Homepage";
+
+
 
 const userID = sessionStorage.getItem("sessionToken");
 const baseUrl = "http://localhost:8100/unit";
@@ -247,9 +251,8 @@ const UnitListTable = () => {
 const ActionButton = ({ isActive, text, name, onClick }) => {
   return (
     <button
-      className={`font-mediumisActive mx-auto mb-8 w-4/5 border-[1px] border-solid border-secondary hover:bg-secondary hover:text-white ${
-        isActive ? "bg-secondary text-white" : "bg-white  text-secondary"
-      }`}
+      className={`font-mediumisActive mx-auto mb-8 w-4/5 border-[1px] border-solid border-secondary hover:bg-secondary hover:text-white ${isActive ? "bg-secondary text-white" : "bg-white  text-secondary"
+        }`}
       name={name ? name : text}
       onClick={onClick}
     >
@@ -279,7 +282,7 @@ const StatusUpdate = ({ activeButtons, onButtonClick }) => {
               name="epForm"
               onClick={onButtonClick}
             />
-            <ActionButton 
+            <ActionButton
               isActive={activeButtons.epUnmarkForm}
               text="EP Unmark"
               name="epUnmarkForm"
@@ -336,13 +339,16 @@ const ReplacementForm = ({ isVisible }) => {
       const response = await fetch(`${baseUrl}/replace_unit`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials:'include',
         body: JSON.stringify({ userID, ...inputValues }),
+      
       });
+      console.log(response);
       const data = await response.json();
       if (data.status == 200) {
-        console.log("Unit Replaced Successfully", data);
+        alert(data.message);
       } else {
-        console.log("Could not replace the unit");
+        alert(data.message);
       }
     } catch (err) {
       alert(`Error occured: ${err}`);
@@ -443,7 +449,7 @@ const EPForm = ({ isVisible }) => {
     bulk: "",
     destinationLocation: "",
     acLocation: "",
-    unitList: "",
+    unitIDs: "",
     remarks: "",
   };
   const [inputValues, setInputValues] = useState(initialValues);
@@ -456,49 +462,48 @@ const EPForm = ({ isVisible }) => {
     });
   };
 
-  const handleFormSubmit = async (e) => {
-    const formData = {
-      userID,
-      ...inputValues,
-    };
-    // console.log(formData);
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    };
-
-
-    // const baseUrl = "http://localhost:8100/unit";
-    // try {
-    //   const response = await fetch(`${baseUrl}/replace_unit`, requestOptions);
-    //   const data = await response.json();
-    //   console.log(data);
-    //   if (data.status == 200) {
-    //     alert("Unit Replaced Successfully");
-    //   } else {
-    //     alert("Could not replace the unit");
-    //   }
-    // } catch (err) {
-    //   alert(`Error occured: ${err}`);
-    // }
-    // setInputValues(initialValues);
-  };
+  const baseUrl = "http://localhost:8100/unit";
 
   const handleFinalFormSubmit = async (e) => {
-    const formData = {
-      userID,
-      bulk: inputValues.bulk,
-      destinationLocation: inputValues.destinationLocation,
-      acLocation: inputValues.acLocation,
-      unitList: inputValues.unitList,
-      remarks: inputValues.remarks
-    };
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formData),
-    };
+    try {
+      const response = await fetch(`${baseUrl}/marking_complete`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userID, ...inputValues }),
+        
+      });
+      const data = await response.json();
+      if (data.status == 200) {
+        alert(data.message);
+      } else {
+        alert(data.message);
+      }
+    } catch (err) {
+      alert(`Error occured: ${err}`);
+    }
+    setInputValues(initialValues);
+  };
+
+  const handleFormSubmit = async (e) => {
+    try {
+      const response = await fetch(`${baseUrl}/ep_mark`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials:'include',
+        body: JSON.stringify({...inputValues })
+      });
+      console.log(response);
+      console.log(JSON.stringify({...inputValues }));
+      const data = await response.json();
+      if (data.status == 200) {
+        alert(data.message);
+      } else {
+        alert(data.message);
+      }
+    } catch (err) {
+      alert(`Error occured: ${err}`);
+    }
+    setInputValues(initialValues);
   };
 
   function ACNum() {
@@ -524,14 +529,14 @@ const EPForm = ({ isVisible }) => {
     return (
       <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
         <label className="mb-2 w-full text-base">
-          Unit Lists<span className="text-red-600">*</span>
+          Unit IDs<span className="text-red-600">*</span>
         </label>
         <div className="relative text-gray-800">
           <input
             className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-            name="unitList"
-            placeholder="Unit Lists"
-            value={inputValues.unitList}
+            name="unitIDs"
+            placeholder="Unit IDs"
+            value={inputValues.unitIDs}
             onChange={handleInputChange}
           />
         </div>
@@ -556,7 +561,7 @@ const EPForm = ({ isVisible }) => {
         <div className={styles.unit_list_container}>
           <div className={styles.unit_list_header}>
             <h4>EP Mark</h4> <button className="font-semibold text-black"
-            onClick={handleFinalFormSubmit} style={{backgroundColor: 'white'}}>Final Submit</button>
+              onClick={handleFinalFormSubmit} style={{ backgroundColor: 'white' }}>Final Submit</button>
           </div>
           <div className="mt-2 w-full bg-white p-6">
             <div className="grid grid-cols-3">
@@ -629,7 +634,7 @@ const EPUnmarkForm = ({ isVisible }) => {
     bulk: "",
     destinationLocation: "",
     acLocation: "",
-    unitList: "",
+    unitIDs: "",
     remarks: "",
   };
   const [inputValues, setInputValues] = useState(initialValues);
@@ -655,21 +660,8 @@ const EPUnmarkForm = ({ isVisible }) => {
     };
 
 
-    // const baseUrl = "http://localhost:8100/unit";
-    // try {
-    //   const response = await fetch(`${baseUrl}/replace_unit`, requestOptions);
-    //   const data = await response.json();
-    //   console.log(data);
-    //   if (data.status == 200) {
-    //     alert("Unit Replaced Successfully");
-    //   } else {
-    //     alert("Could not replace the unit");
-    //   }
-    // } catch (err) {
-    //   alert(`Error occured: ${err}`);
-    // }
-    // setInputValues(initialValues);
-  };
+    const baseUrl = "http://localhost:8100/unit";
+  }
 
 
   function ACNum() {
@@ -700,9 +692,9 @@ const EPUnmarkForm = ({ isVisible }) => {
         <div className="relative text-gray-800">
           <input
             className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-            name="unitList"
-            placeholder="Unit Lists"
-            value={inputValues.unitList}
+            name="unitIDs"
+            placeholder="Unit IDs"
+            value={inputValues.unitIDs}
             onChange={handleInputChange}
           />
         </div>
@@ -721,12 +713,112 @@ const EPUnmarkForm = ({ isVisible }) => {
     }
   }
 
+
+  const [baseImage, setBaseImage] = useState("")
+  const navigate = useNavigate()
+  const fileNameArray = [];
+  const fileTypeArray = [];
+  const filebase64Array = [];
+  const [fileNameArray2, setFileName] = React.useState([]);
+  const [fileTypeArray2, setFileType] = React.useState([]);
+  const [filebase64Array2, setFileData] = React.useState([]);
+  const [action, setAction] = useState("");
+
+  const uploadImage = async (e) => {
+    const files = e.target.files;
+    console.log(files)
+
+    const totalFiles = files.length;
+    console.log(totalFiles)
+
+    var fileNumber = 0;
+
+    while (fileNumber < totalFiles) {
+      var x = fileNumber + 1;
+      console.log("fileNumber: " + x)
+
+      const file = e.target.files[fileNumber];
+      const fullFileName = file.name;
+
+      var fileParts = fullFileName.split(".");
+
+      console.log("full file" + fileParts.length)
+      const fileArrayLength = fileParts.length;
+
+      const indexDot = fullFileName.indexOf(".");
+      // console.log("indexDot"+indexDot)
+
+      const fileNameo = fullFileName.slice(0, indexDot);
+      // console.log("fileName"+ fileNameo);
+
+
+
+
+      window.fileType = fileParts[fileArrayLength - 1];
+
+      const filePartsNew = fileParts.pop();
+      console.log(fileParts);
+      const fileName = fileParts.join(".");
+      console.log("this file name: " + fileName);
+      console.log("fileParts New" + filePartsNew);
+      console.log("fileName = " + filePartsNew)
+      const convertedFile = await convertBase64(file);
+      setBaseImage(convertedFile)
+      console.log("FILE" + convertedFile)
+      // const indexC = convertedFile.indexOf(",")
+
+      // var base64Converted = "";
+      // if(window.fileType === "JPG" || window.fileType === "jpeg" ){
+      //     var base64Converted = convertedFile.slice(indexC + 5)
+      // }else{
+      var base64Converted = convertedFile;
+      // }
+
+      // console.log("base64-1" + window.base64Converted)
+      console.log("type:" + window.fileType)
+      fileNumber += 1;
+
+      fileNameArray.push(fileName);
+      fileTypeArray.push(window.fileType);
+      filebase64Array.push(base64Converted);
+
+      setFileName(arr => [...arr, fileName])
+      setFileType(arr => [...arr, window.fileType])
+      setFileData(arr => [...arr, base64Converted])
+
+      console.log("Arrays:-")
+      console.log("fileNameArray: " + fileNameArray);
+      console.log(fileTypeArray);
+      console.log(filebase64Array);
+      console.log(document.getElementById("formRemarks").value)
+      console.log(JSON.stringify(fileNameArray))
+    }
+  }
+
+
+
+  const convertBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      }
+
+      fileReader.onerror = (error) => {
+        reject(error);
+      }
+    })
+  }
+
+
   return (
     <>
       {isVisible && (
         <div className={styles.unit_list_container}>
           <div className={styles.unit_list_header}>
-            <h4>EP Unmark</h4> 
+            <h4>EP Unmark</h4>
           </div>
           <div className="mt-2 w-full bg-white p-6">
             <div className="grid grid-cols-3">
@@ -750,6 +842,8 @@ const EPUnmarkForm = ({ isVisible }) => {
                   <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1/2" />
                 </div>
               </div>
+
+
               <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
                 <label className="mb-2 w-full text-base">
                   Destination Location<span className="text-red-600">*</span>
@@ -764,6 +858,8 @@ const EPUnmarkForm = ({ isVisible }) => {
                   />
                 </div>
               </div>
+
+
               {UaCList(inputValues.bulk)}
               <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
                 <label className="mb-2 w-full text-base">
@@ -778,6 +874,20 @@ const EPUnmarkForm = ({ isVisible }) => {
                     onChange={handleInputChange}
                   />
                 </div>
+              </div>
+
+
+              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+                <label className="mb-2 w-full text-base">Supporting Documents <span className="text-red-600">*</span></label>
+
+                <input type="file" className="w-1/6"
+                  disabled={action === "merge" ? true : false}
+                  id="formDocuments"
+                  multiple
+                  onChange={(e) => {
+                    uploadImage(e);
+                  }}
+                ></input>
               </div>
             </div>
           </div>
