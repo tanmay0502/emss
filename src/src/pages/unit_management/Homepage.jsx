@@ -32,6 +32,7 @@ export default function HomePage() {
         let getData = async () => {
             try {
                 const ID = window.sessionStorage.getItem('sessionToken');
+                console.log("GET "+uri+ID)
                 const response = await fetch(
                 uri+ID,
                 {
