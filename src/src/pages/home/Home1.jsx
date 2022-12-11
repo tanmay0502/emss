@@ -60,6 +60,9 @@ function Home1() {
 			setIndiaMap(0);
 			setSTName(statesCode.find(e=>e.code==stateID).state)
 		}
+		if (stateID==="IN") {
+			setIndiaMap(1)
+		}
 	},[stateID])
 	useEffect(()=>{
 		if(content2&&statesCode.find(e=>e.state==content2)&&!indiaMap){
@@ -255,7 +258,7 @@ function Home1() {
 
 			<div className='w-100 gridCustom  pb-10'>
 				{otherElements.includes("District") && <div className="myCardSample" style={{padding:"15px 30px 0"}}>
-					{stateID==="IN"?<><div className="card_title">
+					{/* {stateID==="IN"?<><div className="card_title">
 						State
 					</div>
 					<select name="" id="">
@@ -265,7 +268,7 @@ function Home1() {
 								<option onClick={()=>{setSTName(val.state);setIndiaMap(0);show2();setContent2(val.state)}}>{val.state}</option>
 							)
 						})}
-					</select></>:""}
+					</select></>:""} */}
 
 					<div style={{ height: '75%', overflow: 'hidden' }}>
 						<span className="heading" style={{ maxWidth: "100%", display: "block", "textOverflow": "ellipsis", "whiteSpace": "nowrap" }}> {"India:" + content2 }</span>
