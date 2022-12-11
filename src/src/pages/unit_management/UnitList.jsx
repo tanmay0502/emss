@@ -380,56 +380,6 @@ const EPForm = ({ isVisible }) => {
     }
     setInputValues(initialValues);
   };
-
-  function ACNum() {
-    return (
-      <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
-        <label className="mb-2 w-full text-base">
-          AC Location<span className="text-red-600">*</span>
-        </label>
-        <div className="relative text-gray-800">
-          <input
-            className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-            name="acLocation"
-            placeholder="AC Location"
-            value={inputValues.acLocation}
-            onChange={handleInputChange}
-          />
-        </div>
-      </div>
-    );
-  }
-
-  function UList() {
-    return (
-      <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
-        <label className="mb-2 w-full text-base">
-          Unit IDs<span className="text-red-600">*</span>
-        </label>
-        <div className="relative text-gray-800">
-          <input
-            className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-            name="unitIDs"
-            placeholder="Unit IDs"
-            value={inputValues.unitIDs}
-            onChange={handleInputChange}
-          />
-        </div>
-      </div>
-    );
-  }
-
-  function UaCList(val) {
-    switch (val) {
-      case "Yes":
-        return <ACNum />;
-      case "No":
-        return <UList />;
-      default:
-        return <div></div>;
-    }
-  }
-
   return (
     <>
       {isVisible && (
@@ -480,7 +430,20 @@ const EPForm = ({ isVisible }) => {
                   />
                 </div>
               </div>
-              {UaCList(inputValues.bulk)}
+              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+                <label className="mb-2 w-full text-base">
+                  {inputValues.bulk==='Yes'?'AC Number':'Unit IDs'}<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-gray-800">
+                  <input
+                    className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                    name={inputValues.bulk==='Yes'?'acLocation':'unitIDs'}
+                    placeholder={inputValues.bulk==='Yes'?'AC Number':'Unit IDs'}
+                    value={inputValues.bulk==='Yes'?inputValues.acLocation:inputValues.unitIDs}
+                    onChange={handleInputChange}
+                  />
+                </div>
+              </div>
               <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
                 <label className="mb-2 w-full text-base">
                   Remarks<span className="text-red-600">*</span>
@@ -515,7 +478,7 @@ const EPUnmarkForm = ({ isVisible }) => {
     bulk: "",
     destinationLocation: "",
     acLocation: "",
-    unitList: "",
+    unitIDs: "",
     remarks: "",
   };
   const [inputValues, setInputValues] = useState(initialValues);
@@ -532,7 +495,7 @@ const EPUnmarkForm = ({ isVisible }) => {
     e.preventDefault();
     console.log(JSON.stringify(filebase64Array2))
     // console.log(filebase64Array2)
-    console.log(inputValues['bulk'], inputValues['destinationLocation'], inputValues['remarks'], inputValues['acLocation'], "unitList", inputValues['unitList'], "here", filebase64Array2, "HELLO", JSON.stringify(filebase64Array2), 'HIIIIIIIIIIIIIIIIIIIIIIIIIIIi')
+    console.log(inputValues['bulk'], inputValues['destinationLocation'], inputValues['remarks'], inputValues['acLocation'], inputValues['unitIDs'], filebase64Array2, JSON.stringify(filebase64Array2))
 
 
     try {
@@ -543,11 +506,11 @@ const EPUnmarkForm = ({ isVisible }) => {
           headers: {
             "Content-Type": "application/json",
           },
-          credentials: "include",
+          credantials: 'include',
           body: JSON.stringify({
             bulk: inputValues['bulk'],
             destinationLocation: inputValues['destinationLocation'],
-            unitIDs: inputValues['unitList'],
+            unitIDs: inputValues['unitIDs'],
             acLocation: inputValues['acLocation'],
             remarks: inputValues['remarks'],
             courtorderdata: JSON.stringify(filebase64Array2)
@@ -571,58 +534,6 @@ const EPUnmarkForm = ({ isVisible }) => {
     }
 
   };
-
-
-  function ACNum() {
-    return (
-      <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
-        <label className="mb-2 w-full text-base">
-          AC Location<span className="text-red-600">*</span>
-        </label>
-        <div className="relative text-gray-800">
-          <input
-            className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-            name="acLocation"
-            placeholder="AC Location"
-            value={inputValues.acLocation}
-            onChange={handleInputChange}
-          />
-        </div>
-      </div>
-    );
-  }
-
-  function UList() {
-    return (
-      <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
-        <label className="mb-2 w-full text-base">
-          Unit Lists<span className="text-red-600">*</span>
-        </label>
-        <div className="relative text-gray-800">
-          <input
-            className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-            name="unitList"
-            placeholder="Unit Lists"
-            value={inputValues.unitList}
-            onChange={handleInputChange}
-          />
-        </div>
-      </div>
-    );
-  }
-
-  function UaCList(val) {
-    switch (val) {
-      case "Yes":
-        return <ACNum />;
-      case "No":
-        return <UList />;
-      default:
-        return <div></div>;
-    }
-  }
-
-
   // const [baseImage, setBaseImage] = useState("")
   const navigate = useNavigate()
   const fileNameArray = [];
@@ -751,9 +662,20 @@ const EPUnmarkForm = ({ isVisible }) => {
                   />
                 </div>
               </div>
-
-
-              {UaCList(inputValues.bulk)}
+              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+                <label className="mb-2 w-full text-base">
+                  {inputValues.bulk==='Yes'?'AC Number':'Unit IDs'}<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-gray-800">
+                  <input
+                    className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                    name={inputValues.bulk==='Yes'?'acLocation':'unitIDs'}
+                    placeholder={inputValues.bulk==='Yes'?'AC Number':'Unit IDs'}
+                    value={inputValues.bulk==='Yes'?inputValues.acLocation:inputValues.unitIDs}
+                    onChange={handleInputChange}
+                  />
+                </div>
+              </div>
               <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
                 <label className="mb-2 w-full text-base">
                   Remarks<span className="text-red-600">*</span>
