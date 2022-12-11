@@ -345,7 +345,7 @@ const EPForm = ({ isVisible }) => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userID, ...inputValues }),
-        credantials: 'include'
+        credentials: "include"
       });
       const data = await response.json();
       if (data.status == 200) {
@@ -556,11 +556,18 @@ const EPUnmarkForm = ({ isVisible }) => {
         }
       );
 
+      console.log(response);
+      console.log(JSON.stringify({ ...inputValues }));
       const data = await response.json();
-      alert('Submitted Successfully')
+      if (data.status == 200) {
+        alert(data.message);
+      } else {
+        alert(data.message);
+      }
+
+      // alert('Submitted Successfully')
     } catch (err) {
       console.log(err);
-      console.log("22222")
     }
 
   };
