@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import React from 'react';
 import styles from "./styles/UnitList.module.css";
 import { useTable } from "react-table";
 import { DynamicDataTable } from "@langleyfoxall/react-dynamic-data-table";
@@ -513,6 +514,7 @@ const EPUnmarkForm = ({ isVisible }) => {
     bulk: "",
     destinationLocation: "",
     acLocation: "",
+    unitList: "",
     remarks: "",
   };
   const [inputValues, setInputValues] = useState(initialValues);
@@ -527,6 +529,11 @@ const EPUnmarkForm = ({ isVisible }) => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    console.log(JSON.stringify(filebase64Array2))
+    // console.log(filebase64Array2)
+    console.log(inputValues['bulk'], inputValues['destinationLocation'], inputValues['remarks'], inputValues['acLocation'], "unitList", inputValues['unitList'], "here", filebase64Array2, "HELLO", JSON.stringify(filebase64Array2), 'HIIIIIIIIIIIIIIIIIIIIIIIIIIIi')
+
+
     try {
       const response = await fetch(
         `${process.env.REACT_APP_API_SERVER}/unit/ep_unmark`,
@@ -535,26 +542,28 @@ const EPUnmarkForm = ({ isVisible }) => {
           headers: {
             "Content-Type": "application/json",
           },
-          credantials: "same-origin",
+          credantials: 'include',
           body: JSON.stringify({
-            bulk: true,
-            destinationLocation: "string",
-            unitIDs: "string",
-            acLocation: "string",
-            remarks: "string",
-            courtorderdata: JSON.stringify(filebase64Array2),
+            bulk: inputValues['bulk'],
+            destinationLocation: inputValues['destinationLocation'],
+            unitIDs: inputValues['unitList'],
+            acLocation: inputValues['acLocation'],
+            remarks: inputValues['remarks'],
+            courtorderdata: JSON.stringify(filebase64Array2)
           }),
-          mode: "cors",
+          mode: "cors"
         }
       );
 
       const data = await response.json();
-      alert("Submitted Successfully");
+      alert('Submitted Successfully')
     } catch (err) {
       console.log(err);
-      console.log("22222");
+      console.log("22222")
     }
+
   };
+
 
   function ACNum() {
     return (
@@ -605,35 +614,36 @@ const EPUnmarkForm = ({ isVisible }) => {
     }
   }
 
+
   // const [baseImage, setBaseImage] = useState("")
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const fileNameArray = [];
   const fileTypeArray = [];
   const filebase64Array = [];
-  const [fileNameArray2, setFileName] = useState([]);
-  const [fileTypeArray2, setFileType] = useState([]);
-  const [filebase64Array2, setFileData] = useState([]);
+  const [fileNameArray2, setFileName] = React.useState([]);
+  const [fileTypeArray2, setFileType] = React.useState([]);
+  const [filebase64Array2, setFileData] = React.useState([]);
   const [action, setAction] = useState("");
 
   const court_order_data = async (e) => {
     const files = e.target.files;
-    console.log(files);
+    console.log(files)
 
     const totalFiles = files.length;
-    console.log(totalFiles);
+    console.log(totalFiles)
 
     var fileNumber = 0;
 
     while (fileNumber < totalFiles) {
       var x = fileNumber + 1;
-      console.log("fileNumber: " + x);
+      console.log("fileNumber: " + x)
 
       const file = e.target.files[fileNumber];
       const fullFileName = file.name;
 
       var fileParts = fullFileName.split(".");
 
-      console.log("full file" + fileParts.length);
+      console.log("full file" + fileParts.length)
       const fileArrayLength = fileParts.length;
 
       const indexDot = fullFileName.indexOf(".");
@@ -641,6 +651,9 @@ const EPUnmarkForm = ({ isVisible }) => {
 
       const fileNameo = fullFileName.slice(0, indexDot);
       // console.log("fileName"+ fileNameo);
+
+
+
 
       window.fileType = fileParts[fileArrayLength - 1];
 
@@ -650,7 +663,7 @@ const EPUnmarkForm = ({ isVisible }) => {
       // console.log("this file name: " + fileName);
       // console.log("fileParts New" + filePartsNew);
       // console.log("fileName = " + filePartsNew)
-      console.log(file, "FILE");
+      console.log(file, 'FILE')
       const convertedFile = await convertBase64(file);
 
       var base64Converted = convertedFile;
@@ -660,11 +673,14 @@ const EPUnmarkForm = ({ isVisible }) => {
       fileTypeArray.push(window.fileType);
       filebase64Array.push(base64Converted);
 
-      setFileName((arr) => [...arr, fileName]);
-      setFileType((arr) => [...arr, window.fileType]);
-      setFileData((arr) => [...arr, base64Converted]);
+      setFileName(arr => [...arr, fileName])
+      setFileType(arr => [...arr, window.fileType])
+      setFileData(arr => [...arr, base64Converted])
+
     }
-  };
+  }
+
+
 
   const convertBase64 = (file) => {
     return new Promise((resolve, reject) => {
@@ -673,13 +689,14 @@ const EPUnmarkForm = ({ isVisible }) => {
 
       fileReader.onload = () => {
         resolve(fileReader.result);
-      };
+      }
 
       fileReader.onerror = (error) => {
         reject(error);
-      };
-    });
-  };
+      }
+    })
+  }
+
 
   return (
     <>
@@ -711,6 +728,7 @@ const EPUnmarkForm = ({ isVisible }) => {
                 </div>
               </div>
 
+
               <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
                 <label className="mb-2 w-full text-base">
                   Destination Location<span className="text-red-600">*</span>
@@ -725,6 +743,7 @@ const EPUnmarkForm = ({ isVisible }) => {
                   />
                 </div>
               </div>
+
 
               {UaCList(inputValues.bulk)}
               <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
@@ -742,14 +761,11 @@ const EPUnmarkForm = ({ isVisible }) => {
                 </div>
               </div>
 
-              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
-                <label className="mb-2 w-full text-base">
-                  Supporting Documents <span className="text-red-600">*</span>
-                </label>
 
-                <input
-                  type="file"
-                  className="w-1/6"
+              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+                <label className="mb-2 w-full text-base">Supporting Documents <span className="text-red-600">*</span></label>
+
+                <input type="file" className="w-1/6"
                   disabled={action === "merge" ? true : false}
                   id="formDocuments"
                   multiple
@@ -772,7 +788,6 @@ const EPUnmarkForm = ({ isVisible }) => {
     </>
   );
 };
-
 // Unit Replacement Card
 const ReplacementForm = ({ isVisible }) => {
   const initialInputValues = {
