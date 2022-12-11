@@ -1,5 +1,4 @@
 import { useState, useEffect, useMemo } from "react";
-import React from 'react';
 import styles from "./styles/UnitList.module.css";
 import { useTable } from "react-table";
 import { DynamicDataTable } from "@langleyfoxall/react-dynamic-data-table";
@@ -15,7 +14,7 @@ import { ReactComponent as ChevronDown } from "../../assets/ChevronDown.svg";
 import { expD } from "./Homepage";
 
 const userID = sessionStorage.getItem("sessionToken");
-const baseUrl = "http://localhost:8100/unit";
+const baseUrl = `${process.env.REACT_APP_API_SERVER}/unit`;
 
 export default function UnitList() {
   const initialVisibilityValues = {
@@ -345,10 +344,10 @@ const EPForm = ({ isVisible }) => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userID, ...inputValues }),
-        credentials: "include"
+        credentials: "include",
       });
       const data = await response.json();
-      if (data.status == 200) {
+      if (data.status === 200) {
         alert(data.message);
       } else {
         alert(data.message);
@@ -370,7 +369,7 @@ const EPForm = ({ isVisible }) => {
       console.log(response);
       console.log(JSON.stringify({ ...inputValues }));
       const data = await response.json();
-      if (data.status == 200) {
+      if (data.status === 200) {
         alert(data.message);
       } else {
         alert(data.message);
@@ -432,14 +431,21 @@ const EPForm = ({ isVisible }) => {
               </div>
               <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
                 <label className="mb-2 w-full text-base">
-                  {inputValues.bulk==='Yes'?'AC Number':'Unit IDs'}<span className="text-red-600">*</span>
+                  {inputValues.bulk === "Yes" ? "AC Number" : "Unit IDs"}
+                  <span className="text-red-600">*</span>
                 </label>
                 <div className="relative text-gray-800">
                   <input
                     className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-                    name={inputValues.bulk==='Yes'?'acLocation':'unitIDs'}
-                    placeholder={inputValues.bulk==='Yes'?'AC Number':'Unit IDs'}
-                    value={inputValues.bulk==='Yes'?inputValues.acLocation:inputValues.unitIDs}
+                    name={inputValues.bulk === "Yes" ? "acLocation" : "unitIDs"}
+                    placeholder={
+                      inputValues.bulk === "Yes" ? "AC Number" : "Unit IDs"
+                    }
+                    value={
+                      inputValues.bulk === "Yes"
+                        ? inputValues.acLocation
+                        : inputValues.unitIDs
+                    }
                     onChange={handleInputChange}
                   />
                 </div>
@@ -493,10 +499,17 @@ const EPUnmarkForm = ({ isVisible }) => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    console.log(JSON.stringify(filebase64Array2))
+    console.log(JSON.stringify(filebase64Array2));
     // console.log(filebase64Array2)
-    console.log(inputValues['bulk'], inputValues['destinationLocation'], inputValues['remarks'], inputValues['acLocation'], inputValues['unitIDs'], filebase64Array2, JSON.stringify(filebase64Array2))
-
+    console.log(
+      inputValues["bulk"],
+      inputValues["destinationLocation"],
+      inputValues["remarks"],
+      inputValues["acLocation"],
+      inputValues["unitIDs"],
+      filebase64Array2,
+      JSON.stringify(filebase64Array2)
+    );
 
     try {
       const response = await fetch(
@@ -506,16 +519,16 @@ const EPUnmarkForm = ({ isVisible }) => {
           headers: {
             "Content-Type": "application/json",
           },
-          credentials: 'include',
+          credentials: "include",
           body: JSON.stringify({
-            bulk: inputValues['bulk'],
-            destinationLocation: inputValues['destinationLocation'],
-            unitIDs: inputValues['unitIDs'],
-            acLocation: inputValues['acLocation'],
-            remarks: inputValues['remarks'],
-            courtorderdata: JSON.stringify(filebase64Array2)
+            bulk: inputValues["bulk"],
+            destinationLocation: inputValues["destinationLocation"],
+            unitIDs: inputValues["unitIDs"],
+            acLocation: inputValues["acLocation"],
+            remarks: inputValues["remarks"],
+            courtorderdata: JSON.stringify(filebase64Array2),
           }),
-          mode: "cors"
+          mode: "cors",
         }
       );
 
@@ -532,37 +545,36 @@ const EPUnmarkForm = ({ isVisible }) => {
     } catch (err) {
       console.log(err);
     }
-
   };
   // const [baseImage, setBaseImage] = useState("")
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const fileNameArray = [];
   const fileTypeArray = [];
   const filebase64Array = [];
-  const [fileNameArray2, setFileName] = React.useState([]);
-  const [fileTypeArray2, setFileType] = React.useState([]);
-  const [filebase64Array2, setFileData] = React.useState([]);
+  const [fileNameArray2, setFileName] = useState([]);
+  const [fileTypeArray2, setFileType] = useState([]);
+  const [filebase64Array2, setFileData] = useState([]);
   const [action, setAction] = useState("");
 
   const court_order_data = async (e) => {
     const files = e.target.files;
-    console.log(files)
+    console.log(files);
 
     const totalFiles = files.length;
-    console.log(totalFiles)
+    console.log(totalFiles);
 
     var fileNumber = 0;
 
     while (fileNumber < totalFiles) {
       var x = fileNumber + 1;
-      console.log("fileNumber: " + x)
+      console.log("fileNumber: " + x);
 
       const file = e.target.files[fileNumber];
       const fullFileName = file.name;
 
       var fileParts = fullFileName.split(".");
 
-      console.log("full file" + fileParts.length)
+      console.log("full file" + fileParts.length);
       const fileArrayLength = fileParts.length;
 
       const indexDot = fullFileName.indexOf(".");
@@ -570,9 +582,6 @@ const EPUnmarkForm = ({ isVisible }) => {
 
       const fileNameo = fullFileName.slice(0, indexDot);
       // console.log("fileName"+ fileNameo);
-
-
-
 
       window.fileType = fileParts[fileArrayLength - 1];
 
@@ -582,7 +591,7 @@ const EPUnmarkForm = ({ isVisible }) => {
       // console.log("this file name: " + fileName);
       // console.log("fileParts New" + filePartsNew);
       // console.log("fileName = " + filePartsNew)
-      console.log(file, 'FILE')
+      console.log(file, "FILE");
       const convertedFile = await convertBase64(file);
 
       var base64Converted = convertedFile;
@@ -592,14 +601,11 @@ const EPUnmarkForm = ({ isVisible }) => {
       fileTypeArray.push(window.fileType);
       filebase64Array.push(base64Converted);
 
-      setFileName(arr => [...arr, fileName])
-      setFileType(arr => [...arr, window.fileType])
-      setFileData(arr => [...arr, base64Converted])
-
+      setFileName((arr) => [...arr, fileName]);
+      setFileType((arr) => [...arr, window.fileType]);
+      setFileData((arr) => [...arr, base64Converted]);
     }
-  }
-
-
+  };
 
   const convertBase64 = (file) => {
     return new Promise((resolve, reject) => {
@@ -608,14 +614,13 @@ const EPUnmarkForm = ({ isVisible }) => {
 
       fileReader.onload = () => {
         resolve(fileReader.result);
-      }
+      };
 
       fileReader.onerror = (error) => {
         reject(error);
-      }
-    })
-  }
-
+      };
+    });
+  };
 
   return (
     <>
@@ -647,7 +652,6 @@ const EPUnmarkForm = ({ isVisible }) => {
                 </div>
               </div>
 
-
               <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
                 <label className="mb-2 w-full text-base">
                   Destination Location<span className="text-red-600">*</span>
@@ -664,14 +668,21 @@ const EPUnmarkForm = ({ isVisible }) => {
               </div>
               <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
                 <label className="mb-2 w-full text-base">
-                  {inputValues.bulk==='Yes'?'AC Number':'Unit IDs'}<span className="text-red-600">*</span>
+                  {inputValues.bulk === "Yes" ? "AC Number" : "Unit IDs"}
+                  <span className="text-red-600">*</span>
                 </label>
                 <div className="relative text-gray-800">
                   <input
                     className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-                    name={inputValues.bulk==='Yes'?'acLocation':'unitIDs'}
-                    placeholder={inputValues.bulk==='Yes'?'AC Number':'Unit IDs'}
-                    value={inputValues.bulk==='Yes'?inputValues.acLocation:inputValues.unitIDs}
+                    name={inputValues.bulk === "Yes" ? "acLocation" : "unitIDs"}
+                    placeholder={
+                      inputValues.bulk === "Yes" ? "AC Number" : "Unit IDs"
+                    }
+                    value={
+                      inputValues.bulk === "Yes"
+                        ? inputValues.acLocation
+                        : inputValues.unitIDs
+                    }
                     onChange={handleInputChange}
                   />
                 </div>
@@ -691,11 +702,14 @@ const EPUnmarkForm = ({ isVisible }) => {
                 </div>
               </div>
 
-
               <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
-                <label className="mb-2 w-full text-base">Supporting Documents <span className="text-red-600">*</span></label>
+                <label className="mb-2 w-full text-base">
+                  Supporting Documents <span className="text-red-600">*</span>
+                </label>
 
-                <input type="file" className="w-1/6"
+                <input
+                  type="file"
+                  className="w-1/6"
                   disabled={action === "merge" ? true : false}
                   id="formDocuments"
                   multiple
@@ -746,7 +760,7 @@ const ReplacementForm = ({ isVisible }) => {
       });
       console.log(response);
       const data = await response.json();
-      if (data.status == 200) {
+      if (data.status === 200) {
         alert(data.message);
       } else {
         alert(data.message);
@@ -846,47 +860,32 @@ const ReplacementForm = ({ isVisible }) => {
 
 // 1st Randomisation Card
 const FirstRandomisationForm = ({ isVisible }) => {
-  const warehouse_id = "TS08I1"; // calc from userId
-  // const [assemblyData, setAssemblyData] = useState([
-  //   {
-  //     ac_name: "",
-  //     cu_count: "",
-  //     bu_count: "",
-  //     vt_count: "",
-  //   },
-  // ]);
+  const district_id = "410"; // calc from userId
   const [assemblyData, setAssemblyData] = useState([
     {
-      ac_name: "AC1",
-      cu_count: 8,
-      bu_count: 10,
-      vt_count: 24,
-    },
-    {
-      ac_name: "AC2",
-      cu_count: 18,
-      bu_count: 12,
-      vt_count: 14,
-    },
-    {
-      ac_name: "AC3",
-      cu_count: 48,
-      bu_count: 56,
-      vt_count: 42,
+      ac_name: "",
+      cu_count: "",
+      bu_count: "",
+      vt_count: "",
     },
   ]);
+  const [iterationIndex, setIterationIndex] = useState(0);
   const [isFetching, setIsFetching] = useState(true);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [randomisedData, setRandomisedData] = useState([]);
+  const [assemblyList, setAssemblyList] = useState([]);
 
   const handleInputChange = (e) => {
     const { name, value, dataset } = e.currentTarget;
     const update = [...assemblyData];
     update[dataset.id][name] = value;
+    setIsSubmitted(false);
     setAssemblyData(update);
   };
 
   const handleAddButtonClick = (e) => {
     const id = parseInt(e.currentTarget.dataset.id);
+    setIsSubmitted(false);
     setAssemblyData([
       ...assemblyData.slice(0, id + 1),
       {
@@ -902,11 +901,13 @@ const FirstRandomisationForm = ({ isVisible }) => {
   const handleSubtractButtonClick = (e) => {
     const id = parseInt(e.currentTarget.dataset.id);
     if (assemblyData.length > 1) {
+      setIsSubmitted(false);
       setAssemblyData(assemblyData.filter((a, i) => i !== id));
     }
   };
 
   const handleFormSubmit = async (e) => {
+    setIsSubmitted(false);
     const units_requirement = assemblyData
       .filter((d) => d.ac_name)
       .map((d) => {
@@ -915,36 +916,64 @@ const FirstRandomisationForm = ({ isVisible }) => {
         d.vt_count = d.vt_count ? parseInt(d.vt_count) : 0;
         return d;
       });
-    // console.log(
-    //   JSON.stringify({
-    //     warehouse_id,
-    //     units_requirement,
-    //   })
-    // );
+    // console.log(JSON.stringify({ units_requirement }));
     // fetch request
-    setIsSubmitted(false);
     try {
-      const response = await fetch(`${baseUrl}/executeRandomisation`, {
+      const response = await fetch(`${baseUrl}/first_randomization`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          warehouse_id,
           units_requirement,
         }),
       });
       const data = await response.json();
-      if (data.status == 200) {
-        console.log("Randomisation results: ", data);
-        // setIsSubmitted(true);
+      // console.log("Randomisation results: ", data);
+      if (response.status === 200 && data.hasOwnProperty("allotted_units")) {
         // useMemo and cache the output result
+        // randomisedData = data.allotted_units;
+        const update = [...randomisedData];
+        update[data.iteration_index - 1] = data.allotted_units;
+        setRandomisedData(update);
+        setIterationIndex(data.iteration_index);
+        setAssemblyData(units_requirement);
+        setIsSubmitted(true);
         // pass the data to child component & re-render
       } else {
         console.log("Could not fetch randomisation results");
+        alert(data.message);
       }
     } catch (err) {
       alert(`Error occured: ${err}`);
     }
-    setIsSubmitted(true);
+  };
+
+  const handleFetchingNewIterations = async (iteration_index) => {
+    if (randomisedData[iteration_index - 1]) {
+      setIterationIndex(iteration_index);
+    } else {
+      setIsSubmitted(false);
+      // fetch request
+      try {
+        const response = await fetch(`${baseUrl}/first_randomization`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+        });
+        const data = await response.json();
+        // console.log("Next Randomisation results: ", data);
+        if (response.status === 200 && data.hasOwnProperty("allotted_units")) {
+          const update = [...randomisedData];
+          update[data.iteration_index - 1] = data.allotted_units;
+          setRandomisedData(update);
+          setIterationIndex(data.iteration_index);
+          setIsSubmitted(true);
+        } else {
+          console.log("Could not fetch randomisation results");
+          alert(data.message);
+        }
+      } catch (err) {
+        alert(`Error occured: ${err}`);
+      }
+    }
   };
 
   useEffect(() => {
@@ -953,10 +982,32 @@ const FirstRandomisationForm = ({ isVisible }) => {
       setIsFetching(true);
       (async () => {
         try {
-          const response = await fetch(`${baseUrl}/fetchRandomisationInput/`);
+          const response = await fetch(`${baseUrl}/fetch-ac-name-list/`, {
+            credentials: "include",
+          });
           const data = await response.json();
-          if (response.status == 200) {
-            setAssemblyData(data.units_requirement);
+          if (response.status === 200) {
+            if (data.hasOwnProperty(district_id)) {
+              setAssemblyList(data[district_id]);
+            }
+          }
+        } catch (err) {
+          alert(`Error occured: ${err}`);
+        }
+      })();
+      (async () => {
+        try {
+          const response = await fetch(
+            `${baseUrl}/fetch-first-randomization-input/`,
+            {
+              credentials: "include",
+            }
+          );
+          const data = await response.json();
+          if (response.status === 200) {
+            if (data.hasOwnProperty("units_requirement")) {
+              setAssemblyData(data.units_requirement);
+            }
           }
         } catch (err) {
           alert(`Error occured: ${err}`);
@@ -979,13 +1030,13 @@ const FirstRandomisationForm = ({ isVisible }) => {
                 <div className="mb-5 flex w-full flex-row justify-evenly">
                   <div className="flex w-3/8 flex-col text-left">
                     <label className="mb-2 w-full text-base">
-                      Warehouse ID<span className="text-red-600">*</span>
+                      District ID<span className="text-red-600">*</span>
                     </label>
                     <div className="relative text-gray-600">
                       <input
                         className="h-10 w-full cursor-not-allowed rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-                        name="warehouseId"
-                        value={warehouse_id}
+                        name="districtId"
+                        value={district_id}
                         readOnly
                         disabled
                       />
@@ -1065,19 +1116,35 @@ const FirstRandomisationForm = ({ isVisible }) => {
                         <span className="text-red-600"> *</span>
                       </label>
                       <div className="relative text-gray-800">
-                        <input
-                          className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                        <select
+                          className="h-10 w-full rounded-md p-2 px-5 placeholder:text-gray-400 focus-within:border-primary focus:border-primary"
                           name="ac_name"
-                          placeholder={`Assembly ${id + 1}`}
-                          value={data.ac_name.toUpperCase()}
+                          placeholder="Select"
+                          value={data.ac_name}
                           onChange={handleInputChange}
                           data-id={id}
-                        />
+                        >
+                          {" "}
+                          <option hidden>Select</option>
+                          {/* <option>Commissioning</option>
+                          <option>Distribution</option>
+                          <option>Mock Polling</option>
+                          <option>Actual Polling</option> */}
+                          {assemblyList.map((item, _id) => (
+                            <option key={_id}>{item}</option>
+                          ))}
+                        </select>
+                        <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1/2" />
+                        {/* <input
+                          className="h-10 w-full rounded-md p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                          name="ac_name"
+                          placeholder={`Assembly ${id + 1}`}
+                        /> */}
                       </div>
                     </div>
                     <div className="flex w-3/8 flex-col text-left">
                       <label className="mb-2 w-full text-base">
-                        Unit Count {id + 1}
+                        Unit Count {id + 1} {"(CU  BU  VT)"}
                         <span className="text-red-600"> *</span>
                       </label>
                       <div className="flex w-full justify-between gap-2 text-gray-800">
@@ -1121,44 +1188,28 @@ const FirstRandomisationForm = ({ isVisible }) => {
           >
             Randomise
           </button>
-          {isSubmitted && <RandomisationOutput assemblyData={assemblyData} />}
+          {isSubmitted && (
+            <RandomisationOutput
+              assemblyData={assemblyData}
+              randomData={randomisedData[iterationIndex - 1]}
+              iterationIndex={iterationIndex}
+              fetchNewIterations={handleFetchingNewIterations}
+            />
+          )}
         </div>
       )}
     </>
   );
 };
 
-const RandomisationOutput = ({ assemblyData }) => {
-  const [iterationIndex, setIterationIndex] = useState(0);
-  const rndResponse = {
-    iteration_index: "1",
-    alloted_units: {
-      AC1: {
-        cu: [
-          "BCUM1000011",
-          "BCUM1000011",
-          "BCUM1000011",
-          "BCUM1000011",
-          "BCUM1000011",
-        ],
-        bu: ["BCUM1000011", "BCUM1000011", "BCUM1000011", "BCUM1000011"],
-        vt: ["BCUM1000011", "BCUM1000011", "BCUM1000011"],
-      },
-      AC2: {
-        cu: [
-          "BCUM1000011",
-          "BCUM1000011",
-          "BCUM1000011",
-          "BCUM1000011",
-          "BCUM1000011",
-        ],
-        bu: ["BCUM1000011", "BCUM1000011", "BCUM1000011", "BCUM1000011"],
-        vt: ["BCUM1000011", "BCUM1000011", "BCUM1000011"],
-      },
-    },
-  };
-
-  const response = useMemo(() => rndResponse.alloted_units, [rndResponse]);
+const RandomisationOutput = ({
+  iterationIndex,
+  assemblyData,
+  randomData,
+  fetchNewIterations,
+}) => {
+  const iterationText = ["First", "Second", "Third"];
+  const [isRandomisationSaved, setIsRandomisationSaved] = useState(false);
   const data = useMemo(() => assemblyData, [assemblyData]);
   const columns = useMemo(
     () => [
@@ -1181,23 +1232,86 @@ const RandomisationOutput = ({ assemblyData }) => {
     ],
     []
   );
-
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({ columns, data });
 
-  const iterationText = ["First", "Second", "Third"];
+  const handleButtonClick = (e) => {
+    const { name } = e.currentTarget;
+    let newIndex = iterationIndex;
+    if (name == "prev" && iterationIndex > 1) {
+      newIndex--;
+    } else if (name == "next" && iterationIndex < 3) {
+      newIndex++;
+    } else {
+      return;
+    }
+    fetchNewIterations(newIndex);
+  };
+
+  const handleRadomisationSave = async () => {
+    try {
+      const response = await fetch(
+        `${baseUrl}/save_first_randomization/` +
+          new URLSearchParams({
+            iteration_index: iterationIndex,
+          }),
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+        }
+      );
+      const data = await response.json();
+      if (data.status === 200) {
+        setIsRandomisationSaved(data.message === "First Randomization Saved");
+      }
+    } catch (err) {
+      alert(`Error occured: ${err}`);
+    }
+  };
+
+  const handleGenerateReport = async () => {
+    try {
+      const response = await fetch(
+        `${baseUrl}/generate-first-randomization-report/`,
+        {
+          credentials: "include",
+        }
+      );
+      const isPDF = response.headers
+        .get("content-type")
+        ?.includes("application/pdf");
+      const data = isPDF ? await response.blob() : null;
+      if (response.status === 200 && isPDF) {
+        let file = window.URL.createObjectURL(data);
+        window.open(file, "Randomisation Report");
+      }
+    } catch (err) {
+      alert(`Error occured: ${err}`);
+    }
+  };
 
   return (
     <>
       {/* Iteration Count */}
       <div className="flex w-full flex-row items-center justify-between px-16">
-        <button className="h-8 rounded-md border-2 border-solid border-zinc-300 bg-zinc-50 px-5 py-0 text-sm text-gray-800 hover:bg-zinc-100">
+        <button
+          className="h-8 rounded-md border-2 border-solid border-zinc-300 bg-zinc-50 px-5 py-0 text-sm text-gray-800 hover:bg-zinc-100 disabled:cursor-not-allowed"
+          onClick={handleButtonClick}
+          name="prev"
+          disabled={iterationIndex === 1}
+        >
           {"< Prev"}
         </button>
         <h3 className="font-sans font-semibold">
-          {iterationText[iterationIndex]} Iteration
+          {iterationText[iterationIndex - 1]} Iteration
         </h3>
-        <button className="h-8 rounded-md border-2 border-solid border-zinc-300 bg-zinc-50 px-5 py-0 text-sm text-gray-800 hover:bg-zinc-100">
+        <button
+          className="h-8 rounded-md border-2 border-solid border-zinc-300 bg-zinc-50 px-5 py-0 text-sm text-gray-800 hover:bg-zinc-100 disabled:cursor-not-allowed"
+          onClick={handleButtonClick}
+          name="next"
+          disabled={iterationIndex === 3}
+        >
           {"Next >"}
         </button>
       </div>
@@ -1218,17 +1332,33 @@ const RandomisationOutput = ({ assemblyData }) => {
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {rows.map((row) => {
+          {rows.map((row, id) => {
             prepareRow(row);
             return (
               <AssemblyTableRow
+                key={id}
                 row={row}
-                unitData={response[row.cells[0].value]}
+                unitData={randomData[row.cells[0].value]}
               />
             );
           })}
         </tbody>
       </table>
+      {isRandomisationSaved ? (
+        <button
+          className="rounded-md border-2 border-solid border-zinc-300 bg-zinc-50 px-4 py-1.5 text-base text-gray-800 hover:bg-zinc-100"
+          onClick={handleGenerateReport}
+        >
+          Generate Report
+        </button>
+      ) : (
+        <button
+          className="rounded-md border-2 border-solid border-zinc-300 bg-zinc-50 px-4 py-1.5 text-base text-gray-800 hover:bg-zinc-100"
+          onClick={handleRadomisationSave}
+        >
+          Save Randomisation
+        </button>
+      )}
     </>
   );
 };
@@ -1265,7 +1395,7 @@ const AssemblyTableRow = ({ row, unitData }) => {
               {...cell.getCellProps()}
               className="relative border-b border-solid border-gray-200 bg-white p-2 text-lg text-gray-600"
             >
-              {cell.column.Header == "Assembly Segment" && (
+              {cell.column.Header === "Assembly Segment" && (
                 <ChevronDown
                   className={`absolute left-0 top-1/2 ml-7 h-5 w-5 -translate-y-1/2 translate-x-1/2 transition-transform ease-in-out ${
                     !isExpanded && "-rotate-90"
@@ -1283,36 +1413,42 @@ const AssemblyTableRow = ({ row, unitData }) => {
             <div className="px-4 text-left">
               <h6 className="text-lg">CU</h6>
               <div className="mx-auto mb-2 grid grid-cols-7 text-center font-sans text-base">
-                {/* {unitData.cu.map((unit) => (
-                  <p className="m-0 mr-2 text-base">{unit}</p>
-                ))} */}
-                {[...Array(row.values.cu_count).keys()].map((unit) => (
-                  <p className="m-0">
-                    BCUM1000{unit.toString().padStart(3, 0)}
+                {unitData.CU.map((unit, _id) => (
+                  <p className="m-0" key={_id}>
+                    {unit}
                   </p>
                 ))}
+                {/* {[...Array(row.values.cu_count).keys()].map((unit, _id) => (
+                  <p className="m-0" key={_id}>
+                    BCUM1000{unit.toString().padStart(3, 0)}
+                  </p>
+                ))} */}
               </div>
               <h6 className="text-lg">BU</h6>
               <div className="mx-auto mb-2 grid grid-cols-7 text-center font-sans text-base">
-                {/* {unitData.bu.map((unit) => (
-                  <p className="m-0 mr-2 text-base">{unit}</p>
-                ))} */}
-                {[...Array(row.values.bu_count).keys()].map((unit) => (
-                  <p className="m-0">
-                    BCUM1000{unit.toString().padStart(3, 0)}
+                {unitData.BU.map((unit, _id) => (
+                  <p className="m-0" key={_id}>
+                    {unit}
                   </p>
                 ))}
+                {/* {[...Array(row.values.bu_count).keys()].map((unit, _id) => (
+                  <p className="m-0" key={_id}>
+                    BCUM1000{unit.toString().padStart(3, 0)}
+                  </p>
+                ))} */}
               </div>
               <h6 className="text-lg">VT</h6>
               <div className="mx-auto mb-2 grid grid-cols-7 text-center font-sans text-base">
-                {/* {unitData.vt.map((unit) => (
-                  <p className="m-0 mr-2 text-base">{unit}</p>
-                ))} */}
-                {[...Array(row.values.vt_count).keys()].map((unit) => (
-                  <p className="m-0">
-                    BCUM1000{unit.toString().padStart(3, 0)}
+                {unitData.VT.map((unit, _id) => (
+                  <p className="m-0" key={_id}>
+                    {unit}
                   </p>
                 ))}
+                {/* {[...Array(row.values.vt_count).keys()].map((unit, _id) => (
+                  <p className="m-0" key={_id}>
+                    BCUM1000{unit.toString().padStart(3, 0)}
+                  </p>
+                ))} */}
               </div>
             </div>
           </td>
