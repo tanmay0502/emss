@@ -67,7 +67,7 @@ function Home1() {
 	useEffect(()=>{
 		if(content2&&statesCode.find(e=>e.state==content2)&&!indiaMap){
 			const ID = statesCode.find(e=>e.state==content2).code+window.sessionStorage.getItem('sessionToken').slice(2,11);
-			console.log(ID)
+			// console.log(ID)
 			let getData = async ()=>{
 				try {
 					console.log("GET "+uri+ID)
