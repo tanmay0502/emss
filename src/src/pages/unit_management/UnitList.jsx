@@ -506,7 +506,7 @@ const EPUnmarkForm = ({ isVisible }) => {
           headers: {
             "Content-Type": "application/json",
           },
-          credantials: 'include',
+          credentials: 'include',
           body: JSON.stringify({
             bulk: inputValues['bulk'],
             destinationLocation: inputValues['destinationLocation'],
