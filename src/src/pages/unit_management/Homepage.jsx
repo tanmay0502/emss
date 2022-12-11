@@ -641,7 +641,7 @@ export default function HomePage() {
                 </div>
                 <div className={styles.myCardSampleHover} onClick={()=>{navigate(`/session/unitmanagement/first_randomisation_scheduling`)}}>
                     <div className={styles.card_title}>
-                        <span>1nd Randomisation Scheduling</span>
+                        <span>1st Randomisation Scheduling</span>
                     </div>
                     <div className={styles.Box123}>
                         <div className="flex" >
