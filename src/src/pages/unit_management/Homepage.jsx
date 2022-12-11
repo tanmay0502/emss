@@ -44,7 +44,7 @@ export default function HomePage() {
                 }
               );
                 let data2 = await response.json();
-                // console.log("Data fetched", data2);
+                console.log("Data fetched", data2);
                 // console.log("Data fetched", data2['data']);
                 let data = data2['data'];
 
@@ -392,6 +392,13 @@ export default function HomePage() {
         return <div>{val.count!="0"?val.count+" "+val.model:"0"}</div>
     }
 
+    const countUnites = (data)=>{
+        let sum = 0;
+        data.map((val)=>{
+            val.model!="0"?sum+=val.count:sum+=0;
+        })
+        return sum;
+    }
     function createCard(cardVal) {
         let exp = [];
         stDat.map(function(v){
@@ -402,12 +409,8 @@ export default function HomePage() {
         return (
             <div className={styles.myCardSample}>
                     <div className={styles.card_title}>
-                    
                         <button onClick={handleButtonClick} name={cardVal.status} style={{backgroundColor:'white'}}>Units {rightArrow} {cardVal.status}</button>
-                             
-
                     </div>
-
                     <div className={styles.Scroll}>
                         <table >
                             <thead >
@@ -423,7 +426,9 @@ export default function HomePage() {
                                         <tbody >
                                             <tr>
                                                 <td className="text-black text-sm" style={{ textAlign: "left" }}>
-                                                    <div>{val.unit_type}</div>
+                                                    <div>{val.unit_type}<br/>
+                                                    {`(${countUnites(val.ECIL)}, ${countUnites(val.BEL)})`}
+                                                    </div>
                                                 </td>
                                                 <td className="text-black text-sm mr-2 pl-5">
                                                     {val.ECIL.map((val,ind)=>{
@@ -476,7 +481,7 @@ export default function HomePage() {
                     <div className={styles.s}>
                         <span>State Wise Unit Count</span>
                     </div>
-                    <div>
+                    {/* <div>
                         <select
                             id="Process"
                             required
@@ -487,8 +492,8 @@ export default function HomePage() {
                                 Select
                             </option>
                         </select>
-                    </div>
-                    <div className={styles.Scroll1}>
+                    </div> */}
+                    <div className={styles.Scroll}>
 
                     <table className='w-100 '>
                         <thead >
@@ -506,7 +511,10 @@ export default function HomePage() {
                                     <tbody >
                                         <tr>
                                             <td>
-                                            <button style={{backgroundColor:'white'}} onClick={handleButtonClick} name={val.unit_type}>{val.unit_type}</button>
+                                            <button style={{backgroundColor:'white'}} onClick={handleButtonClick} name={val.unit_type}>{val.unit_type}
+                                            <br/>
+                                            {`(${countUnites(val.ECIL)}, ${countUnites(val.BEL)})`}
+                                            </button>
                                             </td>
                                             <td>
                                                 {val.ECIL.map((val, ind) => {
