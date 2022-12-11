@@ -559,20 +559,20 @@ export default function HomePage() {
                                                         )})}
                                                 </td>
                                                 <td className="text-black text-sm pl-7">
-                                                    {val.BEL.map((val,ind)=>{
+                                                {val.BEL.map((val,ind)=>{
                                                         return(
                                                             <DisplayMachineCountByModel val={val}/>
                                                         )})}
                                                 </td>
-                                            </tr>
-                                        </tbody>
-                                    )
-                                })}
+                                                </tr>
+                                                </tbody>
+                                                )
+                                            })}
                         </table> */}
                     {/* </div> */}
                 </div>
 
-                <div className={styles.myCardSampleFlc}
+                <div className={styles.myCardSampleHover}
                                     onClick={() => {
                                         navigate(`/session/unitmanagement/flc_list`)
                                     }}
@@ -595,6 +595,124 @@ export default function HomePage() {
                                     <span></span>
                                     Number Of Engineers
                                     <span className="ml-6">132</span>
+
+                                </span>
+                            </span>
+                        </li>
+                        <li className="mb-4">
+                            <span>
+                                <span>
+                                    <span></span>
+                                    Start Date
+                                    <span className="ml-4"></span>
+                                    <span className="ml-4"></span>
+                                    <span className="ml-4"></span>
+                                    <span className="ml-4"></span>
+                                    <span className="ml-4"></span>
+                                    <span className="ml-6">25-03-12</span>
+
+                                </span>
+                            </span>
+                        </li>
+                        <li className="mb-4">
+                            <span>
+                                <span>
+                                    <span></span>
+                                    End Date
+                                    <span className="ml-4"></span>
+                                    <span className="ml-4"></span>
+                                    <span className="ml-4"></span>
+                                    <span className="ml-4"></span>
+                                    <span className="ml-4"></span>
+                                    <span className="ml-8">25-03-12</span>
+
+                                </span>
+                            </span>
+                        </li>
+                    </div>
+                </div>
+                <div className={styles.myCardSampleHover} onClick={()=>{navigate(`/session/unitmanagement/first_randomisation_scheduling`)}}>
+                    <div className={styles.card_title}>
+                        <span>1nd Randomisation Scheduling</span>
+                    </div>
+                    <div className={styles.Box123}>
+                        <div className="flex" >
+                            <div style={{ marginLeft: "3%", fontSize: "15px" }}> <span style={{ fontSize: "15px" }}>  Unit Quantity </span>  <div style={{ marginLeft: "20%", fontSize: "15px" }}> 2567 </div> </div>
+                            <div className={styles.Line} style={{ marginLeft: "6%" }}></div>
+                            <div style={{ marginLeft: "5%", fontSize: "15px" }}>  <span style={{ fontSize: "15px" }}>  Unit Type</span>  <div style={{ marginLeft: "20%", fontSize: "15px" }}> CU </div></div>
+                            <div className={styles.Line} style={{ marginLeft: "6%" }}></div>
+                            <div style={{ marginLeft: "5%", fontSize: "15px" }}>  <span style={{ marginLeft: "10%", fontSize: "15px" }}>  Process</span>  <div style={{ marginLeft: "20%", fontSize: "15px" }}> Polling </div></div>
+                        </div>
+                    </div>
+                    <div className={styles.LI_TAG}>
+                        <li className="mb-4">
+                            <span>
+                                <span>
+                                    <span></span>
+                                    Election Type
+                                    <span className="ml-4"></span>
+                                    <span className="ml-4"></span>
+                                    <span className="ml-4"></span>
+                                    <span className="ml-8">Assembly</span>
+
+                                </span>
+                            </span>
+                        </li>
+                        <li className="mb-4">
+                            <span>
+                                <span>
+                                    <span></span>
+                                    Start Date
+                                    <span className="ml-4"></span>
+                                    <span className="ml-4"></span>
+                                    <span className="ml-4"></span>
+                                    <span className="ml-4"></span>
+                                    <span className="ml-4"></span>
+                                    <span className="ml-6">25-03-12</span>
+
+                                </span>
+                            </span>
+                        </li>
+                        <li className="mb-4">
+                            <span>
+                                <span>
+                                    <span></span>
+                                    End Date
+                                    <span className="ml-4"></span>
+                                    <span className="ml-4"></span>
+                                    <span className="ml-4"></span>
+                                    <span className="ml-4"></span>
+                                    <span className="ml-4"></span>
+                                    <span className="ml-8">25-03-12</span>
+
+                                </span>
+                            </span>
+                        </li>
+                    </div>
+                </div>
+                <div className={styles.myCardSampleHover} onClick={()=>{navigate(`/session/unitmanagement/second_randomisation_scheduling`)}}>
+                    <div className={styles.card_title}>
+                        <span>2nd Randomisation Scheduling</span>
+                    </div>
+                    <div className={styles.Box123}>
+                        <div className="flex" >
+                            <div style={{ marginLeft: "3%", fontSize: "15px" }}> <span style={{ fontSize: "15px" }}>  Unit Quantity </span>  <div style={{ marginLeft: "20%", fontSize: "15px" }}> 2567 </div> </div>
+                            <div className={styles.Line} style={{ marginLeft: "6%" }}></div>
+                            <div style={{ marginLeft: "5%", fontSize: "15px" }}>  <span style={{ fontSize: "15px" }}>  Unit Type</span>  <div style={{ marginLeft: "20%", fontSize: "15px" }}> CU </div></div>
+                            <div className={styles.Line} style={{ marginLeft: "6%" }}></div>
+                            <div style={{ marginLeft: "5%", fontSize: "15px" }}>  <span style={{ marginLeft: "10%", fontSize: "15px" }}>  Process</span>  <div style={{ marginLeft: "20%", fontSize: "15px" }}> Polling </div></div>
+                        </div>
+                    </div>
+                    <div className={styles.LI_TAG}>
+                        <li className="mb-4">
+                            <span>
+                                <span>
+                                    <span></span>
+                                    Election Type
+                                    <span className="ml-4"></span>
+                                    <span className="ml-4"></span>
+                                    <span className="ml-4"></span>
+                                    <span className="ml-8">Assembly</span>
 
                                 </span>
                             </span>
@@ -693,7 +811,7 @@ export default function HomePage() {
                 </div>
 
 
-                <div className={styles.myCardSample}>
+                {/* <div className={styles.myCardSample}>
                     <div className={styles.card_title}>
                         <span>CDP Scheduling</span>
                     </div>
@@ -749,7 +867,7 @@ export default function HomePage() {
                             </span>
                         </li>
                     </div>
-                </div>
+                </div> */}
                 <div className={styles.myCardSample}>
                     <div className={styles.card_title}>
                         <span>TnA Scheduling</span>
@@ -832,124 +950,6 @@ export default function HomePage() {
                                     <span className="ml-4"></span>
                                     <span className="ml-4"></span>
                                     <span className="ml-8">In Progress</span>
-
-                                </span>
-                            </span>
-                        </li>
-                        <li className="mb-4">
-                            <span>
-                                <span>
-                                    <span></span>
-                                    Start Date
-                                    <span className="ml-4"></span>
-                                    <span className="ml-4"></span>
-                                    <span className="ml-4"></span>
-                                    <span className="ml-4"></span>
-                                    <span className="ml-4"></span>
-                                    <span className="ml-6">25-03-12</span>
-
-                                </span>
-                            </span>
-                        </li>
-                        <li className="mb-4">
-                            <span>
-                                <span>
-                                    <span></span>
-                                    End Date
-                                    <span className="ml-4"></span>
-                                    <span className="ml-4"></span>
-                                    <span className="ml-4"></span>
-                                    <span className="ml-4"></span>
-                                    <span className="ml-4"></span>
-                                    <span className="ml-8">25-03-12</span>
-
-                                </span>
-                            </span>
-                        </li>
-                    </div>
-                </div>
-                <div className={styles.myCardSample}>
-                    <div className={styles.card_title}>
-                        <span>2nd Randomisation Scheduling</span>
-                    </div>
-                    <div className={styles.Box123}>
-                        <div className="flex" >
-                            <div style={{ marginLeft: "3%", fontSize: "15px" }}> <span style={{ fontSize: "15px" }}>  Unit Quantity </span>  <div style={{ marginLeft: "20%", fontSize: "15px" }}> 2567 </div> </div>
-                            <div className={styles.Line} style={{ marginLeft: "6%" }}></div>
-                            <div style={{ marginLeft: "5%", fontSize: "15px" }}>  <span style={{ fontSize: "15px" }}>  Unit Type</span>  <div style={{ marginLeft: "20%", fontSize: "15px" }}> CU </div></div>
-                            <div className={styles.Line} style={{ marginLeft: "6%" }}></div>
-                            <div style={{ marginLeft: "5%", fontSize: "15px" }}>  <span style={{ marginLeft: "10%", fontSize: "15px" }}>  Process</span>  <div style={{ marginLeft: "20%", fontSize: "15px" }}> Polling </div></div>
-                        </div>
-                    </div>
-                    <div className={styles.LI_TAG}>
-                        <li className="mb-4">
-                            <span>
-                                <span>
-                                    <span></span>
-                                    Election Type
-                                    <span className="ml-4"></span>
-                                    <span className="ml-4"></span>
-                                    <span className="ml-4"></span>
-                                    <span className="ml-8">Assembly</span>
-
-                                </span>
-                            </span>
-                        </li>
-                        <li className="mb-4">
-                            <span>
-                                <span>
-                                    <span></span>
-                                    Start Date
-                                    <span className="ml-4"></span>
-                                    <span className="ml-4"></span>
-                                    <span className="ml-4"></span>
-                                    <span className="ml-4"></span>
-                                    <span className="ml-4"></span>
-                                    <span className="ml-6">25-03-12</span>
-
-                                </span>
-                            </span>
-                        </li>
-                        <li className="mb-4">
-                            <span>
-                                <span>
-                                    <span></span>
-                                    End Date
-                                    <span className="ml-4"></span>
-                                    <span className="ml-4"></span>
-                                    <span className="ml-4"></span>
-                                    <span className="ml-4"></span>
-                                    <span className="ml-4"></span>
-                                    <span className="ml-8">25-03-12</span>
-
-                                </span>
-                            </span>
-                        </li>
-                    </div>
-                </div>
-                <div className={styles.myCardSample}>
-                    <div className={styles.card_title}>
-                        <span>1nd Randomisation Scheduling</span>
-                    </div>
-                    <div className={styles.Box123}>
-                        <div className="flex" >
-                            <div style={{ marginLeft: "3%", fontSize: "15px" }}> <span style={{ fontSize: "15px" }}>  Unit Quantity </span>  <div style={{ marginLeft: "20%", fontSize: "15px" }}> 2567 </div> </div>
-                            <div className={styles.Line} style={{ marginLeft: "6%" }}></div>
-                            <div style={{ marginLeft: "5%", fontSize: "15px" }}>  <span style={{ fontSize: "15px" }}>  Unit Type</span>  <div style={{ marginLeft: "20%", fontSize: "15px" }}> CU </div></div>
-                            <div className={styles.Line} style={{ marginLeft: "6%" }}></div>
-                            <div style={{ marginLeft: "5%", fontSize: "15px" }}>  <span style={{ marginLeft: "10%", fontSize: "15px" }}>  Process</span>  <div style={{ marginLeft: "20%", fontSize: "15px" }}> Polling </div></div>
-                        </div>
-                    </div>
-                    <div className={styles.LI_TAG}>
-                        <li className="mb-4">
-                            <span>
-                                <span>
-                                    <span></span>
-                                    Election Type
-                                    <span className="ml-4"></span>
-                                    <span className="ml-4"></span>
-                                    <span className="ml-4"></span>
-                                    <span className="ml-8">Assembly</span>
 
                                 </span>
                             </span>
