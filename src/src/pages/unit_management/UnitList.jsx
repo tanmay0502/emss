@@ -96,9 +96,9 @@ const UnitListTable = () => {
             Status: (
               <div className={styles.unit_status}>{val["modelStatus"]}</div>
             ),
-            Remarks: val["modelRemarks"],
+            Remarks: val["modelRemark"],
             Location: val["modelLocation"],
-            "Status Update Time": val["Status Update Time"],
+            "Status Update Time": val["modelTimeStamp"],
             "": (
               <button className={styles.optionsButton}>
                 <OptionsIndicator />

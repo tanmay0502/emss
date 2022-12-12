@@ -96,7 +96,9 @@ export default function HomePage() {
                                 modelId: v[0],
                                 modelStatus: v[1],
                                 modelType: v[2],
-                                model_Id: v[3]
+                                modelLocation: v[3],
+                                modelRemark: v[4],
+                                modelTimeStamp: v[5]
                             });
                         }); 
                     }
@@ -106,7 +108,9 @@ export default function HomePage() {
                                 modelId: v[0],
                                 modelStatus: v[1],
                                 modelType: v[2],
-                                model_Id: v[3]
+                                modelLocation: v[3],
+                                modelRemark: v[4],
+                                modelTimeStamp: v[5]
                             });
                         }); 
                     }
@@ -116,7 +120,9 @@ export default function HomePage() {
                                 modelId: v[0],
                                 modelStatus: v[1],
                                 modelType: v[2],
-                                model_Id: v[3]
+                                modelLocation: v[3],
+                                modelRemark: v[4],
+                                modelTimeStamp: v[5]
                             });
                         }); 
                     }
@@ -132,7 +138,9 @@ export default function HomePage() {
                                     modelId: o[0],
                                     modelStatus: o[1],
                                     modelType: o[2],
-                                    model_Id: o[3]
+                                    modelLocation: o[3],
+                                    modelRemark: o[4],
+                                    modelTimeStamp: o[5]
                                 });
                             });
                         }
@@ -144,7 +152,9 @@ export default function HomePage() {
                                 modelId: o[0],
                                 modelStatus: o[1],
                                 modelType: o[2],
-                                model_Id: o[3]
+                                modelLocation: o[3],
+                                modelRemark: o[4],
+                                modelTimeStamp: o[5]
                             });
                         });
                         sDat.push({
