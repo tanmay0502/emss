@@ -58,6 +58,7 @@ margin-right: auto;
 margin-top: 10px;
 border: 1px solid rgba(0, 0, 0, 0.28);
 }
+
 .myCardSampleHover{
     height: 385px;
     width: 458px !important;
@@ -213,3 +214,4 @@ margin: 0 10px;
     overflow-x: hidden !important;
     height: 70%;
 }
+
