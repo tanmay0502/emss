@@ -44,6 +44,7 @@ function First_Randomisation_Scheduling() {
                     headers: {
                         "Content-Type": "application/json",
                     },
+                    credentials: 'include',
                     body: JSON.stringify({
                         ceouserid: document.getElementById("ceouserid") ? document.getElementById("ceouserid").value : "",
                         deouserid: document.getElementById("deouserid") ? document.getElementById("deouserid").value : "",

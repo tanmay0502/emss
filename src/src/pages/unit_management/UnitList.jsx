@@ -860,7 +860,8 @@ const ReplacementForm = ({ isVisible }) => {
 
 // 1st Randomisation Card
 const FirstRandomisationForm = ({ isVisible }) => {
-  const district_id = "410"; // calc from userId
+  const district_id = userID.slice(2,5); // calc from userId
+  console.log(userID.slice(2,5))
   const [assemblyData, setAssemblyData] = useState([
     {
       ac_name: "",
@@ -922,6 +923,7 @@ const FirstRandomisationForm = ({ isVisible }) => {
       const response = await fetch(`${baseUrl}/first_randomization`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: 'include',
         body: JSON.stringify({
           units_requirement,
         }),
@@ -957,6 +959,7 @@ const FirstRandomisationForm = ({ isVisible }) => {
         const response = await fetch(`${baseUrl}/first_randomization`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
+          credentials: 'include'
         });
         const data = await response.json();
         // console.log("Next Randomisation results: ", data);
@@ -983,11 +986,16 @@ const FirstRandomisationForm = ({ isVisible }) => {
       (async () => {
         try {
           const response = await fetch(`${baseUrl}/fetch-ac-name-list/`, {
-            credentials: "include",
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include"
           });
           const data = await response.json();
+          console.log(data)
           if (response.status === 200) {
+            console.log("inside if")
             if (data.hasOwnProperty(district_id)) {
+              console.log("inside second if")
               setAssemblyList(data[district_id]);
             }
           }
