@@ -860,8 +860,7 @@ const ReplacementForm = ({ isVisible }) => {
 
 // 1st Randomisation Card
 const FirstRandomisationForm = ({ isVisible }) => {
-  const district_id = userID.slice(2,5); // calc from userId
-  console.log(userID.slice(2,5))
+  const district_id = userID.slice(2, 5); // calc from userId
   const [assemblyData, setAssemblyData] = useState([
     {
       ac_name: "",
@@ -923,7 +922,7 @@ const FirstRandomisationForm = ({ isVisible }) => {
       const response = await fetch(`${baseUrl}/first_randomization`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: 'include',
+        credentials: "include",
         body: JSON.stringify({
           units_requirement,
         }),
@@ -959,7 +958,7 @@ const FirstRandomisationForm = ({ isVisible }) => {
         const response = await fetch(`${baseUrl}/first_randomization`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          credentials: 'include'
+          credentials: "include",
         });
         const data = await response.json();
         // console.log("Next Randomisation results: ", data);
@@ -987,15 +986,11 @@ const FirstRandomisationForm = ({ isVisible }) => {
         try {
           const response = await fetch(`${baseUrl}/fetch-ac-name-list/`, {
             method: "GET",
-            headers: { "Content-Type": "application/json" },
-            credentials: "include"
+            credentials: "include",
           });
           const data = await response.json();
-          console.log(data)
           if (response.status === 200) {
-            console.log("inside if")
             if (data.hasOwnProperty(district_id)) {
-              console.log("inside second if")
               setAssemblyList(data[district_id]);
             }
           }
@@ -1134,10 +1129,6 @@ const FirstRandomisationForm = ({ isVisible }) => {
                         >
                           {" "}
                           <option hidden>Select</option>
-                          {/* <option>Commissioning</option>
-                          <option>Distribution</option>
-                          <option>Mock Polling</option>
-                          <option>Actual Polling</option> */}
                           {assemblyList.map((item, _id) => (
                             <option key={_id}>{item}</option>
                           ))}
@@ -1152,12 +1143,13 @@ const FirstRandomisationForm = ({ isVisible }) => {
                     </div>
                     <div className="flex w-3/8 flex-col text-left">
                       <label className="mb-2 w-full text-base">
-                        Unit Count {id + 1} {"(CU  BU  VT)"}
+                        Unit Count {id + 1}
                         <span className="text-red-600"> *</span>
                       </label>
-                      <div className="flex w-full justify-between gap-2 text-gray-800">
+                      <div className="flex w-full items-center justify-between gap-2 text-gray-800">
+                        <span className="text-base text-gray-500">CU</span>
                         <input
-                          className="h-10 w-1/3 rounded-md border-0 bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                          className="h-10 w-1/4 rounded-md border-0 bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
                           type="number"
                           name="cu_count"
                           placeholder="CU"
@@ -1165,8 +1157,9 @@ const FirstRandomisationForm = ({ isVisible }) => {
                           onChange={handleInputChange}
                           data-id={id}
                         />
+                        <span className="text-base text-gray-500">BU</span>
                         <input
-                          className="h-10 w-1/3 rounded-md border-0 bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                          className="h-10 w-1/4 rounded-md border-0 bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
                           type="number"
                           name="bu_count"
                           placeholder="BU"
@@ -1174,8 +1167,9 @@ const FirstRandomisationForm = ({ isVisible }) => {
                           onChange={handleInputChange}
                           data-id={id}
                         />
+                        <span className="text-base text-gray-500">VT</span>
                         <input
-                          className="h-10 w-1/3 rounded-md border-0 bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                          className="h-10 w-1/4 rounded-md border-0 bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
                           type="number"
                           name="vt_count"
                           placeholder="VT"
@@ -1218,6 +1212,7 @@ const RandomisationOutput = ({
 }) => {
   const iterationText = ["First", "Second", "Third"];
   const [isRandomisationSaved, setIsRandomisationSaved] = useState(false);
+  const [isDataSaving, setIsDataSaving] = useState(false);
   const data = useMemo(() => assemblyData, [assemblyData]);
   const columns = useMemo(
     () => [
@@ -1257,9 +1252,10 @@ const RandomisationOutput = ({
   };
 
   const handleRadomisationSave = async () => {
+    setIsDataSaving(true);
     try {
       const response = await fetch(
-        `${baseUrl}/save_first_randomization/` +
+        `${baseUrl}/save_first_randomization/?` +
           new URLSearchParams({
             iteration_index: iterationIndex,
           }),
@@ -1271,11 +1267,12 @@ const RandomisationOutput = ({
       );
       const data = await response.json();
       if (data.status === 200) {
-        setIsRandomisationSaved(data.message === "First Randomization Saved");
+        setIsRandomisationSaved(data.message == "First Randomization Saved");
       }
     } catch (err) {
       alert(`Error occured: ${err}`);
     }
+    setIsDataSaving(false);
   };
 
   const handleGenerateReport = async () => {
@@ -1359,6 +1356,8 @@ const RandomisationOutput = ({
         >
           Generate Report
         </button>
+      ) : isDataSaving ? (
+        <p className="text-base">Saving...</p>
       ) : (
         <button
           className="rounded-md border-2 border-solid border-zinc-300 bg-zinc-50 px-4 py-1.5 text-base text-gray-800 hover:bg-zinc-100"
