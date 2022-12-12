@@ -9,6 +9,7 @@ import ListCard from './ListCard';
 
 
 const uri = process.env.REACT_APP_API_SERVER+"/unit/total_counts?oprnd="
+const uri2 = process.env.REACT_APP_API_SERVER+"/unit/fetch-first-randomization-schedule"
 // const uri = "http://localhost:8100/unit/total_counts?oprnd=CH000000CEO"
 
 let expD = [];
@@ -26,13 +27,15 @@ export default function HomePage() {
     const [bDat,setBDat] = useState([]);
     const [vDat,setVDat] = useState([]);
     const [stDat,setStDat] = useState([]);
+    const [flcOkCount,setFlcOkCount] = useState(0);
+    const [startDate,setStartDate] = useState("");
+    const [endDate,setEndDate] = useState("");
     const navigate = useNavigate();
 
     useEffect(()=>{
         let getData = async () => {
             try {
                 const ID = window.sessionStorage.getItem('sessionToken');
-                console.log("GET "+uri+ID)
                 const response = await fetch(
                 uri+ID,
                 {
@@ -44,10 +47,22 @@ export default function HomePage() {
                 }
               );
                 let data2 = await response.json();
-                console.log("Data fetched", data2);
                 // console.log("Data fetched", data2['data']);
                 let data = data2['data'];
+                const response2 = await fetch(
+                    uri2,
+                    {
+                      method: "GET",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      credentials:'include'
+                    }
+                );
 
+                let rDat = await response2.json();
+                setStartDate(rDat.start_date);
+                setEndDate(rDat.end_date); 
                 // console.log(data);
                 // let data = Data;
                 // let data = [];
@@ -73,6 +88,7 @@ export default function HomePage() {
                 let buDat = [];
                 let vtDat = [];
                 let sDat = [];
+                let flcC = 0;
                 data.map(function(val){
                     if(val.unit_type==='CU') {
                         val.unit_list.map(function(v){
@@ -136,6 +152,10 @@ export default function HomePage() {
                             type: T
                         });
                     }
+                });
+
+                data.map(function(val){
+                    if(val.status==='FLC OK')   flcC+=val.count;
                 });
                 
                 for (let i = 0; i < data.length; i++) {
@@ -365,13 +385,16 @@ export default function HomePage() {
                     }
                     
                 }
+
+
                 setUnitData(finalData)
                 setStatusData(statusData)
                 setCDat(cuDat)
                 setBDat(buDat)
                 setVDat(vtDat)
                 setStDat(sDat)
-                return [finalData, statusData, cuDat, buDat, vtDat, sDat];
+                setFlcOkCount(flcC);
+                return [finalData, statusData, cuDat, buDat, vtDat, sDat, flcC];
             } catch (err) {
               console.log(err);
               return [[],[]];
@@ -379,12 +402,10 @@ export default function HomePage() {
           }
           console.log(getData());
         
-        },[])        
+        },[])       
 
     let dataByStatus = statusData;
     let dataByUnitType = unitData;
-
- 
 
     const rightArrow = ">";
 
@@ -645,27 +666,10 @@ export default function HomePage() {
                     </div>
                     <div className={styles.Box123}>
                         <div className="flex" >
-                            <div style={{ marginLeft: "3%", fontSize: "15px" }}> <span style={{ fontSize: "15px" }}>  Unit Quantity </span>  <div style={{ marginLeft: "20%", fontSize: "15px" }}> 2567 </div> </div>
-                            <div className={styles.Line} style={{ marginLeft: "6%" }}></div>
-                            <div style={{ marginLeft: "5%", fontSize: "15px" }}>  <span style={{ fontSize: "15px" }}>  Unit Type</span>  <div style={{ marginLeft: "20%", fontSize: "15px" }}> CU </div></div>
-                            <div className={styles.Line} style={{ marginLeft: "6%" }}></div>
-                            <div style={{ marginLeft: "5%", fontSize: "15px" }}>  <span style={{ marginLeft: "10%", fontSize: "15px" }}>  Process</span>  <div style={{ marginLeft: "20%", fontSize: "15px" }}> Polling </div></div>
+                            <div style={{ margin: "auto",marginTop: '3%' , fontSize: "15px" }}> <span style={{ fontSize: "25px" }}>  Units : {flcOkCount} </span> </div>
                         </div>
                     </div>
                     <div className={styles.LI_TAG}>
-                        <li className="mb-4">
-                            <span>
-                                <span>
-                                    <span></span>
-                                    Election Type
-                                    <span className="ml-4"></span>
-                                    <span className="ml-4"></span>
-                                    <span className="ml-4"></span>
-                                    <span className="ml-8">Assembly</span>
-
-                                </span>
-                            </span>
-                        </li>
                         <li className="mb-4">
                             <span>
                                 <span>
@@ -676,7 +680,7 @@ export default function HomePage() {
                                     <span className="ml-4"></span>
                                     <span className="ml-4"></span>
                                     <span className="ml-4"></span>
-                                    <span className="ml-6">25-03-12</span>
+                                    <span className="ml-6">{startDate}</span>
 
                                 </span>
                             </span>
@@ -691,7 +695,7 @@ export default function HomePage() {
                                     <span className="ml-4"></span>
                                     <span className="ml-4"></span>
                                     <span className="ml-4"></span>
-                                    <span className="ml-8">25-03-12</span>
+                                    <span className="ml-8">{endDate}</span>
 
                                 </span>
                             </span>
