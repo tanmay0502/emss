@@ -231,16 +231,18 @@ const UnitListTable = () => {
             {/* </div> */}
           </div>
         </div>
-        <DynamicDataTable
-          className={styles.unitListTable}
-          rows={tableData}
-          hoverable
-          renderCheckboxes
-          buttons={[]}
-          fieldsToExclude={["Status_Hidden"]}
-          orderByField={sortMapping[sortBy]}
-          orderByDirection={sortOrder}
-        />
+        <div style={{ maxHeight: "600px", overflowY: "scroll" }}>
+          <DynamicDataTable
+            className={styles.unitListTable}
+            rows={tableData}
+            hoverable
+            renderCheckboxes
+            buttons={[]}
+            fieldsToExclude={["Status_Hidden"]}
+            orderByField={sortMapping[sortBy]}
+            orderByDirection={sortOrder}
+          />
+        </div>
       </div>
     </>
   );
