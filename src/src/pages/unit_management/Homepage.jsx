@@ -27,7 +27,9 @@ export default function HomePage() {
     const [bDat,setBDat] = useState([]);
     const [vDat,setVDat] = useState([]);
     const [stDat,setStDat] = useState([]);
-    const [flcOkCount,setFlcOkCount] = useState(0);
+    const [flcOkCountCU,setFlcOkCountCU] = useState(0);
+    const [flcOkCountBU,setFlcOkCountBU] = useState(0);
+    const [flcOkCountVT,setFlcOkCountVT] = useState(0);
     const [startDate,setStartDate] = useState("");
     const [endDate,setEndDate] = useState("");
     const navigate = useNavigate();
@@ -88,7 +90,9 @@ export default function HomePage() {
                 let buDat = [];
                 let vtDat = [];
                 let sDat = [];
-                let flcC = 0;
+                let flcCU = 0;
+                let flcBU = 0;
+                let flcVT = 0;
                 data.map(function(val){
                     if(val.unit_type==='CU') {
                         val.unit_list.map(function(v){
@@ -165,7 +169,11 @@ export default function HomePage() {
                 });
 
                 data.map(function(val){
-                    if(val.status==='FLC OK')   flcC+=val.count;
+                    if(val.status==='FLC OK') {
+                        if(val.unit_type==='CU')    flcCU+=val.count;
+                        else if(val.unit_type==='BU')    flcBU+=val.count;
+                        else if(val.unit_type==='VT')    flcVT+=val.count;
+                    }  
                 });
                 
                 for (let i = 0; i < data.length; i++) {
@@ -403,8 +411,10 @@ export default function HomePage() {
                 setBDat(buDat)
                 setVDat(vtDat)
                 setStDat(sDat)
-                setFlcOkCount(flcC);
-                return [finalData, statusData, cuDat, buDat, vtDat, sDat, flcC];
+                setFlcOkCountCU(flcCU);
+                setFlcOkCountBU(flcBU);
+                setFlcOkCountVT(flcVT);
+                return [finalData, statusData, cuDat, buDat, vtDat, sDat, flcCU, flcBU, flcVT];
             } catch (err) {
               console.log(err);
               return [[],[]];
@@ -678,9 +688,12 @@ export default function HomePage() {
                     </div>
                     <div className={styles.Box123}>
                         <div className="flex" >
-                            <div style={{ margin: "auto",marginTop: '3%' , fontSize: "15px" }}> <span style={{ fontSize: "25px" }}>  Units : {flcOkCount} </span> </div>
+                            <div style={{ marginLeft: "10%", fontSize: "15px" }}> <span style={{ fontSize: "15px" }}>  Units CU </span>  <div style={{ marginLeft: "20%", fontSize: "15px" }}> {flcOkCountCU} </div> </div>
+                            <div className={styles.Line} style={{ marginLeft: "6%" }}></div>
+                            <div style={{ marginLeft: "10%", fontSize: "15px" }}> <span style={{ fontSize: "15px" }}>  Units BU </span>  <div style={{ marginLeft: "20%", fontSize: "15px" }}> {flcOkCountBU} </div> </div>
+                            <div className={styles.Line} style={{ marginLeft: "6%" }}></div>
+                            <div style={{ marginLeft: "10%", fontSize: "15px" }}> <span style={{ fontSize: "15px" }}>  Units VT </span>  <div style={{ marginLeft: "20%", fontSize: "15px" }}> {flcOkCountVT} </div> </div>                              </div>
                         </div>
-                    </div>
                     <div className={styles.LI_TAG}>
                         <li className="mb-4">
                             <span>
