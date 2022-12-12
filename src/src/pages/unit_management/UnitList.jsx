@@ -294,10 +294,10 @@ const StatusUpdate = ({ activeButtons, onButtonClick }) => {
               name="replacementForm"
               onClick={onButtonClick}
             />
-            <ActionButton text="Unit Block" onClick={onButtonClick} />
+            {/* <ActionButton text="Unit Block" onClick={onButtonClick} />
             <ActionButton text="Unit UnBlock" onClick={onButtonClick} />
             <ActionButton text="Mark Defective" onClick={onButtonClick} />
-            <ActionButton text="Unit Destruction" onClick={onButtonClick} />
+            <ActionButton text="Unit Destruction" onClick={onButtonClick} /> */}
             <ActionButton
               isActive={activeButtons.firstRandomisationForm}
               text="1st Randomisation"
