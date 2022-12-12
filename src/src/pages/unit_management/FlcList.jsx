@@ -1,12 +1,13 @@
 import React from "react";
 import DynamicDataTable from "@langleyfoxall/react-dynamic-data-table";
-import { useState, useEffect } from "react";
+import { useState,useEffect } from "react";
 import { useNavigate } from 'react-router-dom'
+import Edit from '../../assets/editBtn.png';
 import styles from './styles/TnaList.module.css';
 import { AiOutlineSortAscending, AiOutlineSortDescending } from "react-icons/ai";
 import { ReactComponent as SearchInputElement } from '../../assets/searchInputIcon.svg';
 import { ReactComponent as ChevronDown } from '../../assets/ChevronDown.svg';
-
+// import { ReactComponent as Edit } from '../../assets/editBtn.svg';
 export default function FLCList() {
 
     const navigate = useNavigate()
@@ -14,7 +15,7 @@ export default function FLCList() {
     const [sortBy, setSortBy] = useState("None");
     const [isDetail, setIsDetail] = useState(0);
     const [tableFilter, setTableFilter] = useState("");
-    const [tableData, setTableData] = useState([])
+
     const [flc, setFlc] = useState([])
     const [flcValue, setFlcValue] = useState([])
 
@@ -32,63 +33,116 @@ export default function FLCList() {
                 }
             );
             const data = await response.json();
-
-            if (response.status == 200) {
-                setFlc(data)
+            console.log(data['data'])
+            if(data["data"]!=404){
+                setFlc(data);       
             }
+            
         } catch (err) {
-            console.log({ err });
+            console.log({err});
         }
     }
-    console.log(flc, "I am flc")
+   
 
-    useEffect(() => {
-        if (flc) {
-            var data = flc.filter((elem) => {
-                if (tableFilter === "") {
-                    return true;
-                }
-                else {
-                    // const filter = tableFilter.toLowerCase();
-                    // return (elem["userid"].toLowerCase().includes(filter) || elem["name"].toLowerCase().includes(filter))
-                }
-            }).map((val) => {
-                let st = ""
-                let ed = ""
-                try {
-                    st = st + val['startdate'].slice(0,10)
-                    ed = ed + val["enddate"].slice(0,10)
-                }catch(err){
-                    // st = ""
-                    console.log(err)
-                }
+    {
+        flc !== undefined && console.log(flc)
+    }
 
-                return {
-                    'Flcid': val['flcid'],
-                    'District': val['district'],
-                    'Manufacturer Name': val['manufacturername'],
-                    "Status": val['status'],
-                    "ECI Supervisor's Name": val['ecisupervisor'],
-                    "No. Of Engineers": val['numengineers'],
-                    "Start Date Of FLC":st,
-                    "End Date Of FLC": ed,
-                }
-            })
-            setTableData(data)
+    const sortMapping = {
+        "None": null,
+        "Warehouse ID": "Warehouse ID",
+        "Manufacturer Name": "Manufacturer Name",
+        "Warehouse Supervisor's UserID": "Warehouse Supervisor's UserID",
+        "ECI Supervisor's name" : "ECI Supervisor's name",
+        "No. of engineers": "No. of engineers",
+        "Start Date": "Start Date",
+        "End Date": "End Date",
+       
+    }
+    const row2 = {
+        "Warehouse ID": "AA1122",
+        "Manufacturer Name": "ECIL",
+        "Warehouse Supervisor's UserID": "SSPPAAARRR",
+        "ECI Supervisor's name" : "Naman Biswas",
+        "No. of engineers": "257",
+        "Start Date of FLC": "22-09-2021",
+        "End Date of FLC": "15-10-2021",
+    }
+    const row3 = {
+        "Warehouse ID": "AA1122",
+        "Manufacturer Name": "ECIL",
+        "Warehouse Supervisor's UserID": "SSPPAAARRR",
+        "ECI Supervisor's name" : "Naman Biswas",
+        "No. of engineers": "257",
+        "Start Date of FLC": "22-09-2021",
+        "End Date of FLC": "15-10-2021",
+    }
+    const row1 = {
+        "Warehouse ID": "AA1122",
+        "Manufacturer Name": "ECIL",
+        "Warehouse Supervisor's UserID": "SSPPAAARRR",
+        "ECI Supervisor's name" : "Naman Biswas",
+        "No. of engineers": "257",
+        "Start Date of FLC": "22-09-2021",
+        "End Date of FLC": "15-10-2021",
+    }
+    const data = [row1, row2, row3, row2, row1, row2,row1, row2, row3, row2, row1, row2,];
+    // const data1 = [row1, row2, row1];
 
+    // const Table = [
+    //     <Collapse orderId='XYZ/20' data={data} time='22-09-2021' />,
+    //     <Collapse orderId='XYZ/12' data={data} time='12-12-2021' />,
+    //     <Collapse orderId='XYZ/14' data={data1} time='2-05-2021' bottom={true} />
+    // ]
+    function makeFlcList(props){
+        let eList = []
+        for( const i in props){
+            console.log("i " + i + "data: " + props[i])
+            var start ='';
+            var end = '';
+            // console.log(props[i]['startdate'])
+            if(props[i]['startdate'] !== undefined){
+                start = props[i]['startdate'].slice(0,10);
+                end = props[i]['enddate'].slice(0,10)
+            }
+           
+
+            const row = {
+                'Warehouse ID': props[i]['flcwarehouse'],
+                'Manufacturer Name': props[i]['manufacturername'],
+                "Warehouse Supervisor's UserID": props[i]['warehousesupervisor'],
+                "ECI Supervisor's Name": props[i]['ecisupervisor'],
+                "No. Of Engineers": props[i]['numengineers'],
+                "Start Date Of FLC": start,
+                "End Date Of FLC": end,
+                "ID":props[i]['flcid']
+            }  
+            console.log({row})
+            eList.push(row);
+              
         }
-        return () => {
-
-        }
-    }, [flc])
+        console.log({eList})
+        setFlcValue(eList)
+    }
 
 
 
     useEffect(() => {
         getElectionList();
+        // s(elections);
+        
     }, []);
 
+    useEffect(()=>{
+        if(flc !== undefined){
+            makeFlcList(flc);
+        }
+    }, [flc])
 
+    const handleButtonClick = (e) => {
+        // console.log("clicked" + e.target.name);
+        navigate('/session/unitmanagement');
+      };
 
     return (
         <div className={`${styles.myWrapper1}`} style={{ position: "relative", height: "100%" }}>
@@ -97,7 +151,7 @@ export default function FLCList() {
 
                 <div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center" }}>
                     <button className='createRequestBtn' onClick={() => {
-                        window.location.pathname = "/session/unitmanagement/announce_flc";
+                        window.location.pathname = "/session/unitmanagement/schedule_flc";
                     }}>
                         Schedule FLC
                     </button>
@@ -119,25 +173,33 @@ export default function FLCList() {
                             <option value={"Timestamp"}>Timestamp</option>
                         </select>
                         <ChevronDown />
-
+                        
                         <button className='sortOrderButton' onClick={() => {
                             setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
                         }}>
                             {sortOrder === 'asc' ? <AiOutlineSortAscending /> : <AiOutlineSortDescending />}
                         </button>
                     </div>
+
+                    
+                    <button onClick={handleButtonClick} className="font-semibold text-black" style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center", background: "#F9FBFF", borderRadius: "10px", padding: "7.5px 15px 7.5px 15px", fontSize: "0.8em", marginLeft:"5px" }}>Go Back</button>
+                    
+
                 </div>
             </div> : <></>}
-            {isDetail === 0 ?
-                <div class={styles.table}>
-                    <DynamicDataTable
-                        rows={flcValue !== undefined ? tableData : "No Data"}
-                        fieldsToExclude={["Flcid"]}
-                        buttons={[]}
-                        onClick={(event, row) => {
-                            navigate('/session/unitmanagement/editFlc/' + row["Flcid"])
-                        }}
-                    />
+            {isDetail === 0 ? 
+            <div class={styles.table}>
+            
+            <DynamicDataTable 
+                rows={flcValue !== undefined ? flcValue: "No Data"}
+                fieldsToExclude={["ID"]}
+                buttons={[]} 
+                onClick={(event, row) => {
+                    console.log("row ID: "+ row["ID"])
+                    navigate(`/session/unitmanagement/editFlc/id=${row["ID"]}`)
+                }}
+                
+                />
                 </div>
                 : ''
             }

@@ -44,7 +44,6 @@ import EditFLC from './pages/unit_management/EditFlc'
 import EditTna from './pages/unit_management/EditTna';
 import EditElection from './pages/unit_management/EditElection';
 import HomePageUnit from './pages/unit_management/Homepage';
-import Announce_Flc from './pages/unit_management/announce_flc'
 function App() {
 
   const [sessionState, setSessionState] = useState({
@@ -143,10 +142,6 @@ function App() {
             <Route
               path="/session/unitmanagement/schedule_varification_list"
               element={<VarificationList />}
-            />
-            <Route
-              path="/session/unitmanagement/announce_Flc"
-              element={<Announce_Flc />}
             />
             <Route
               path="/session/unitmanagement/schedule_flc"
