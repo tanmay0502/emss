@@ -1,0 +1,86 @@
+.prepared_Certificate_container{
+    width: 100%;
+    max-height: 100%;
+    border-radius: 25px;
+    background: #FFFFFF;
+    box-shadow: 0px 10px 60px rgba(226, 236, 249, 0.5);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 25px;
+    box-shadow: 0px 8px 45px 10px rgba(0,0,0,0.2);
+}
+
+.prepared_Certificate_header{
+    height: 10vh;
+    background: linear-gradient(180deg, #84587C 0%, #BA8BB1 100%);
+    border-radius: 25px 25px 0 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5vh;
+    width: 100%;
+}
+
+.prepared_Certificate_header h4{
+    margin-bottom: 0 !important;
+    color: white !important;
+}
+
+.District{
+    color:#B5B7C0 !important;
+    
+}
+
+.span_tag{
+    margin-right: 78%;
+}
+
+.Upload{
+    margin-right: 60%;
+    width: 32%;
+}
+
+.mess{
+    margin-top: 4%;
+    width: 100%;
+    display: flex;
+}
+
+input[type="file"] {
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: var(--border-radius);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    line-height: calc(200%);
+    padding: 20px 1px;
+    position: relative;
+    outline: none;
+    margin-left:1%;
+  }
+  
+  input[type="file"]::file-selector-button {
+    background-color:#F56A3F;
+    color: var(--foreground-theme-overlay);
+    padding: 5px 15px;
+    border-radius: 10px;
+    position: absolute;
+    border: none;
+    outline: none;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    transition: all linear 0.1s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    content: 'Choose';
+  }
