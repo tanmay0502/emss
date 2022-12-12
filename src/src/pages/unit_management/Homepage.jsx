@@ -96,9 +96,7 @@ export default function HomePage() {
                                 modelId: v[0],
                                 modelStatus: v[1],
                                 modelType: v[2],
-                                modelLocation: v[3],
-                                modelRemark: v[4],
-                                modelTimeStamp: v[5]
+                                model_Id: v[3]
                             });
                         }); 
                     }
@@ -108,9 +106,7 @@ export default function HomePage() {
                                 modelId: v[0],
                                 modelStatus: v[1],
                                 modelType: v[2],
-                                modelLocation: v[3],
-                                modelRemark: v[4],
-                                modelTimeStamp: v[5]
+                                model_Id: v[3]
                             });
                         }); 
                     }
@@ -120,9 +116,7 @@ export default function HomePage() {
                                 modelId: v[0],
                                 modelStatus: v[1],
                                 modelType: v[2],
-                                modelLocation: v[3],
-                                modelRemark: v[4],
-                                modelTimeStamp: v[5]
+                                model_Id: v[3]
                             });
                         }); 
                     }
@@ -138,9 +132,7 @@ export default function HomePage() {
                                     modelId: o[0],
                                     modelStatus: o[1],
                                     modelType: o[2],
-                                    modelLocation: o[3],
-                                    modelRemark: o[4],
-                                    modelTimeStamp: o[5]
+                                    model_Id: o[3]
                                 });
                             });
                         }
@@ -152,9 +144,7 @@ export default function HomePage() {
                                 modelId: o[0],
                                 modelStatus: o[1],
                                 modelType: o[2],
-                                modelLocation: o[3],
-                                modelRemark: o[4],
-                                modelTimeStamp: o[5]
+                                model_Id: o[3]
                             });
                         });
                         sDat.push({
@@ -416,10 +406,44 @@ export default function HomePage() {
 
     let dataByStatus = statusData;
     let dataByUnitType = unitData;
-
+    const User_ID = sessionStorage.getItem("sessionToken");
+    const Role = User_ID.substring(8)
+    // const Role = "DEO"
  
 
     const rightArrow = ">";
+    const [flc, setflc] = useState([]);
+    async function getFLC() {
+
+        try {
+            const response = await fetch(
+                `${process.env.REACT_APP_API_SERVER}/unit/getflcdetail`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: 'include',
+                    mode: "cors"
+                }
+            );
+            const data = await response.json();
+            console.log(data)
+            if (response.status == 200) {
+                setflc(data['data']);
+            }
+
+        } catch (err) {
+            console.log({ err });
+        }
+    }
+
+    useEffect(() => {
+        getFLC();
+    }, []);
+
+
+
 
     function DisplayMachineCountByModel({val}) {
         return <div>{val.count!="0"?val.count+" "+val.model:"0"}</div>
@@ -500,8 +524,20 @@ export default function HomePage() {
             })
         }
         navigate('/session/unitmanagement/unitlist');
+
+        
       };
 
+      const Redirect = (e) => {
+        if (Role == "CEO") {
+            navigate("/session/unitmanagement/flc_list")
+        }
+        else if (Role == "DEO") {
+            navigate("/session/unitmanagement/schedule_flc")
+        }
+
+
+    };
     
 
 
@@ -614,18 +650,15 @@ export default function HomePage() {
                 </div>
 
                 <div className={styles.myCardSampleHover}
-                                    onClick={() => {
-                                        navigate(`/session/unitmanagement/flc_list`)
-                                    }}
-                >
+                    onClick={Redirect} >
                     <div className={styles.card_title}>
                         <span>FLC Scheduling</span>
                     </div>
                     <div className={styles.Box123}>
                         <div className="flex" >
-                            <div style={{ marginLeft: "5%", fontSize: "15px" }}> WareHouse ID  <div style={{ marginLeft: "25%", fontSize: "15px" }}> AA1122 </div> </div>
+                            <div style={{ marginLeft: "13%", fontSize: "15px" }}> District <div style={{ fontSize: "15px" }}> {flc[1]} </div> </div>
                             <div className={styles.Line} style={{ marginLeft: "12%" }}></div>
-                            <div style={{ marginLeft: "15%", fontSize: "15px" }}> Manufacturer <div style={{ marginLeft: "35%", fontSize: "15px" }}> ECIL </div></div>
+                            <div style={{ marginLeft: "15%", fontSize: "15px" }}> Manufacturer <div style={{ marginLeft: "35%", fontSize: "15px" }}> {flc[2]}  </div></div>
                         </div>
                     </div>
 
@@ -635,7 +668,7 @@ export default function HomePage() {
                                 <span>
                                     <span></span>
                                     Number Of Engineers
-                                    <span className="ml-6">132</span>
+                                    <span className="ml-6">{flc[6]} </span>
 
                                 </span>
                             </span>
@@ -650,7 +683,7 @@ export default function HomePage() {
                                     <span className="ml-4"></span>
                                     <span className="ml-4"></span>
                                     <span className="ml-4"></span>
-                                    <span className="ml-6">25-03-12</span>
+                                    <span className="ml-6">{flc[7] && flc[7].slice(0,10)} </span>
 
                                 </span>
                             </span>
@@ -665,7 +698,7 @@ export default function HomePage() {
                                     <span className="ml-4"></span>
                                     <span className="ml-4"></span>
                                     <span className="ml-4"></span>
-                                    <span className="ml-8">25-03-12</span>
+                                    <span className="ml-8">{flc[8] && flc[8].slice(0,10)} </span>
 
                                 </span>
                             </span>

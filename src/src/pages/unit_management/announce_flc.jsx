@@ -1,47 +1,18 @@
 import React, { useState, useEffect } from 'react'
 import { DynamicDataTable } from '@langleyfoxall/react-dynamic-data-table'
-import styles from './styles/ScheduleFlc.module.css'
-import Prepared_Certificate from './preparedness_certificate'
-import Modal from 'react-modal';
-import { AiOutlineArrowLeft } from 'react-icons/ai'
-import { useNavigate } from 'react-router-dom'
+import styles from './styles/announce_flc.module.css'
 
-function ScheduleFLC() {
 
-    const [modalIsOpen, setIsOpen] = React.useState(false);
-    const navigate = useNavigate()
-    function openModal() {
-        setIsOpen(true);
-    }
 
-    function afterOpenModal() {
-        // references are now sync'd and can be accessed.
-        //   subtitle.style.color = '#f00';
-    }
 
-    function closeModal() {
-        setIsOpen(false);
-    }
 
-    const customStyles = {
-        content: {
-            top: '50%',
-            left: '50%',
-            right: 'auto',
-            bottom: 'auto',
-            marginRight: '-50%',
-            transform: 'translate(-50%, -50%)',
-        },
-    };
+function Announce_Flc() {
 
     var currentdate = new Date();
     var hrs = currentdate.getHours();
     var mins = currentdate.getMinutes();
     var secs = currentdate.getSeconds();
-
-    const [Schedule, setSchedule] = useState(0);
-    const [flc, setflc] = useState(0);
-
+    const [District, setDistrict] = useState([])
 
     if (hrs < 10) {
         hrs = "0" + hrs;
@@ -60,51 +31,45 @@ function ScheduleFLC() {
 
     console.log(time)
 
-    async function getFLC() {
+    async function GetDistrict() {
 
         try {
             const response = await fetch(
-                `${process.env.REACT_APP_API_SERVER}/unit/getflcdetail`,
+                `${process.env.REACT_APP_API_SERVER}/user/getRealm`,
                 {
-                    method: "GET",
+                    method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    credentials: 'include',
-                    mode: "cors"
+                    credentials: 'same-origin',
                 }
             );
+
             const data = await response.json();
-            console.log(data)
+            console.log(data, "I am response");
+
             if (response.status == 200) {
-                setflc(data['data']);
+                setDistrict(data['dist'])
             }
 
         } catch (err) {
-            console.log({ err });
+            console.log(err);
         }
     }
 
     useEffect(() => {
-        getFLC();
+        GetDistrict();
     }, []);
 
 
-    const onFormSubmit = async (e) => {
-        e.preventDefault();
-        console.log("submit button clicked")
-    };
 
 
 
-    const [photoFileName, setPhotoFileName] = useState("")
-    const [photoFileData, setPhotoFileData] = useState("")
+    async function AnnounceFLC() {
 
-    async function UploadPhoto() {
-        setflag(1);
         try {
             const response = await fetch(
-                `${process.env.REACT_APP_API_SERVER}/unit/preparedness_certificate`,
+                `${process.env.REACT_APP_API_SERVER}/unit/flc_announce`,
                 {
                     method: "POST",
                     headers: {
@@ -112,55 +77,51 @@ function ScheduleFLC() {
                     },
                     credentials: 'include',
                     body: JSON.stringify({
-                        "flcID": Number(flc[0]),
-                        "filedata": photoFileData
+
+                        district: document.getElementById("1") ? document.getElementById("1").value : "",
+                        ManufacturerName: document.getElementById("3") ? document.getElementById("3").value : "",
+                        ManufacturerMobNo: document.getElementById("8") ? document.getElementById("8").value : "",
+                        ManufacturerEmailID: document.getElementById("7") ? document.getElementById("7").value : "",
+                        ECISupervisor: document.getElementById("4") ? document.getElementById("4").value : "",
+                        TentativeYear: document.getElementById("2") ? document.getElementById("2").value : "",
+                        TentativeMonth: document.getElementById("6") ? document.getElementById("6").value : "",
+                        ElectionType: document.getElementById("5") ? document.getElementById("5").value : "",
+
                     }),
-                    mode: "cors"
                 }
             );
             const data = await response.json();
-            console.log(data, "data")
-            if (response.status == 200) {
-                alert("Successfully Submitted File")
-            }
 
+            if (response.status === 200) {
+                document.getElementById("form").reset();
+                alert("Successful");
+                window.location.pathname = "/session/unitmanagement/flc_list";
+            } else {
+                alert("Failed!");
+            }
         } catch (err) {
-            console.log({ err });
+            console.log(err);
         }
     }
 
-    const [flag, setflag] = useState(0);
+    const onFormSubmit = async (e) => {
+        e.preventDefault();
+        console.log("submit button clicked")
+        AnnounceFLC();
+    };
 
-    console.log(photoFileData)
-
-
-        useEffect(() => {
-            if (flag == 0) {
-                if (photoFileData) {
-                    UploadPhoto()
-                }
-            }
-        }, [photoFileData]);
 
 
     return (
         <>
             <form onSubmit={onFormSubmit} id="form">
-                {flag == 1 && <button
-                    class={styles.backbutton}
-                    onClick={() => {
-                        navigate('/session/unitmanagement')
-                    }}
-                >
-                    <AiOutlineArrowLeft />
-                </button>}
                 <div className={styles.Schedule_container}>
                     <div className={styles.Schedule_header}>
-
                         <h4>
-                            Schedule FLC
+                            Announce FLC
                         </h4>
                     </div>
+
                     <div class={styles.parent}>
 
                         <div class={styles.div1}>
@@ -171,11 +132,9 @@ function ScheduleFLC() {
                                 id="1"
                                 className="selectBox"
                                 placeholder='Enter District'
-                                disabled
-                                defaultValue={flc[1]}
                             ></input>
                             {/* <select
-                                //   required={!isTemporary}
+                                disabled={District.length == 0 ? true : false}
                                 required
                                 name=""
                                 id="1"
@@ -185,6 +144,13 @@ function ScheduleFLC() {
                                 <option value="" disabled selected>
                                     Select District
                                 </option>
+                                {District.length > 0 && District.map((val) => (
+                                    <option value={val} >
+                                        {val}
+                                    </option>
+                                ))
+                                }
+
                             </select> */}
                         </div>
 
@@ -196,22 +162,21 @@ function ScheduleFLC() {
                                 id="2"
                                 className="selectBox"
                                 placeholder='Enter Year'
-                                disabled
-                                defaultValue={flc[9]}
                             ></input>
+
                         </div>
 
+
                         <div class={styles.div3}>
-                            <p> Manufacturer</p>
+                            <p> Manufacturer </p>
                             <input
                                 class={styles.input}
                                 type="text"
                                 id="3"
                                 className="selectBox"
                                 placeholder='Full Name'
-                                disabled
-                                defaultValue={flc[2]}
                             ></input>
+
                         </div>
 
                         <div class={styles.div4}>
@@ -221,33 +186,19 @@ function ScheduleFLC() {
                                 type="text"
                                 id="4"
                                 className="selectBox"
-                                placeholder='ECI Supervisor Name'
-                                disabled
-                                defaultValue={flc[5]}
+                                placeholder='Full Name'
                             ></input>
-
                         </div>
-
 
                         <div class={styles.div5}>
                             <p> Type of election</p>
-                            <input
-                                class={styles.input}
-                                type="text"
-                                id="5"
-                                className="selectBox"
-                                placeholder='Type of election'
-                                disabled
-                                defaultValue={flc[11]}
-                            ></input>
-                            {/* <select
+                            <select
                                 //   required={!isTemporary}
                                 required
                                 name=""
-                                id="6"
+                                id="5"
                                 className=" selectBox"
-                                disabled
-                                defaultValue={flc[9]}
+                            //   onChange={(e) => setRoleFunc(e.target.value)}
                             >
                                 <option value="" disabled selected>
                                     Select
@@ -261,21 +212,61 @@ function ScheduleFLC() {
                                 <option value="B">
                                     By elections
                                 </option>
-                            </select> */}
+                            </select>
                         </div>
 
                         <div class={styles.div6}>
                             <p>Tentative month of election</p>
-                            <input
-                                class={styles.input}
-                                type="text"
+                            <select
+                                required
+                                name=""
                                 id="6"
-                                className="selectBox"
-                                placeholder='Tentative month of election'
-                                disabled
-                                defaultValue={flc[10]}
-                            ></input>
+                                className=" selectBox"
+                            //   onChange={(e) => setRoleFunc(e.target.value)}
+                            >
+                                <option value="" disabled selected>
+                                    Select
+                                </option>
+                                <option value="January">
+                                    January
+                                </option>
+                                <option value="February">
+                                    February
+                                </option>
+                                <option value="March">
+                                    March
+                                </option>
+                                <option value="April">
+                                    April
+                                </option>
+                                <option value="May">
+                                    May
+                                </option>
+                                <option value="June">
+                                    June
+                                </option>
+                                <option value="July">
+                                    July
+                                </option>
+                                <option value="August">
+                                    August
+                                </option>
+                                <option value="September">
+                                    September
+                                </option>
+                                <option value="October">
+                                    October
+                                </option>
+                                <option value="November">
+                                    November
+                                </option>
+                                <option value="December">
+                                    December
+                                </option>
+
+                            </select>
                         </div>
+
 
                         <div class={styles.div7}>
                             <p>Manufacturer Email ID</p>
@@ -285,8 +276,6 @@ function ScheduleFLC() {
                                 id="7"
                                 className="selectBox"
                                 placeholder='xyz@example.com'
-                                disabled
-                                defaultValue={flc[4]}
                             ></input>
                         </div>
 
@@ -298,44 +287,16 @@ function ScheduleFLC() {
                                 id="8"
                                 className="selectBox"
                                 placeholder='Enter Number'
-                                disabled
-                                defaultValue={flc[3]}
                             ></input>
                         </div>
-                        {photoFileName !== "" &&
-                            <div class={styles.div9}>
-                                <p style={{ color: "white" }}>s </p>
-                                <button onClick={() => { openModal(); }}
-                                    style={{ padding: "10px", background: "white", color: "black", overflow: "hidden", display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-                                >  <u> View Preparedness Certificate </u>  </button>
-                            </div>
-                        }
+
                     </div>
+
                 </div>
-
-                <Modal
-                    isOpen={modalIsOpen}
-                    onAfterOpen={afterOpenModal}
-                    onRequestClose={closeModal}
-                    style={customStyles}
-                >
-                    <div id="root" className=''>
-                        <div className='flex justify-center items-center'>
-                            {<embed style={{ width: "600px", height: "600px", padding: "10px" }} src={`${photoFileData}`} />}
-                        </div>
-                        <button style={{ color: "white", }} onClick={closeModal}>Close</button>
-                    </div>
-                </Modal>
-                {
-                    photoFileName == "" &&
-                    <div style={{ marginTop: "2%" }}>
-                        <Prepared_Certificate setPhotoFileName={setPhotoFileName} setPhotoFileData={setPhotoFileData} photoFileName={photoFileName} photoFileData={photoFileData} />
-                    </div>
-                }
-
+                <button class={styles.submitBtn} type={"submit"} > Submit </button>
             </form>
         </>
     )
 }
 
-export default ScheduleFLC
+export default Announce_Flc
