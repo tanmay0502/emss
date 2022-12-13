@@ -6,6 +6,7 @@ import Card from './Card';
 import Popup from 'reactjs-popup';	
 import 'reactjs-popup/dist/index.css';	
 import ListCard from './ListCard';
+import statesCode from "../home/StatesCode";
 
 
 const uri = process.env.REACT_APP_API_SERVER+"/unit/total_counts?oprnd="
@@ -536,48 +537,7 @@ export default function HomePage() {
                                 )
                             })}
                     </table>
-                    </div>           
-
-
-                        {/* <table >
-                           <thead >
-                                <tr>
-                                    <th style={{ color: "#f56a3f", paddingLeft: "33px", textAlign: "left" }}>Units</th>
-                                    <th style={{ color: "#f56a3f", paddingLeft: "33px" }}>ECIL</th>
-                                    <th style={{ color: "#f56a3f", paddingLeft: "33px" }}>BEL</th>
-                                </tr>
-                            </thead>
-                            {dataByUnitType != [] && dataByUnitType.length > 0 &&
-                                dataByUnitType.map((val) => {
-                                    // console.log(val)
-                                    return (
-                                        <tbody >
-                                            <tr>
-                                                <td className="text-black text-sm" style={{ textAlign: "left" }}>
-                                            
-                                                    <div> <button name={val.unit_type} style={{backgroundColor: 'white'}} onClick={handleButtonClick}>{val.unit_type}</button></div>
-                                                
-                                                        
-                                              
-                                                </td>
-                                                <td className="text-black text-sm mr-2 pl-5">
-                                                    {val.ECIL.map((val,ind)=>{
-                                                        return(
-                                                            <DisplayMachineCountByModel val={val}/>
-                                                        )})}
-                                                </td>
-                                                <td className="text-black text-sm pl-7">
-                                                {val.BEL.map((val,ind)=>{
-                                                        return(
-                                                            <DisplayMachineCountByModel val={val}/>
-                                                        )})}
-                                                </td>
-                                                </tr>
-                                                </tbody>
-                                                )
-                                            })}
-                        </table> */}
-                    {/* </div> */}
+                    </div>
                 </div>
 
                 <div className={styles.myCardSampleHover}
