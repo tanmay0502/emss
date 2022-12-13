@@ -1,6 +1,6 @@
 import React from "react";
 import DynamicDataTable from "@langleyfoxall/react-dynamic-data-table";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom'
 
 import styles from './styles/order.module.css';
@@ -16,51 +16,109 @@ export default function OrderList() {
     const [isDetail, setIsDetail] = useState(0);
     const [tableFilter, setTableFilter] = useState("");
 
+
     const sortMapping = {
         "None": null,
         "Request ID": "Request ID",
         "Registration Date": "Registration Date",
         "Last Action Date": "Last Action Date",
     }
-    const row1 = {
-        'Order Id': 'XYZ/20',
-        'Referenced Order ID': "--",
-        "Creator User ID": 'IL00000ECI-Admin',
-        "Order Status": 'Order Generated',
-        "Source": 'MH',
-        "Destination": 'CH',
-        "Type": 'ITRS',
-        'Item': <div className="item_col">
-            <span className="table_btn">50 CU</span>
-            <div className="item_details">
-                <p>Manufacturer : ECIL</p>
-                <p>Item Model : M12</p>
-                <p>Item Quantity : 8</p>
-            </div>
-        </div>,
-        'Timestamp': '22-09-2021'
+    const UserId = window.sessionStorage.getItem('sessionToken');
+    async function getOrders() {
+        try {
+            const response = await fetch(
+                `${process.env.REACT_APP_API_SERVER}/order/list_orders/`,
+                // `${process.env.REACT_APP_API_SERVER}/order/list_orders/CH01001DEO`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    mode: "cors"
+                }
+            );
+            const data2 = await response.json();
+            console.log(data2)
+            if (data2["status"] != 404)
+                setData(data2["data"])
+        } catch (err) {
+            console.log(err);
+        }
     }
-    const row2 = {
-        'Order Id': 'O24',
-        'Referenced Order ID': "XYZ/20",
-        "Creator User ID": 'IL00000ECI-Admin',
-        "Order Status": 'Order Generated',
-        "Source": 'MH',
-        "Destination": 'CH',
-        "Type": 'ITRS',
-        'Item': <div className="item_col">
-            <span className="table_btn">50 CU</span>
-            <div className="item_details">
-                <p>Manufacturer : ECIL</p>
-                <p>Item Model : M12</p>
-                <p>Item Quantity : 8</p>
-            </div>
-        </div>,
-        'Timestamp': '22-09-2021'
-    }
-    const data = [row1, row2];
-    const data1 = [row1, row2, row1];
 
+    const [data, setData] = useState([
+        {
+            "orderid": "ECI/M/DL000MP000/12122022/0003:__1",
+            "referenceorderid": "ECI/M/DL000MP000/12122022/0003",
+            "creatoruserid": "MP000000CEO",
+            "orderstatus": "RC",
+            "manufacturer": "BEL",
+            "source": "DL",
+            "destination": "MP",
+            "type": "ITRS",
+            "item": "VVPAT",
+            "itemmodel": "M3",
+            "itemquantity": "1000",
+            "timestamp": "2022-12-12T17:52:31.507353"
+        },
+        {
+            "orderid": "ECI/M/DL000MP000/12122022/0003:__2",
+            "referenceorderid": "ECI/M/DL000MP000/12122022/0003",
+            "creatoruserid": "MP000000CEO",
+            "orderstatus": "RC",
+            "manufacturer": "BEL",
+            "source": "DL",
+            "destination": "MP",
+            "type": "ITRS",
+            "item": "CU",
+            "itemmodel": "M3",
+            "itemquantity": "1000",
+            "timestamp": "2022-12-12T17:52:31.507353"
+        }  
+    ]);
+    const [tableData, setTableData] = useState([]);
+
+    useEffect(() => {
+        console.log(data)
+        if (data) {
+            console.log(data)
+            const tmp = [...new Set(data.map((val) => {
+                if (1) {
+                    return JSON.stringify({
+                        'displayID': val['orderid'].split(':__')[0],
+                        'type': val['type'],
+                        'creatoruserid': val['creatoruserid'],
+                        'orderstatus': val['orderstatus'] == 'OC' ? 'Completed' : 'Pending',
+                        'timestamp': new Date(val['timestamp']).toLocaleDateString('en-us', { year: "numeric", month: "short", day: "numeric", hour: 'numeric', minute: 'numeric' })
+                    })
+                }
+                else {
+                    return null
+                }
+            }).filter(val => val))]
+
+            setTableData(tmp.map(val => JSON.parse(val)))
+        }
+
+        return () => {
+
+        }
+    }, [data])
+
+
+    useEffect(() => {
+        getOrders();
+
+        return () => {
+
+        }
+    }, [])
+
+    // const Table = [
+    //     <Collapse orderId='XYZ/20' data={data} time='22-09-2021' />,
+    //     <Collapse orderId='XYZ/12' data={data} time='12-12-2021' />,
+    //     <Collapse orderId='XYZ/14' data={data1} time='2-05-2021' bottom={true} />
+    // ]
     // const Table = [
     //     <Collapse orderId='XYZ/20' data={data} time='22-09-2021' />,
     //     <Collapse orderId='XYZ/12' data={data} time='12-12-2021' />,
@@ -68,7 +126,7 @@ export default function OrderList() {
     // ]
 
     return (
-        <div className={`${styles.myWrapper1}`} style={{ position: "relative", height: "100%" }}>
+         <div className={`${styles.myWrapper1}`} style={{ position: "relative", height: "100%" }}>
             {isDetail == 0 ? <div className='MainHeader pd-5 ' style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between", "alignItems": "center" }}>
                 <h4 className='text-white'>Order List</h4>
                 <div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center" }}>
@@ -86,9 +144,9 @@ export default function OrderList() {
                             style={{ textAlign: "center", outline: "none", background: "transparent", padding: "0px", border: "none" }}
                             onChange={(e) => setSortBy(e.target.value)}>
                             <option value={"None"}>Default</option>
-                            <option value={"Order ID"}>Request ID</option>
+                            {/* <option value={"Order ID"}>Request ID</option>
                             <option value={"Registration Date"}>Registration Date</option>
-                            <option value={"Logged by"}>Logged by</option>
+                            <option value={"Logged by"}>Logged by</option> */}
                         </select>
                         <ChevronDown />
                         <button className='sortOrderButton' onClick={() => {
@@ -99,14 +157,41 @@ export default function OrderList() {
                     </div>
                 </div>
             </div> : <></>}
-            {isDetail == 0 ? 
-            <DynamicDataTable 
-                rows={data}
-                buttons={[]} 
-                onClick={(event, row) => {
-                    navigate(`/session/ordermanagement/orderdetails`)
-                }}
-                />
+            {isDetail == 0 ?
+                <div className={styles.Scroll}>
+                    <DynamicDataTable
+                        rows={tableData}
+                        buttons={[]}
+                        fieldMap={
+                            {
+                                'displayID': 'Order ID',
+                                'creatoruserid': 'Creator User ID',
+                                'itemquantity': 'Quantity',
+                                orderstatus: 'Status',
+                            }
+                        }
+                        fieldsToExclude={['orderID', 'manufacturer', 'item', 'itemmodel', 'referenceorderid', 'itemquantity', 'source', 'destination']}
+                        fieldOrder={[
+                            'displayID', 'creatoruserid', 'timestamp', 'type', 'status'
+                        ]}
+                        onClick={(event, row) => {
+                            let passingID = "";
+                            const id=row["displayID"];
+                            console.log(id.lenght);
+                            for(let i=0;i<id.length;i++){
+                                // console.log(id[i])
+                                if(id[i]=='/'){
+                                    passingID+='-';
+                                }
+                                else{
+                                    passingID+=id[i];
+                                }
+                            }
+                            console.log(passingID)
+                            navigate("/session/ordermanagement/orderdetails/" + passingID)
+                        }}
+                    />
+                </div>
                 : ''
             }
         </div>

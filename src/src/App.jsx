@@ -15,7 +15,7 @@ import HomePage from './pages/unit_management/Homepage'
 import Login from './pages/login/Login';
 import Routed from './Router';
 import { useEffect, useState } from 'react';
-import WarehouseDetails from './pages/warehouse_management/WarehouseDetails';
+import WarehouseDetail from './pages/warehouse_management/WarehouseDetail';
 import CreateIssue from './pages/issue_request_management/CreateIssue';
 import Profile from './components/Profile';
 import ViewRequest from './pages/issue_request_management/ViewRequest';
@@ -45,6 +45,8 @@ import EditTna from './pages/unit_management/EditTna';
 import EditElection from './pages/unit_management/EditElection';
 import HomePageUnit from './pages/unit_management/Homepage';
 import Announce_Flc from './pages/unit_management/announce_flc'
+import FillDemand from './pages/order_management/FillDemand';
+import FillAvailability from './pages/order_management/FillAvailability';
 function App() {
 
   const [sessionState, setSessionState] = useState({
@@ -55,7 +57,7 @@ function App() {
     userImage: null
   })
 
-	return (
+  return (
     <>
       <BrowserRouter>
         <Routes>
@@ -82,6 +84,10 @@ function App() {
             <Route
               path="/session/usermanagement/createuser"
               element={<CreateUser />}
+            />
+            <Route
+              path="/session/usermanagement/edituser/:userid"
+              element={<EditUser />}
             />
             <Route
               path="/session/usermanagement/edituser/:userid"
@@ -185,7 +191,7 @@ function App() {
             />
             <Route
               path="/session/warehousemanagement/warehousedetails/:id"
-              element={<WarehouseDetails />}
+              element={<WarehouseDetail />}
             />
             <Route
               path="/session/warehousemanagement/modifywarehouse/:id"
@@ -222,14 +228,16 @@ function App() {
               path="/session/ordermanagement/ordertypes"
               element={<OrderTypes />}
             />
+            
             <Route
-              path="/session/ordermanagement/orderdetails"
+              path="/session/ordermanagement/orderdetails/:orderID"
               element={<ViewOrderDetails />}
             />
-            <Route
+           <Route
               path="/session/ordermanagement/createorder/generateorder/:orderType"
               element={<GenerateOrder />}
             />
+           
             <Route
               path="/session/services"
               element={<>Other Services</>}

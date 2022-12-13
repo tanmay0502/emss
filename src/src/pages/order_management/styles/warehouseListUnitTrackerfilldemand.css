@@ -1,0 +1,21 @@
+.FILL_INPUT{
+	padding: 10px 15px !important;
+	height: 40px !important;
+	width: 40% !important;
+	outline: none;
+	border: 2px solid #84587C;
+	border-radius: var(--border-radius) !important;
+	font-size: 0.8em;
+	margin-right: 10px;
+	transition: all linear 0.2s;
+	margin-bottom: 2%;
+}
+
+.Scroll{
+	border: none;
+    padding: 5px;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+}
