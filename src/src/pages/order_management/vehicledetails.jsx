@@ -1,7 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import "./styles/order.css";
-import Group from "./Group";
 import "../home/styles/Newversion.css";
 import { Fragment } from 'react';
 import { FaCircle } from 'react-icons/fa'
@@ -68,11 +67,11 @@ export default function VehicleDetails() {
                                 <div className="block bg-white pt-2 pl-10 pr-10 pb-5 rounded-lg mb-10">
                                     <div>
                                         <div className="d-flex d-flex-apart" style={{ marginTop: "18px", marginLeft: "15px" }}>
-                                            <Group
+                                            {/* <Group
                                                 LabelText="Order ID"
                                                 value="OM12993455"
                                                 className="myFont"
-                                            />
+                                            /> */}
                                         </div>
                                         
                                     </div>
@@ -83,15 +82,15 @@ export default function VehicleDetails() {
                                         >
                                             <div className="d-flex">
                                                 <SourceIcon />
-                                                <Group LabelText="Source" value="CG01A2" />
+                                                {/* <Group LabelText="Source" value="CG01A2" /> */}
                                             </div>
                                             <div className="d-flex" style={{ marginRight: "30px" }}>
                                                 <DestIcon />
-                                                <Group
+                                                {/* <Group
                                                     LabelText="Destination"
                                                     value="DL02D1"
                                                     custom={true}
-                                                />
+                                                /> */}
                                             </div>
                                         </div>
                                         <div className="box1">

@@ -50,5 +50,3 @@ function SubOrder(props) {
 }
 
 export default SubOrder
-
-export default SubOrder

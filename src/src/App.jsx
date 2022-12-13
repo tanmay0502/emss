@@ -6,7 +6,6 @@ import ActionIssue from './pages/issue_request_management/ActionIssue';
 import IssueList from './pages/issue_request_management/Requestlist'
 import CreateUser from './pages/user_management/CreateUser';
 import EditUser from './pages/user_management/EditUser';
-import EditUser from './pages/user_management/EditUser';
 import Home1 from './pages/home/Home1';
 import ManageUsers from './pages/user_management/ManageUsers';
 import WarehouseManagement from './pages/warehouse_management/WarehouseManagement'
@@ -23,7 +22,6 @@ import ViewRequest from './pages/issue_request_management/ViewRequest';
 import OrderManagement from './pages/order_management/OrderManagement';
 import OrderTypes from './pages/order_management/OrderTypes';
 import GenerateOrder from './pages/order_management/GenarateOrder';
-import ViewOrderDetails from './pages/order_management/ViewOrderDetails';
 import ViewOrderDetails from './pages/order_management/ViewOrderDetails';
 import EditView from './pages/home/EditView';
 import UnitList from './pages/unit_management/UnitList';

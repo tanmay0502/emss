@@ -29,4 +29,3 @@ function UnitTrackerTable(props) {
 }
 
 export default UnitTrackerTable
-export default UnitTrackerTable

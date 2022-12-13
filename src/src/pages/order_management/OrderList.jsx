@@ -9,9 +9,7 @@ import { ReactComponent as SearchInputElement } from '../../assets/searchInputIc
 import { ReactComponent as ChevronDown } from '../../assets/ChevronDown.svg';
 
 export default function OrderList() {
-export default function OrderList() {
 
-    const navigate = useNavigate()
     const navigate = useNavigate()
     const [sortOrder, setSortOrder] = useState("asc");
     const [sortBy, setSortBy] = useState("None");
@@ -128,12 +126,9 @@ export default function OrderList() {
     // ]
 
     return (
-        <div className={`${styles.myWrapper1}`} style={{ position: "relative", height: "100%" }}>
-            {isDetail == 0 ? <div className='MainHeader pd-5 ' style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between", "alignItems": "center" }}>
-        <div className={`${styles.myWrapper1}`} style={{ position: "relative", height: "100%" }}>
+         <div className={`${styles.myWrapper1}`} style={{ position: "relative", height: "100%" }}>
             {isDetail == 0 ? <div className='MainHeader pd-5 ' style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between", "alignItems": "center" }}>
                 <h4 className='text-white'>Order List</h4>
-                <div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center" }}>
                 <div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center" }}>
                     <button className='createRequestBtn' onClick={() => {
                         window.location.pathname = "/session/ordermanagement/ordertypes";
