@@ -164,8 +164,19 @@ function Home1() {
 	},[fetchData])
 
 
-	const handleClose = () => setIndiaMap(1);
-	const handleOpen = () => setIndiaMap(0);
+	const handleClose = () => {
+		setIndiaMap(1);
+		document.getElementById("statesDropdownHome").selectedIndex = "0";
+	}
+	const handleOpen = () => {
+		setIndiaMap(0);
+		for (let i = 0; i < statesCode.length; i++) {
+			const ele = statesCode[i];
+			if(ele.state===content2){
+				document.getElementById("statesDropdownHome").selectedIndex = i+1;
+			}
+		}
+	}
 
 
 
@@ -258,17 +269,17 @@ function Home1() {
 
 			<div className='w-100 gridCustom  pb-10'>
 				{otherElements.includes("District") && <div className="myCardSample" style={{padding:"15px 30px 0"}}>
-					{/* {stateID==="IN"?<><div className="card_title">
-						State
-					</div>
-					<select name="" id="">
-					<option value="none" selected disabled hidden>Select State</option>
+					{stateID==="IN"?<><label className="card_title">
+						Select State:
+					</label>
+					<select name="" id="statesDropdownHome">
+					<option>{"none"}</option>
 						{statesCode.map((val, ind)=>{
 							return(
 								<option onClick={()=>{setSTName(val.state);setIndiaMap(0);show2();setContent2(val.state)}}>{val.state}</option>
 							)
 						})}
-					</select></>:""} */}
+					</select></>:""}
 
 					<div style={{ height: '75%', overflow: 'hidden' }}>
 						<span className="heading" style={{ maxWidth: "100%", display: "block", "textOverflow": "ellipsis", "whiteSpace": "nowrap" }}> {"India:" + content2 }</span>
