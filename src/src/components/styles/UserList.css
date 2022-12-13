@@ -86,7 +86,7 @@
 }
 
 .users-table td:first-child, .users-table td:nth-child(3){
-	text-align: left;
+	/* text-align: left; */
 	width: max-content;
 }
 

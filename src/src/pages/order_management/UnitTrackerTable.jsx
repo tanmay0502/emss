@@ -18,14 +18,15 @@ function UnitTrackerTable(props) {
             'Left Out': 69
         }
     ]
-  return (
-    <div className={styles.unitTrackerTable}>
-        <div className={styles.unitTrackerTableHeader}>
-            <h4>{props.title}</h4>
+    return (
+        <div className={styles.unitTrackerTable}>
+            <div className={styles.unitTrackerTableHeader}>
+                <h4>{props.title}</h4>
+            </div>
+            <DynamicDataTable className={styles.unitTrackerTableContainer} rows={data} buttons={[]} />
         </div>
-        <DynamicDataTable className={styles.unitTrackerTableContainer} rows={data} buttons={[]} />
-    </div>
-  )
+    )
 }
 
+export default UnitTrackerTable
 export default UnitTrackerTable

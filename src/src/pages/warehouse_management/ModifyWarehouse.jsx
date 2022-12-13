@@ -24,7 +24,7 @@ export default function ModifyWarehouse() {
   const [Lng, setLng] = useState("");
   const [userId1, setUserId1] = useState("");
   const [userId2, setUserId2] = useState("");
-  const [doubleLockSystem, setDoubleLockSystem] = useState(true);
+  const [doubleLockSystem, setDoubleLockSystem] = useState("");
   const [WarehouseDetails, setWarehousDetails] = useState([]);
   //Form filed states end....
 
@@ -147,249 +147,225 @@ export default function ModifyWarehouse() {
 
 
   return (
-    <div className="flex-col justify-center align-middle">
-      {/* <div className="content-path">
-        <WarehouseManagementIcon />
-        <a href="/session/warehousemanagement">
-          <span>Warehouse Management</span>
-        </a>
-        <ChevronRightIcon />
-        <span>Modify Warehouse Details</span>
-      </div> */}
+    // <div className="flex-col justify-center align-middle">
+    // <div className="myWrapper">
+    <div>
+      <div className="PageTitle" style={{ marginLeft: '1%' }}>
+        <h4>
+          <button
+            className="flex justify-center rounded-full aspect-square "
+            onClick={() => {
+              navigate('/session/warehousemanagement')
+            }}
+            style={{ "background": "#84587C", color: "white" }}
+          >
+            <AiOutlineArrowLeft />
+          </button>
+          <FaWarehouse />
+          <span>Modify Warehouse Details - {WarehouseId}</span>
+        </h4>
+      </div>
 
-      <div className="myWrapper">
-        {/* <div className="PageTitle">
-          <h4>
-            <FaWarehouse />
-            <span>Modify Warehouse Details - {WarehouseId}</span>
-          </h4>
-        </div> */}
-        <div className="PageTitle" style={{ marginLeft: '1%' }}>
-          <h4>
-            <button
-              className="flex justify-center rounded-full aspect-square "
-              onClick={() => {
-                navigate('/session/warehousemanagement')
+      <form
+        id="create-warehouse-form"
+        className="myForm"
+        onSubmit={onFormSubmit}
+      >
+        <div className="">
+          <div class="warehouse-type">
+            <div
+              className="input_group"
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gridGap: "5px 30px",
               }}
-              style={{ "background": "#84587C", color: "white" }}
             >
-              <AiOutlineArrowLeft />
-            </button>
-            <FaWarehouse />
-            <span>Modify Warehouse Details - {WarehouseId}</span>
-          </h4>
-        </div>
-        <form
-          id="create-warehouse-form"
-          className="myForm"
-          onSubmit={onFormSubmit}
-        >
-          <div className="form_Grid">
-            <div class="warehouse-type">
-              <h5>Warehouse Type</h5>
-              <div
-                className="input_group"
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr",
-                  gridGap: "5px 15px",
-                }}
-              >
-
-                <div className="form_group">
-                  <div className="form_label">
-                    <label htmlFor="">Building Type : </label>
-                  </div>
-                  <div className="form_select">
-                    <select
-                      required
-                      name=""
-                      id="input_buildingtype"
-                      onChange={(e) => setBuildingType(e.target.value)}
-                    >
-                      <option value="P" selected={BuildingType == "P" ? true : false}>Permanent</option>
-                      <option value="T" selected={BuildingType == "T" ? true : false}>Temporary</option>
-                    </select>
-                    <div className="input_icon">
-                      <FaRegBuilding size="1em" />
-                    </div>
-                  </div>
+              <div className="form_group">
+                <div className="form_label">
+                  <label htmlFor="">Building Type</label>
                 </div>
-
-                <div className="form_group">
-                  <div className="form_label">
-                    <label htmlFor="">Sealed : </label>
-                  </div>
-                  <div className="form_select">
-                    <select
-                      required
-                      name=""
-                      id="input_sealed"
-                      onChange={(e) => setisSealed(e.target.value)}
-                    >
-                      <option value="I">Yes</option>
-                      <option value="A">No</option>
-                    </select>
-                    <div className="input_icon">
-                      <BsShieldLockFill size="1em" />
-                    </div>
+                <div className="form_select">
+                  <select
+                    required
+                    name=""
+                    id="input_buildingtype"
+                    onChange={(e) => setBuildingType(e.target.value)}
+                  >
+                    <option value="P" selected={BuildingType == "P" ? true : false}>Permanent</option>
+                    <option value="T" selected={BuildingType == "T" ? true : false}>Temporary</option>
+                  </select>
+                  <div className="input_icon">
+                    <FaRegBuilding size="1em" />
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="warehouse-location" style={{ gridArea: '3 / 1 / 4 / 3' }}>
-              <h5>Warehouse Location</h5>
-              <div className="input_group">
-                <div
-                  className="form_group"
-                  style={{ gridArea: "1 / 1 / 2 / 3" }}
-                >
-                  <div className="form_label">
-                    <label htmlFor="">Address : </label>
-                  </div>
-                  <div className="form_input">
-                    <input
-                      required
-                      id="input_address"
-                      name=""
-                      className=""
-                      placeholder="Warehouse Address"
-                      onChange={(e) => setAddress(e.target.value)}
-                      value={Address}
-                    />
-                    <div className="input_icon">
-                      <FaMapMarkedAlt size="1em" />
-                    </div>
-                  </div>
-                </div>
 
-                <div className="form_group">
-                  <div className="form_label">
-                    <label htmlFor="">Latitude : </label>
-                  </div>
-                  <div className="form_input">
-                    <input
-                      required
-                      type={"number"}
-                      step="any"
-                      id="input_lat"
-                      name=""
-                      className=""
-                      placeholder="Latitude"
-                      onChange={(e) => setLat(e.target.value)}
-                      value={Lat}
-                    />
-                    <div className="input_icon">
-                      <FaLaptopHouse size="1em" />
-                    </div>
-                  </div>
+              <div className="form_group">
+                <div className="form_label">
+                  <label htmlFor="">Sealed</label>
                 </div>
-
-                <div className="form_group">
-                  <div className="form_label">
-                    <label htmlFor="">Longitude : </label>
-                  </div>
-                  <div className="form_input">
-                    <input
-                      required
-                      id="input_lng"
-                      type={"number"}
-                      step="any"
-                      name=""
-                      className=""
-                      placeholder="Longitude"
-                      onChange={(e) => setLng(e.target.value)}
-                      value={Lng}
-                    />
-                    <div className="input_icon">
-                      <FaLaptopHouse size="1em" />
-                    </div>
+                <div className="form_select">
+                  <select
+                    required
+                    name=""
+                    id="input_sealed"
+                    onChange={(e) => setisSealed(e.target.value)}
+                  >
+                    <option value="I">Yes</option>
+                    <option value="A">No</option>
+                  </select>
+                  <div className="input_icon">
+                    <BsShieldLockFill size="1em" />
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="warehouse-personnel">
-              <h5>Warehouse Personnel Details</h5>
-              <div className="input_group three-column-grid">
-                <div
-                  className="form_group"
-                  style={{ gridArea: "1 / 1 / 2 / 4" }}
-                >
-                  <div className="form_radio">
-                    <label htmlFor="double_lock_yes">
-                      Double Lock System:{" "}
-                    </label>
-                    <label htmlFor="double_lock_yes">Yes </label>
-                    <input
-                      type={"radio"}
-                      name="double_lock"
-                      id="double_lock_yes"
-                      value={true}
-                      onChange={(e) => {
-                        setDoubleLockSystem(true);
-                      }}
-                      checked={doubleLockSystem === true ? true : false}
-                    />
-                    <label htmlFor="double_lock_no">No </label>
-                    <input
-                      type={"radio"}
-                      name="double_lock"
-                      id="double_lock_no"
-                      onChange={(e) => {
-                        setDoubleLockSystem(false);
-                      }}
-                      value={false}
-                      checked={doubleLockSystem === false ? true : false}
-                    />
+              <div className="form_group">
+                <div className="form_label">
+                  <label htmlFor="">Latitude</label>
+                </div>
+                <div className="form_input">
+                  <input
+                    required
+                    type={"number"}
+                    step="any"
+                    id="input_lat"
+                    name=""
+                    className=""
+                    placeholder="Latitude"
+                    onChange={(e) => setLat(e.target.value)}
+                    value={Lat}
+                  />
+                  <div className="input_icon">
+                    <FaLaptopHouse size="1em" />
                   </div>
                 </div>
-                <div className="form_group">
-                  <div className="form_label" style={{ width: '20%' }}>
-                    <label htmlFor="">Personnel 1 ID : </label>
-                  </div>
-                  <div className="form_input">
-                    <input
-                      required
-                      placeholder="AA000000RRRRR"
-                      id="input_personName_1"
-                      name=""
-                      onChange={(e) => setUserId1(e.target.value)}
-                      value={userId1}
-                    />
-                    <div className="input_icon">
-                      <BsFillPersonFill size="1em" />
-                    </div>
+              </div>
+
+              <div className="form_group">
+                <div className="form_label">
+                  <label htmlFor="">Longitude</label>
+                </div>
+                <div className="form_input">
+                  <input
+                    required
+                    id="input_lng"
+                    type={"number"}
+                    step="any"
+                    name=""
+                    className=""
+                    placeholder="Longitude"
+                    onChange={(e) => setLng(e.target.value)}
+                    value={Lng}
+                  />
+                  <div className="input_icon">
+                    <FaLaptopHouse size="1em" />
                   </div>
                 </div>
-
-
-                <div className="form_group" hidden={!doubleLockSystem}>
-                  <div className="form_label" style={{ width: '20%' }}>
-                    <label htmlFor="">Personnel 2 ID : </label>
-                  </div>
-                  <div className="form_input">
-                    <input
-                      required={doubleLockSystem}
-                      placeholder="AA000000RRRRR"
-                      id="input_personName_2"
-                      name=""
-                      onChange={(e) => setUserId2(e.target.value)}
-                      value={userId2}
-                    />
-                    <div className="input_icon">
-                      <BsFillPersonFill size="1em" />
-                    </div>
+              </div>
+              <div className="form_group">
+                <div className="form_label">
+                  <label htmlFor="">Address</label>
+                </div>
+                <div className="form_input">
+                  <input
+                    required
+                    id="input_address"
+                    name=""
+                    className=""
+                    onChange={(e) => setAddress(e.target.value)}
+                    value={Address}
+                    placeholder="Warehouse Address"
+                  />
+                  <div className="input_icon">
+                    <FaMapMarkedAlt size="1em" />
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          <center>
-            <input type={"submit"} className="mySubmit" value={"Submit Changes"}>
-            </input>
-          </center>
-        </form>
-      </div>
+          <div class="warehouse-personnel">
+            <div className="input_group three-column-grid">
+              <div
+                className="form_group"
+                style={{ gridArea: "1 / 1 / 2 / 3", textAlign: "center" }}
+              >
+                <div className="form_radio">
+                  <label htmlFor="double_lock_yes">
+                    Double Lock System:{" "}
+                  </label>
+                  <label htmlFor="double_lock_yes">Yes </label>
+                  <input
+                    type={"radio"}
+                    name="double_lock"
+                    id="double_lock_yes"
+                    // defaultChecked={true}
+                    value="1"
+                    onChange={(e) => {
+                      setDoubleLockSystem(true);
+                    }}
+                    checked={doubleLockSystem === true ? true : false}
+                  />
+                  <label htmlFor="double_lock_no">No </label>
+                  <input
+                    type={"radio"}
+                    name="double_lock"
+                    id="double_lock_no"
+                    value="0"
+                    onChange={(e) => {
+                      setDoubleLockSystem(false);
+                    }}
+                  />
+                </div>
+              </div>
+              <div className="form_group">
+                <div className="form_label">
+                  <label htmlFor="">User ID of First Key Holder</label>
+                </div>
+                <div className="form_input">
+                  <input
+                    required
+                    placeholder="AA000000RRRRR"
+                    id="input_personName_1"
+                    name=""
+                    onChange={(e) => setUserId1(e.target.value)}
+                    value={userId1}
+                  />
+                  <div className="input_icon">
+                    <BsFillPersonFill size="1em" />
+                  </div>
+                </div>
+              </div>
+
+              <div className="form_group" hidden={!doubleLockSystem}>
+                <div className="form_label">
+                  <label htmlFor="">User ID of Second Key Holder</label>
+                </div>
+                <div className="form_input">
+                  <input
+                    required={doubleLockSystem}
+                    placeholder="AA000000RRRRR"
+                    id="input_personName_2"
+                    name=""
+                    onChange={(e) => setUserId2(e.target.value)}
+                    value={userId2}
+                  />
+                  <div className="input_icon">
+                    <BsFillPersonFill size="1em" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <center>
+          <input type={"submit"} className="mySubmit">
+          </input>
+        </center>
+      </form>
     </div>
   );
 }
+
+
+

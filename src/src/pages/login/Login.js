@@ -654,6 +654,7 @@ const Login = () => {
 			);
 			const data2 = await response.json();
 			// console.log(data2["token"], "hehgegiugigfk");
+			console.log(response)
 			if (response.status === 200) {
 				// window.localStorage.setItem("token",JSON.stringify(data2["token"]));
 				// document.cookie = "username=John Ricks"
