@@ -205,7 +205,7 @@ function OrderActions(props) {
                                 }} >
                                     Optimal Allocation
                                 </button>
-                                <button disabled={f4}  className={`${f4==0 ? 'bg-gray-400' : 'bg-orange-500'}`}  onClick={() => {
+                                <button disabled={!f4}  className={`${f4==0 ? 'bg-gray-400' : 'bg-orange-500'}`}  onClick={() => {
                                     setAction(renderAction(2))
                                 }} >
                                     Vehicle Details

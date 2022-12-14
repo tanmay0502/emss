@@ -59,7 +59,7 @@ export default function ViewOrderDetails() {
   
   useEffect(() => {
     let orderBy_Id = {}
-    if (flag == 0 && allOrders != []) {
+    if (flag == 0 && allOrders != [] && allOrders) {
       setOrder([]);
       let myorder={
         units:[]
@@ -101,8 +101,8 @@ export default function ViewOrderDetails() {
       {
         flag == 1 &&
         <>
-          <UnitDescription Order={allOrders} OrderID={orderID} />
-          <OrderActions Order={allOrders} OrderID={orderID}/>
+          {allOrders && <UnitDescription Order={allOrders} OrderID={orderID} />}
+          {allOrders && <OrderActions Order={allOrders} OrderID={orderID}/>}
         </>
       }
     </div >
