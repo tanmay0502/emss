@@ -6,7 +6,7 @@ import OrderActions from "./OrderActions";
 
 export default function ViewOrderDetails() {
   const OrderID = useParams();
-  console.log(OrderID["orderID"], "Orderid")
+  // console.log(OrderID["orderID"], "Orderid")
   const id=OrderID["orderID"];
   let orderID="";
   for(let i=0;i<id.length;i++){
@@ -16,76 +16,51 @@ export default function ViewOrderDetails() {
     else
     orderID+=id[i];
   }
-  console.log(orderID)
+  // console.log(orderID)
 
 
   const [Order, setOrder] = useState([]);
-  const [allOrders, setAllOrders] = useState([ {
-    "orderid": "ECI/M/DL000MP000/12122022/0003:__1",
-    "referenceorderid": "ECI/M/DL000MP000/12122022/0003",
-    "creatoruserid": "MP000000CEO",
-    "orderstatus": "RC",
-    "manufacturer": "BEL",
-    "source": "DL",
-    "destination": "MP",
-    "type": "ITRS",
-    "item": "VVPAT",
-    "itemmodel": "M3",
-    "itemquantity": "1000",
-    "timestamp": "2022-12-12T17:52:31.507353"
-},
-{
-    "orderid": "ECI/M/DL000MP000/12122022/0003:__2",
-    "referenceorderid": "ECI/M/DL000MP000/12122022/0003",
-    "creatoruserid": "MP000000CEO",
-    "orderstatus": "RC",
-    "manufacturer": "BEL",
-    "source": "DL",
-    "destination": "MP",
-    "type": "ITRS",
-    "item": "CU",
-    "itemmodel": "M3",
-    "itemquantity": "1000",
-    "timestamp": "2022-12-12T17:52:31.507353"
-}]);
+  const [allOrders, setAllOrders] = useState([]);
   const [isPageLoaded, setIsPageLoaded] = useState(0);
   const [orderById, setOrderById] = useState({});
   const [orderDetailPage, setOrderDetailPage] = useState("-1");
   const UserId = window.sessionStorage.getItem('sessionToken');
   const [flag, setFlag] = useState(0);
 
-  async function getOrders() {
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_SERVER}/order/list_orders/`,
-        // `${process.env.REACT_APP_API_SERVER}/order/list_orders/CH01001DEO`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          mode: "cors"
-        }
-      );
-      const data2 = await response.json();
-      setAllOrders(data2["data"])
-    } catch (err) {
-      console.log(err);
-    }
-  }
   useEffect(() => {
+    async function getOrders() {
+      try {
+        const body = {"orderid": orderID}
+        const response = await fetch(
+          `${process.env.REACT_APP_API_SERVER}/order/view_order/`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: 'include',
+            body: JSON.stringify(body)
+          }
+        );
+        const data2 = await response.json();
+        // console.log("fetched data",data2)
+        setAllOrders(data2["data"])
+      } catch (err) {
+        console.log(err);
+      }
+    }
     if (isPageLoaded == 0) {
       getOrders();
       setIsPageLoaded(1)
     }
 
-  })
+  },[])
 
 
   
   useEffect(() => {
     let orderBy_Id = {}
-    console.log(allOrders, "allorders")
+    // console.log(allOrders, "allorders")
     if (flag == 0 && allOrders != []) {
       setOrder([]);
       let myorder={
@@ -115,7 +90,7 @@ export default function ViewOrderDetails() {
         }
         
       })
-      console.log(myorder)
+      // console.log(myorder)
       setOrder(myorder)
     }
     
@@ -123,9 +98,6 @@ export default function ViewOrderDetails() {
     setOrderById(orderBy_Id)
   }, [allOrders])
 
-  useEffect(()=>{
-    console.log(Order)
-  },[Order])
 
 
   return (
@@ -133,8 +105,8 @@ export default function ViewOrderDetails() {
       {
         flag == 1 &&
         <>
-          <UnitDescription Order={Order} OrderID={orderID} />
-          <OrderActions Order={Order} OrderID={orderID}/>
+          <UnitDescription Order={allOrders} OrderID={orderID} />
+          {/* <OrderActions Order={Order} OrderID={orderID}/> */}
         </>
       }
     </div >
