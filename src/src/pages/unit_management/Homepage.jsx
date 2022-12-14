@@ -779,8 +779,9 @@ export default function HomePage() {
                         </li>
                     </div>
                 </div>
-                <div className={styles.myCardSample}>
+                <div className={styles.myCardSampleHover } onClick={()=>{navigate(`/session/unitmanagement/schedule_list`)}}>
                     <div className={styles.card_title}>
+                    {/* /session/unitmanagement/schedule_list */}
                         <span>Election Scheduling</span>
                     </div>
                     <div className={styles.Box123}>
@@ -898,7 +899,7 @@ export default function HomePage() {
                         </li>
                     </div>
                 </div> */}
-                <div className={styles.myCardSample}>
+                <div className={styles.myCardSampleHover} onClick={()=>{navigate(`/session/unitmanagement/schedule_tna_list`)}}>
                     <div className={styles.card_title}>
                         <span>TnA Scheduling</span>
                     </div>
@@ -955,7 +956,7 @@ export default function HomePage() {
                         </li>
                     </div>
                 </div>
-                <div className={styles.myCardSample}>
+                <div className={styles.myCardSampleHover} onClick={()=>{navigate(`/session/unitmanagement/schedule_varification_list`)}}>
                     <div className={styles.card_title}>
                         <span>Physical Verification</span>
                     </div>
