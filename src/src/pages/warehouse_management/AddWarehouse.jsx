@@ -158,7 +158,10 @@ export default function AddWarehouse() {
         );
 
         const data = await response.json();
-        setPCs(data["PCs"]);
+        
+        console.log(data);
+        if(data["PCs"])
+          setPCs(data["PCs"]);
         // setPCcodes(data["pccode"]);
       } catch (error) {
         console.log(error);
@@ -167,7 +170,8 @@ export default function AddWarehouse() {
       }
 
       const StateData = await response.json();
-      // console.log(StateData)
+      if(StateData) {
+      console.log(StateData)
 
       const ans = getKeyByValue(StateData['states'], first2)
 
@@ -185,6 +189,7 @@ export default function AddWarehouse() {
         } );
         // setStatesCode([first2]);
       }
+    }
     } catch (error) {
       console.log(error);
     }
@@ -234,7 +239,9 @@ export default function AddWarehouse() {
         );
 
         const data = await response.json();
-        setPCs(data["PCs"]);
+        console.log(data);
+        if(data["PCs"])
+          setPCs(data["PCs"]);
         // setPCcodes(data["pccode"]);
       } catch (error) {
         console.log(error);
