@@ -19,7 +19,6 @@ function SubOrder(props) {
   }
 
 
-  // console.log("Subunit:",props.Order)
   const Order = props.Order
   let source = ""
   let destination = ""

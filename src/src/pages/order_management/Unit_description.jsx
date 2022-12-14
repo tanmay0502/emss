@@ -12,7 +12,6 @@ export default function UnitDescription(props) {
 
     const [Length, setLength] = useState(0);
     const units = [props.Order]
-    // const units = []
     const OrderID = props.OrderID
 
     function LEFT() {
