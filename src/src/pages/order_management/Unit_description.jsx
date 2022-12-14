@@ -34,7 +34,6 @@ export default function UnitDescription(props) {
     }
 
 
-    console.log(units, "units")
     return (
         <div className={styles.orderDetailsHolder}>
             <div className={styles.orderDetailsTitle}>

@@ -24,64 +24,35 @@ export default function OrderList() {
         "Last Action Date": "Last Action Date",
     }
     const UserId = window.sessionStorage.getItem('sessionToken');
-    async function getOrders() {
-        try {
-            const response = await fetch(
-                `${process.env.REACT_APP_API_SERVER}/order/list_orders/`,
-                // `${process.env.REACT_APP_API_SERVER}/order/list_orders/CH01001DEO`,
-                {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    mode: "cors"
-                }
-            );
-            const data2 = await response.json();
-            console.log(data2)
-            if (data2["status"] != 404)
-                setData(data2["data"])
-        } catch (err) {
-            console.log(err);
+    useEffect(()=>{
+        async function getOrders() {
+            try {
+                const response = await fetch(
+                    `${process.env.REACT_APP_API_SERVER}/order/list_orders/`,
+                    {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        credentials: 'include',
+                    }
+                );
+                const data2 = await response.json();
+                console.log(data2)
+                if (data2["status"] != 404)
+                    setData(data2["data"])
+            } catch (err) {
+                console.log(err);
+            }
         }
-    }
+        getOrders();
+    },[])
 
-    const [data, setData] = useState([
-        {
-            "orderid": "ECI/M/DL000MP000/12122022/0003:__1",
-            "referenceorderid": "ECI/M/DL000MP000/12122022/0003",
-            "creatoruserid": "MP000000CEO",
-            "orderstatus": "RC",
-            "manufacturer": "BEL",
-            "source": "DL",
-            "destination": "MP",
-            "type": "ITRS",
-            "item": "VVPAT",
-            "itemmodel": "M3",
-            "itemquantity": "1000",
-            "timestamp": "2022-12-12T17:52:31.507353"
-        },
-        {
-            "orderid": "ECI/M/DL000MP000/12122022/0003:__2",
-            "referenceorderid": "ECI/M/DL000MP000/12122022/0003",
-            "creatoruserid": "MP000000CEO",
-            "orderstatus": "RC",
-            "manufacturer": "BEL",
-            "source": "DL",
-            "destination": "MP",
-            "type": "ITRS",
-            "item": "CU",
-            "itemmodel": "M3",
-            "itemquantity": "1000",
-            "timestamp": "2022-12-12T17:52:31.507353"
-        }  
-    ]);
+    const [data, setData] = useState([]);
     const [tableData, setTableData] = useState([]);
 
     useEffect(() => {
-        console.log(data)
         if (data) {
-            console.log(data)
             const tmp = [...new Set(data.map((val) => {
                 if (1) {
                     return JSON.stringify({
@@ -105,14 +76,6 @@ export default function OrderList() {
         }
     }, [data])
 
-
-    useEffect(() => {
-        getOrders();
-
-        return () => {
-
-        }
-    }, [])
 
     // const Table = [
     //     <Collapse orderId='XYZ/20' data={data} time='22-09-2021' />,
