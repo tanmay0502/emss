@@ -4,6 +4,7 @@ import { ReactComponent as SearchInputElement } from '../../assets/searchInputIc
 // import styles from './styles/ScheduleCDP_edit.module.css'
 import styles from './styles/ScheduleFlc.module.css'
 import Modal from 'react-modal';
+import load from '../issue_request_management/styles/issue.module.css'
 import UserImageTest from '../../assets/UserImageTest.png'
 
 
@@ -95,6 +96,7 @@ function EditFlc_Ceo_Manufacturer(props) {
     const [currEnd, setCurrEnd] = useState("")
     const User_ID = sessionStorage.getItem("sessionToken");
     const Role = User_ID.substring(8)
+    // const Role = "Mfr-User"
     const [district, setdistrict] = useState('');
     const [tentativeyear, settentativeyear] = useState('');
     const [tentativemonth, settentativemonth] = useState('');
@@ -692,8 +694,10 @@ function EditFlc_Ceo_Manufacturer(props) {
                         >
                             <div id="root" className=''>
                                 <div className='flex justify-center items-center'>
-                                {<embed style={{ width: "600px", height: "600px", padding: "10px" }} src={``} />}
-                                    {/* {<embed style={{ width: "600px", height: "600px", padding: "10px" }} src={`${photoFileData}`} />} */}
+                                    {console.log("Name: " ,photoFileName)}
+                                    {console.log("DATA: " ,photoFileData["data"])}
+                                    {/* {<embed style={{ width: "600px", height: "600px", padding: "10px" }} src={``} />} */}
+                                    {photoFileData["data"] && <embed style={{ width: "1000px", height: "800px", padding: "10px" }} src={`${photoFileData["data"]}`} />}
                                 </div>
                                 <button style={{ color: "white", }} onClick={closeModal}>Close</button>
                             </div>
@@ -742,6 +746,7 @@ function EditFlc_Ceo_Manufacturer(props) {
                                                         <input
                                                             className={styles.Assigned_Engineer_Tr}
                                                             required
+                                                            type="text"
                                                             value={assign_engineer_name[id]}
                                                             name="enggname"
                                                             placeholder="Name"
@@ -754,6 +759,7 @@ function EditFlc_Ceo_Manufacturer(props) {
                                                             className={styles.Assigned_Engineer_Tr}
                                                             value={assign_engineer_number[id]}
                                                             placeholder="Mobile Number"
+                                                            type="number"
                                                             required
                                                             name="enggmobno"
                                                             onChange={(e) => handleInputChange_Assigned_Engineer_number(e, id)}
@@ -766,12 +772,16 @@ function EditFlc_Ceo_Manufacturer(props) {
                                                             value={assign_engineer_email[id]}
                                                             required
                                                             placeholder="Email ID"
+                                                            type="email"
                                                             name="enggemail"
                                                             onChange={(e) => handleInputChange_Assigned_Engineer_email(e, id)}
                                                             disabled={manufacture_edit === true ? false : true}
                                                         />
+                                                        
                                                     </td>
+                                                    
                                                     {manufacture_edit == true && <td className="text-black text-sm" onClick={() => handleRemoveClick_Assigned_Engineer(id)}>{row12['']}</td>}
+                                                
                                                 </tr>
                                             </tbody>
                                         )

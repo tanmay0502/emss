@@ -5,15 +5,13 @@ import Modal from 'react-modal';
 
 
 function EditFlc_Ceo(props) {
-
-
+    
     const [photoFileName, setPhotoFileName] = useState("")
     const [photoFileData, setPhotoFileData] = useState("")
     const [flag, setflag] = useState(0);
     const [modalIsOpen, setIsOpen] = React.useState(false);
 
-    console.log(photoFileName, "filename")
-
+    console.log(photoFileName+ ".pdf", ":filename")
 
     function openModal() {
         setIsOpen(true);
@@ -44,7 +42,7 @@ function EditFlc_Ceo(props) {
 
         try {
             const response = await fetch(
-                `${process.env.REACT_APP_API_SERVER}/unit/getPreparenessCertificate/${photoFileName}`,
+                `${process.env.REACT_APP_API_SERVER}/unit/getPreparenessCertificate/${photoFileName+ ".pdf"}`,
                 {
                     method: "GET",
                     headers: {
@@ -395,9 +393,12 @@ function EditFlc_Ceo(props) {
                         >
                             <div id="root" className=''>
                                 <div className='flex justify-center items-center'>
-                                    {console.log(photoFileName)}
-                                    {<embed style={{ width: "600px", height: "600px", padding: "10px" }} src={``} />}
-                                    {/* {<embed style={{ width: "600px", height: "600px", padding: "10px" }} src={`${photoFileData}`} />} */}
+                                    {console.log("This Data:")}
+                                    {/* {console.log(photoFileData["data"].slice(0,-1))} */}
+                                    {/* {console.log(fileData)} */}
+                                    {console.log("Fetched Data:- ",photoFileData["data"])}
+                                    {/* {<embed style={{ width: "600px", height: "600px", padding: "10px" }} src={fileData} />} */}
+                                    {photoFileData["data"] !== undefined && <embed type="text/html" style={{ width: "1000px", height: "800px", padding: "10px" }} src={photoFileData["data"]} />}
                                 </div>
                                 <button style={{ color: "white", }} onClick={closeModal}>Close</button>
                             </div>

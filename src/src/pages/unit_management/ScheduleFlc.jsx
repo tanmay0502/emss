@@ -15,7 +15,7 @@ function ScheduleFLC() {
     }
 
     function afterOpenModal() {
-        // references are now sync'd and can be accessed.
+        //   references are now sync'd and can be accessed.
         //   subtitle.style.color = '#f00';
     }
 
@@ -321,7 +321,7 @@ function ScheduleFLC() {
                 >
                     <div id="root" className=''>
                         <div className='flex justify-center items-center'>
-                            {<embed style={{ width: "600px", height: "600px", padding: "10px" }} src={`${photoFileData}`} />}
+                            {photoFileData !== undefined && <embed style={{ width: "1000px", height: "800px", padding: "10px" }} src={`${photoFileData}`} />}
                         </div>
                         <button style={{ color: "white", }} onClick={closeModal}>Close</button>
                     </div>
