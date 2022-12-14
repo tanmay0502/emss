@@ -74,7 +74,7 @@ export default function WarehouseDetails() {
     const getStateName = async (state_code) => {
         try {
             const response = await fetch(
-                'http://evm.iitbhilai.ac.in:8100/user/getStateList',
+                `${process.env.REACT_APP_API_SERVER}/user/getStateList`,
                 {
                     method: "GET",
                     headers: {
