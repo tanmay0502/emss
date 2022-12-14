@@ -6,6 +6,7 @@ import Modal from 'react-modal';
 
 function EditFlc_Ceo(props) {
     
+    
     const [photoFileName, setPhotoFileName] = useState("")
     const [photoFileData, setPhotoFileData] = useState("")
     const [flag, setflag] = useState(0);

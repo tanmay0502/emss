@@ -59,7 +59,7 @@ export default function WarehouseList() {
     const MapWarehouseTypes = async (data) => {
         try {
             const response = await fetch(
-                'http://evm.iitbhilai.ac.in:8100/warehouse/warehouseTypes',
+                `${process.env.REACT_APP_API_SERVER}/warehouse/warehouseTypes`,
                 {
                     method: "GET",
                     headers: {
