@@ -19,7 +19,6 @@ function SubOrder(props) {
   }
 
 
-  // console.log("Subunit:",props.Order)
   const Order = props.Order
   let source = ""
   let destination = ""
@@ -49,7 +48,7 @@ function SubOrder(props) {
           <div className={styles.orderUnitDataContainer}>
             <DynamicDataTable rows={myrow} buttons={[]} />
           </div>
-          <p>Status: {mapOrderStatus[Order["orderstatus"]]}</p>
+          <p>Status: {mapOrderStatus[Order[0].orderstatus]}</p>
         </div>
       </div>
     </>

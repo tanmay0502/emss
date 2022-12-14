@@ -70,7 +70,6 @@ export default function GenarateOrderITRS() {
   async function getState() {
     try {
       let uri = `${process.env.REACT_APP_API_SERVER}/user/getRealm`
-      // console.log(uri);
       const response = await fetch(
         uri,
         {
@@ -106,7 +105,6 @@ export default function GenarateOrderITRS() {
       </p>
       <div className="flex w-full">
         <div className=" w-3/5">
-          {/* {console.log(body.details)} */}
           {body.details.map((val,ind) => (
 
 

@@ -12,7 +12,6 @@ export default function UnitDescription(props) {
 
     const [Length, setLength] = useState(0);
     const units = [props.Order]
-    // const units = []
     const OrderID = props.OrderID
 
     function LEFT() {
@@ -35,7 +34,6 @@ export default function UnitDescription(props) {
     }
 
 
-    // console.log("units", units)
     return (
         <div className={styles.orderDetailsHolder}>
             <div className={styles.orderDetailsTitle}>

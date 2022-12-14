@@ -11,8 +11,8 @@ import { useEffect } from 'react'
 
 function OrderActions(props) {
 
-    console.log(props.Order)
-    const order=props.Order
+    console.log("Order acetion:", props.Order)
+    const order=props.Order[0]
 
     const [action, setAction] = useState(null)
     const [senderOrder,setSenderOrder] =useState([])
@@ -39,9 +39,9 @@ function OrderActions(props) {
         let sender_order=[]
         let recipient_order=[]
         
-        
+            console.log(userid.substring(8))
             if(order["source"]==userid.substring(0,2) && "CEO"==userid.substring(8)){
-                
+                    console.log("Inside if")
                     sender_order.push(order);
                
                     if(order["orderstatus"]=="RC"){
