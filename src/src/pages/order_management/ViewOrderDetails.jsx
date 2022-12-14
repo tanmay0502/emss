@@ -6,7 +6,6 @@ import OrderActions from "./OrderActions";
 
 export default function ViewOrderDetails() {
   const OrderID = useParams();
-  // console.log(OrderID["orderID"], "Orderid")
   const id=OrderID["orderID"];
   let orderID="";
   for(let i=0;i<id.length;i++){
@@ -16,7 +15,6 @@ export default function ViewOrderDetails() {
     else
     orderID+=id[i];
   }
-  // console.log(orderID)
 
 
   const [Order, setOrder] = useState([]);
@@ -43,7 +41,6 @@ export default function ViewOrderDetails() {
           }
         );
         const data2 = await response.json();
-        // console.log("fetched data",data2)
         setAllOrders(data2["data"])
       } catch (err) {
         console.log(err);
@@ -60,7 +57,6 @@ export default function ViewOrderDetails() {
   
   useEffect(() => {
     let orderBy_Id = {}
-    // console.log(allOrders, "allorders")
     if (flag == 0 && allOrders != []) {
       setOrder([]);
       let myorder={
@@ -72,7 +68,6 @@ export default function ViewOrderDetails() {
         setFlag(1)
         
         const id = (orderID)
-        // const id = getId(order["orderID"])
         if(order["referenceorderid"]==id){
           myorder["orderid"]=order["referenceorderid"]
           myorder["creatoruserid"]=order["creatoruserid"]
@@ -90,7 +85,6 @@ export default function ViewOrderDetails() {
         }
         
       })
-      // console.log(myorder)
       setOrder(myorder)
     }
     
@@ -106,7 +100,7 @@ export default function ViewOrderDetails() {
         flag == 1 &&
         <>
           <UnitDescription Order={allOrders} OrderID={orderID} />
-          {/* <OrderActions Order={Order} OrderID={orderID}/> */}
+          <OrderActions Order={allOrders} OrderID={orderID}/>
         </>
       }
     </div >

@@ -29,7 +29,6 @@ export default function OrderList() {
             try {
                 const response = await fetch(
                     `${process.env.REACT_APP_API_SERVER}/order/list_orders/`,
-                    // `${process.env.REACT_APP_API_SERVER}/order/list_orders/CH01001DEO`,
                     {
                         method: "GET",
                         headers: {
@@ -53,9 +52,7 @@ export default function OrderList() {
     const [tableData, setTableData] = useState([]);
 
     useEffect(() => {
-        // console.log(data)
         if (data) {
-            // console.log(data)
             const tmp = [...new Set(data.map((val) => {
                 if (1) {
                     return JSON.stringify({
