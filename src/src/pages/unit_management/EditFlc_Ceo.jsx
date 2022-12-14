@@ -394,9 +394,12 @@ function EditFlc_Ceo(props) {
                         >
                             <div id="root" className=''>
                                 <div className='flex justify-center items-center'>
-                                    {console.log(photoFileName)}
-                                    {<embed style={{ width: "600px", height: "600px", padding: "10px" }} src={``} />}
-                                    {/* {<embed style={{ width: "600px", height: "600px", padding: "10px" }} src={`${photoFileData}`} />} */}
+                                    {console.log("This Data:")}
+                                    {/* {console.log(photoFileData["data"].slice(0,-1))} */}
+                                    {/* {console.log(fileData)} */}
+                                    {console.log("Fetched Data:- ",photoFileData["data"])}
+                                    {/* {<embed style={{ width: "600px", height: "600px", padding: "10px" }} src={fileData} />} */}
+                                    {photoFileData["data"] !== undefined && <embed type="text/html" style={{ width: "1000px", height: "800px", padding: "10px" }} src={photoFileData["data"]} />}
                                 </div>
                                 <button style={{ color: "white", }} onClick={closeModal}>Close</button>
                             </div>
