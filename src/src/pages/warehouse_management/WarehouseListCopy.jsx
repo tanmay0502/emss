@@ -21,6 +21,8 @@ import UserImageTest from '../../assets/UserImageTest.png'
 import { FaCircle } from 'react-icons/fa'
 import { FaKey } from 'react-icons/fa'
 
+const uri = process.env.REACT_APP_API_SERVER;
+
 function WarehouseList() {
 	const navigate = useNavigate();
 	const [Details, setDetails] = React.useState([]);
@@ -30,9 +32,7 @@ function WarehouseList() {
 
 
 	async function getList() {
-		let userId = sessionStorage.getItem('sessionToken');
-		const code = userId.slice(0, 2);
-		console.log(code);
+
 		try {
 			const response = await fetch(
 				`${process.env.REACT_APP_API_SERVER}/warehouse/listWarehouses`,
@@ -41,12 +41,10 @@ function WarehouseList() {
 					headers: {
 						"Content-Type": "application/json",
 					},
-					body: JSON.stringify({
-						"stateCode": code
-					}),
 				})
 
 			const data = await response.json();
+			console.log(data);
 			setDetails(data["data"])
 			console.log(data["data"], "data")
 		} catch (error) {
@@ -62,12 +60,13 @@ function WarehouseList() {
 	const MapWarehouseTypes = async () => {
 		try {
 			const response = await fetch(
-				'http://evm.iitbhilai.ac.in:8100/warehouse/warehouseTypes',
+				`${process.env.REACT_APP_API_SERVER}/warehouse/warehouseTypes`,
 				{
 					method: "GET",
 					headers: {
 						"Content-Type": "application/json",
 					},
+					credentials: 'include'
 				}
 			)
 			const types = await response.json();
@@ -126,7 +125,7 @@ function WarehouseList() {
 			}
 		}).map((val) => {
 			return {
-				"Warehouse ID": val["warehousebuildingtype"] == 'P' ?
+				"Warehouse ID": val["type"] == 'P' ?
 					<Fragment><span style={{ display: 'flex', justifyContent: 'left', alignItems: 'left', marginLeft: "35%" }}>
 						<FaCircle size='0.8em' className='PermaWarehouse' />
 						<span style={{ marginLeft: '10px', marginRight: '10px' }}>
@@ -147,13 +146,12 @@ function WarehouseList() {
 					</span>
 					</Fragment>,
 				"warehouseid": val['warehouseid'],
-				"Room Type": warehouseMapping ? warehouseMapping["data"][val["warehousetype"]] : "",
+				"Room Type": warehouseMapping ? warehouseMapping["data"][val["type"]] : "",
 				// "Double Locked": val["doublelock"] ? "Yes" : "No",
 				Details: val,
 				Edit: <button className="modifyBtn p-2 text-white" disabled={true}>
 					<FaUserEdit style={{ transform: "translateX(1px)" }} />
 				</button>,
-				"BuildingType": val["warehousebuildingtype"],
 				// "Building Type": <ToggleButton userID={val["warehouseid"]} checked={val["warehousebuildingtype"] === 'P'} onToggle={(e) => {
 				// }} 
 				// customLabels={{
@@ -161,19 +159,7 @@ function WarehouseList() {
 				// 	"inactive": "Temporary"
 				// }
 				// }/>,
-				"Status": <ToggleButton userID={val["warehouseid"]} checked={val["warehousestatus"] === 'A'} onToggle={(e) => {
-					if (val["warehousestatus"] !== "A") {
-						ActivateWarehouse(e)
-					}
-					else {
-						DectivateWarehouse(e)
-					}
-				}}
-					customLabels={{
-						"active": "Active",
-						"inactive": "Inactive"
-					}}
-				/>
+				"Status": val['status']
 			}
 		})
 		data.sort(function (a, b) {
@@ -201,11 +187,10 @@ function WarehouseList() {
 				const response = await fetch(
 					`${process.env.REACT_APP_API_SERVER}/warehouse/activateWarehouse/${myId}`,
 					{
-						method: "GET",
+						method: "POST",
 						headers: {
 							"Content-Type": "application/json",
-						},
-						credentials: 'same-origin',
+						}
 					}
 				)
 
@@ -216,7 +201,7 @@ function WarehouseList() {
 					getList();
 				}
 				else {
-					alert("Deactivation Failed");
+					alert("Activation Failed");
 				}
 
 			} catch (error) {
@@ -232,11 +217,10 @@ function WarehouseList() {
 				const response = await fetch(
 					`${process.env.REACT_APP_API_SERVER}/warehouse/deactivateWarehouse/${myId}`,
 					{
-						method: "GET",
+						method: "POST",
 						headers: {
 							"Content-Type": "application/json",
-						},
-						credentials: 'same-origin',
+						}
 					}
 				)
 
@@ -296,18 +280,17 @@ function WarehouseList() {
 					</div>
 
 				</div> : <></>}
-
 				{isDetail == 0 ? <DynamicDataTable className="warehouses-table"
 					rows={tableData}
-					fieldsToExclude={["Details", "Edit", "BuildingType", "warehouseid"]}
+					fieldsToExclude={["Details", "Edit", "BuildingType", "warehouseid", "Room Type"]}
 					orderByField={sortMapping[sortBy]}
 					orderByDirection={sortOrder}
-					onClick={(event, row) => {
-						details(row["Details"])
-					}}
+					// onClick={(event, row) => {
+					// 	details(row["Details"])
+					// }}
 					buttons={[]}
 					allowOrderingBy={[
-						'warehouseid', 'Room Type', "BuildingType"
+						'warehouseid', 'status', "type"
 					]} />
 					:
 					<WarehouseDetail detail={user} close={close} warehouseMapping={warehouseMapping} />
@@ -331,7 +314,7 @@ function WarehouseList() {
 						<div className="warehouseStatsText">
 							<span>Permanent Warehouses</span>
 							<h3>{tableData.filter((elem) => {
-								return elem["Details"] && elem["Details"]["warehousebuildingtype"] === 'P'
+								return elem["Details"] && elem["Details"]["type"] === 'P'
 							}).length.toLocaleString()}</h3>
 						</div>
 					</li>
@@ -342,7 +325,7 @@ function WarehouseList() {
 						<div className="warehouseStatsText">
 							<span>Temporary Warehouses</span>
 							<h3>{tableData.filter((elem) => {
-								return elem["Details"] && elem["Details"]["warehousebuildingtype"] !== 'P'
+								return elem["Details"] && elem["Details"]["type"] !== 'P'
 							}).length.toLocaleString()}</h3>
 						</div>
 					</li>

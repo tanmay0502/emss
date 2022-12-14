@@ -587,7 +587,7 @@ const Login = () => {
 	//   try {
 	//     console.log(userID, password, mobile, OTP)
 	//     const response = await fetch(
-	//       "http://evm.iitbhilai.ac.in:8100/user/verifyOTPPassword",
+	//       "${process.env.REACT_APP_API_SERVER}/user/verifyOTPPassword",
 	//       {
 	//         method: "POST",
 	//         headers: {

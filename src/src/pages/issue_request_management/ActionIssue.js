@@ -121,7 +121,7 @@ export default function ActionIssue() {
     const myId = issueId();
     try {
         const response = await fetch(
-            `http://evm.iitbhilai.ac.in:8100/issue_requests/getDocument/${myId}/${docName}`,
+            `${process.env.REACT_APP_API_SERVER}/issue_requests/getDocument/${myId}/${docName}`,
             {
                 method: "GET",
                 headers: {

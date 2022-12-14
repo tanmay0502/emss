@@ -2,12 +2,7 @@ import React, { useState, useEffect } from 'react'
 import EditFlc_Ceo_Manufacturer from './EditFlc_Ceo_Manufacturer'
 import EditFlc_Ceo from './EditFlc_Ceo'
 
-
-
 function FlcEdit() {
-
-
-
     const URL = window.location.href;
     const arr = URL.split("/");
     const param = arr[arr.length - 1];
@@ -20,7 +15,6 @@ function FlcEdit() {
     // upload pending
 
     async function getFLC() {
-
         try {
             const response = await fetch(
                 `${process.env.REACT_APP_API_SERVER}/unit/viewFLC/${param}`,
@@ -52,7 +46,6 @@ function FlcEdit() {
 
     return (
         <>
-
             {Role == "CEO" && Status == "scheduled" &&
                 <div>
                     <EditFlc_Ceo_Manufacturer ID={param} />
@@ -72,7 +65,6 @@ function FlcEdit() {
                     <EditFlc_Ceo ID={param} Status={Status} />
                 </div>
             }
-
         </>
     )
 

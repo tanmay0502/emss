@@ -161,7 +161,7 @@ function Routed(props) {
 				<span>Election Scheduling</span>
 			</>);
 		}
-		if (location.pathname === '/session/unitmanagement/schedule_flc' || location.pathname === '/session/unitmanagement/flc_list' || location.pathname.startsWith('/session/unitmanagement/editFlc')) {
+		if (location.pathname === '/session/unitmanagement/schedule_flc' || location.pathname === '/session/unitmanagement/flc_list' || location.pathname.startsWith('/session/unitmanagement/editFlc') || location.pathname.startsWith('/session/unitmanagement/announce_flc')) {
 			return (<>
 				<UnitManagementIcon />
 				<span>FLC Scheduling</span>
