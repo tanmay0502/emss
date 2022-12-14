@@ -50,7 +50,7 @@ export default function HomePage() {
                 }
               );
                 let data2 = await response.json();
-                // console.log("Data fetched", data2['data']);
+                console.log("Data fetched", data2);
                 let data = data2['data'];
                 const response2 = await fetch(
                     uri2,
