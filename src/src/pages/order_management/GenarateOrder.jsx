@@ -11,6 +11,7 @@ import GenarateOrderSEC from "./GenarateOrderSEC";
 export default function GenarateOrder (){
 
     const {orderType} = useParams()
+    console.log(orderType);
     return (
         <>
         {orderType=="ITRS" && <GenarateOrderITRS/>}

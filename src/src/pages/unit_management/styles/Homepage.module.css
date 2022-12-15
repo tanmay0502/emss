@@ -15,7 +15,7 @@
     grid-column-gap: 0px;
     grid-row-gap: 0px;
     height: 100%;
-    overflow-y: scroll;
+    /* overflow-y: scroll; */
     overflow-x: visible;
 
 }   
@@ -27,7 +27,7 @@
     grid-column-gap: 2%;
     grid-row-gap: 2%;
     height: 100%;
-    overflow-y: scroll;
+    /* overflow-y: scroll; */
     overflow-x: visible;
 }    
 

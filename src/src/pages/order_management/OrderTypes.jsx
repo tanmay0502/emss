@@ -11,7 +11,7 @@ export default function OrderTypes(){
 
     const [selected,setSelected] = useState(null);
     const orderTypeMapping = {
-        "order-type-1" : 'New',
+        "order-type-1" : 'NEW',
         "order-type-2" : 'REP',
         "order-type-3" : 'ITRS',
         "order-type-4" : 'ITAS',

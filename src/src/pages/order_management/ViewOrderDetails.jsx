@@ -6,7 +6,7 @@ import OrderActions from "./OrderActions";
 
 export default function ViewOrderDetails() {
   const OrderID = useParams();
-  const id=OrderID["orderID"];
+  const id=OrderID?OrderID["orderID"]:[];
   let orderID="";
   for(let i=0;i<id.length;i++){
     if(id[i]=='-'){
@@ -19,7 +19,6 @@ export default function ViewOrderDetails() {
 
   const [Order, setOrder] = useState([]);
   const [allOrders, setAllOrders] = useState([]);
-  const [isPageLoaded, setIsPageLoaded] = useState(0);
   const [orderById, setOrderById] = useState({});
   const [orderDetailPage, setOrderDetailPage] = useState("-1");
   const UserId = window.sessionStorage.getItem('sessionToken');
@@ -29,6 +28,7 @@ export default function ViewOrderDetails() {
     async function getOrders() {
       try {
         const body = {"orderid": orderID}
+        console.log(body)
         const response = await fetch(
           `${process.env.REACT_APP_API_SERVER}/order/view_order/`,
           {
@@ -41,23 +41,25 @@ export default function ViewOrderDetails() {
           }
         );
         const data2 = await response.json();
-        setAllOrders(data2["data"])
+        console.log("fetcjed", data2)
+        if (data2["data"]) {
+          setAllOrders(data2["data"])
+        }
       } catch (err) {
         console.log(err);
       }
     }
-    if (isPageLoaded == 0) {
+    if (orderID) {
       getOrders();
-      setIsPageLoaded(1)
     }
 
-  },[])
+  },[OrderID])
 
 
   
   useEffect(() => {
     let orderBy_Id = {}
-    if (flag == 0 && allOrders != []) {
+    if (flag == 0 && allOrders != [] && allOrders) {
       setOrder([]);
       let myorder={
         units:[]
@@ -99,8 +101,8 @@ export default function ViewOrderDetails() {
       {
         flag == 1 &&
         <>
-          <UnitDescription Order={allOrders} OrderID={orderID} />
-          <OrderActions Order={allOrders} OrderID={orderID}/>
+          {allOrders && <UnitDescription Order={allOrders} OrderID={orderID} />}
+          {allOrders && <OrderActions Order={allOrders} OrderID={orderID}/>}
         </>
       }
     </div >
