@@ -123,9 +123,10 @@ export default function GenarateOrderITRS() {
                       {states &&
                         states.map((st) => (
                           <option value={st} className="text-black" onClick={()=>{
-                            let prevBody=body;
-                            prevBody.details[ind].source=st;
-                            setBody(prevBody);
+                            setBody((prevBody)=>{
+                              prevBody.details[ind].source=st;
+                              return (prevBody);
+                            })
                           }}>
                             {st}
                           </option>
@@ -152,9 +153,10 @@ export default function GenarateOrderITRS() {
                         {states &&
                           states.map((st) => (
                             <option value={st} className="text-black" onClick={()=>{
-                              let prevBody=body;
-                              prevBody.details[ind].destination=st;
-                              setBody(prevBody);
+                              setBody((prevBody)=>{
+                                prevBody.details[ind].destination=st;
+                                return(prevBody);
+                              })
                             }}>
                               {st}
                             </option>
@@ -190,8 +192,10 @@ export default function GenarateOrderITRS() {
                           >select</option>
                           <option value="BU"onClick={()=>{
                             let prevBody=body;
-                            prevBody.details[ind].unitDetails[ind2].item="BU";
-                            setBody(prevBody);
+                            setBody((prevBody)=>{
+                              prevBody.details[ind].unitDetails[ind2].item="BU";
+                              return(prevBody);
+                            })
                           }}>BU</option>
                           <option value="CU"onClick={()=>{
                             let prevBody=body;
@@ -207,18 +211,20 @@ export default function GenarateOrderITRS() {
                         <td>
                           <input type="number" placeholder="No of Unit" className=" w-2/3 p-2 rounded-lg border mb-2" 
                           onChange={(e)=>{
-                            let prevBody=body;
-                            prevBody.details[ind].unitDetails[ind2].itemquantity=e.target.value;
-                            setBody(prevBody);
+                            setBody((prevBody)=>{
+                              prevBody.details[ind].unitDetails[ind2].itemquantity=e.target.value;
+                              return (prevBody);
+                            })
                           }} required></input>
                         </td>
                         <td>
                           <select className="border p-2 mb-2"
                             required
                             onChange={(e)=>{
-                              let prevBody=body;
-                              prevBody.details[ind].unitDetails[ind2].itemmodel=e.target.value;
-                              setBody(prevBody);
+                              setBody((prevBody)=>{
+                                prevBody.details[ind].unitDetails[ind2].itemmodel=e.target.value;
+                                return (prevBody);
+                              })
                             }}
 
                           >
@@ -232,9 +238,10 @@ export default function GenarateOrderITRS() {
                           <select className="border p-2 mb-2 ml-3 mr-7"
                             required
                             onChange={(e)=>{
-                              let prevBody=body;
-                              prevBody.details[ind].unitDetails[ind2].manufacturer=e.target.value;
-                              setBody(prevBody);
+                              setBody((prevBody)=>{
+                                prevBody.details[ind].unitDetails[ind2].manufacturer=e.target.value;
+                                return (prevBody);
+                              })
                             }}
 
                           >
