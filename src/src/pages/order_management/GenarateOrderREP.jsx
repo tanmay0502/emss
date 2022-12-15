@@ -2,120 +2,114 @@ import React, { useEffect, useState } from "react";
 import { ReactComponent as CreateIssueIcon } from "../../assets/create_issue_request.svg";
 import { useParams } from "react-router-dom";
 import "./styles/generateOrder.css";
+import UnitTraker from "./UnitTracker";
+import Modal from 'react-modal';
 
 export default function GenarateOrderREP() {
 
   const { orderType } = useParams();
   const [states, setStates] = useState([]);
   const [isPageLoaded, setIsPageLoaded] = useState(0);
-  const [orderCount, setOrderCount] = useState({ 1: [1] });
   const [total_BU_M2, setTotal_BU_M2] = useState(0)
   const [total_BU_M3, setTotal_BU_M3] = useState(0)
   const [total_CU_M2, setTotal_CU_M2] = useState(0)
   const [total_CU_M3, setTotal_CU_M3] = useState(0)
   const [total_VVPAT_M2, setTotal_VVPAT_M2] = useState(0)
   const [total_VVPAT_M3, setTotal_VVPAT_M3] = useState(0)
+  const [photoFileName, setPhotoFileName] = useState("")
+  const [photoFileData, setPhotoFileData] = useState("")
+  const [flag, setflag] = useState(0);
+  const [modalIsOpen, setIsOpen] = React.useState(false);
 
-  function increaseOrder() {
-    const p = parseInt(Object.keys(orderCount)[Object.keys(orderCount).length - 1]) + 1
-    setOrderCount({ ...orderCount, [p]: [1] });
+  function openModal() {
+    setIsOpen(true);
+}
 
-  }
+function afterOpenModal() {
+    // references are now sync'd and can be accessed.
+    //   subtitle.style.color = '#f00';
+}
 
-  function increaseOne(index) {
+function closeModal() {
+    setIsOpen(false);
+}
 
-    let temp = orderCount;
-    temp[index].push(parseInt(temp[index][temp[index].length - 1]) + 1)
-    setOrderCount({ ...temp });
+const customStyles = {
+    content: {
+        top: '50%',
+        left: '50%',
+        right: 'auto',
+        bottom: 'auto',
+        marginRight: '-50%',
+        transform: 'translate(-50%, -50%)',
+    },
+};
 
-  }
-
-  function calculate() {
-
-    console.log("calculate")
-    let _total_CU_M2 = 0
-    let _total_CU_M3 = 0
-    let _total_BU_M2 = 0
-    let _total_BU_M3 = 0
-    let _total_VVPAT_M2 = 0
-    let _total_VVPAT_M3 = 0
-
-    if ((Object.keys((orderCount)))) {
-
-      (Object.keys(orderCount)).map((index) => {
-        orderCount[index].map((index2) => {
-          if (document.getElementById(index.toString() + "_" + index2.toString() + "_quantity") && document.getElementById(index.toString() + "_" + index2.toString() + "_type").value != "select" && document.getElementById(index.toString() + "_" + index2.toString() + "_model").value != "select" && document.getElementById(index.toString() + "_" + index2.toString() + "_manufacturer").value!="select") {
-            const q = parseInt(document.getElementById(index.toString() + "_" + index2.toString() + "_quantity").value);
-            const type = document.getElementById(index.toString() + "_" + index2.toString() + "_type").value
-            const model = document.getElementById(index.toString() + "_" + index2.toString() + "_model").value
-            const manufacturer = document.getElementById(index.toString() + "_" + index2.toString() + "_manufacturer").value
-
-            let temp = "";
-            temp += "_total_" + type + "_" + model;
-            console.log(temp, eval(temp))
-            let p1 = eval(temp)
-            p1 = p1 + q;
-            eval(temp + " = " + p1.toString())
-            console.log(eval(temp))
-
-
+async function getcertificate(val) {
+  setflag(1)
+  console.log(val);
+  try {
+      const response = await fetch(
+          `${process.env.REACT_APP_API_SERVER}/order/getOrderPdf/`,
+          {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json",
+              },
+              body: JSON.stringify(val),
+              credentials: 'include'
           }
-        })
-      })
-    }
-
-    console.log(_total_CU_M2, _total_CU_M3, _total_BU_M2, _total_BU_M3, _total_VVPAT_M2, _total_VVPAT_M3)
-    setTotal_BU_M2(_total_BU_M2)
-    setTotal_BU_M3(_total_BU_M3)
-    setTotal_CU_M2(_total_CU_M2)
-    setTotal_CU_M3(_total_CU_M3)
-    setTotal_VVPAT_M2(_total_VVPAT_M2)
-    setTotal_VVPAT_M3(_total_VVPAT_M3)
-
-  }
-
-  const onFormSubmit = async (e) => {
-    e.preventDefault();
-    console.log("Submitted")
-    let details = []
-
-    Object.keys(orderCount).map((index) => {
-      let temp = {}
-      if (document.getElementById(index.toString() + "_source")) {
-        temp["source"] = states[document.getElementById(index.toString() + "_source").value]
-        temp["destination"] = states[document.getElementById(index.toString() + "_destination").value]
-        temp["unitDetails"] = []
-        orderCount[index].map((index2) => {
-          if (document.getElementById(index.toString() + "_" + index2.toString() + "_quantity") && document.getElementById(index.toString() + "_" + index2.toString() + "_type").value != "select" && document.getElementById(index.toString() + "_" + index2.toString() + "_model").value != "select" &&  document.getElementById(index.toString() + "_" + index2.toString() + "_manufacturer").value!="select") {
-            const q = parseInt(document.getElementById(index.toString() + "_" + index2.toString() + "_quantity").value);
-            const type = document.getElementById(index.toString() + "_" + index2.toString() + "_type").value
-            const model = document.getElementById(index.toString() + "_" + index2.toString() + "_model").value
-            const manufacturer = document.getElementById(index.toString() + "_" + index2.toString() + "_manufacturer").value
-
-            let temp2 = {};
-            temp2["item"] = type
-            temp2["itemmodel"] = model
-            temp2["itemquantity"] = q
-            temp2["manufacturer"] = manufacturer
-            temp["unitDetails"].push(temp2)
-
-
-
-          }
-        })
-        details.push(temp);
+      );
+      const data = await response.json();
+      console.log(data);
+      if (response.status == 200) {
+          setPhotoFileData(data)
       }
-    })
 
-    let data = {}
-    if(document.getElementById("orderId").value && document.getElementById("orderId").value!=""){
-      data["orderid"] = document.getElementById("orderId").value
-    }
-    data["type"] = orderType
-    data["creatoruserid"] = sessionStorage.getItem("sessionToken");
-    data["details"] = details
-    console.log(`${process.env.REACT_APP_API_SERVER}`)
-    console.log(data)
+  } catch (err) {
+      console.log({ err });
+  }
+}
+
+if (flag == 0) {
+  if (photoFileName) {
+      getcertificate();
+  }
+}
+
+  const sampleBody = {
+    "type": orderType,
+    "details": [
+      {
+        "source": "string",
+        "destination": "string",
+        "unitDetails": [
+          {
+            "item": "string",
+            "itemmodel": "string",
+            "manufacturer": "string",
+            "itemquantity": 0
+          }
+        ]
+      }
+    ]
+  }
+  const [body, setBody] = useState(sampleBody)
+
+  const submmit = async () => {
+    console.log("Submitted")
+    console.log(body);
+    body.details.map(function(val){
+      let b = [];
+      val.unitDetails.map(function(v){
+        b.push(v.item+v.itemmodel+v.manufacturer);
+      });
+      if((new Set(b)).size !== b.length) {
+        alert("Error : Identical Entries");
+        window.location.reload(false);
+      }
+    });
+
     try {
       const response = await fetch(
         `${process.env.REACT_APP_API_SERVER}/order/generate_order/`,
@@ -124,22 +118,30 @@ export default function GenarateOrderREP() {
           headers: {
             "Content-Type": "application/json",
           },
-          credentials: 'same-origin',
-          body: JSON.stringify(data),
-
-          mode: "cors",
-
+          credentials: 'include',
+          body: JSON.stringify(body),
         }
       );
       const data2 = await response.json();
-        console.log(response)
-        console.log(data2)
-      if (response["status"] == 200) {
-        alert("Order Generated Successfully");
+      console.log(data2["OrderIDs List"]);
+
+      let t = [];
+      data2['OrderIDs List'].map(function(val){
+        t.push({
+          "orderid": val
+        });
+      });
+      let p = {
+        "listofOrders": t
       }
       if (response["status"] == 200) {
-        window.location = '/session/ordermanagement'
+        // alert("Order Generated Successfully");
+        getcertificate(p);
+        openModal();
       }
+      // if (response["status"] == 200) {
+      //   window.location = '/session/ordermanagement'
+      // }
     } catch (err) {
       console.log(err);
     }
@@ -151,19 +153,21 @@ export default function GenarateOrderREP() {
 
   async function getState() {
     try {
+      let uri = `${process.env.REACT_APP_API_SERVER}/user/getRealm`
       const response = await fetch(
-        `${process.env.REACT_APP_API_SERVER}/user/getStateList`,
+        uri,
         {
-          method: "GET",
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          mode: "cors"
+          credentials: 'include',
+          body:{}
         }
       );
       const data2 = await response.json();
-      console.log(data2);
-      setStates(data2["states"]);
+      console.log("Data fetched",data2)
+      setStates(data2["state"]);
     } catch (err) {
       console.log(err);
     }
@@ -177,17 +181,35 @@ export default function GenarateOrderREP() {
     }
   })
 
+  const[manufacturer, setManufacturer] = useState("");
+
   return (
-    <form className="p-3"
-      onSubmit={onFormSubmit}>
+    <div className="p-3">
+      <Modal
+                            isOpen={modalIsOpen}
+                            onAfterOpen={afterOpenModal}
+                            onRequestClose={closeModal}
+                            style={customStyles}
+                        >
+                            <div id="root" className=''>
+                                <div className='flex justify-center items-center'>
+                                    {console.log("This Data:")}
+                                    {/* {console.log(photoFileData["data"].slice(0,-1))} */}
+                                    {/* {console.log(fileData)} */}
+                                    {console.log("Fetched Data:- ",photoFileData)}
+                                    {/* {<embed style={{ width: "600px", height: "600px", padding: "10px" }} src={fileData} />} */}
+                                    {photoFileData !== undefined && <embed type="text/html" style={{ width: "1000px", height: "800px", padding: "10px" }} src={photoFileData} />}
+                                </div>
+                                <button style={{ color: "white", }} onClick={()=>{ window.location = '/session/ordermanagement'}}>Close</button>
+                            </div>
+      </Modal>
       <p className="text-left text-lg flex">
         <CreateIssueIcon className="mr-2" />
-        Request ID : {orderType}
+        Request ID : {body.type}
       </p>
       <div className="flex w-full">
         <div className=" w-3/5">
-          
-          {Object.keys(orderCount).map((index) => (
+          {body.details.map((val,ind) => (
 
 
             <div className="bg-white p-6 rounded-lg shadow-lg mt-2 w-full">
@@ -199,17 +221,20 @@ export default function GenarateOrderREP() {
                     <select
                       className="w-5/6 h-10 p-2 border rounded-md "
                       placeholder="Type"
-                      id={index.toString() + "_source"}
                       required
                     >
                       <option>Select</option>
-                      {states &&
-                        Object.keys(states).map((st) => (
-                          <option value={st} className="text-black">
-                            {st}
+                      {["ECIL", "BEL"].map((val) => (
+                          <option value={val} className="text-black" onClick={()=>{
+                            let prevBody=body;
+                            prevBody.details[ind].source=val;
+                            setBody(prevBody);
+                            setManufacturer(val)
+                          }}>
+                            {val}
                           </option>
                         ))}
-                      {states == {} && (<option value="0" className="text-black">
+                      {states == [] && (<option value="0" className="text-black">
                         Select:
                       </option>)}
                     </select>
@@ -223,19 +248,22 @@ export default function GenarateOrderREP() {
                       <select
                         className="h-10 p-2 border rounded-md"
                         placeholder="Type"
-                        id={index.toString() + "_destination"}
                         required
 
                       >
                         {" "}
                         <option>Select</option>
                         {states &&
-                          Object.keys(states).map((st) => (
-                            <option value={st} className="text-black">
+                          states.map((st) => (
+                            <option value={st} className="text-black" onClick={()=>{
+                              let prevBody=body;
+                              prevBody.details[ind].destination=st;
+                              setBody(prevBody);
+                            }}>
                               {st}
                             </option>
                           ))}
-                        {states == {} && (<option value="0" className="text-black">
+                        {states == [] && (<option value="0" className="text-black">
                           Select:
                         </option>)}
                       </select>
@@ -257,28 +285,46 @@ export default function GenarateOrderREP() {
                   <br />
                   
                   {
-                    orderCount[index].map((v2) => (
+                    body.details[ind].unitDetails.map((val, ind2) => (
                       <tr className="border-b-2 ">
                         <td><select className="border p-2 mb-2"
-                          id={index.toString() + "_" + v2.toString() + "_type"}
                           required
-                          onChange={calculate}
-
                         >
                           <option
                           >select</option>
-                          <option value="BU">BU</option>
-                          <option value="CU">CU</option>
-                          <option value="VVPAT">VVPAT</option>
+                          <option value="BU"onClick={()=>{
+                            let prevBody=body;
+                            prevBody.details[ind].unitDetails[ind2].item="BU";
+                            setBody(prevBody);
+                          }}>BU</option>
+                          <option value="CU"onClick={()=>{
+                            let prevBody=body;
+                            prevBody.details[ind].unitDetails[ind2].item="CU";
+                            setBody(prevBody);
+                          }}>CU</option>
+                          <option value="VVPAT"onClick={()=>{
+                            let prevBody=body;
+                            prevBody.details[ind].unitDetails[ind2].item="VT";
+                            setBody(prevBody);
+                          }}>VVPAT</option>
                         </select></td>
                         <td>
-                          <input type="number" placeholder="No of Unit" className=" w-2/3 p-2 rounded-lg border mb-2" id={index.toString() + "_" + v2.toString() + "_quantity"} onChange={calculate} required></input>
+                          <input type="number" placeholder="No of Unit" className=" w-2/3 p-2 rounded-lg border mb-2" 
+                          onChange={(e)=>{
+                            let prevBody=body;
+                            prevBody.details[ind].unitDetails[ind2].itemquantity=e.target.value;
+                            setBody(prevBody);
+                          }} required></input>
                         </td>
                         <td>
                           <select className="border p-2 mb-2"
-                            id={index.toString() + "_" + v2.toString() + "_model"}
                             required
-                            onChange={calculate}
+                            onChange={(e)=>{
+                              let prevBody=body;
+                              prevBody.details[ind].unitDetails[ind2].itemmodel=e.target.value;
+                              prevBody.details[ind].unitDetails[ind2].manufacturer=manufacturer;
+                              setBody(prevBody);
+                            }}
 
                           >
                             <option
@@ -289,29 +335,58 @@ export default function GenarateOrderREP() {
                         </td>
                         <td>
                           <select className="border p-2 mb-2 ml-3 mr-7"
-                            id={index.toString() + "_" + v2.toString() + "_manufacturer"}
-                            required
-                            onChange={calculate}
-
-                          >
+                            required>
                             <option
-                            >select</option>
-                            <option value="ECIL">ECIL</option>
-                            <option value="BEL">BEL</option>
+                            >{manufacturer}</option>
                           </select>
                         </td>
                       </tr>
                     ))
                   }
                 </table>
-                <div className="flex justify-end w-full mt-1"><button type="button" onClick={() => increaseOne(index)} className="bg-orange-600 text-white  p-3  " >Add row</button></div>
+                <div className="flex justify-end w-full mt-1"><button type="button" onClick={() => {
+                  setBody((prev)=>{
+                  let temp = {
+                    "item": "string",
+                    "itemmodel": "string",
+                    "manufacturer": "string",
+                    "itemquantity": 0
+                  }
+                  console.log("add",prev.details[ind].unitDetails[prev.details[ind].unitDetails.length-1].itemquantity)
+                  if (prev.details[ind].unitDetails[prev.details[ind].unitDetails.length-1].itemquantity===0) {
+                    return prev;
+                  }
+                  const newBody = {...prev};
+                  prev.details[ind].unitDetails.push(temp)
+                  return newBody;
+                })
+                }} className="bg-orange-600 text-white  p-3  " >Add row</button></div>
               </div>
             </div>
           ))}
 
-
-
-          <div className="flex justify-end"><button onClick={increaseOrder} type="button" className="text-white bg-orange-600 p-1 text-2xl w-10 h-10 -mt-5 " style={{ borderRadius: "50%" }}> +</button></div>
+          <div className="flex justify-end"><button onClick={()=>{
+            setBody((prev)=>{
+              let temp = {
+                "source": "string",
+                "destination": "string",
+                "unitDetails": [
+                  {
+                    "item": "string",
+                    "itemmodel": "string",
+                    "manufacturer": "string",
+                    "itemquantity": 0
+                  }
+                ]
+              }
+              if (prev.details[prev.details.length-1].destination==="string") {
+                return prev;
+              }
+              const newBody = {...prev};
+              newBody.details.push(temp)
+              return newBody;
+            })
+          }} type="button" className="text-white bg-orange-600 p-1 text-2xl w-10 h-10 -mt-5 " style={{ borderRadius: "50%" }}> +</button></div>
         </div>
         <div className="w-2/5">
           <div className="bg-white p-6 rounded-lg shadow-lg mt-2 w-full m-4 ">
@@ -338,106 +413,12 @@ export default function GenarateOrderREP() {
               <p className="w-2/6 text-right text-sm text-gray-400">3hrs ago</p>
             </div>
             <hr />
-
-
           </div>
-          <div className="bg-white p-6 rounded-lg shadow-lg mt-2 w-full m-4 ">
-            <p className=" text-lg font-semibold text-center">Unit Tracker</p>
-
-            <div className="rounded-lg shadow-md mt-5 bg-white">
-              <div
-                className="rounded-t-lg p-2 text-left "
-                style={{ backgroundColor: "#84587C" }}
-              >
-                <span className="text-white text-lg ml-5">Ballot Units</span>
-              </div>
-              <div className="p-2">
-                <table className="w-full mt-4 ">
-                  <tr className="text-red-400 border-b-2 ">
-                    <td className="">Model</td>
-                    <td>Quantity</td>
-                  </tr>
-                  <br />
-                  <tr className=" border-b-2 ">
-                    <td>M2</td>
-                    <td>{total_BU_M2}</td>
-                  </tr>
-                  <br />
-                  <tr className=" border-b-2 ">
-                    <td>M3</td>
-                    <td>{total_BU_M3}</td>
-                  </tr>
-                  <br />
-
-                </table>
-
-              </div>
-            </div>
-            <div className="rounded-lg shadow-md mt-5 bg-white">
-              <div
-                className="rounded-t-lg p-2 text-left "
-                style={{ backgroundColor: "#84587C" }}
-              >
-                <span className="text-white text-lg ml-5">Control Units</span>
-              </div>
-              <div className="p-2">
-                <table className="w-full mt-4 ">
-                  <tr className="text-red-400 border-b-2 ">
-                    <td className="">Model</td>
-                    <td>Quantity</td>
-                  </tr>
-                  <br />
-                  <tr className=" border-b-2 ">
-                    <td>M2</td>
-                    <td>{total_CU_M2}</td>
-                  </tr>
-                  <br />
-                  <tr className=" border-b-2 ">
-                    <td>M3</td>
-                    <td>{total_CU_M3}</td>
-                  </tr>
-                  <br />
-
-                </table>
-
-              </div>
-            </div>
-            <div className="rounded-lg shadow-md mt-5 bg-white">
-              <div
-                className="rounded-t-lg p-2 text-left "
-                style={{ backgroundColor: "#84587C" }}
-              >
-                <span className="text-white text-lg ml-5">VVPAT</span>
-              </div>
-              <div className="p-2">
-                <table className="w-full mt-4 ">
-                  <tr className="text-red-400 border-b-2 ">
-                    <td className="">Model</td>
-                    <td>Quantity</td>
-                  </tr>
-                  <br />
-                  <tr className=" border-b-2 ">
-                    <td>M2</td>
-                    <td>{total_VVPAT_M2}</td>
-                  </tr>
-                  <br />
-                  <tr className=" border-b-2 ">
-                    <td>M3</td>
-                    <td>{total_VVPAT_M3}</td>
-                  </tr>
-                  <br />
-
-                </table>
-
-              </div>
-            </div>
-
-
-          </div>
+          <UnitTraker body={body}/>
         </div>
       </div>
-      <button type="submit" className="text-white bg-orange-600">Submit</button>
-    </form>
+      <button className="text-white bg-orange-600" onClick={()=>submmit()}>Submit</button>
+    </div>
   );
 }
 
