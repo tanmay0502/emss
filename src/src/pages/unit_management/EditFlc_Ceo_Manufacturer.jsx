@@ -422,10 +422,12 @@ function EditFlc_Ceo_Manufacturer(props) {
             <form id="form" onSubmit={onFormSubmit}>
                 <div className={scheduleStyles.Schedule_container}>
                     <div className={scheduleStyles.Schedule_header}>
+                    
                         <h4>
                             Schedule FLC
                         </h4>
-                        {Role == 'CEO' && edit == false && <button className={scheduleStyles.editBtn} onClick={(e) => { edit == true ? setEdit(false) : setEdit(true) }}> Edit </button>}
+                    
+                    {Role == 'CEO' && edit == false && <button className={scheduleStyles.editBtn} onClick={(e) => { edit == true ? setEdit(false) : setEdit(true) }}> Edit </button>}
                     </div>
                     <div class={scheduleStyles.parent}>
 
@@ -791,7 +793,7 @@ function EditFlc_Ceo_Manufacturer(props) {
                         {manufacture_edit == true && <button type="button" className="text-white bg-orange-600 p-1 text-2xl w-8 h-8 -mt-4 " style={{ borderRadius: "50%", marginLeft: "91%", marginTop: "1%" }} onClick={() => { handleAdd_Assigned_Engineer() }}>+</button>}
                     </div>
                 </div>
-                {(edit == true || manufacture_edit == true) &&
+                {(edit === true || manufacture_edit === true) &&
                     <center>
                         <input type={"submit"} className="mySubmit">
                         </input>

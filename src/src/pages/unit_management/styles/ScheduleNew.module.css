@@ -74,6 +74,13 @@
   background-color: #f56a3f;
   color: white;
 }
+.editBtn{
+  display: flex;
+  margin-left: 87%;
+  margin-bottom:15px;
+  background-color: #F56A3F;
+  color: white
+}
 
 ::-webkit-datetime-edit {
   padding: 1em;

@@ -59,7 +59,7 @@ function ScheduleTna() {
             if (data["message"] === "Insertion successful") {
                 document.getElementById("form").reset();
                 alert("Successful");
-                window.location.pathname = "/session/unitmanagement/flc_list";
+                window.location.pathname = "/session/unitmanagement/schedule_tna_list";
             } else {
                 alert("Failed!");
             

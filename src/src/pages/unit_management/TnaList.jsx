@@ -72,7 +72,7 @@ export default function ScheduleList() {
                 'Num Awareness Unit': props[i]['numawarenessunit'],
                 "Unit Type": props[i]['unittype'],
                 "Timestamp": props[i]['madeon'].slice(0,10),
-                // "ID":props[i]['tnaid']
+                "ID":props[i]['tnaid']
             }  
             console.log({row})
             eList.push(row);
@@ -185,9 +185,9 @@ export default function ScheduleList() {
             <DynamicDataTable 
                 rows={tna}
                 buttons={[]} 
-                // fieldsToExclude={["ID"]}
+                fieldsToExclude={["ID"]}
                 onClick={(event, row) => {
-                    navigate(`/session/unitmanagement/edit_tna/id=${row["ID"]}`)
+                    navigate(`/session/unitmanagement/edit_tna/${row["ID"]}`)
                 }}
                 
                 />
