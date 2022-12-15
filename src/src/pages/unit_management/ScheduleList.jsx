@@ -127,7 +127,7 @@ export default function ScheduleList() {
                 "Edit":
                 <div className={styles.editBtn}
                 onClick={() => {
-                    navigate(`/session/unitmanagement/edit_election/id=${i}`)
+                    navigate(`/session/unitmanagement/edit_election/${i}`)
                 }}
                 >
                     <img src={Edit} />

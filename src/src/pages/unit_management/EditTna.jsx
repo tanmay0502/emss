@@ -11,12 +11,15 @@ function EditTna() {
     const [tags, setTags] = React.useState([]);
     const [edit, setEdit] = useState(false)
     const [tna,setTna] = useState([])
+
     const issueId = () => {
         const URL = window.location.href;
         const arr = URL.split("/");
         const param = arr[arr.length - 1];
         const arr1 = param.split("=");
-        return arr1[1];
+        console.log(arr1)
+        return arr1[0];
+        
       }
     async function getTna() {
         let id = issueId();
@@ -33,7 +36,7 @@ function EditTna() {
                 }
             );
             const data = await response.json();
-            // console.log(data['data'])
+            console.log(data)
             if(data["data"]!=404){
                 setTna(data);       
             }
@@ -46,6 +49,27 @@ function EditTna() {
         getTna();        
     }, []);
 
+    const [currStrong,setCurrStrong] = useState("")
+    const [currNum,setCurrNum] = useState()
+    const [currType,setCurrType] = useState("")
+    const [currTags,setCurrTags] = useState([])
+
+    useEffect(() => {
+        try{
+            if(tna !== undefined){
+                // setCurrStrong(elections[id][0]);
+                setCurrStrong("AA1122");
+                setCurrNum(23);
+                setCurrType("CU");
+                setCurrTags(["SSSPPPAARRR", "AAAGGSOOOSO"]);
+                setTags(currTags)
+            }
+
+        }catch{
+            console.log("err")
+        }
+
+    },[tna])
     const row21 = {
         'User_ID': 'MH00000CEO',
         "": <div style={{ display: "flex", flexDirection: "row", alignItems: "right", justifyContent: "flex-start", paddingLeft: "40px" }}><img src={UserImageTest} /></div>,
@@ -106,16 +130,61 @@ function EditTna() {
         setEdit_Temporary_Users(i);
     };
 
-
-
+    async function postEditTna() {
+        try {
+            const response = await fetch(
+                `${process.env.REACT_APP_API_SERVER}/unit/edit_tna_schedule`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: 'same-origin',
+                    body: JSON.stringify({
+                        // Severity: document.getElementById("formSeverity").value.slice(-1),
+                        tnaid: 1,
+                        StrongRoom: "string",
+                        NumAwarenessUnit: "string",
+                        UnitType: "string",
+                        tempUsers: [
+                          "string"
+                        ]
+                    }),
+                }
+            );
+            
+            // console.log(response);
+            const data = await response.json();
+            // console.log("data" + data);
+            // console.log("Message:" + data["message"])
+            if (data["message"] === "Insertion successful") {
+                document.getElementById("form").reset();
+                alert("Successful");
+                window.location.pathname = "/session/unitmanagement/schedule_tna_list";
+            } else {
+                alert("Failed!");
+            
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
+    const onFormSubmit = async (e) => {
+        e.preventDefault();
+        console.log("submit button clicked")
+        postEditTna();
+    };
 
     return(
         <>
+        {edit === false ? 
         <button className={defStyles.editBtn} 
             onClick = {() => {setEdit(true)}}
         >
             Edit TnA
         </button>
+        : "" }
+        <form onSubmit={onFormSubmit} id="form">
         <div className={defStyles.mainDiv}>
         <div className={defStyles.Schedule_container}>
             <div className={defStyles.Schedule_header}>
@@ -127,54 +196,95 @@ function EditTna() {
 
                 <div class={defStyles.div1}>
                     <p> Strong Room</p>
-                    <select
-                        //   required={!isTemporary}
-                        required
-                        name=""
-                        id="formLevel"
-                        className=" selectBox"
-                        disabled = {edit === true ? false : true}
-                    //   onChange={(e) => setRoleFunc(e.target.value)}
-                    >
-                        <option value="" disabled selected>
-                           Select Warehouse ID
-                        </option>
-                        {/* {levelArray.map((st, index) => (
-                            <option value={st} className="text-black">
-                                {index + 1}. {st}
-                            </option>
-                        ))} */}
 
-                    </select>
+                    {edit === false ?
+                    <input 
+                    class={defStyles.input}
+                    disabled = {true}
+                    defaultValue={currStrong}
+                    type = "text"
+                    className=" selectBox"
+                    
+                    ></input>:
+
+                    <input  
+                    class={defStyles.input}
+                    type="text"
+                    // id="formLevel"
+                    className="selectBox"
+                    placeholder='Enter Warehouse ID'
+                    // disabled = {edit === true ? false : true}
+                    ></input>
+                    }
 
                 </div>
 
                 <div class={defStyles.div2}> 
                 <p> Num Awareness Unit</p>
-                <input  
+
+                {edit === false ?
+                    <input 
+                    class={defStyles.input}
+                    disabled = {true}
+                    defaultValue={currNum}
+                    type = "text"
+                    className=" selectBox"
+                    
+                    ></input>:
+
+                    <input  
                     class={defStyles.input}
                     type="number"
                     // id="formLevel"
                     className="selectBox"
                     placeholder='Enter Number'
-                    disabled = {edit === true ? false : true}
+                    defaultValue={currNum}
+                    // disabled = {edit === true ? false : true}
                     ></input>
+                    }
+                
                 </div>
 
                 <div class={defStyles.div3}> 
                 <p> Unit Type</p>
-                    <select
+                    
+
+                    {edit === false ?
+                    <input 
+                    class={defStyles.input}
+                    disabled = {true}
+                    defaultValue={currType}
+                    type = "text"
+                    className=" selectBox"
+                    
+                    ></input>:
+
+                        <select
                         //   required={!isTemporary}
                         required
                         name=""
                         id="formLevel"
                         className=" selectBox"
-                        disabled = {edit === true ? false : true}
+                        defaultValue={currType}
+                        // disabled = {edit === true ? false : true}
                     //   onChange={(e) => setRoleFunc(e.target.value)}
                     >
                         <option value="" disabled selected>
                             Select Unit Type
                         </option>
+                        <option value="CU">
+                            CU
+                        </option>
+                        <option value="BU">
+                            BU
+                        </option>
+                        <option value="VT">
+                            VT
+                        </option>
+                        <option value="SC">
+                            SC
+                        </option>
+
                         {/* {levelArray.map((st, index) => (
                             <option value={st} className="text-black">
                                 {index + 1}. {st}
@@ -182,32 +292,48 @@ function EditTna() {
                         ))} */}
 
                     </select>
+                    }
                 
                 </div>
 
                 <div class={defStyles.div4}> 
-                <p> Timestamp</p>
-                <input  
-                    class={defStyles.dateInput}
-                    type="date"
-                    // id="formLevel"
-                    className=" selectBox"
-                    disabled = {edit === true ? false : true}
-                    ></input>
+               
                 </div>
 
                 <div class={defStyles.div5Tna}> 
-                <p> Add Temporary Users</p>
-                    <TagsInput
+                <p>{edit === true ? "Add": " "} Temporary Users</p>
 
+                {edit === false ?
+                    <input 
+                    class={defStyles.input}
+                    disabled = {true}
+                    defaultValue={currTags.map((val,index) => {
+                        if(index === 0){
+                            return(val) 
+                        }else{
+                            return(" " + val)
+                        }
+                         
+                    }) }
+                    type = "text"
+                    className=" selectBox"
+                    
+                    ></input>:
+
+                    <TagsInput
                     // style={{ width: '100%' }}
                     className='li_noti hide-scroll-bar tagInput p-2'
                     value={tags}
                     id="formTags"
                     onChange={setTags}
-                    disabled = {edit === true ? false : true}
+                    // disabled = {edit === true ? false : true}
                     placeHolder="SSPPAAARRR, SSPPAAARRR"
                     />
+                    }
+                
+
+
+
                 </div>
 
                 
@@ -287,6 +413,7 @@ function EditTna() {
             {edit === true ?
             <button class={defStyles.submitBtn} type='submit' > Submit </button>
             : " "}
+            </form>
         </>
     )
 }
