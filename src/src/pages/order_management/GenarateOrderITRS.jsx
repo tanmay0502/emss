@@ -184,7 +184,8 @@ export default function GenarateOrderITRS() {
     }
   })
 
-  const updateTracker = () => {
+  const [update, setUpdate] = useState(0);
+  useEffect(() => {
     setTotal_BU_M2(0);
     setTotal_BU_M3(0);
     setTotal_CU_M2(0);
@@ -215,7 +216,7 @@ export default function GenarateOrderITRS() {
         }
       }
     }
-  }
+  },[update])
 
   return (
     <div className="p-3">
@@ -335,7 +336,7 @@ export default function GenarateOrderITRS() {
                               prevBody.details[ind].unitDetails[ind2].item = e.target.value;
                               return (prevBody);
                             })
-                            updateTracker();
+                            setUpdate((prev)=>{return (prev+1)%10});
                           }}
                         >
                           <option
@@ -351,7 +352,7 @@ export default function GenarateOrderITRS() {
                                 prev.details[ind].unitDetails[ind2].itemquantity = e.target.value;
                                 return prev;
                               })
-                              updateTracker();
+                              setUpdate((prev)=>{return (prev+1)%10});
                             }} required></input>
                         </td>
                         <td>
@@ -362,7 +363,7 @@ export default function GenarateOrderITRS() {
                                 prev.details[ind].unitDetails[ind2].itemmodel = e.target.value;
                                 return prev;
                               })
-                              updateTracker();
+                              setUpdate((prev)=>{return (prev+1)%10});
                             }}
 
                           >
@@ -380,7 +381,7 @@ export default function GenarateOrderITRS() {
                                 prev.details[ind].unitDetails[ind2].manufacturer = e.target.value;
                                 return prev;
                               })
-                              updateTracker();
+                              setUpdate((prev)=>{return (prev+1)%10});
                             }}
 
                           >
