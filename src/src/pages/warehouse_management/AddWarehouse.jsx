@@ -16,7 +16,7 @@ import { useState } from "react";
 import './css/AddWarehouse.css'
 import { useNavigate } from "react-router-dom";
 
-import {getKeyByValue} from '../../assets/helper/ObjectHelpers.js'
+import { getKeyByValue } from '../../assets/helper/ObjectHelpers.js'
 
 export default function AddWarehouse() {
 
@@ -70,7 +70,7 @@ export default function AddWarehouse() {
       const warehouseType = document.getElementById("input_warehousetype").value;
       const buildingType = document.getElementById("input_buildingtype").value;
       const state =
-      states[document.getElementById("input_state").value];
+        states[document.getElementById("input_state").value];
       const PC = PCs[document.getElementById("input_PC").value];
 
       const lat = document.getElementById("input_lat").value;
@@ -137,7 +137,7 @@ export default function AddWarehouse() {
   async function getState() {
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_SERVER}/user/getStateList`,
+        // `${process.env.REACT_APP_API_SERVER}/user/getStateList`,
         {
           method: "GET",
           headers: {
@@ -158,9 +158,9 @@ export default function AddWarehouse() {
         );
 
         const data = await response.json();
-        
+
         console.log(data);
-        if(data["PCs"])
+        if (data["PCs"])
           setPCs(data["PCs"]);
         // setPCcodes(data["pccode"]);
       } catch (error) {
@@ -170,26 +170,26 @@ export default function AddWarehouse() {
       }
 
       const StateData = await response.json();
-      if(StateData) {
-      console.log(StateData)
+      if (StateData) {
+        console.log(StateData)
 
-      const ans = getKeyByValue(StateData['states'], first2)
+        const ans = getKeyByValue(StateData['states'], first2)
 
-      console.log("Val")
+        console.log("Val")
 
-      if (["EC", "ME", "MB"].includes(
-        window.sessionStorage.getItem("sessionToken").substring(0, 2)
-      )) {
-        setStates(StateData['states']);
-        // setStatesCode(StateData['stcodes']);
+        if (["EC", "ME", "MB"].includes(
+          window.sessionStorage.getItem("sessionToken").substring(0, 2)
+        )) {
+          setStates(StateData['states']);
+          // setStatesCode(StateData['stcodes']);
+        }
+        else {
+          setStates({
+            [ans]: first2
+          });
+          // setStatesCode([first2]);
+        }
       }
-      else {
-        setStates( {
-          [ans]: first2
-        } );
-        // setStatesCode([first2]);
-      }
-    }
     } catch (error) {
       console.log(error);
     }
@@ -240,7 +240,7 @@ export default function AddWarehouse() {
 
         const data = await response.json();
         console.log(data);
-        if(data["PCs"])
+        if (data["PCs"])
           setPCs(data["PCs"]);
         // setPCcodes(data["pccode"]);
       } catch (error) {
@@ -450,7 +450,7 @@ export default function AddWarehouse() {
 
               <div className="form_group">
                 <div className="form_label">
-                  <label htmlFor="">PC Code</label>
+                  <label htmlFor="">District</label>
                 </div>
                 <div className="form_select">
                   <select
@@ -471,6 +471,30 @@ export default function AddWarehouse() {
                   </div>
                 </div>
               </div>
+              <div className="form_group">
+                <div className="form_label">
+                  <label htmlFor="">AC</label>
+                </div>
+                <div className="form_select">
+                  <select
+                    required
+                    name=""
+                    id="input_PC"
+                    onChange={(e) => setPcFunc(e.target.value)}
+                  >
+                    <option value="">--Select--</option>
+                    {Object.keys(PCs).map((pc) => (
+                      <option value={pc} className="text-black">
+                        {pc}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="input_icon">
+                    <FaLaptopHouse size="1em" />
+                  </div>
+                </div>
+              </div>
+
               {/* <div></div>
               <div className="three-column-grid">----------------------------------------------- */}
 
