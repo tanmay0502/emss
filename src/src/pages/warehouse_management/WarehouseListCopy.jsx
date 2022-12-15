@@ -29,8 +29,6 @@ function WarehouseList() {
 	const [warehouseMapping, setWarehouseMapping] = useState(null)
 	console.log(window.localStorage.getItem("token"))
 
-
-
 	async function getList() {
 
 		try {
@@ -95,11 +93,15 @@ function WarehouseList() {
 		"Room Type": "Room Type",
 	}
 
+	const [id, setID] = useState("")
+	// useEffect(() => {
+	// 	console.log(tableData[0]['warehouseid'])
+	// }, [tableData])
 
 	useEffect(() => {
 		console.log(user);
 		if (user) {
-			console.log(user);
+			console.log({user});
 			setIsDetail(1);
 		}
 	}, [user]);
@@ -280,14 +282,34 @@ function WarehouseList() {
 					</div>
 
 				</div> : <></>}
+				{/* {tableData !== undefined &&
+				<DynamicDataTable className="warehouses-table"
+				rows={tableData}
+				fieldsToExclude={["Details", "Edit", "BuildingType", "warehouseid", "Room Type"]}
+				orderByField={sortMapping[sortBy]}
+				orderByDirection={sortOrder}
+				buttons={[]}
+				onClick={(event, row) => {
+					// console.log(row["Details"]["warehouseid"])
+					navigate(`warehousedetails/id=${row["Details"]["warehouseid"]}`)
+					// onClick={() => window.location = `session/warehousemanagement/warehousedetails/id=${value[0]}`}
+				}}
+				
+				allowOrderingBy={[
+					'warehouseid', 'status', "type"
+				]} />
+				} */}
+
 				{isDetail == 0 ? <DynamicDataTable className="warehouses-table"
 					rows={tableData}
 					fieldsToExclude={["Details", "Edit", "BuildingType", "warehouseid", "Room Type"]}
 					orderByField={sortMapping[sortBy]}
 					orderByDirection={sortOrder}
-					// onClick={(event, row) => {
-					// 	details(row["Details"])
-					// }}
+					onClick={(event, row) => {
+						details(row)
+						// navigate(`warehousedetails/id=${row['warehouseid']}`)
+						// onClick={() => window.location = `session/warehousemanagement/warehousedetails/id=${value[0]}`}
+					}}
 					buttons={[]}
 					allowOrderingBy={[
 						'warehouseid', 'status', "type"

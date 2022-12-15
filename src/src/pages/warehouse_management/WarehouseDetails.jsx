@@ -15,6 +15,8 @@ export default function WarehouseDetails() {
         const param = arr[arr.length - 1];
         const arr1 = param.split("=");
         const myId = arr1[1];
+        console.log(myId)
+
         try {
             const response = await fetch(
                 `${process.env.REACT_APP_API_SERVER}/warehouse/warehouseDetails/${myId}`,

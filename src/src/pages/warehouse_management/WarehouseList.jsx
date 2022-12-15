@@ -190,8 +190,8 @@ export default function WarehouseList() {
                             <td>
                                 {value[1]}
                             </td>
-                            <td><div className="btn_details" id={value[0]} onClick={() => window.location = `warehousemanagement/warehousedetails/id=${value[0]}`}><FaListUl /></div></td>
-                            <td><div className="btn_edit" id={value[0]} onClick={() => window.location = `warehousemanagement/modifywarehouse/id=${value[0]}`}><FaEdit /></div></td>
+                            <td><div className="btn_details" id={value[0]} onClick={() => window.location = `session/warehousemanagement/warehousedetails/id=${value[0]}`}><FaListUl /></div></td>
+                            <td><div className="btn_edit" id={value[0]} onClick={() => window.location = `session/warehousemanagement/modifywarehouse/id=${value[0]}`}><FaEdit /></div></td>
 
                             <td>
                                 <ToggleSwitch key={value[0]} warehouseID={value[0]} label={value[13] == "A" ? "Deactivate" : "Activate"} checked={value[13] == "A"} onToggle={(e) => value[13] == "A" ? action(e, 0) : action(e, 1)} />

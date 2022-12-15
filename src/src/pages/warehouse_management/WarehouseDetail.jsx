@@ -12,6 +12,7 @@ function WarehouseDetail(props) {
   const [show, setShow] = useState(0)
 
   function getlatlong(latlong) {
+    if(latlong !== undefined){
     let p = latlong.slice(1, (latlong.length - 1))
     console.log(p)
 
@@ -35,13 +36,13 @@ function WarehouseDetail(props) {
 
     setLat(lat)
     setLong(long)
-
+  }
   }
 
   useEffect(() => {
     getlatlong(props.detail["warehouselatlong"])
-  })
-  console.log(props.detail, "details")
+  },)
+  // console.log(props.detail, "details")
 
 
   return (
@@ -199,7 +200,7 @@ function WarehouseDetail(props) {
           </div>
         )}
       </div>
-      <AuditDetail />
+      <AuditDetail id={props.detail["warehouseid"]} />
     </div>
   );
 }
