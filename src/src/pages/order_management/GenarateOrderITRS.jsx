@@ -140,8 +140,13 @@ export default function GenarateOrderITRS() {
         openModal();
       }
       if (response["status"] == 200) {
-        window.location = '/session/ordermanagement'
+        // alert("Order Generated Successfully");
+        getcertificate(p);
+        openModal();
       }
+      // if (response["status"] == 200) {
+      //   window.location = '/session/ordermanagement'
+      // }
     } catch (err) {
       console.log(err);
     }
