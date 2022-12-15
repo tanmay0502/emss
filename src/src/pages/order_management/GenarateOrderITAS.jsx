@@ -6,7 +6,7 @@ import "./styles/generateOrder.css";
 export default function GenarateOrderITAS() {
 
   const { orderType } = useParams();
-  const [districts, setDistricts] = useState([]);
+  const [states, setStates] = useState([]);
   const [isPageLoaded, setIsPageLoaded] = useState(0);
   const [orderCount, setOrderCount] = useState({ 1: [1] });
   const [total_BU_M2, setTotal_BU_M2] = useState(0)
@@ -16,29 +16,106 @@ export default function GenarateOrderITAS() {
   const [total_VVPAT_M2, setTotal_VVPAT_M2] = useState(0)
   const [total_VVPAT_M3, setTotal_VVPAT_M3] = useState(0)
 
-  const sampleBody = {
-    "type": orderType,
-    "details": [
-      {
-        "source": "",
-        "destination": "",
-        "unitDetails": [
-          {
-            "item": "",
-            "itemmodel": "",
-            "manufacturer": "",
-            "itemquantity": 0
-          }
-        ]
-      }
-    ]
+  function increaseOrder() {
+    const p = parseInt(Object.keys(orderCount)[Object.keys(orderCount).length - 1]) + 1
+    setOrderCount({ ...orderCount, [p]: [1] });
+
   }
 
-  const [body, setBody] = useState(sampleBody)
-  const submmit = async () => {
-    console.log("Submitted")
-    console.log(body)
+  function increaseOne(index) {
 
+    let temp = orderCount;
+    temp[index].push(parseInt(temp[index][temp[index].length - 1]) + 1)
+    setOrderCount({ ...temp });
+
+  }
+
+  function calculate() {
+
+    console.log("calculate")
+    let _total_CU_M2 = 0
+    let _total_CU_M3 = 0
+    let _total_BU_M2 = 0
+    let _total_BU_M3 = 0
+    let _total_VVPAT_M2 = 0
+    let _total_VVPAT_M3 = 0
+
+    if ((Object.keys((orderCount)))) {
+
+      (Object.keys(orderCount)).map((index) => {
+        orderCount[index].map((index2) => {
+          if (document.getElementById(index.toString() + "_" + index2.toString() + "_quantity") && document.getElementById(index.toString() + "_" + index2.toString() + "_type").value != "select" && document.getElementById(index.toString() + "_" + index2.toString() + "_model").value != "select" && document.getElementById(index.toString() + "_" + index2.toString() + "_manufacturer").value!="select") {
+            const q = parseInt(document.getElementById(index.toString() + "_" + index2.toString() + "_quantity").value);
+            const type = document.getElementById(index.toString() + "_" + index2.toString() + "_type").value
+            const model = document.getElementById(index.toString() + "_" + index2.toString() + "_model").value
+            const manufacturer = document.getElementById(index.toString() + "_" + index2.toString() + "_manufacturer").value
+
+            let temp = "";
+            temp += "_total_" + type + "_" + model;
+            console.log(temp, eval(temp))
+            let p1 = eval(temp)
+            p1 = p1 + q;
+            eval(temp + " = " + p1.toString())
+            console.log(eval(temp))
+
+
+          }
+        })
+      })
+    }
+
+    console.log(_total_CU_M2, _total_CU_M3, _total_BU_M2, _total_BU_M3, _total_VVPAT_M2, _total_VVPAT_M3)
+    setTotal_BU_M2(_total_BU_M2)
+    setTotal_BU_M3(_total_BU_M3)
+    setTotal_CU_M2(_total_CU_M2)
+    setTotal_CU_M3(_total_CU_M3)
+    setTotal_VVPAT_M2(_total_VVPAT_M2)
+    setTotal_VVPAT_M3(_total_VVPAT_M3)
+
+  }
+
+  const onFormSubmit = async (e) => {
+    e.preventDefault();
+    console.log("Submitted")
+    let details = []
+
+    Object.keys(orderCount).map((index) => {
+      let temp = {}
+      if (document.getElementById(index.toString() + "_source")) {
+        temp["source"] = states[document.getElementById(index.toString() + "_source").value]
+        temp["destination"] = states[document.getElementById(index.toString() + "_destination").value]
+        temp["unitDetails"] = []
+        orderCount[index].map((index2) => {
+          if (document.getElementById(index.toString() + "_" + index2.toString() + "_quantity") && document.getElementById(index.toString() + "_" + index2.toString() + "_type").value != "select" && document.getElementById(index.toString() + "_" + index2.toString() + "_model").value != "select" &&  document.getElementById(index.toString() + "_" + index2.toString() + "_manufacturer").value!="select") {
+            const q = parseInt(document.getElementById(index.toString() + "_" + index2.toString() + "_quantity").value);
+            const type = document.getElementById(index.toString() + "_" + index2.toString() + "_type").value
+            const model = document.getElementById(index.toString() + "_" + index2.toString() + "_model").value
+            const manufacturer = document.getElementById(index.toString() + "_" + index2.toString() + "_manufacturer").value
+
+            let temp2 = {};
+            temp2["item"] = type
+            temp2["itemmodel"] = model
+            temp2["itemquantity"] = q
+            temp2["manufacturer"] = manufacturer
+            temp["unitDetails"].push(temp2)
+
+
+
+          }
+        })
+        details.push(temp);
+      }
+    })
+
+    let data = {}
+    if(document.getElementById("orderId").value && document.getElementById("orderId").value!=""){
+      data["orderid"] = document.getElementById("orderId").value
+    }
+    data["type"] = orderType
+    data["creatoruserid"] = sessionStorage.getItem("sessionToken");
+    data["details"] = details
+    console.log(`${process.env.REACT_APP_API_SERVER}`)
+    console.log(data)
     try {
       const response = await fetch(
         `${process.env.REACT_APP_API_SERVER}/order/generate_order/`,
@@ -47,41 +124,46 @@ export default function GenarateOrderITAS() {
           headers: {
             "Content-Type": "application/json",
           },
-          credentials: 'include',
-          body: JSON.stringify(body),
+          credentials: 'same-origin',
+          body: JSON.stringify(data),
+
+          mode: "cors",
+
         }
       );
       const data2 = await response.json();
         console.log(response)
+        console.log(data2)
       if (response["status"] == 200) {
         alert("Order Generated Successfully");
       }
-      // if (response["status"] == 200) {
-      //   window.location = '/session/ordermanagement'
-      // }
+      if (response["status"] == 200) {
+        window.location = '/session/ordermanagement'
+      }
     } catch (err) {
       console.log(err);
     }
-  };
-  
 
-  async function getDistricts() {
+
+
+  };
+
+
+  async function getState() {
     try {
-      let uri = `${process.env.REACT_APP_API_SERVER}/user/getRealm`
       const response = await fetch(
-        uri,
+        `${process.env.REACT_APP_API_SERVER}/user/getStateList`,
         {
-          method: "POST",
+          method: "GET",
           headers: {
             "Content-Type": "application/json",
           },
-          credentials: 'include',
-          body:{}
+          mode: "cors"
         }
       );
       const data2 = await response.json();
-      console.log(data2)
-      setDistricts(data2["dist"]);
+      console.log(data2);
+      setStates(data2["states"]);
     } catch (err) {
       console.log(err);
     }
@@ -89,22 +171,23 @@ export default function GenarateOrderITAS() {
 
   useEffect(() => {
     if (isPageLoaded == 0) {
-      getDistricts();
+      getState();
       setIsPageLoaded(1);
 
     }
   })
 
   return (
-    <div className="p-3">
+    <form className="p-3"
+      onSubmit={onFormSubmit}>
       <p className="text-left text-lg flex">
         <CreateIssueIcon className="mr-2" />
-        Request ID : {body.type}
+        Request ID : {orderType}
       </p>
       <div className="flex w-full">
         <div className=" w-3/5">
           
-        {body.details.map((val,ind) => (
+          {Object.keys(orderCount).map((index) => (
 
 
             <div className="bg-white p-6 rounded-lg shadow-lg mt-2 w-full">
@@ -116,20 +199,17 @@ export default function GenarateOrderITAS() {
                     <select
                       className="w-5/6 h-10 p-2 border rounded-md "
                       placeholder="Type"
+                      id={index.toString() + "_source"}
                       required
                     >
                       <option>Select</option>
-                      {districts &&
-                        districts.map((val) => (
-                          <option value={val} className="text-black" onClick={()=>{
-                            let prevBody=body;
-                            prevBody.details[ind].source=val;
-                            setBody(prevBody);
-                          }}>
-                            {val}
+                      {states &&
+                        Object.keys(states).map((st) => (
+                          <option value={st} className="text-black">
+                            {st}
                           </option>
                         ))}
-                      {districts === [] && (<option value="0" className="text-black">
+                      {states == {} && (<option value="0" className="text-black">
                         Select:
                       </option>)}
                     </select>
@@ -143,22 +223,19 @@ export default function GenarateOrderITAS() {
                       <select
                         className="h-10 p-2 border rounded-md"
                         placeholder="Type"
+                        id={index.toString() + "_destination"}
                         required
 
                       >
                         {" "}
                         <option>Select</option>
-                        {districts &&
-                        districts.map((val) => (
-                          <option value={val} className="text-black" onClick={()=>{
-                            let prevBody=body;
-                            prevBody.details[ind].destination=val;
-                            setBody(prevBody);
-                          }}>
-                            {val}
-                          </option>
-                        ))}
-                        {districts == [] && (<option value="0" className="text-black">
+                        {states &&
+                          Object.keys(states).map((st) => (
+                            <option value={st} className="text-black">
+                              {st}
+                            </option>
+                          ))}
+                        {states == {} && (<option value="0" className="text-black">
                           Select:
                         </option>)}
                       </select>
@@ -180,10 +257,13 @@ export default function GenarateOrderITAS() {
                   <br />
                   
                   {
-                    body.details[ind].unitDetails.map((val, ind2) => (
+                    orderCount[index].map((v2) => (
                       <tr className="border-b-2 ">
                         <td><select className="border p-2 mb-2"
+                          id={index.toString() + "_" + v2.toString() + "_type"}
                           required
+                          onChange={calculate}
+
                         >
                           <option
                           >select</option>
@@ -192,21 +272,14 @@ export default function GenarateOrderITAS() {
                           <option value="VVPAT">VVPAT</option>
                         </select></td>
                         <td>
-                          <input type="number" placeholder="No of Unit" className=" w-2/3 p-2 rounded-lg border mb-2" 
-                          onChange={(e)=>{
-                            let prevBody=body;
-                            prevBody.details[ind].unitDetails[ind2].itemquantity=e.target.value;
-                            setBody(prevBody);
-                          }} required></input>
+                          <input type="number" placeholder="No of Unit" className=" w-2/3 p-2 rounded-lg border mb-2" id={index.toString() + "_" + v2.toString() + "_quantity"} onChange={calculate} required></input>
                         </td>
                         <td>
-                        <select className="border p-2 mb-2"
+                          <select className="border p-2 mb-2"
+                            id={index.toString() + "_" + v2.toString() + "_model"}
                             required
-                            onChange={(e)=>{
-                              let prevBody=body;
-                              prevBody.details[ind].unitDetails[ind2].itemmodel=e.target.value;
-                              setBody(prevBody);
-                            }}
+                            onChange={calculate}
+
                           >
                             <option
                             >select</option>
@@ -215,13 +288,11 @@ export default function GenarateOrderITAS() {
                           </select>
                         </td>
                         <td>
-                        <select className="border p-2 mb-2 ml-3 mr-7"
+                          <select className="border p-2 mb-2 ml-3 mr-7"
+                            id={index.toString() + "_" + v2.toString() + "_manufacturer"}
                             required
-                            onChange={(e)=>{
-                              let prevBody=body;
-                              prevBody.details[ind].unitDetails[ind2].manufacturer=e.target.value;
-                              setBody(prevBody);
-                            }}
+                            onChange={calculate}
+
                           >
                             <option
                             >select</option>
@@ -233,50 +304,14 @@ export default function GenarateOrderITAS() {
                     ))
                   }
                 </table>
-                <div className="flex justify-end w-full mt-1"><button type="button" onClick={() => {
-                  setBody((prev)=>{
-                  let temp = {
-                    "item": "string",
-                    "itemmodel": "string",
-                    "manufacturer": "string",
-                    "itemquantity": 0
-                  }
-                  if (prev.details[ind].unitDetails[prev.details[ind].unitDetails.length-1].itemquantity===0) {
-                    return prev;
-                  }
-                  const newBody = {...prev};
-                  prev.details[ind].unitDetails.push(temp)
-                  return newBody;
-                })
-                }} className="bg-orange-600 text-white  p-3  " >Add row</button></div>
+                <div className="flex justify-end w-full mt-1"><button type="button" onClick={() => increaseOne(index)} className="bg-orange-600 text-white  p-3  " >Add row</button></div>
               </div>
             </div>
           ))}
 
 
 
-          <div className="flex justify-end"><button onClick={()=>{
-            setBody((prev)=>{
-              let temp = {
-                "source": "string",
-                "destination": "string",
-                "unitDetails": [
-                  {
-                    "item": "string",
-                    "itemmodel": "string",
-                    "manufacturer": "string",
-                    "itemquantity": 0
-                  }
-                ]
-              }
-              if (prev.details[prev.details.length-1].destination==="string") {
-                return prev;
-              }
-              const newBody = {...prev};
-              newBody.details.push(temp)
-              return newBody;
-            })
-          }} type="button" className="text-white bg-orange-600 p-1 text-2xl w-10 h-10 -mt-5 " style={{ borderRadius: "50%" }}> +</button></div>
+          <div className="flex justify-end"><button onClick={increaseOrder} type="button" className="text-white bg-orange-600 p-1 text-2xl w-10 h-10 -mt-5 " style={{ borderRadius: "50%" }}> +</button></div>
         </div>
         <div className="w-2/5">
           <div className="bg-white p-6 rounded-lg shadow-lg mt-2 w-full m-4 ">
@@ -401,8 +436,8 @@ export default function GenarateOrderITAS() {
           </div>
         </div>
       </div>
-      <button onClick={()=>submmit()} className="text-white bg-orange-600">Submit</button>
-    </div>
+      <button type="submit" className="text-white bg-orange-600">Submit</button>
+    </form>
   );
 }
 
