@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { ReactComponent as CreateIssueIcon } from "../../assets/create_issue_request.svg";
 import { useParams } from "react-router-dom";
+import { useNavigate } from 'react-router-dom'
 import "./styles/generateOrder.css";
 import Modal from 'react-modal';
 
-export default function GenarateOrderDEF() {
+const userId = window.sessionStorage.getItem('sessionToken');
+
+export default function GenarateOrderSEC() {
 
   const { orderType } = useParams();
-  const [warehouses, setWarehouses] = useState([]);
-  const [manufacturers,setManufacturers] = useState(['MB','ME']);
+  const [states, setStates] = useState([]);
   const [isPageLoaded, setIsPageLoaded] = useState(0);
+  const [repetitions,SetRepetitions] = useState([]);
   const [total_BU_M2, setTotal_BU_M2] = useState(0)
   const [total_BU_M3, setTotal_BU_M3] = useState(0)
   const [total_CU_M2, setTotal_CU_M2] = useState(0)
@@ -79,12 +82,14 @@ if (flag == 0) {
     }
 }
 
+  const navigate = useNavigate();
+
   const sampleBody = {
     "type": orderType,
     "details": [
       {
-        "source": "string",
-        "destination": "string",
+        "source": userId.substring(0,2),
+        "destination": userId.substring(0,2),
         "unitDetails": [
           {
             "item": "string",
@@ -153,43 +158,16 @@ if (flag == 0) {
   };
 
 
-    async function getWarehouse() {
-      try {
-        const uri = `${process.env.REACT_APP_API_SERVER}/warehouse/listWarehouses`;
-        const response = await fetch(
-          uri,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            credentials: 'include',
-            body: {}
-          }
-        );
-        const data2 = await response.json();
-        const da = data2.data;
-        let a = [];
-        da.map(function(val){
-          console.log(val);
-          a.push(val.warehouseid);
-        });
-        setWarehouses(a);
-      } catch (err) {
-        console.log(err);
-      }
-    }
 
   useEffect(() => {
     if (isPageLoaded == 0) {
-      getWarehouse();
       setIsPageLoaded(1);
     }
   })
 
   return (
     <div className="p-3">
-    <Modal
+      <Modal
                             isOpen={modalIsOpen}
                             onAfterOpen={afterOpenModal}
                             onRequestClose={closeModal}
@@ -217,64 +195,7 @@ if (flag == 0) {
 
 
             <div className="bg-white p-6 rounded-lg shadow-lg mt-2 w-full">
-              <div className="flex justify-between">
-                <div className="w-full">
-                  <label className="flex  w-full mb-2">Source<span className="text-red-600">*</span></label>
 
-                  <div className="flex">
-                    <select
-                      className="w-5/6 h-10 p-2 border rounded-md "
-                      placeholder="Type"
-                      required
-                    >
-                      <option>Select</option>
-                      {warehouses &&
-                        warehouses.map((st) => (
-                          <option value={st} className="text-black" onClick={()=>{
-                            let prevBody=body;
-                            prevBody.details[ind].source=st;
-                            setBody(prevBody);
-                          }}>
-                            {st}
-                          </option>
-                        ))}
-                      {warehouses == [] && (<option value="0" className="text-black">
-                        Select:
-                      </option>)}
-                    </select>
-                  </div>
-                </div>
-                <div className="flex w-full justify-end" >
-                  <div className="w-5/6">
-                    <label className="flex  w-full mb-2">Destination<span className="text-red-600">*</span></label>
-
-                    <div className="flex w-full">
-                      <select
-                        className="h-10 p-2 border rounded-md"
-                        placeholder="Type"
-                        required
-
-                      >
-                        {" "}
-                        <option>Select</option>
-                        {manufacturers &&
-                          manufacturers.map((st) => (
-                            <option value={st} className="text-black" onClick={()=>{
-                              let prevBody=body;
-                              prevBody.details[ind].destination=st;
-                              setBody(prevBody);
-                            }}>
-                              {st}
-                            </option>
-                          ))}
-                        {manufacturers == [] && (<option value="0" className="text-black">
-                          Select:
-                        </option>)}
-                      </select>
-                    </div>
-                  </div>
-                </div>
-              </div>
               <p className="text-left font-bold mt-2 text-lg mb-4" >
                 Units Description
               </p>
@@ -368,6 +289,21 @@ if (flag == 0) {
                   if (prev.details[ind].unitDetails[prev.details[ind].unitDetails.length-1].itemquantity===0) {
                     return prev;
                   }
+                  console.log(prev);
+                  const p = prev.details[0].unitDetails;
+                  const u = p[p.length-1];
+                  const o = u.itemmodel+u.manufacturer+u.item;
+                  repetitions.map(function(val){
+                    if(val==o) {
+                      console.log("W");
+                      alert("Error : Identical Entries");
+                      window.location.reload(false);
+                    }
+                  });
+                  SetRepetitions([
+                    ...repetitions,
+                    o
+                  ]);
                   const newBody = {...prev};
                   prev.details[ind].unitDetails.push(temp)
                   return newBody;
@@ -377,28 +313,6 @@ if (flag == 0) {
             </div>
           ))}
 
-          <div className="flex justify-end"><button onClick={()=>{
-            setBody((prev)=>{
-              let temp = {
-                "source": "string",
-                "destination": "string",
-                "unitDetails": [
-                  {
-                    "item": "string",
-                    "itemmodel": "string",
-                    "manufacturer": "string",
-                    "itemquantity": 0
-                  }
-                ]
-              }
-              if (prev.details[prev.details.length-1].destination==="string") {
-                return prev;
-              }
-              const newBody = {...prev};
-              newBody.details.push(temp)
-              return newBody;
-            })
-          }} type="button" className="text-white bg-orange-600 p-1 text-2xl w-10 h-10 -mt-5 " style={{ borderRadius: "50%" }}> +</button></div>
         </div>
         <div className="w-2/5">
           <div className="bg-white p-6 rounded-lg shadow-lg mt-2 w-full m-4 ">
