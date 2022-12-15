@@ -618,12 +618,13 @@ export default function HomePage() {
                     </table>
                     </div>
                 </div>
-
+                {flc !== undefined &&
                 <div className={styles.myCardSampleHover}
                     onClick={Redirect} >
                     <div className={styles.card_title}>
                         <span>FLC Scheduling</span>
                     </div>
+                    
                     <div className={styles.Box123}>
                         <div className="flex" >
                             <div style={{ marginLeft: "13%", fontSize: "15px" }}> District <div style={{ fontSize: "15px" }}> {flc[1]} </div> </div>
@@ -631,7 +632,7 @@ export default function HomePage() {
                             <div style={{ marginLeft: "15%", fontSize: "15px" }}> Manufacturer <div style={{ marginLeft: "35%", fontSize: "15px" }}> {flc[2]}  </div></div>
                         </div>
                     </div>
-
+                    
                     <div className={styles.LI_TAG}>
                         <li className="mb-4">
                             <span>
@@ -675,6 +676,7 @@ export default function HomePage() {
                         </li>
                     </div>
                 </div>
+                }
                 <div className={styles.myCardSampleHover} onClick={()=>{navigate(`/session/unitmanagement/first_randomisation_scheduling`)}}>
                     <div className={styles.card_title}>
                         <span>1st Randomisation Scheduling</span>

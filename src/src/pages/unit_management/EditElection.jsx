@@ -8,8 +8,8 @@ function EditElection() {
         const URL = window.location.href;
         const arr = URL.split("/");
         const param = arr[arr.length - 1];
-        const arr1 = param.split("=");
-        return arr1[1];
+        const arr1 = param.split("/");
+        return arr1[0];
       }
     
     var currentdate = new Date(); 
@@ -74,7 +74,7 @@ function EditElection() {
 
         try {
             const response = await fetch(
-                `${process.env.REACT_APP_API_SERVER}/unit/flc_announce`,
+                // `${process.env.REACT_APP_API_SERVER}/unit/flc_announce`,
                 {
                     method: "POST",
                     headers: {
@@ -176,7 +176,7 @@ function EditElection() {
     console.log(states[state])
     // getPCListbyState()
     useEffect(() => {
-        getState();
+        // getState();
         getElectionList();
         // getPCListbyState()
         // console.log(states)
@@ -323,11 +323,13 @@ function EditElection() {
     
     return(
         <>
+        {edit === false ? 
         <button className={styles.editBtn} 
             onClick = {() => { setEdit(true)}}
         >
-            Edit Flc Schedule
+            Edit Election
         </button>
+        :""}
         <form onSubmit={onFormSubmit} id="form">
         <div className={styles.Schedule_container}>
             <div className={styles.Schedule_header}>
@@ -339,6 +341,7 @@ function EditElection() {
 
                 <div class={styles.div1}>
                     <p> State</p>
+
                     {edit === false ?
                     <input 
                     class={styles.dateInput}
