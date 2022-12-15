@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import DynamicDataTable from "@langleyfoxall/react-dynamic-data-table";
 import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom'
@@ -16,6 +16,10 @@ export default function OrderList() {
     const [isDetail, setIsDetail] = useState(0);
     const [tableFilter, setTableFilter] = useState("");
 
+    function generatePDF(id){
+        console.log(id)
+        alert("Order Id "+id+" pdf generated");
+    }
 
     const sortMapping = {
         "None": null,
@@ -60,7 +64,8 @@ export default function OrderList() {
                         'type': val['type'],
                         'creatoruserid': val['creatoruserid'],
                         'orderstatus': val['orderstatus'] == 'OC' ? 'Completed' : 'Pending',
-                        'timestamp': new Date(val['timestamp']).toLocaleDateString('en-us', { year: "numeric", month: "short", day: "numeric", hour: 'numeric', minute: 'numeric' })
+                        'timestamp': new Date(val['timestamp']).toLocaleDateString('en-us', { year: "numeric", month: "short", day: "numeric", hour: 'numeric', minute: 'numeric' }),
+                        
                     })
                 }
                 else {
@@ -68,7 +73,15 @@ export default function OrderList() {
                 }
             }).filter(val => val))]
 
-            setTableData(tmp.map(val => JSON.parse(val)))
+            // setTableData(tmp.map(val => JSON.parse(val)));
+            let pp=tmp.map(val => JSON.parse(val));
+            
+            for(let i=0;i<pp.length;i++){
+                pp[i]["print"]=(<button onClick={()=>generatePDF(pp[i]["displayID"])} className="text-white">Print Pdf</button>);
+            }
+            console.log(pp);
+            setTableData(pp);
+
         }
 
         return () => {

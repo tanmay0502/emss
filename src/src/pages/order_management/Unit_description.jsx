@@ -9,7 +9,10 @@ import SubOrder from "./SubOrder";
 
 export default function UnitDescription(props) {
 
-
+    function generatePDF(id){
+        console.log(id)
+        alert("Order Id "+id+" pdf generated");
+    }
     const [Length, setLength] = useState(0);
     const units = [props.Order]
     const OrderID = props.OrderID
@@ -42,6 +45,7 @@ export default function UnitDescription(props) {
 
             <div className={styles.orderDetailsIDandSearch}>
                 <span><span className={styles.orderDetailsID}>Order ID: </span>{OrderID}</span>
+                <button onClick={()=>generatePDF(OrderID)} className="text-white">Print Pdf</button>
                 <div className={styles.orderDetailsSearch}>
                     <SearchInputIcon />
                     <input type="search" name="searchRefID" placeholder="Search By Reference ID" />

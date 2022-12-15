@@ -107,7 +107,8 @@ export default function WareHouseListUnitTrackerFillDemand(props) {
         let v3={
             "type":"select",
             "quantity":0,
-            "model":"select"
+            "model":"select",
+            "manufacturer":"select"
         }
         let temp = orderCount;
         if(Object.keys(temp[index]).length==0) {
@@ -146,7 +147,7 @@ export default function WareHouseListUnitTrackerFillDemand(props) {
 
         Object.keys(dummy2).map((key1)=>{
             Object.keys(dummy2[key1]).map((key2)=>{
-                if(dummy2[key1][key2]["type"]!="select" && dummy2[key1][key2]["model"]!="select"){
+                if(dummy2[key1][key2]["type"]!="select" && dummy2[key1][key2]["model"]!="select" && dummy2[key1][key2]["manufacturer"]!="select"){
                     
                     let temp=""
                     temp += "_total_" + dummy2[key1][key2]["type"] + "_" + dummy2[key1][key2]["model"];
@@ -258,11 +259,11 @@ export default function WareHouseListUnitTrackerFillDemand(props) {
             }
         }).map((val) => {
             return {
-                "Warehouse ID": val[1] == 'P' ? <Fragment><span style={{ display: 'flex', justifyContent: 'left', alignItems: 'left', marginLeft: "35%" }}><FaCircle size='0.8em' className='PermaWarehouse' /><span style={{ marginLeft: '10px', marginRight: '10px' }}>{val[0]}</span>{val['doublelock'] ? <Fragment><FaKey className='keyColor' /><FaKey className='keyColor' /></Fragment> : <FaKey className='keyColor' />}</span></Fragment> : <Fragment><span style={{ display: 'flex', justifyContent: 'left', alignItems: 'left', marginLeft: "35%" }}><FaCircle size='0.8em' className='TempWarehouse' /><span style={{ marginLeft: '10px', marginRight: '10px' }}>{val[0]}</span>{val['doublelock'] ? <Fragment><FaKey className='keyColor' /><FaKey className='keyColor' /></Fragment> : <FaKey className='keyColor' />}</span></Fragment>,
+                "Warehouse ID": val["type"] == 'P' ? <Fragment><span style={{ display: 'flex', justifyContent: 'left', alignItems: 'left', marginLeft: "35%" }}><FaCircle size='0.8em' className='PermaWarehouse' /><span style={{ marginLeft: '10px', marginRight: '10px' }}>{val["warehouseid"]}</span>{val['doublelock'] ? <Fragment><FaKey className='keyColor' /><FaKey className='keyColor' /></Fragment> : <FaKey className='keyColor' />}</span></Fragment> : <Fragment><span style={{ display: 'flex', justifyContent: 'left', alignItems: 'left', marginLeft: "35%" }}><FaCircle size='0.8em' className='TempWarehouse' /><span style={{ marginLeft: '10px', marginRight: '10px' }}>{val["warehouseid"]}</span>{val['doublelock'] ? <Fragment><FaKey className='keyColor' /><FaKey className='keyColor' /></Fragment> : <FaKey className='keyColor' />}</span></Fragment>,
                 "Room Type": warehouseMapping ? warehouseMapping["data"][val[2]] : "",
-                "Warehouse Type": val[1]=="P" ?"Parmanent" : "Temporary",
-                "Status": <ToggleButton userID={val[0]} checked={val[3] === 'A'} onToggle={(e) => {
-                    if (val[3] !== "A") {
+                "Warehouse Type": val["type"]=="P" ?"Parmanent" : "Temporary",
+                "Status": <ToggleButton userID={val["warehouseid"]} checked={val[3] === 'A'} onToggle={(e) => {
+                    if (val["status"] !== "A") {
                         ActivateWarehouse(e)
                     }
                     else {
@@ -309,17 +310,13 @@ export default function WareHouseListUnitTrackerFillDemand(props) {
                 })
 
             const data = await response.json();
-            console.log(data)
+            console.log("warehouse list",data)
             let activedata=[]
            
             data["data"].map((warehouse)=>{
-                if(warehouse[3]=="A"){
                     activedata.push(warehouse)
-                    
-
-                }
             })
-            console.log(activedata)
+            console.log("Active data",activedata)
             setDetails(activedata);
 
         } catch (error) {
@@ -397,9 +394,12 @@ export default function WareHouseListUnitTrackerFillDemand(props) {
           
         }
 
+        console.log(Details)
+
         Object.keys(orderCount).map((order)=>{
+            // console.log(Details[order])
             let detail = {
-                0:Details[order][0] ,
+                "warehouseid":Details[order]["warehouseid"] ,
                 "unitDetails": [
                   
                 ]
@@ -408,11 +408,13 @@ export default function WareHouseListUnitTrackerFillDemand(props) {
                 let temp=  {
                     "item": orderCount[order][miniorder]["type"],
                     "itemmodel": orderCount[order][miniorder]["model"],
-                    "itemquantity": orderCount[order][miniorder]["quantity"]
+                    "itemquantity": orderCount[order][miniorder]["quantity"],
+                    "manufacturer": orderCount[order][miniorder]["manufacturer"]
                   }
-                if(temp["item"]!="select" && temp["itemmodel"]!="select" && temp["itemquantity"]!=0)
+                if(temp["item"]!="select" && temp["itemmodel"]!="select" && temp["manufacturer"]!="select" && temp["itemquantity"]!=0)
                 detail["unitDetails"].push(temp);
               })
+              if(detail["unitDetails"].length)
               data["details"].push(detail);
         })
         console.log(data)
@@ -425,10 +427,9 @@ export default function WareHouseListUnitTrackerFillDemand(props) {
                 headers: {
                   "Content-Type": "application/json",
                 },
-                credentials: 'same-origin',
+                credentials: 'include',
                 body: JSON.stringify(data),
       
-                mode: "cors",
       
               }
             );
@@ -515,6 +516,7 @@ export default function WareHouseListUnitTrackerFillDemand(props) {
                                                             <th className="font-normal">Type</th>
                                                             <th className="font-normal">Quantity</th>
                                                             <th className="font-normal">Model</th>
+                                                            <th className="font-normal">Manufacturer</th>
                                                         </tr>
                                                         <br />
 
@@ -549,6 +551,20 @@ export default function WareHouseListUnitTrackerFillDemand(props) {
                                                                     >select</option>
                                                                     <option value="M2">M2</option>
                                                                     <option value="M3">M3</option>
+                                                                </select>
+                                                                </td>
+                                                                <td>
+                                                                <select className="border p-2 mb-2 text-black"
+                                                                    id={id.toString() + "_" + v2.toString() + "_manufacturer"}
+                                                                    required
+                                                                    onChange={(e)=>calculate(id,v2,"manufacturer",e.target.value)}
+                                                                    value={orderCount[id][v2]["manufacturer"]}
+
+                                                                >
+                                                                    <option value="select"
+                                                                    >select</option>
+                                                                    <option value="ECIL">ECIL</option>
+                                                                    <option value="BEL">BEL</option>
                                                                 </select>
                                                                 </td>
                                                             </tr>

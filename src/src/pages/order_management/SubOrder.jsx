@@ -24,7 +24,7 @@ function SubOrder(props) {
   let destination = ""
   console.log("order",Order)
   let myrow=[]
-  if (Order.length) {
+  if (Order && Order.length) {
     for(let i=0;i<Order.length;i++){
         myrow.push(
           { "Type": Order[i]["item"], "Quantity": Order[i]["itemquantity"], "Model": Order[i]["itemmodel"],  "Manufacturer": Order[i]["manufacturer"] }
@@ -33,6 +33,7 @@ function SubOrder(props) {
         destination = Order[0].destination;
     }
   }
+  console.log(myrow)
 
 
   return (
@@ -48,7 +49,7 @@ function SubOrder(props) {
           <div className={styles.orderUnitDataContainer}>
             <DynamicDataTable rows={myrow} buttons={[]} />
           </div>
-          <p>Status: {mapOrderStatus[Order[0].orderstatus]}</p>
+          {Order && <p>Status: {mapOrderStatus[Order[0].orderstatus]}</p>}
         </div>
       </div>
     </>
