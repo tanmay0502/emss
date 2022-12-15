@@ -113,7 +113,7 @@ function AuditDetail(props) {
         console.log(currDoc)
                     
     }catch(err){
-        
+
     }
     }, [Documents]);
     function afterOpenModal() {
@@ -158,8 +158,9 @@ function AuditDetail(props) {
     return (
         <>
             <div className="flex justify-between mb-10">
-                <div className="text-left text-lg font-bold mt-2 " onClick={show_hide}>Audit Details</div>
-                {hide == 1 && <div className="text-left text-lg font-bold mt-2 mr-2" onClick={show_fun}>Hide Audit Details</div>}
+            {hide !== 1 &&<div className="text-left text-md font-bold mt-2 hover:cursor-pointer bg-transparent hover:bg-orange-500 text-orange-500 font-semibold hover:text-white py-2 px-4 border border-orange-500 hover:border-transparent rounded" onClick={show_hide}>Audit Details</div>
+                }
+             {hide == 1 && <div className="text-left text-md font-bold mt-2 mr-2 hover:cursor-pointer bg-transparent hover:bg-orange-500 text-orange-500 font-semibold hover:text-white py-2 px-4 border border-orange-500 hover:border-transparent rounded" onClick={show_fun}>Hide Audit Details</div>}
             </div>
             {
                 show == 1 && showImage == 0 &&
