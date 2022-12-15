@@ -492,7 +492,7 @@ export default function WareHouseListUnitTrackerFillDemand(props) {
                         <div className="p-2">
                             <table className="w-full mt-4 ">
                                 <thead className="HeadRow border-b-2">
-                                    <tr>
+                                    <tr  className="flex justify-start">
 
                                         <th style={{ color: "#f56a3f", padding: "20px" }}>Sl. No.</th>
                                         <th style={{ color: "#f56a3f", padding: "20px" }}>WareHouse ID</th>
@@ -506,7 +506,7 @@ export default function WareHouseListUnitTrackerFillDemand(props) {
 
                                     {WareHouse_List.length > 0 &&
                                         WareHouse_List.map((val, id) => (<>
-                                             <tr onClick={(e) => setBox(id)}>
+                                             <tr onClick={(e) => setBox(id) } className="flex justify-start ml-10 cursor-pointer">
                                                 <td className="text-black text-sm">{id+1}</td>
                                                 <td className="text-black text-sm">{val["Warehouse ID"]}</td>
                                                 {/* <td className="text-black text-sm">{val["Warehouse Type"]}</td> */}
@@ -517,7 +517,7 @@ export default function WareHouseListUnitTrackerFillDemand(props) {
                                                 {Object.keys(orderCount[id]).map((key)=>(
                                                     <div className="">
                                                         
-                                                        {orderCount[id][key]["type"]!="select" && orderCount[id][key]["model"]!="select" && orderCount[id][key]["manufacturer"]!="select" && <div className="flex justify-between p-3 h-6 text-sm pb-2 ">
+                                                        {orderCount[id][key]["type"]!="select" && orderCount[id][key]["model"]!="select" && orderCount[id][key]["manufacturer"]!="select" && <div className="flex justify-between p-3 h-6 text-sm pb-2 text-black">
                                                             <p>{orderCount[id][key]["type"]}</p><p>{"-->"}</p><p>{orderCount[id][key]["model"]}</p><p>{"-->"}</p><p>{orderCount[id][key]["manufacturer"]}</p><p>{"-->"}</p><p>{orderCount[id][key]["quantity"]}</p>
                                                         </div> }
                                                     </div>
