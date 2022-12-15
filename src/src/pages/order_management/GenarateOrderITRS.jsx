@@ -96,52 +96,52 @@ export default function GenarateOrderITRS() {
   }
   const [body, setBody] = useState(sampleBody)
 
-  const submmit = () => {
+  const submmit = async () => {
     console.log("Submitted")
     console.log(body);
-    // body.details.map(function (val) {
-    //   let b = [];
-    //   val.unitDetails.map(function (v) {
-    //     b.push(v.item + v.itemmodel + v.manufacturer);
-    //   });
-    //   if ((new Set(b)).size !== b.length) {
-    //     alert("Error : Identical Entries");
-    //     window.location.reload(false);
-    //   }
-    // });
+    body.details.map(function (val) {
+      let b = [];
+      val.unitDetails.map(function (v) {
+        b.push(v.item + v.itemmodel + v.manufacturer);
+      });
+      if ((new Set(b)).size !== b.length) {
+        alert("Error : Identical Entries");
+        window.location.reload(false);
+      }
+    });
 
     try {
-      // const response = await fetch(
-      //   `${process.env.REACT_APP_API_SERVER}/order/generate_order/`,
-      //   {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //     },
-      //     credentials: 'include',
-      //     body: JSON.stringify(body),
-      //   }
-      // );
-      // const data2 = await response.json();
-      // console.log(data2["OrderIDs List"]);
+      const response = await fetch(
+        `${process.env.REACT_APP_API_SERVER}/order/generate_order/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: 'include',
+          body: JSON.stringify(body),
+        }
+      );
+      const data2 = await response.json();
+      console.log(data2["OrderIDs List"]);
 
-      // let t = [];
-      // data2['OrderIDs List'].map(function (val) {
-      //   t.push({
-      //     "orderid": val
-      //   });
-      // });
-      // let p = {
-      //   "listofOrders": t
-      // }
-      // if (response["status"] == 200) {
-      //   // alert("Order Generated Successfully");
-      //   getcertificate(p);
-      //   openModal();
-      // }
-      // // if (response["status"] == 200) {
-      // //   window.location = '/session/ordermanagement'
-      // // }
+      let t = [];
+      data2['OrderIDs List'].map(function (val) {
+        t.push({
+          "orderid": val
+        });
+      });
+      let p = {
+        "listofOrders": t
+      }
+      if (response["status"] == 200) {
+        alert("Order Generated Successfully");
+        getcertificate(p);
+        openModal();
+      }
+      if (response["status"] == 200) {
+        window.location = '/session/ordermanagement'
+      }
     } catch (err) {
       console.log(err);
     }
