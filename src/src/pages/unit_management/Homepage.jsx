@@ -50,7 +50,7 @@ export default function HomePage() {
                 }
               );
                 let data2 = await response.json();
-                // console.log("Data fetched", data2['data']);
+                console.log("Data fetched", data2);
                 let data = data2['data'];
                 const response2 = await fetch(
                     uri2,
@@ -779,8 +779,9 @@ export default function HomePage() {
                         </li>
                     </div>
                 </div>
-                <div className={styles.myCardSample}>
+                <div className={styles.myCardSampleHover } onClick={()=>{navigate(`/session/unitmanagement/schedule_list`)}}>
                     <div className={styles.card_title}>
+                    {/* /session/unitmanagement/schedule_list */}
                         <span>Election Scheduling</span>
                     </div>
                     <div className={styles.Box123}>
@@ -898,7 +899,7 @@ export default function HomePage() {
                         </li>
                     </div>
                 </div> */}
-                <div className={styles.myCardSample}>
+                <div className={styles.myCardSampleHover} onClick={()=>{navigate(`/session/unitmanagement/schedule_tna_list`)}}>
                     <div className={styles.card_title}>
                         <span>TnA Scheduling</span>
                     </div>
@@ -955,7 +956,7 @@ export default function HomePage() {
                         </li>
                     </div>
                 </div>
-                <div className={styles.myCardSample}>
+                <div className={styles.myCardSampleHover} onClick={()=>{navigate(`/session/unitmanagement/schedule_varification_list`)}}>
                     <div className={styles.card_title}>
                         <span>Physical Verification</span>
                     </div>
