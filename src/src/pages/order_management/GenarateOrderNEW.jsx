@@ -92,9 +92,12 @@ export default function GenarateOrderNEW() {
     if (isPageLoaded == 0) {
       getState();
       setIsPageLoaded(1);
-
     }
   })
+
+
+  const[manufacturer, setManufacturer] = useState("");
+
 
   return (
     <div className="p-3">
@@ -122,9 +125,11 @@ export default function GenarateOrderNEW() {
                       <option>Select</option>
                       {["ECIL", "BEL"].map((val) => (
                           <option value={val} className="text-black" onClick={()=>{
-                            let prevBody=body;
-                            prevBody.details[ind].source=val;
-                            setBody(prevBody);
+                            setBody((prevBody)=>{
+                              prevBody.details[ind].source=val;
+                              setManufacturer(val);
+                              return(prevBody);
+                            })
                           }}>
                             {val}
                           </option>
@@ -217,6 +222,7 @@ export default function GenarateOrderNEW() {
                             onChange={(e)=>{
                               let prevBody=body;
                               prevBody.details[ind].unitDetails[ind2].itemmodel=e.target.value;
+                              prevBody.details[ind].unitDetails[ind2].manufacturer=manufacturer;
                               setBody(prevBody);
                             }}
 
@@ -229,18 +235,8 @@ export default function GenarateOrderNEW() {
                         </td>
                         <td>
                           <select className="border p-2 mb-2 ml-3 mr-7"
-                            required
-                            onChange={(e)=>{
-                              let prevBody=body;
-                              prevBody.details[ind].unitDetails[ind2].manufacturer=e.target.value;
-                              setBody(prevBody);
-                            }}
-
-                          >
-                            <option
-                            >select</option>
-                            <option value="ECIL">ECIL</option>
-                            <option value="BEL">BEL</option>
+                            required>
+                            <option value={manufacturer}>{manufacturer}</option>
                           </select>
                         </td>
                       </tr>

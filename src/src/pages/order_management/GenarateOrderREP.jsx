@@ -98,6 +98,8 @@ export default function GenarateOrderREP() {
     }
   })
 
+  const[manufacturer, setManufacturer] = useState("");
+
   return (
     <div className="p-3">
 
@@ -127,6 +129,7 @@ export default function GenarateOrderREP() {
                             let prevBody=body;
                             prevBody.details[ind].source=val;
                             setBody(prevBody);
+                            setManufacturer(val)
                           }}>
                             {val}
                           </option>
@@ -219,6 +222,7 @@ export default function GenarateOrderREP() {
                             onChange={(e)=>{
                               let prevBody=body;
                               prevBody.details[ind].unitDetails[ind2].itemmodel=e.target.value;
+                              prevBody.details[ind].unitDetails[ind2].manufacturer=manufacturer;
                               setBody(prevBody);
                             }}
 
@@ -231,18 +235,9 @@ export default function GenarateOrderREP() {
                         </td>
                         <td>
                           <select className="border p-2 mb-2 ml-3 mr-7"
-                            required
-                            onChange={(e)=>{
-                              let prevBody=body;
-                              prevBody.details[ind].unitDetails[ind2].manufacturer=e.target.value;
-                              setBody(prevBody);
-                            }}
-
-                          >
+                            required>
                             <option
-                            >select</option>
-                            <option value="ECIL">ECIL</option>
-                            <option value="BEL">BEL</option>
+                            >{manufacturer}</option>
                           </select>
                         </td>
                       </tr>
