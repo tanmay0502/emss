@@ -22,37 +22,37 @@ export default function OrderFlowTwo() {
 
   const [initialTempD,setInitalTempD] = useState([
     {
-        "User Id" : "SSPPAARR",
+        "User Id" : "SSPPAARR1",
         "Name" : "Kunj Gupta"
     },
     {
-        "User Id" : "SSPPORRR",
+        "User Id" : "SSPPORRR2",
         "Name" : "Lokesh Parmar"
     },
     {
-        "User Id" : "SWPYATRR",
+        "User Id" : "SWPYATRR3",
         "Name" : "Manav Khandelwal"
     },
     {
-        "User Id" : "SSRIOARR",
+        "User Id" : "SSRIOARR4",
         "Name" : "Atal Jasoria"
     }
   ]);
   const [initialAssignD,setInitialAssignD] = useState([
     {
-        "User Id" : "SSPPAARR",
+        "User Id" : "SSPPAARR5",
         "Name" : "Rajesh Singh"
     },
     {
-        "User Id" : "SSPEBARR",
+        "User Id" : "SSPEBARR6",
         "Name" : "Kavita Das"
     },
     {
-        "User Id" : "SSRPAYRR",
+        "User Id" : "SSRPAYRR7",
         "Name" : "Yash Patel"
     },
     {
-        "User Id" : "SSPYWARR",
+        "User Id" : "SSPYWARR8",
         "Name" : "Atal Gupta"
     }
   ]);
@@ -325,38 +325,134 @@ export default function OrderFlowTwo() {
     }
 
     const FVDetails = ({isVisible}) =>{
+        const sampleBody = [{
+            vehicleNumber : "",
+            driverName : "",
+            escortName : "",
+            senderIncharge : "",
+            driverContact : "",
+            escortContact : ""
+        }];
+        const [body, setBody] = useState(sampleBody)
+        const baseUrl = "http://localhost:8100/unit";
+        const handleFormSubmit = async (e) => {
+        // try {
+        //     const response = await fetch(`${baseUrl}/ep_mark`, {
+        //     method: "POST",
+        //     headers: { "Content-Type": "application/json" },
+        //     credentials: "include",
+        //     body: JSON.stringify({ ...inputValues }),
+        //     });
+        //     console.log(response);
+        //     console.log(JSON.stringify({ ...inputValues }));
+        //     const data = await response.json();
+        //     if (data.status === 200) {
+        //     alert(data.message);
+        //     } else {
+        //     alert(data.message);
+        //     }
+        // } catch (err) {
+        //     alert(`Error occured: ${err}`);
+        // }
+        console.log(body);
+        };
+
         return isVisible&&<>
             <div className={`${styles.myWrapper1}`} style={{ position: "relative", height: "100%", width:"96%", margin: "2%" }}>
                 <div className='MainHeader pd-5 ' style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between", "alignItems": "center" }}>
                     <h4 className='text-white'>Fill Vehicle Details</h4>
                 </div>
-                <div className="grid grid-cols-2" style={{border: "solid 1px", borderRadius: "10px", width:"94%", margin:"3%"}}>
+                <div className="flex w-full">
+                    <div className=" w-5/5">
+                    {body.map((val, ind) => (
+                        <div className="bg-white p-6 rounded-lg shadow-lg mt-2 w-full">
+                        <div className="grid grid-cols-2" style={{border: "solid 1px", borderRadius: "10px", width:"94%", margin:"3%"}}>
                     <div>
                         <h4 style={{margin:"auto", textAlign:"center", marginTop:"5%"}}>Order Id : OM12993455</h4>
                         <div className="grid grid-cols-2">
                             <div style={{margin:"5%",marginTop:"10%"}}>
                                 <label>Vehicle Number : </label>
-                                <input type="text" style={{width: "40%",height:"10%"}}></input>
+                                <input
+                                className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                                name="vehicleNumber"
+                                placeholder="Vehicle Number"
+                                onChange={(e) => {
+                                    setBody((prevBody) => {
+                                    prevBody[ind].vehicleNumber = e.target.value;
+                                    return (prevBody);
+                                    })
+                                }}
+                                />
                                 <br/>
                                 <br/>
                                 <label>Driver Name : </label>
-                                <input type="text" style={{width: "40%",height:"10%"}}></input>
+                                <input
+                                className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                                name="driverName"
+                                placeholder="Driver Name"
+                                onChange={(e) => {
+                                    setBody((prevBody) => {
+                                    prevBody[ind].driverName = e.target.value;
+                                    return (prevBody);
+                                    })
+                                }}
+                                />
                                 <br/>
                                 <br/>
                                 <label>Escort Name : </label>
-                                <input type="text" style={{width: "40%",height:"10%"}}></input>
+                                <input
+                                className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                                name="escortName"
+                                placeholder="Escort Name"
+                                onChange={(e) => {
+                                    setBody((prevBody) => {
+                                    prevBody[ind].escortName = e.target.value;
+                                    return (prevBody);
+                                    })
+                                }}
+                                />
                             </div>
                             <div style={{margin:"5%",marginTop:"10%"}}>
                                 <label>Sender Incharge : </label>
-                                <input type="text" style={{width: "40%",height:"10%"}}></input>
+                                <input
+                                className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                                name="senderIncharge"
+                                placeholder="Sender Incharge"
+                                onChange={(e) => {
+                                    setBody((prevBody) => {
+                                    prevBody[ind].senderIncharge = e.target.value;
+                                    return (prevBody);
+                                    })
+                                }}
+                                />
                                 <br/>
                                 <br/>
                                 <label>Driver Contact : </label>
-                                <input type="text" style={{width: "40%",height:"10%"}}></input>
+                                <input
+                                className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                                name="driverContact"
+                                placeholder="Driver Contact"
+                                onChange={(e) => {
+                                    setBody((prevBody) => {
+                                    prevBody[ind].driverContact = e.target.value;
+                                    return (prevBody);
+                                    })
+                                }}
+                                />
                                 <br/>
                                 <br/>
                                 <label>Escort Contact : </label>
-                                <input type="text" style={{width: "40%",height:"10%"}}></input>
+                                <input
+                                className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                                name="escortContact"
+                                placeholder="Escort Contact"
+                                onChange={(e) => {
+                                    setBody((prevBody) => {
+                                    prevBody[ind].escortContact = e.target.value;
+                                    return (prevBody);
+                                    })
+                                }}
+                                />
                             </div>
                         </div>
                     </div>
@@ -388,65 +484,28 @@ export default function OrderFlowTwo() {
                         </div>
                     </div>
                 </div>
-                <div className="grid grid-cols-2" style={{border: "solid 1px", borderRadius: "10px", width:"94%", margin:"3%"}}>
-                    <div>
-                        <h4 style={{margin:"auto", textAlign:"center", marginTop:"5%"}}>Order Id : OM12993455</h4>
-                        <div className="grid grid-cols-2">
-                            <div style={{margin:"5%",marginTop:"10%"}}>
-                                <label>Vehicle Number : </label>
-                                <input type="text" style={{width: "40%",height:"10%"}}></input>
-                                <br/>
-                                <br/>
-                                <label>Driver Name : </label>
-                                <input type="text" style={{width: "40%",height:"10%"}}></input>
-                                <br/>
-                                <br/>
-                                <label>Escort Name : </label>
-                                <input type="text" style={{width: "40%",height:"10%"}}></input>
-                            </div>
-                            <div style={{margin:"5%",marginTop:"10%"}}>
-                                <label>Sender Incharge : </label>
-                                <input type="text" style={{width: "40%",height:"10%"}}></input>
-                                <br/>
-                                <br/>
-                                <label>Driver Contact : </label>
-                                <input type="text" style={{width: "40%",height:"10%"}}></input>
-                                <br/>
-                                <br/>
-                                <label>Escort Contact : </label>
-                                <input type="text" style={{width: "40%",height:"10%"}}></input>
-                            </div>
+                        
                         </div>
-                    </div>
-                    <div className={style.optimisedAllocationTable} style={{border: 'none'}}>
-                        <div className={style.allocationLocationDetails}>
-                            {
-                                // Icon - Source Details - Arrow - Icon - Dest Details
-                            }
-                            <div className={style.allocationLocationIcon} >
-                                <img src={SourceLocationPin} />
-                            </div>
-                            <div>
-                                <p className={style.allocationLocationDetailsSource}><span>Source: </span> {'AA1122'} </p>
-                                <p><span>Incharge: </span> {'Jane'} </p>
-                            </div>
-                            <div className={style.allocationLocationArrow}>
-                                
-                            </div>
-                            <div className={style.allocationLocationIcon} >
-                                <img src={DestLocationPin} />
-                            </div>
-                            <div>
-                                <p className={style.allocationLocationDetailsDestination}><span>Destination: </span> {'BB1122'} </p>
-                                <p><span>Incharge: </span> {'Jose'} </p>
-                            </div>
-                        </div>
-                        <div className={style.allocationDetailsTable}>
-                            <DynamicDataTable rows={data} buttons={[]} />
-                        </div>
+                    ))}
+
+                    <div className="flex justify-end"><button onClick={() => {
+                        setBody((prev) => {
+                        let temp = {
+                            vehicleNumber : "",
+                            driverName : "",
+                            escortName : "",
+                            senderIncharge : "",
+                            driverContact : "",
+                            escortContact : ""
+                        };
+                        const newBody = [ ...prev ];
+                        newBody.push(temp);
+                        return newBody;
+                        })
+                    }} type="button" className="text-white bg-orange-600 p-1 text-2xl w-10 h-10 -mt-5 " style={{ borderRadius: "50%" }}> +</button></div>
                     </div>
                 </div>
-                <button className="text-white">Submit</button>
+                <button onClick={handleFormSubmit} className="text-white">Submit</button>
             </div>
         </>
     }
