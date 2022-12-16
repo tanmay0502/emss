@@ -5,6 +5,22 @@ import styles from './styles/allocateorder.module.css'
 import UnitTrackerTable from './UnitTrackerTable'
 
 function AllocateOrder() {
+	const fetchedData = [
+		{
+			"source": "WearHouse1",
+			"Sincharge": "Name1",
+			"destination": "WearHouse2",
+			"Dincharge": "Name2",
+			"unitDetails": [
+				{
+				"item": "CU",
+				"itemmodel": "M1",
+				"manufacturer": "BEL",
+				"itemquantity": 0
+				}
+			]
+		}
+	]
 	return (
 		<div className={styles.orderAllocationContainer}>
 			<div className={styles.optimisedAllocationContainer}>
@@ -28,14 +44,14 @@ function AllocateOrder() {
 					</button>
 				</div>
 			</div>
-			<div className={styles.unitTracker}>
+			{/* <div className={styles.unitTracker}>
 				<h5>Unit Tracker</h5>
 				<div className={styles.unitTrackerTables}>
 					<UnitTrackerTable title="Ballot Units" />
 					<UnitTrackerTable title="Control Units" />
 					<UnitTrackerTable title="VVPAT" />
 				</div>
-			</div>
+			</div> */}
 		</div>
 	)
 }

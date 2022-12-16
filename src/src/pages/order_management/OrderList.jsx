@@ -7,6 +7,7 @@ import styles from './styles/order.module.css';
 import { AiOutlineSortAscending, AiOutlineSortDescending } from "react-icons/ai";
 import { ReactComponent as SearchInputElement } from '../../assets/searchInputIcon.svg';
 import { ReactComponent as ChevronDown } from '../../assets/ChevronDown.svg';
+import Modal from 'react-modal';
 
 export default function OrderList() {
 
@@ -15,11 +16,89 @@ export default function OrderList() {
     const [sortBy, setSortBy] = useState("None");
     const [isDetail, setIsDetail] = useState(0);
     const [tableFilter, setTableFilter] = useState("");
+    const [photoFileName, setPhotoFileName] = useState("")
+    const [photoFileData, setPhotoFileData] = useState("")
+    const [flag, setflag] = useState(0);
+    const [modalIsOpen, setIsOpen] = React.useState(false);
 
-    function generatePDF(id){
-        console.log(id)
-        alert("Order Id "+id+" pdf generated");
+    function downloadPDF(pdf) {
+        const linkSource = `data:application/pdf;base64,${pdf}`;
+        const downloadLink = document.createElement("a");
+        const fileName = "vct_illustration.pdf";
+    
+        downloadLink.href = linkSource;
+        downloadLink.download = fileName;
+        downloadLink.click();
     }
+
+    function openModal() {
+        setIsOpen(true);
+
+    }
+
+    function afterOpenModal() {
+        // references are now sync'd and can be accessed.
+        //   subtitle.style.color = '#f00';
+    }
+
+    function closeModal() {
+        setIsOpen(false);
+    }
+
+    const customStyles = {
+        content: {
+            top: '50%',
+            left: '50%',
+            right: 'auto',
+            bottom: 'auto',
+            marginRight: '-50%',
+            transform: 'translate(-50%, -50%)',
+        },
+    };
+
+    async function getcertificate(val) {
+    setflag(1)
+    console.log(val);
+    try {
+        const response = await fetch(
+            `${process.env.REACT_APP_API_SERVER}/order/getOrderPdf/`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(val),
+                credentials: 'include'
+            }
+        );
+        const data = await response.json();
+        console.log(data);
+        if (response.status == 200) {
+            setPhotoFileData(data)
+        }
+
+    } catch (err) {
+        console.log({ err });
+    }
+    }
+
+    if (flag == 0) {
+    if (photoFileName) {
+        getcertificate();
+    }
+    }
+        function generatePDF(id){
+            console.log(id)
+            const t = {
+                "listofOrders": [
+                {
+                    "orderid": id
+                }
+                ]
+            }
+            getcertificate(t);
+            openModal();
+        }
 
     const sortMapping = {
         "None": null,
@@ -77,7 +156,9 @@ export default function OrderList() {
             let pp=tmp.map(val => JSON.parse(val));
             
             for(let i=0;i<pp.length;i++){
-                pp[i]["print"]=(<button onClick={()=>generatePDF(pp[i]["displayID"])} className="text-white">Print Pdf</button>);
+                pp[i]["print"]=(<button target='_blank' onClick={(e)=>{
+                    e.stopPropagation(); 
+                    generatePDF(pp[i]["displayID"])}} className="text-white">Show Pdf</button>);
             }
             console.log(pp);
             setTableData(pp);
@@ -102,6 +183,25 @@ export default function OrderList() {
     // ]
 
     return (
+        <>
+        <Modal
+                            isOpen={modalIsOpen}
+                            onAfterOpen={afterOpenModal}
+                            onRequestClose={closeModal}
+                            style={customStyles}
+                        >
+                            <div id="root" className=''>
+                                <div className='flex justify-center items-center'>
+                                    {console.log("This Data:")}
+                                    {/* {console.log(photoFileData["data"].slice(0,-1))} */}
+                                    {/* {console.log(fileData)} */}
+                                    {console.log("Fetched Data:- ",photoFileData)}
+                                    {/* {<embed style={{ width: "600px", height: "600px", padding: "10px" }} src={fileData} />} */}
+                                    {photoFileData !== undefined && <embed type="text/html" style={{ width: "1000px", height: "800px", padding: "10px" }} src={photoFileData} />}
+                                </div>
+                                <button style={{ color: "white", }} onClick={()=>{closeModal()}}>Close</button>
+                            </div>
+      </Modal>
          <div className={`${styles.myWrapper1}`} style={{ position: "relative", height: "100%" }}>
             {isDetail == 0 ? <div className='MainHeader pd-5 ' style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between", "alignItems": "center" }}>
                 <h4 className='text-white'>Order List</h4>
@@ -171,5 +271,6 @@ export default function OrderList() {
                 : ''
             }
         </div>
+        </>
     )
 }

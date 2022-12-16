@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ReactComponent as CreateIssueIcon } from "../../assets/create_issue_request.svg";
 import { useParams } from "react-router-dom";
 import "./styles/generateOrder.css";
+import Modal from 'react-modal';
 
 export default function GenarateOrderITAS() {
 
@@ -16,28 +17,99 @@ export default function GenarateOrderITAS() {
   const [total_VVPAT_M2, setTotal_VVPAT_M2] = useState(0)
   const [total_VVPAT_M3, setTotal_VVPAT_M3] = useState(0)
 
+  const [photoFileName, setPhotoFileName] = useState("")
+  const [photoFileData, setPhotoFileData] = useState("")
+  const [flag, setflag] = useState(0);
+  const [modalIsOpen, setIsOpen] = React.useState(false);
+
+  function openModal() {
+    setIsOpen(true);
+}
+
+function afterOpenModal() {
+    // references are now sync'd and can be accessed.
+    //   subtitle.style.color = '#f00';
+}
+
+function closeModal() {
+    setIsOpen(false);
+}
+
+const customStyles = {
+    content: {
+        top: '50%',
+        left: '50%',
+        right: 'auto',
+        bottom: 'auto',
+        marginRight: '-50%',
+        transform: 'translate(-50%, -50%)',
+    },
+};
+
+async function getcertificate(val) {
+  setflag(1)
+  console.log(val);
+  try {
+      const response = await fetch(
+          `${process.env.REACT_APP_API_SERVER}/order/getOrderPdf/`,
+          {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json",
+              },
+              body: JSON.stringify(val),
+              credentials: 'include'
+          }
+      );
+      const data = await response.json();
+      console.log(data);
+      if (response.status == 200) {
+          setPhotoFileData(data)
+      }
+
+  } catch (err) {
+      console.log({ err });
+  }
+}
+
+if (flag == 0) {
+  if (photoFileName) {
+      getcertificate();
+  }
+}
+
   const sampleBody = {
     "type": orderType,
     "details": [
       {
-        "source": "",
-        "destination": "",
+        "source": "string",
+        "destination": "string",
         "unitDetails": [
           {
-            "item": "",
-            "itemmodel": "",
-            "manufacturer": "",
+            "item": "string",
+            "itemmodel": "string",
+            "manufacturer": "string",
             "itemquantity": 0
           }
         ]
       }
     ]
   }
-
   const [body, setBody] = useState(sampleBody)
+
   const submmit = async () => {
     console.log("Submitted")
-    console.log(body)
+    console.log(body);
+    body.details.map(function(val){
+      let b = [];
+      val.unitDetails.map(function(v){
+        b.push(v.item+v.itemmodel+v.manufacturer);
+      });
+      if((new Set(b)).size !== b.length) {
+        alert("Error : Identical Entries");
+        window.location.reload(false);
+      }
+    });
 
     try {
       const response = await fetch(
@@ -52,9 +124,21 @@ export default function GenarateOrderITAS() {
         }
       );
       const data2 = await response.json();
-        console.log(response)
+      console.log(data2["OrderIDs List"]);
+
+      let t = [];
+      data2['OrderIDs List'].map(function(val){
+        t.push({
+          "orderid": val
+        });
+      });
+      let p = {
+        "listofOrders": t
+      }
       if (response["status"] == 200) {
-        alert("Order Generated Successfully");
+        // alert("Order Generated Successfully");
+        getcertificate(p);
+        openModal();
       }
       // if (response["status"] == 200) {
       //   window.location = '/session/ordermanagement'
@@ -62,6 +146,9 @@ export default function GenarateOrderITAS() {
     } catch (err) {
       console.log(err);
     }
+
+
+
   };
   
 
@@ -97,6 +184,24 @@ export default function GenarateOrderITAS() {
 
   return (
     <div className="p-3">
+    <Modal
+                            isOpen={modalIsOpen}
+                            onAfterOpen={afterOpenModal}
+                            onRequestClose={closeModal}
+                            style={customStyles}
+                        >
+                            <div id="root" className=''>
+                                <div className='flex justify-center items-center'>
+                                    {console.log("This Data:")}
+                                    {/* {console.log(photoFileData["data"].slice(0,-1))} */}
+                                    {/* {console.log(fileData)} */}
+                                    {console.log("Fetched Data:- ",photoFileData)}
+                                    {/* {<embed style={{ width: "600px", height: "600px", padding: "10px" }} src={fileData} />} */}
+                                    {photoFileData !== undefined && <embed type="text/html" style={{ width: "1000px", height: "800px", padding: "10px" }} src={photoFileData} />}
+                                </div>
+                                <button style={{ color: "white", }} onClick={()=>{ window.location = '/session/ordermanagement'}}>Close</button>
+                            </div>
+      </Modal>
       <p className="text-left text-lg flex">
         <CreateIssueIcon className="mr-2" />
         Request ID : {body.type}

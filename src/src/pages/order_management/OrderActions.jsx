@@ -38,6 +38,10 @@ function OrderActions(props) {
         const userid=sessionStorage.getItem("sessionToken");
         let sender_order=[]
         let recipient_order=[]
+
+        props.Order.map((order)=>{
+
+        
         
             console.log(userid.substring(8))
             if(order["source"]==userid.substring(0,2) && "CEO"==userid.substring(8)){
@@ -86,6 +90,7 @@ function OrderActions(props) {
 
             }
         
+        })
         
         // flags are
         // f1 for availability
