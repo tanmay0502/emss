@@ -164,7 +164,7 @@ function OrderActions(props) {
                 case 'Fill Demand':
                     return <WareHouseListUnitTrackerFillDemand Order={recipientOrder} OrderID={props.OrderID}/>
                 case 'Optimal Allocation':
-                    return <AllocateOrder />
+                    return <AllocateOrder OrderID={props.OrderID} type={order.type}/>
                 case 'Vehicle Details':
                     return <VehicleDetails/>
             }

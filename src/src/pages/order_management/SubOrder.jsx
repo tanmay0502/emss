@@ -26,14 +26,16 @@ function SubOrder(props) {
   let myrow=[]
   if (Order && Order.length) {
     for(let i=0;i<Order.length;i++){
+      if (Order[i].referenceorderid.length===30) {
         myrow.push(
           { "Type": Order[i]["item"], "Quantity": Order[i]["itemquantity"], "Model": Order[i]["itemmodel"],  "Manufacturer": Order[i]["manufacturer"] }
         )
         source = Order[0].source;
         destination = Order[0].destination;
+      }
     }
   }
-  console.log(myrow)
+  console.log("table", myrow)
 
 
   return (
