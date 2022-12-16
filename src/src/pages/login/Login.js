@@ -146,29 +146,25 @@ const Login = () => {
 
 
 			}
-			if (userID.length >= 4 && PCs) {
-				var pccode = parseInt(userID.substring(2, 4)).toString();
-				const pwpcode = userID.substring(2, 4);
+			if (userID.length >= 5 && PCs) {
+				var pccode = parseInt(userID.substring(2, 5)).toString();
+				const pwpcode = userID.substring(2, 5);
 				var key = PCs != {} ? getKeyByValue(PCs, pwpcode) : undefined
 				if (key != undefined) {
 					pccode = pwpcode;
 				}
+				console.log(pwpcode,pccode)
 
-				if (pccode == "00") {
-					// console.log("kk");
-					setPCs({});
-					if (document.getElementById("pcDropdown"))
-						document.getElementById("pcDropdown").value = "00";
-				} else if (getKeyByValue(PCs, pccode) !== undefined) {
-					console.log("lkk");
+				if (getKeyByValue(PCs, pccode) !== undefined) {
+					console.log("lkk",key);
 					if (document.getElementById("pcDropdown")) {
-						console.log("l", PCs[key]);
+						console.log("l", PCs[pccode]);
 						document.getElementById("pcDropdown").value =
 							PCs != {} ? getKeyByValue(PCs, pccode) : "";
 					}
 					setPCFunc(key, false);
 				} else {
-					// console.log("lkk")
+					console.log("lkk")
 					if (document.getElementById("pcDropdown"))
 						document.getElementById("pcDropdown").value = "Select:";
 				}
@@ -181,17 +177,10 @@ const Login = () => {
 
 			}
 
-			if (userID.length >= 7) {
-				const accode = userID.substring(4, 7);
+			if (userID.length >= 8) {
+				const accode = userID.substring(5, 8);
 				console.log(accode);
-				if (accode == "000") {
-					console.log("pp");
-					setACs({});
-					if (document.getElementById("acDropdown"))
-						document.getElementById("acDropdown").value = "000";
-
-					setACFunc(getKeyByValue(ACs, accode), false);
-				} else if (getKeyByValue(ACs, accode) !== undefined) {
+				if (getKeyByValue(ACs, accode) !== undefined) {
 					if (document.getElementById("acDropdown")) {
 						document.getElementById("acDropdown").value =
 							ACs != {} ? getKeyByValue(ACs, accode) : "";
@@ -202,7 +191,7 @@ const Login = () => {
 						document.getElementById("acDropdown").value = "";
 				}
 
-				const role = userID.substring(7);
+				const role = userID.substring(8);
 				if (Number(role)) {
 					setRoles([]);
 				}
@@ -221,8 +210,12 @@ const Login = () => {
 					document.getElementById("acDropdown").value = "0";
 
 
+					
+
+
 			}
-			if (userID.length <= 7) {
+			if (userID.length <= 8) {
+				console.log("ff")
 				if (document.getElementById("roleDropdown"))
 					document.getElementById("roleDropdown").value = "0";
 				setRoles([])
@@ -245,7 +238,7 @@ const Login = () => {
 				}
 			);
 			const data2 = await response.json();
-			// console.log(data2);
+			console.log(data2);
 			setStates(data2["states"]);
 			checkEmpty()
 		} catch (err) {
@@ -294,7 +287,7 @@ const Login = () => {
 
 			try {
 				const response = await fetch(
-					`${process.env.REACT_APP_API_SERVER}/user/getPCListbyState/${states[st]}`,
+					`${process.env.REACT_APP_API_SERVER}/user/getDistrictList/${states[st]}`,
 					{
 						method: "GET",
 						headers: {
@@ -305,19 +298,24 @@ const Login = () => {
 				);
 				const data2 = await response.json();
 				console.log(data2);
+				console.log(userID,userID.substring(2,5)=="000")
+				
 				if (userID.length != 0) {
 					if (data2["status"] == 502) {
 						setPCs({});
 					}
 					else {
-						setPCs(data2["PCs"]);
+						setPCs(data2["districts"]);
 					}
-				}
+				
+			}
 
 			} catch (err) {
 				console.log(err);
 				setPCs({});
 			}
+			setPCs(prevState => ({ ...prevState, "None": "000"}));
+
 
 			if (changeUserID) {
 				setUserID(
@@ -328,13 +326,14 @@ const Login = () => {
 		}
 	}
 	async function setPCFunc(st, changeUserID = true) {
-		setPC(PCs[st]);
+		console.log(st,PCs[st])
+		// setPC(PCs[st]);
 		if (state !== "Select:") {
 			if (0) {
 			} else {
 				try {
 					const response = await fetch(
-						`${process.env.REACT_APP_API_SERVER}/user/getACListbyStatePC/${state}`,
+						`${process.env.REACT_APP_API_SERVER}/user/getACList/${state}/${PC}`,
 						{
 							method: "GET",
 							headers: {
@@ -344,36 +343,45 @@ const Login = () => {
 						}
 					);
 					const data2 = await response.json();
-					// console.log("ACs");
-					// console.log(data2);
+					console.log("ACs");
+					console.log(data2);
+					console.log(userID,userID.substring(5,8)=="000")
+				
 					if (userID.length != 0) {
 
 						if (data2["status"] == 502) {
 							setACs({})
 						}
 						else {
-							setACs(data2["ACs"])
+							setACs(data2["acs"])
 						}
-					}
+					
+				}
 				} catch (err) {
 					console.log(err);
 					setACs({})
 				}
 
+				setACs(prevState => ({ ...prevState, "None": "000"}));
+
 			}
 			if (changeUserID) {
 				setUserID(
-					state + ("00" + PCs[st]).slice(-2)
+					state + ("000" + PCs[st]).slice(-3)
 				);
+				setPC(PCs[st]);
 			}
 			setInvalidUser("");
 		}
+		console.log(PC)
 	}
 	async function setACFunc(st, changeUserID = true) {
 		setAC(ACs[st]);
+		console.log(ACs)
+		console.log(PC)
 		try {
 			const response = await fetch(
-				`${process.env.REACT_APP_API_SERVER}/user/getRoleList`,
+				`${process.env.REACT_APP_API_SERVER}/user/getRolesList`,
 				{
 					method: "GET",
 					headers: {
@@ -384,19 +392,35 @@ const Login = () => {
 			);
 			const data2 = await response.json();
 			console.log(data2);
+			// if(userID.length>=8 && userID.substring(5,8)=="000"){
+			// 	setACs({"000":"000"});
+			// 	console.log("jdjdj")
+			// 	if (document.getElementById("acDropdown"))
+			// 		document.getElementById("acDropdown").value = "000";
+			// 		setAC("000")
+			// }
+			
 			if (userID.length != 0) {
+				let p1=[]
+				let p2=[]
+				Object.keys(data2["roles"]).map((key)=>{
+					p1.push(key);
+					p2.push(data2["roles"][key])
+				})
 
-				setRoles(data2["roleName"]);
-				setRolesCode(data2["roleCode"]);
+				setRoles(p1);
+				setRolesCode(p2);
 			}
+		
 
 		} catch (err) {
 			console.log(err);
 		}
 		if (changeUserID) {
+			console.log(state,PC,ACs,ACs[st])
 			setUserID(
 				state +
-				("00" + PC).slice(-2) +
+				("000" + PC).slice(-3) +
 				("000" + ACs[st]).slice(-3)
 			);
 		}
@@ -409,7 +433,7 @@ const Login = () => {
 
 			if (changeUserID) {
 				setUserID(
-					state + ("00" + PC).slice(-2) + AC + rolesCode[roles.indexOf(st)]
+					state + ("000" + PC).slice(-3) + AC + rolesCode[roles.indexOf(st)]
 				);
 			}
 			setInvalidUser("");
@@ -678,6 +702,10 @@ const Login = () => {
 		}
 	}
 
+	useEffect(()=>{
+		console.log(PC);
+	},[PC]);
+
 	return (
 		<div>
 			<div className="nav flex">
@@ -824,7 +852,7 @@ const Login = () => {
 														</option>
 													</select>
 												</div>}
-												{PCs != {} && (
+												{PCs != {} &&  (
 													<select
 														className="pl-3 pr-3 mt-7 h-13 text-black outline-none rounded-md w-full mb-5"
 														style={{ fontFamily: "nunito sans" }}
@@ -844,6 +872,7 @@ const Login = () => {
 															))}
 													</select>
 												)}
+												
 											</div>
 											<div className="dropdown">
 												<p
@@ -888,7 +917,7 @@ const Login = () => {
 													className="text-black ml-2 -mb-6 text-sm font-semibold"
 													style={{ fontFamily: "nunito sans" }}
 												>
-													{roles && roles.length == 0 ? <>Role</> : <span className="opacity-40">Role</span>}
+													{roles && roles.length == 0 ? <>Role</> : <span className="">Role</span>}
 												</p>
 												{/* {roles.length == 0 && (
 													<select
