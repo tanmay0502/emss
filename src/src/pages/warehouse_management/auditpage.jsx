@@ -3,6 +3,10 @@ import { AiOutlineArrowLeft, AiOutlineEdit } from 'react-icons/ai'
 import { useNavigate } from "react-router-dom";
 import styles from './css/auditpage.module.css';
 import Modal from 'react-modal';
+import { ReactComponent as File_icon } from "../../assets/file_icon.svg";
+// import { Tooltip as ReactTooltip } from 'react-tooltip'
+import Tippy from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css';
 
 function AuditDetail(props) {
 
@@ -82,9 +86,17 @@ function AuditDetail(props) {
                 }
             )
             const data = await response.json();
-            setDocuments(data);
+            if(data["message"] === "Image not found"){
+                // console.log("Not Found")
+                // setDocuments("blank");
+                // alert(Documents["data"])
+                // console.log(Documents["data"])
+            }else{
+                setDocuments(data);
+            }
+            
             console.log(data)
-            console.log(Documents["data"])
+            // console.log(Documents["data"])
 
             
         } catch (error) {
@@ -109,11 +121,18 @@ function AuditDetail(props) {
     useEffect(() => {
         try{
 
-        setCurrDoc(Documents["data"].slice(0,-1))
-        console.log(currDoc)
+        // if(Documents["data"] === undefined){
+        //     setCurrDoc("blank")
+        // }else{
+            setCurrDoc(Documents["data"].slice(0,-1))
+            console.log(currDoc)
+        // }/\
+
+
+
                     
     }catch(err){
-
+        // setCurrDoc("blank")
     }
     }, [Documents]);
     function afterOpenModal() {
@@ -125,6 +144,7 @@ function AuditDetail(props) {
         console.log("Getting Document")
         console.log("Opening")
         getDocuments(props);
+        imageName(props)
         setIsOpen(true);
     }
 
@@ -198,6 +218,18 @@ function AuditDetail(props) {
                                         <label htmlFor="" className={styles.Label}>Image:</label>
                                     </div>
                                     <div className="form_select">
+                                    <Tippy content={value[2]}>
+                                    <div className={styles.fileIcon} 
+                                    // 'hover:cursor-pointer scale-50 form_select '
+                                    onClick={() => { openModal(value[2]);
+                                        // setModalImage(value[2]); 
+                                        // console.log("Getting Document")
+                                        // getDocuments(value[2]);
+                                    }}
+                                    ><File_icon /> </div>
+                                    </Tippy>
+                                     </div>
+                                    {/* <div className="form_select">
                                         <button className=' w-50 h-9 mb-2' style={{ color: "white" }} onClick={() => { openModal(value[2]);
                                                 // setModalImage(value[2]); 
                                                 // console.log("Getting Document")
@@ -206,9 +238,11 @@ function AuditDetail(props) {
                                         
                                         >
                                             {value[2]}</button>
-                                    </div>
+                                    </div> */}
                                 </div>
+                                
                             </div>
+                            
                         ))}
                     <div>
                         <Modal
@@ -220,9 +254,10 @@ function AuditDetail(props) {
                         >
                             <div id="root" className=''>
                                 {/* <h4>{modalImage}</h4> */}
-                                <h4>Image</h4>
+                                <h4>{modalImage}</h4>
                                 <div className='flex justify-center items-center'>
                                     {/* {currDoc === "loding" ? <p className={`${styles.loader}`}></p> : <embed style={{ width: "600px", height: "600px", padding: "10px" }} src={`${currDoc.slice(0, -1)}`} />} */}
+                                    {/* {console.log(currDoc)} */}
                                     {currDoc === "loding" ? <p className={`${styles.loader}`}></p> : <embed style={{ width: "600px", height: "600px", padding: "10px" }} src={currDoc} />}
                                 </div>
                                 <button style={{ color: "white", }} onClick={closeModal}>Close</button>
