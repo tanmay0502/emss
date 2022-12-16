@@ -19,6 +19,8 @@ import WarehouseDetail from './pages/warehouse_management/WarehouseDetail';
 import CreateIssue from './pages/issue_request_management/CreateIssue';
 import Profile from './components/Profile';
 import ViewRequest from './pages/issue_request_management/ViewRequest';
+import OrderFlowOne from './pages/order_management/OrderFlowOne';
+import OrderFlowTwo from './pages/order_management/OrderFlowTwo';
 import OrderManagement from './pages/order_management/OrderManagement';
 import OrderTypes from './pages/order_management/OrderTypes';
 import GenerateOrder from './pages/order_management/GenarateOrder';
@@ -236,6 +238,14 @@ function App() {
            <Route
               path="/session/ordermanagement/createorder/generateorder/:orderType"
               element={<GenerateOrder />}
+            />
+            <Route
+              path="/session/ordermanagement/orderflowone/:orderID"
+              element={<OrderFlowOne />}
+            />
+            <Route
+              path="/session/ordermanagement/orderflowtwo/:orderID"
+              element={<OrderFlowTwo />}
             />
            
             <Route
