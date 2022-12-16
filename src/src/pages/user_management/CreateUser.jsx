@@ -475,7 +475,7 @@ function CreateUser() {
   async function addUser() {
 
     // console.log(userID)
-    const id = document.getElementById("input_state").value + document.getElementById("input_PC").value + document.getElementById("input_AC").value + document.getElementById("input_Roles").value;
+    const id = (isTemporary)? (document.getElementById("input_state").value + document.getElementById("input_PC").value + document.getElementById("input_AC").value + "TMP"):(document.getElementById("input_state").value + document.getElementById("input_PC").value + document.getElementById("input_AC").value + document.getElementById("input_Roles").value);
     console.log(id)
     if (ValidateEmail(document.getElementById("formUserEmail").value) == false) {
       console.log("Invalid Email")
@@ -667,7 +667,7 @@ function CreateUser() {
           <div className="form_group">
             <div className="form_select">
               <select
-                disabled={isTemporary || stateDisable}
+                disabled={false}
                 required
                 name=""
                 id="input_state"
@@ -716,7 +716,7 @@ function CreateUser() {
           <div className="form_group">
             <div className="form_select">
               <select
-                disabled={isTemporary || pcDisable}
+                disabled={false}
                 name=""
                 id="input_PC"
                 onChange={(e) => setPCFunc(e.target.value)}
@@ -762,7 +762,7 @@ function CreateUser() {
           <div className="form_group">
             <div className="form_select">
               <select
-                disabled={isTemporary || acDisable}
+                disabled={false}
                 name=""
                 id="input_AC"
                 onChange={(e) => setACFunc(e.target.value)}
