@@ -91,8 +91,8 @@ function WarehouseList() {
 	const sortMapping = {
 		"None": null,
 		"Warehouse ID": "warehouseid",
-		"Building Type": "BuildingType",
-		"Room Type": "Room Type",
+		"Status": "Status",
+		"Type": "Room Type",
 	}
 
 
@@ -120,24 +120,25 @@ function WarehouseList() {
 				return true;
 			}
 			else {
+				console.log(data)
 				const filter = tableFilter.toLowerCase();
-				return (elem[0].toLowerCase().includes(filter) || elem[1].toLowerCase().includes(filter))
+				return (elem['warehouseid'].toLowerCase().includes(filter) || elem['type'].toLowerCase().includes(filter))
 			}
 		}).map((val) => {
 			return {
 				"Warehouse ID": val["type"] == 'P' ?
-					<Fragment><span style={{ display: 'flex', justifyContent: 'left', alignItems: 'left', marginLeft: "35%" }}>
+					<Fragment><span style={{ display: 'flex', justifyContent: 'left', alignItems: 'center', marginLeft: "12%" }}>
 						<FaCircle size='0.8em' className='PermaWarehouse' />
-						<span style={{ marginLeft: '10px', marginRight: '10px' }}>
+						<span style={{ marginLeft: '15px', marginRight: '15px' }}>
 							{val['warehouseid']}</span>{val['doublelock'] ?
 								<Fragment><FaKey className='keyColor' />
 									<FaKey className='keyColor' /></Fragment>
 								:
 								<FaKey className='keyColor' />}</span></Fragment>
 					:
-					<Fragment><span style={{ display: 'flex', justifyContent: 'left', alignItems: 'left', marginLeft: "35%" }}>
+					<Fragment><span style={{ display: 'flex', justifyContent: 'left', alignItems: 'center', marginLeft: "12%" }}>
 						<FaCircle size='0.8em' className='TempWarehouse' />
-						<span style={{ marginLeft: '10px', marginRight: '10px' }}>{val['warehouseid']}</span>{val['doublelock'] ?
+						<span style={{ marginLeft: '15px', marginRight: '15px' }}>{val['warehouseid']}</span>{val['doublelock'] ?
 							<Fragment>
 								<FaKey className='keyColor' />
 								<FaKey className='keyColor' />
@@ -164,7 +165,7 @@ function WarehouseList() {
 		})
 		data.sort(function (a, b) {
 			if (sortMapping[sortBy] !== null) {
-				return a[sortMapping[sortBy]].localeCompare(b[sortMapping[sortBy]])
+				return (a[sortMapping[sortBy]].toString()).localeCompare(b[sortMapping[sortBy]].toString())
 			}
 			else return 0;
 		});
@@ -267,8 +268,8 @@ function WarehouseList() {
 								onChange={(e) => setSortBy(e.target.value)}>
 								<option value={"None"}>Default</option>
 								<option value={"Warehouse ID"}>Warehouse ID</option>
-								<option value={"Room Type"}>Room Type</option>
-								<option value={"Building Type"}>Building Type</option>
+								<option value={"Status"}>Status</option>
+								{/* <option value={"Type"}>Type</option> */}
 							</select>
 							<ChevronDown />
 							<button className='sortOrderButton' onClick={() => {
