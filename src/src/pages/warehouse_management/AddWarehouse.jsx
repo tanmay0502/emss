@@ -31,6 +31,7 @@ export default function AddWarehouse() {
   const [states, setStates] = useState([]);
   const [statesCode, setStatesCode] = useState([]);
   const [PCs, setPCs] = useState([]);
+  const [ACs, setACs] = useState([]);
   const [PCcodes, setPCcodes] = useState([]);
 
   // const [userid_1, setUserId_1] = useState('');
@@ -41,9 +42,74 @@ export default function AddWarehouse() {
   //Form filed states....
   const [myState, setmyState] = useState("");
   const [myPCcode, setmyPCcode] = useState("");
+  const [myACcode, setmyACcode] = useState("");
   const [WarehouseType, setWarehouseType] = useState("");
   const [userState, setUserState] = useState("");
   //Form filed states end....
+
+  // Get realm Start
+  const [realm, setRealm] = useState();
+  
+  async function getRealm() {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_SERVER}/user/getRealm`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: 'include',
+        }
+      );
+      const data2 = await response.json();
+
+
+      console.log(response);
+
+
+      console.log(data2);
+      setRealm(data2)
+    } catch (err) {
+      console.log(err);
+    }
+
+
+  }
+ 
+ 
+
+  useEffect(() => {
+    if (window.sessionStorage.getItem("sessionToken") === null) {
+      window.location.pathname = "/session/home";
+    }
+    // getState();
+    // getRoleList();
+    getRealm();
+  }, []);
+
+  console.log({realm})
+  const [currAC, setCurrAC] = useState([])
+  const [currDist, setCurrDist] = useState([])
+  const [currState, setCurrState] = useState([])
+  useEffect(() => {
+    try{
+      setCurrAC(realm["ac"])
+      setCurrDist(realm["dist"])
+      setCurrState(realm["state"])
+
+    }catch(err){
+      console.log("Error in setting Current vars"+err)
+    }
+  }, [realm]);
+  // console.log(currAC)
+
+  // Realm End
+
+
+
+
+
 
   const onFormSubmit = async (e) => {
     e.preventDefault()
@@ -69,10 +135,9 @@ export default function AddWarehouse() {
     else {
       const warehouseType = document.getElementById("input_warehousetype").value;
       const buildingType = document.getElementById("input_buildingtype").value;
-      const state =
-        states[document.getElementById("input_state").value];
-      const PC = PCs[document.getElementById("input_PC").value];
-
+      const state = document.getElementById("input_state").value;
+      const dist = document.getElementById("input_PC").value;
+      const AC = document.getElementById("input_AC").value;
       const lat = document.getElementById("input_lat").value;
       const lon = document.getElementById("input_lng").value;
 
@@ -90,15 +155,19 @@ export default function AddWarehouse() {
         warehouseType: warehouseType,
         warehouseBuildingType: buildingType,
         warehouseState: state,
-        warehousePC: PC,
+        warehouseDist: dist,
         warehouseLatLong: [lat, lon],
         warehouseAddress: address,
         doubleLock: double_lock.toString().toUpperCase(),
         UIDKey1: person1_ID,
+        // UIDKey2: person2_ID,
         updateTime: new Date().toISOString(),
         updatedByUID: window.sessionStorage.getItem("sessionToken"),
         warehouseStatus: sealed,
+        warehouseAC: AC,
       };
+      console.log(JSON.stringify(reqBody))
+      console.log(PCs)
 
       if (double_lock) {
         reqBody["UIDKey2"] = person2_ID;
@@ -111,25 +180,23 @@ export default function AddWarehouse() {
           headers: {
             "Content-Type": "application/json",
           },
-          credentials: 'same-origin',
+          credentials: 'include',
           body: JSON.stringify(reqBody),
         }
       );
       const status = await response;
       // console.log(status)
       alert(
-        status.status == 200
+        status.status === 200
           ? "Warehouse Created Successfully"
           : "Error Creating Warehouse."
       );
-      if (status.status == 200) {
+      if (status.status === 200) {
         // document.getElementById("create-warehouse-form").reset();
         // window.location.reload();
         navigate('/session/warehousemanagement')
       }
     }
-
-
   };
 
   //Get state list
@@ -258,11 +325,17 @@ export default function AddWarehouse() {
       setmyPCcode(pcCode);
     }
   }
+  async function setAcFunc(Ac) {
+    if (Ac !== "-1") {
+      const acCode = ACs[Ac];
+      setmyACcode(acCode);
+    }
+  }
 
 
   function validate(ID) {
 
-    if (/^[A-Z]{2}[0-9]{5}[A-Z]{3,10}$/.test(ID)) {
+    if (/^[A-Z]{2}[0-9]{6}[A-Z]{3,10}$/.test(ID)) {
       return (true)
     }
     alert("You have entered invalid UserId!")
@@ -364,13 +437,13 @@ export default function AddWarehouse() {
                     onChange={(e) => {
                       setStateFunc(e.target.value)
                     }}
-                    disabled={true}
+                    // disabled={true}
                   >
                     {/* <option value="" disabled selected>
                       --Select--
                     </option> */}
-                    {states && Object.keys(states).map((st) => (
-                      <option value={st} className="text-black" selected={st == first2 ? true : false}>
+                    {currState && currState.map((st) => (
+                      <option value={st} className="text-black">
                         {st}
                       </option>
                     ))}
@@ -460,9 +533,9 @@ export default function AddWarehouse() {
                     onChange={(e) => setPcFunc(e.target.value)}
                   >
                     <option value="">--Select--</option>
-                    {Object.keys(PCs).map((pc) => (
-                      <option value={pc} className="text-black">
-                        {pc}
+                    {currDist.map((dist) => (
+                      <option value={dist} className="text-black">
+                        {dist}
                       </option>
                     ))}
                   </select>
@@ -479,13 +552,13 @@ export default function AddWarehouse() {
                   <select
                     required
                     name=""
-                    id="input_PC"
-                    onChange={(e) => setPcFunc(e.target.value)}
+                    id="input_AC"
+                    onChange={(e) => setAcFunc(e.target.value)}
                   >
                     <option value="">--Select--</option>
-                    {Object.keys(PCs).map((pc) => (
-                      <option value={pc} className="text-black">
-                        {pc}
+                    {currAC.map((ac) => (
+                      <option value={ac} className="text-black">
+                        {ac}
                       </option>
                     ))}
                   </select>
