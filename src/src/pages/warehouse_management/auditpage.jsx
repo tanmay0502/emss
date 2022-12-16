@@ -30,24 +30,101 @@ function AuditDetail(props) {
             transform: 'translate(-50%, -50%)',
         },
     };
+    const [list,setList] = useState([])
+    console.log(props.id)
+    async function getAudit() {
+
+        try {
+            const response = await fetch(
+                `${process.env.REACT_APP_API_SERVER}/warehouse/getWarehouseAudit/${props.id}`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: 'include',
+                    mode: "cors"
+                }
+            );
+            const data = await response.json();
+            console.log(data)
+            if (response.status == 200) {
+                setList(data["data"]);
+            }
+
+        } catch (err) {
+            console.log({ err });
+        }
+    }
+
+    useEffect(() => {
+        getAudit();
+    }, []);
+    console.log({list})
+    function issueId(){
+        return(props.id)
+    }
+    const getDocuments = async (docName) => {
+        const myId = issueId();
+        console.log("Document Details:")
+        console.log(issueId())
+        console.log({docName})
+
+        try {
+            const response = await fetch(
+                `${process.env.REACT_APP_API_SERVER}/warehouse/getAuditImage/${myId}/${docName}`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    mode: 'cors'
+                }
+            )
+            const data = await response.json();
+            setDocuments(data);
+            console.log(data)
+            console.log(Documents["data"])
+
+            
+        } catch (error) {
+
+            console.log({error});
+        }
+    }
+
+
 
     const List = [1, 2, 2, 2, 2, 2, 2, 2, 2, 2]
     const imageData = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFKSURBVHgB3VXtdYMwDLwR2KAegRE8QkZgg7IB3qDZIN2gI3gERmAERmhxIz3OQhSa9lfuPb3AWbZOHzHAM2JYbFrsU357s65r42K3xS74BUbZzDbtBLA+4ejwgZyjcLNwjePfLtZRwFm4Q/WRuCzcT2Uowa8UJOw5arqMJNyVOFWcJQPFO/GnA0Rnk+3BgDUTLWn0AujGF+JaOoj7UJ57WovCJ3m/eQE+UNf7lRTN8BudUGcY4E9e5az1zrQ5wEdDAhReqb8RjXMkNQ32MaFWbN8rqOrOvL/hn9ChVl2arH0YjG+DB2FVd9iOZKDAWXwvOHFdwKjunSATifBsxPaC3IBnvCfV9k9WxETcJzCjHutDJDqolKChbDL2Ve6OqQfOZEJ993iIWMt0GgF1acrzDfemtuZw9Ut4AB38j43X5D+hxdpUm1nC0+ELIayoHUrW/fUAAAAASUVORK5CYII='"
     console.log(UserID, show, showImage)
 
-    let currDoc = ''
-    if (Documents["data"] !== undefined) {
-        currDoc = currDoc + Documents["data"];
-    } else {
-        currDoc = "loding";
-    }
+    // let currDoc = ''
+    // if (Documents["data"] !== undefined){
+    //     currDoc = currDoc + Documents["data"];
+    // } else {
+    //     currDoc = "loding";
+    // }
+    const [currDoc, setCurrDoc] = useState("loding")
+    useEffect(() => {
+        try{
 
+        setCurrDoc(Documents["data"].slice(0,-1))
+        console.log(currDoc)
+                    
+    }catch(err){
+
+    }
+    }, [Documents]);
     function afterOpenModal() {
         // references are now sync'd and can be accessed.
         //   subtitle.style.color = '#f00';
     }
 
-    function openModal() {
+    function openModal(props) {
+        console.log("Getting Document")
+        console.log("Opening")
+        getDocuments(props);
         setIsOpen(true);
     }
 
@@ -58,6 +135,7 @@ function AuditDetail(props) {
     function imageName(name) {
         setModalImage(name)
     }
+    
     function show_fun() {
         setShow(0);
         setShowImage(0);
@@ -75,17 +153,20 @@ function AuditDetail(props) {
 
     }
 
+
+
     return (
         <>
             <div className="flex justify-between mb-10">
-                <div className="text-left text-lg font-bold mt-2 " onClick={show_hide}>Audit Details</div>
-                {hide == 1 && <div className="text-left text-lg font-bold mt-2 mr-2" onClick={show_fun}>Hide Audit Details</div>}
+            {hide !== 1 &&<div className="text-left text-md font-bold mt-2 hover:cursor-pointer bg-transparent hover:bg-orange-500 text-orange-500 font-semibold hover:text-white py-2 px-4 border border-orange-500 hover:border-transparent rounded" onClick={show_hide}>Audit Details</div>
+                }
+             {hide == 1 && <div className="text-left text-md font-bold mt-2 mr-2 hover:cursor-pointer bg-transparent hover:bg-orange-500 text-orange-500 font-semibold hover:text-white py-2 px-4 border border-orange-500 hover:border-transparent rounded" onClick={show_fun}>Hide Audit Details</div>}
             </div>
             {
                 show == 1 && showImage == 0 &&
                 <div className={styles.mainbox} >
-                    {List.length > 0 &&
-                        List.map((value, id) => (
+                    {list.length > 0 &&
+                        list.map((value, id) => (
                             <div className={styles.box} >
                                 <div className="form_group">
                                     <div className="form_label">
@@ -117,7 +198,14 @@ function AuditDetail(props) {
                                         <label htmlFor="" className={styles.Label}>Image:</label>
                                     </div>
                                     <div className="form_select">
-                                        <button className=' w-50 h-9 mb-2' style={{ color: "white" }} onClick={() => { openModal(); }}>{name[0].length >= 20 ? name[0].slice(0, 20) + "..." : name}</button>
+                                        <button className=' w-50 h-9 mb-2' style={{ color: "white" }} onClick={() => { openModal(value[2]);
+                                                // setModalImage(value[2]); 
+                                                // console.log("Getting Document")
+                                                // getDocuments(value[2]);
+                                            }}
+                                        
+                                        >
+                                            {value[2]}</button>
                                     </div>
                                 </div>
                             </div>
@@ -135,7 +223,7 @@ function AuditDetail(props) {
                                 <h4>Image</h4>
                                 <div className='flex justify-center items-center'>
                                     {/* {currDoc === "loding" ? <p className={`${styles.loader}`}></p> : <embed style={{ width: "600px", height: "600px", padding: "10px" }} src={`${currDoc.slice(0, -1)}`} />} */}
-                                    {currDoc !== "loding" ? <p className={`${styles.loader}`}></p> : <embed style={{ width: "600px", height: "600px", padding: "10px" }} src={`${imageData.slice(0, -1)}`} />}
+                                    {currDoc === "loding" ? <p className={`${styles.loader}`}></p> : <embed style={{ width: "600px", height: "600px", padding: "10px" }} src={currDoc} />}
                                 </div>
                                 <button style={{ color: "white", }} onClick={closeModal}>Close</button>
                             </div>
