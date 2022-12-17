@@ -31,15 +31,15 @@ Modal.setAppElement(document.getElementById('root'));
 
 export default function ActionIssue() {
 
-  function mystring(arr) {
-    let ans = ""
-    arr.map((v) => {
-      ans = ans + v + " ";
+  function mystring(arr){
+    let ans=""
+    arr.map((v)=>{
+        ans=ans+v+" ";
     })
 
     return ans
-  }
-  const [baseImage, setBaseImage] = useState("")
+}
+  const [baseImage, setBaseImage ] = useState("")
   const navigate = useNavigate()
   const fileNameArray = [];
   const fileTypeArray = [];
@@ -57,34 +57,34 @@ export default function ActionIssue() {
   const [supportingDoc, setSupportingDoc] = useState("");
   const [users, setUsers] = useState([]);
   const [issue, setIssue] = useState([]);
-
+      
   const [fileNameArray2, setFileName] = React.useState([]);
   const [fileTypeArray2, setFileType] = React.useState([]);
   const [filebase64Array2, setFileData] = React.useState([]);
 
 
-  // for showing document
-  // let subtitle;
-  const [modalIsOpen, setIsOpen] = React.useState(false);
-
-  function openModal() {
-    setIsOpen(true);
-  }
-
-  function afterOpenModal() {
-    // references are now sync'd and can be accessed.
+// for showing document
+    // let subtitle;
+    const [modalIsOpen, setIsOpen] = React.useState(false);
+  
+    function openModal() {
+      setIsOpen(true);
+    }
+  
+    function afterOpenModal() {
+      // references are now sync'd and can be accessed.
     //   subtitle.style.color = '#f00';
-  }
+    }
+  
+    function closeModal() {
+      setIsOpen(false);
+    }
 
-  function closeModal() {
-    setIsOpen(false);
-  }
-
-  function imageName(name) {
-    setModalImage(name)
-  }
-
-  //END for showing documents
+    function imageName(name){
+        setModalImage(name)
+    }
+  
+//END for showing documents
 
   const issueId = () => {
     const URL = window.location.href;
@@ -95,7 +95,7 @@ export default function ActionIssue() {
   }
 
   const getDetails = async () => {
-
+    
     const myId = issueId();
     try {
       const response = await fetch(
@@ -109,14 +109,9 @@ export default function ActionIssue() {
           mode: 'cors'
         }
       )
-      const data2 = await response.json();
-      if (response.status == 200) {
-        const data = data2['data']
-        console.log(data, 'i am datafuyfuyfuyf')
-        setDetails(data);
-      }
-      else
-        alert(data2['message'])
+      const data = await response.json();
+      console.log(data)
+      setDetails(data);
 
     } catch (error) {
       console.log(error);
@@ -125,86 +120,82 @@ export default function ActionIssue() {
   const getDocuments = async (docName) => {
     const myId = issueId();
     try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_SERVER}/issue_requests/getDocument/${myId}/${docName}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          mode: 'cors'
-        }
-      )
-      const data = await response.json();
-      if (response.status == 200) {
-        setDocuments(data['data']);
+        const response = await fetch(
+            `${process.env.REACT_APP_API_SERVER}/issue_requests/getDocument/${myId}/${docName}`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                mode: 'cors'
+            }
+        )
+        const data = await response.json();
+
+        // let connectorLength = data['remarks'].map((e, index) => {
+        //     if (e[6] == "Y") return index != data['remarks'].length - 1 ? <ConnectorTwo /> : <ConnnectorOne />
+        // })
+        // connectorLength = connectorLength.filter((ele) => {
+        //     return ele !== undefined;
+        // })
+        // console.log(connectorLength);
+        // if (data['remarks'] != undefined && data['remarks'].length == 1 || data['remarks'].length == 0 || connectorLength.length == 1) connectorLength = '';
+
+        // data['ConnectorLength'] = connectorLength;
+        setDocuments(data);
+        // console.log({Documents})
+
+        
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+const getOpenIssues = async () => {
+    
+  const UserID = sessionStorage.getItem('sessionToken')
+  try {
+    const response = await fetch(
+      `${process.env.REACT_APP_API_SERVER}/issue_requests/getOpenIssues/${UserID}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credantials: 'same-origin',
+        mode: 'cors'
       }
-      else
-        alert(data['message'])
-      // let connectorLength = data['remarks'].map((e, index) => {
-      //     if (e[6] == "Y") return index != data['remarks'].length - 1 ? <ConnectorTwo /> : <ConnnectorOne />
-      // })
-      // connectorLength = connectorLength.filter((ele) => {
-      //     return ele !== undefined;
-      // })
-      // console.log(connectorLength);
-      // if (data['remarks'] != undefined && data['remarks'].length == 1 || data['remarks'].length == 0 || connectorLength.length == 1) connectorLength = '';
+    )
+    const data = await response.json();
+    console.log(data)
+    setIssue(data);
 
-      // data['ConnectorLength'] = connectorLength;
-
-      // console.log({Documents})
-
-
-    } catch (error) {
-      console.log(error);
-    }
+  } catch (error) {
+    console.log(error);
   }
+}
 
-
-  const getOpenIssues = async () => {
-
-    const UserID = sessionStorage.getItem('sessionToken')
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_SERVER}/issue_requests/getOpenIssues/${UserID}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credantials: 'include',
-          mode: 'cors'
-        }
-      )
-      const data = await response.json();
-      console.log(data, 'data')
-      setIssue(data);
-
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  // console.log(issue["data"][0][0])
-  // console.log(issue["data"][0][2])
+// console.log(issue["data"][0][0])
+// console.log(issue["data"][0][2])
 
   const getList = async () => {
     let token = localStorage.getItem("token");
-    // console.log(decode)
+        // console.log(decode)
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_SERVER}/user/listAllUsers`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
+				`${process.env.REACT_APP_API_SERVER}/user/listAllUsers`,
+				{
+					method: "GET",
+					headers: {
+						"Content-Type": "application/json",
+					},
           credantials: 'same-origin',
-          mode: "cors"
-        }
-      );
+					mode: "cors"
+				}
+			);
       const data = await response.json();
-      console.log(data, 'data[0');
+      console.log(data[0]);
       let allUsers = []
       for (let i = 0; i < data[0]["data"].length; i++) {
         allUsers.push(data[0]["data"][i][0])
@@ -222,7 +213,7 @@ export default function ActionIssue() {
     getOpenIssues();
   }, [])
 
-  console.log(issue);
+console.log(issue);
   function formatText(tag) {
     var selectedText = document.selection.createRange().text;
 
@@ -238,35 +229,32 @@ export default function ActionIssue() {
     setMMtype(mime.lookup(supportingDoc));
 
 
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_SERVER}/issue_requests/${action}_issue`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credantials: 'same-origin',
-          body: JSON.stringify({
-            issueID: parseInt(issueId()),
-            remarks: remarks,
-            SupportingDocuments: fileNameArray2,
-            MMType: fileTypeArray2,
-            SupportingDocumentsData: filebase64Array2,
-            newrecipient: forwardedTo,
-            mergingIssueID: parseInt(issueId()),
-            mergingIntoIssueID: mergeInto.slice(0, 3)
-          }),
-          mode: "cors"
-        }
-      );
+     try {
+       const response = await fetch(
+         `${process.env.REACT_APP_API_SERVER}/issue_requests/${action}_issue`,
+         {
+           method: "POST",
+           headers: {
+             "Content-Type": "application/json",
+           },
+           credantials: 'same-origin',
+           body: JSON.stringify({
+             issueID: parseInt(issueId()),
+             remarks: remarks,
+             SupportingDocuments: fileNameArray2,
+             MMType: fileTypeArray2,
+             SupportingDocumentsData: filebase64Array2,
+             newrecipient: forwardedTo,
+             mergingIssueID: parseInt(issueId()),
+             mergingIntoIssueID: mergeInto.slice(0,3)
+           }),
+           mode:"cors"
+         }
+       );
 
       const data = await response.json();
-
-      if (response.status == 200)
-        window.location.replace(`/session/issuemanagement/viewRequest/id=${issueId()}`);
-      else
-        alert(data['message'])
+      console.log(data)
+      window.location.replace(`/session/issuemanagement/viewRequest/id=${issueId()}`);
     } catch (err) {
       console.log(err);
     }
@@ -275,150 +263,150 @@ export default function ActionIssue() {
   };
   console.log(mergeInto);
 
-  const uploadImage = async (e) => {
+  const uploadImage = async (e) =>{
     const files = e.target.files;
     console.log(files)
 
     const totalFiles = files.length;
     console.log(totalFiles)
-
+    
     var fileNumber = 0;
+    
+    while (fileNumber < totalFiles){
+        var x = fileNumber +1;
+        console.log("fileNumber: " + x)
 
-    while (fileNumber < totalFiles) {
-      var x = fileNumber + 1;
-      console.log("fileNumber: " + x)
+        const file = e.target.files[fileNumber];
+        const fullFileName = file.name;
 
-      const file = e.target.files[fileNumber];
-      const fullFileName = file.name;
+        var fileParts = fullFileName.split(".");
 
-      var fileParts = fullFileName.split(".");
+        console.log("full file" + fileParts.length)
+        const fileArrayLength = fileParts.length;
 
-      console.log("full file" + fileParts.length)
-      const fileArrayLength = fileParts.length;
+        const indexDot = fullFileName.indexOf(".");
+        // console.log("indexDot"+indexDot)
 
-      const indexDot = fullFileName.indexOf(".");
-      // console.log("indexDot"+indexDot)
+        const fileNameo = fullFileName.slice(0, indexDot);
+        // console.log("fileName"+ fileNameo);
 
-      const fileNameo = fullFileName.slice(0, indexDot);
-      // console.log("fileName"+ fileNameo);
+        
 
 
+        window.fileType = fileParts[fileArrayLength -1];
+    
+        const filePartsNew = fileParts.pop();
+        console.log(fileParts);
+        const fileName = fileParts.join(".");
+        console.log("this file name: " + fileName);
+        console.log("fileParts New" + filePartsNew);
+        console.log("fileName = " + filePartsNew)
+        const convertedFile = await convertBase64(file);
+        setBaseImage(convertedFile)
+        console.log("FILE" + convertedFile)
+        // const indexC = convertedFile.indexOf(",")
+        
+        // var base64Converted = "";
+        // if(window.fileType === "JPG" || window.fileType === "jpeg" ){
+        //     var base64Converted = convertedFile.slice(indexC + 5)
+        // }else{
+         var base64Converted = convertedFile;
+        // }
+    
+        // console.log("base64-1" + window.base64Converted)
+        console.log("type:" + window.fileType)
+        fileNumber += 1;
 
+        fileNameArray.push(fileName);
+        fileTypeArray.push(window.fileType);
+        filebase64Array.push(base64Converted);
 
-      window.fileType = fileParts[fileArrayLength - 1];
+        setFileName(arr => [...arr, fileName])
+        setFileType(arr => [...arr, window.fileType])
+        setFileData(arr => [...arr, base64Converted])
 
-      const filePartsNew = fileParts.pop();
-      console.log(fileParts);
-      const fileName = fileParts.join(".");
-      console.log("this file name: " + fileName);
-      console.log("fileParts New" + filePartsNew);
-      console.log("fileName = " + filePartsNew)
-      const convertedFile = await convertBase64(file);
-      setBaseImage(convertedFile)
-      console.log("FILE" + convertedFile)
-      // const indexC = convertedFile.indexOf(",")
-
-      // var base64Converted = "";
-      // if(window.fileType === "JPG" || window.fileType === "jpeg" ){
-      //     var base64Converted = convertedFile.slice(indexC + 5)
-      // }else{
-      var base64Converted = convertedFile;
-      // }
-
-      // console.log("base64-1" + window.base64Converted)
-      console.log("type:" + window.fileType)
-      fileNumber += 1;
-
-      fileNameArray.push(fileName);
-      fileTypeArray.push(window.fileType);
-      filebase64Array.push(base64Converted);
-
-      setFileName(arr => [...arr, fileName])
-      setFileType(arr => [...arr, window.fileType])
-      setFileData(arr => [...arr, base64Converted])
-
-      console.log("Arrays:-")
-      console.log("fileNameArray: " + fileNameArray);
-      console.log(fileTypeArray);
-      console.log(filebase64Array);
-      console.log(document.getElementById("formRemarks").value)
-      console.log(JSON.stringify(fileNameArray))
+        console.log("Arrays:-")
+        console.log("fileNameArray: " +fileNameArray);
+        console.log(fileTypeArray);
+        console.log(filebase64Array);
+        console.log(document.getElementById("formRemarks").value)
+        console.log(JSON.stringify(fileNameArray))
     }
-  }
-  // console.log(uploadImage())
-  const convertBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(file);
+}
+// console.log(uploadImage())
+const convertBase64 = (file) =>{
+    return new Promise((resolve,reject)=>{
+        const fileReader = new FileReader();
+        fileReader.readAsDataURL(file);
 
-      fileReader.onload = () => {
-        resolve(fileReader.result);
-      }
+        fileReader.onload = () =>{
+            resolve(fileReader.result);
+        }
 
-      fileReader.onerror = (error) => {
-        reject(error);
-      }
+        fileReader.onerror = (error) => {
+            reject(error);
+        }
     })
-  }
+}
 
 
 
-  console.log(Documents["data"])
-  let currDoc = ''
-  if (Documents["data"] !== undefined) {
+console.log(Documents["data"])
+let currDoc = ''
+if(Documents["data"] !== undefined){
     currDoc = currDoc + Documents["data"];
-
+   
     // console.log("DOCUMENT"+ currDoc)
-  } else {
+}else{
     currDoc = "loding";
     // console.log("DOCUMENT else"+ currDoc)
-  }
-  console.log("DOCUMENT else" + currDoc)
+}
+console.log("DOCUMENT else"+ currDoc)
 
 
-  console.log({ Details });
-  let len = Details['remakrs'] !== undefined && Details['remarks'].length;
+console.log({Details});
+let len = Details['remakrs'] !== undefined && Details['remarks'].length;
 
 
-  const document = Details['supportingDocuments']
-  console.log({ document })
-  // var documentID = '';
-  var documentName = [];
-  var index = 0;
+const document = Details['supportingDocuments']
+console.log({document})
+// var documentID = '';
+var documentName = [];
+var index = 0;
 
-  if (document !== undefined) {
+if (document !== undefined){
     for (const [key, value] of Object.entries(document)) {
-      console.log("KEY: VALUE")
-      console.log(`${key}: ${value}`);
-      // documentID = documentID + `${key}`;
-      // documentName = documentName + `${value}`
-      console.log(value.length)
-      if (index === 0) {
-        for (const i in value) {
-          documentName.push(value[i])
-          console.log(value[i])
-        }
+        console.log("KEY: VALUE")
+        console.log(  `${key}: ${value}`);
+        // documentID = documentID + `${key}`;
+        // documentName = documentName + `${value}`
+        console.log(value.length)
+        if(index === 0){
+            for(const i in value){
+                documentName.push(value[i])
+                console.log(value[i])
+            }
+        }            
+
+        index = index+1;
       }
+}
+else documentName = ['No Documents Found']
 
-      index = index + 1;
-    }
-  }
-  else documentName = ['No Documents Found']
+// 
+// console.log("Document ID: " + documentID);
+// console.log("Document Name: " + documentName[0]);
+// var documentData2 = "data:" + Documents["data"].slice(5);
+// var documentData2 = Documents["data"];
 
-  // 
-  // console.log("Document ID: " + documentID);
-  // console.log("Document Name: " + documentName[0]);
-  // var documentData2 = "data:" + Documents["data"].slice(5);
-  // var documentData2 = Documents["data"];
-
-  // var documentData2 = '';
-  // if(documentName.slice(-3) === "png"){
-  //     documentData2 = "data:image/png;base64," + Documents["data"];
-  // }else if(documentName.slice(-3) === "jpg"){
-  //     documentData2 = "data:image/jpeg;base64," + Documents["data"];
-  // }else if(documentName.slice(-3) === "pdf"){
-  //     documentData2 = "data:application/pdf;base64," + Documents["data"];
-  // }
+// var documentData2 = '';
+// if(documentName.slice(-3) === "png"){
+//     documentData2 = "data:image/png;base64," + Documents["data"];
+// }else if(documentName.slice(-3) === "jpg"){
+//     documentData2 = "data:image/jpeg;base64," + Documents["data"];
+// }else if(documentName.slice(-3) === "pdf"){
+//     documentData2 = "data:application/pdf;base64," + Documents["data"];
+// }
 
 
 
@@ -473,14 +461,14 @@ export default function ActionIssue() {
             </p>
           </div>
           <div className="flex justify-between">
-            <p className="text-left mt-4">
-              <span className="text-red-600" >Remarks:</span>&nbsp;{" "}
-              {Details.issue ? Details.issue[0][2] : ""}
-            </p>
-            <p className="text-left mt-4">
-              <span className="text-red-600" >Status:</span>&nbsp;{" "}
-              {Details.issue ? (Details.issue[0][6] == "A" ? "Active" : "Closed") : "Status not found"}
-            </p>
+          <p className="text-left mt-4">
+            <span className="text-red-600" >Remarks:</span>&nbsp;{" "}
+            {Details.issue ? Details.issue[0][2] : ""}
+          </p>
+          <p className="text-left mt-4">
+            <span className="text-red-600" >Status:</span>&nbsp;{" "}
+            {Details.issue ? (Details.issue[0][6]=="A"?"Active":"Closed") : "Status not found"}
+          </p>
           </div>
           <p className="text-left mt-4">
             <span className="text-red-600" >Tagged Users:</span>&nbsp;{" "}
@@ -490,57 +478,57 @@ export default function ActionIssue() {
             <span className="text-red-600">Documents:</span>&nbsp;
             {/* {Details.issue && Details.issue[0][8] && Details.issue[0][8]}
             {(!Details.issue || !Details.issue[0][8]) && " Data not found"} */}
+                    
+                    <div className='p-2 grid grid-cols-3'>
+                        {documentName.map(
+                            (name) => {
+                               return( <> 
+                               
+                               <button onClick={() => {
+                                    openModal();
+                                    setModalImage(name); 
+                                    getDocuments(name);
 
-            <div className='p-2 grid grid-cols-3'>
-              {documentName.map(
-                (name) => {
-                  return (<>
-
-                    <button onClick={() => {
-                      openModal();
-                      setModalImage(name);
-                      getDocuments(name);
-
-                    }} className='m-4 w-60 h-9' style={{ backgroundColor: "#F56A3F", color: "white", overflow: "hidden", display: 'flex', justifyContent: 'center', alignItems: 'center' }}>{name[0].length >= 20 ? name[0].slice(0, 20) + "..." : name}</button>
-
-
-                  </>
-
-                  )
+                               }} className='m-4 w-60 h-9' style={{ backgroundColor: "#F56A3F", color: "white", overflow:"hidden", display : 'flex',justifyContent : 'center', alignItems : 'center' }}>{name[0].length >= 20 ? name[0].slice(0,20)+"..." : name}</button>
 
 
+                                </>
+
+                               )
+                                                              
+
+                            
+                            }
+                            
+                        )}
+                        
+                        </div>
+                        <Modal        
+            isOpen={modalIsOpen}
+            onAfterOpen={afterOpenModal}
+            onRequestClose={closeModal}
+            style={customStyles}
+            contentLabel="Example Modal"
+        >
+            <div id="root" className=''>
+            <h4>{modalImage}</h4>
+            <div className='flex justify-center items-center'>
+                {/* <img className='p-10' src={currDoc} /> */}
+                
+                {   currDoc === "loding" ? <p className={`${styles.loader}`}></p>: <embed style={{width: "600px" ,height:"600px" , padding: "10px"}} src={`${currDoc.slice(0,-1)}`} />
 
                 }
+                {/* <img style={{width: "400px" , padding: "10px"}} src={`${currDoc}`} /> */}
+                            
+                
 
-              )}
+                {/* {console.log("This should be shown:" + currDoc.slice(0,-1))} */}
 
             </div>
-            <Modal
-              isOpen={modalIsOpen}
-              onAfterOpen={afterOpenModal}
-              onRequestClose={closeModal}
-              style={customStyles}
-              contentLabel="Example Modal"
-            >
-              <div id="root" className=''>
-                <h4>{modalImage}</h4>
-                <div className='flex justify-center items-center'>
-                  {/* <img className='p-10' src={currDoc} /> */}
-
-                  {currDoc === "loding" ? <p className={`${styles.loader}`}></p> : <embed style={{ width: "600px", height: "600px", padding: "10px" }} src={`${currDoc.slice(0, -1)}`} />
-
-                  }
-                  {/* <img style={{width: "400px" , padding: "10px"}} src={`${currDoc}`} /> */}
-
-
-
-                  {/* {console.log("This should be shown:" + currDoc.slice(0,-1))} */}
-
-                </div>
-
-                <button style={{ color: "white", }} onClick={closeModal}>Close</button>
-              </div>
-            </Modal>
+            
+            <button style={{  color: "white",}} onClick={closeModal}>Close</button>
+            </div>
+        </Modal>
 
           </p>
         </div>
@@ -568,7 +556,7 @@ export default function ActionIssue() {
                   onChange={(e) => {
                     setRemarks(e.target.value);
                   }}
-                  disabled={action === "merge" ? true : false}
+                  disabled = {action === "merge" ? true : false}
 
                 ></textarea>
               </div>
@@ -580,7 +568,7 @@ export default function ActionIssue() {
                 </label>
                 <br />
                 <div className="flex">
-                  {((Details && Details["issue"]) && Details["issue"][0][6] == "C") ?
+                {((Details && Details["issue"]) && Details["issue"][0][6]=="C") ?
                     (<select
                       type="text"
                       className="w-4/5 h-10 mt-1 p-2 border rounded-md"
@@ -588,10 +576,10 @@ export default function ActionIssue() {
                       onChange={(e) => setAction(e.target.value)}
                       required
                     >
-
+                     
                       <option value="">Select</option>
                       <option value="reopen">Reopen</option>
-                    </select>) :
+                    </select>):
                     (<select
                       type="text"
                       className="w-4/5 h-10 mt-1 p-2 border rounded-md"
@@ -599,15 +587,15 @@ export default function ActionIssue() {
                       onChange={(e) => setAction(e.target.value)}
                       required
                     >
-
+                     
                       <option value="">Select</option>
                       <option value="forward">Forward</option>
                       <option value="reject">Reject</option>
                       <option value="resolve">Resolve</option>
                       <option value="merge">Merge</option>
                     </select>)
-                  }
-
+                    }
+                 
 
                   <TypeIcon className="ml-2" />
                 </div>
@@ -673,15 +661,15 @@ export default function ActionIssue() {
             <label className="text-left">Supporting Documents</label>
 
             <input type="file" className="w-1/6"
-              disabled={action === "merge" ? true : false}
-              // value={supportingDoc}
-              id="formDocuments"
-              // required={isTemporary}
-              multiple
-              onChange={(e) => {
+            disabled = {action === "merge" ? true : false}
+            // value={supportingDoc}
+            id="formDocuments"
+            // required={isTemporary}
+            multiple
+            onChange={(e)=>{
                 uploadImage(e);
-              }}
-
+            }}
+            
 
             // required
             ></input>

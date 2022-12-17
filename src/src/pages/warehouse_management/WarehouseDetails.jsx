@@ -29,32 +29,24 @@ export default function WarehouseDetails() {
             )
 
             const dataObj = await response.json();
+            const data = dataObj["data"];
+            const coordinates = data[5];
+            setDoubleLockSystem(data[7])
+            const myArr = coordinates.split(",");
+            const lat = myArr[0].substring(1);
+            const lng = myArr[1].slice(0, -1);
+            data.push(lat);
+            data.push(lng);
+            getWarehouseType(data[1]).then((val) => {
+                console.log(val);
+                data[1] = val;
+            });
 
-            if (response.status == 200) {
+            getStateName(data[3]).then((val) => {
+                data[3] = val;
+            });
 
-                const data = dataObj["data"];
-                console.log(data, "Datatfauyfuyfyu")
-                const coordinates = data[5];
-                setDoubleLockSystem(data[7])
-                const myArr = coordinates.split(",");
-                const lat = myArr[0].substring(1);
-                const lng = myArr[1].slice(0, -1);
-                data.push(lat);
-                data.push(lng);
-                getWarehouseType(data[1]).then((val) => {
-                    console.log(val);
-                    data[1] = val;
-                });
-
-                getStateName(data[3]).then((val) => {
-                    data[3] = val;
-                });
-
-                getPCName(data[3], data[4], data);
-            }
-            else {
-                alert(dataObj["message"])
-            }
+            getPCName(data[3], data[4], data);
 
         } catch (error) {
             console.log(error);
@@ -72,12 +64,9 @@ export default function WarehouseDetails() {
                 }
             )
             const typesObj = await response.json();
-            if (response.status == 200) {
-
-                const types = typesObj['data'];
-                for (let i = 0; i < types.length; i++) {
-                    if (types[i][0] == code) return types[i][1];
-                }
+            const types = typesObj['data'];
+            for (let i = 0; i < types.length; i++) {
+                if (types[i][0] == code) return types[i][1];
             }
         } catch (error) {
             console.log(error);

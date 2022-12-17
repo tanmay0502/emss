@@ -60,12 +60,9 @@ function RequestList() {
                 }
             );
             const data2 = await response.json();
-            console.log(data2, "data2")
-            if (response.status == 200) {
+            console.log(data2)
+            if(data2["status"]!=404){
                 setRequest(data2['data']);
-            }
-            else {
-                alert(data2['message'])
             }
 
         } catch (err) {
@@ -73,31 +70,31 @@ function RequestList() {
         }
     }
 
-    const Tagged = (type) => UserID === type ? "Recipient" : "Tagged";
+    const Tagged = (type) =>  UserID === type ? "Recipient" : "Tagged"; 
 
     let reverseV = []
-    let reverseK = []
-    if (request != [] && request) {
+    let reverseK =[]
+    if(request!=[] && request){
 
-        reverseK = Object.keys(request).reverse();
+        reverseK=Object.keys(request).reverse();
         reverseV = Object.values(request).reverse();
     }
-
+   
 
     var reverse = []
-
+    
     var i = 0;
-    while (i < reverseV.length) {
+    while(i<reverseV.length){
         reverse[i] = reverseV[i]
 
-        i = i + 1;
+        i = i +1;
     }
     // const reverselist = request 
     console.log(reverse)
     console.log(request)
 
 
-
+    
     async function renderremarkslist() {
         var data = reverse.filter((elem) => {
             if (tableFilter === "") {
@@ -111,17 +108,17 @@ function RequestList() {
             console.log(val);
             return {
                 "Request ID": val['issueid'],
-                "Logged by": <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center", paddingRight: "15px" }}><img src={UserImageTest} /><span style={{ 'marginLeft': "15px" }}>{val['lodgeruserid']}</span></div>,
+                "Logged by": <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center", paddingRight: "15px" }}><img src={UserImageTest} /><span style={{'marginLeft' : "15px"}}>{val['lodgeruserid']}</span></div>,
                 "Registration Date": val['createdon'].split('T')[0],
-                "Severity": <SeverityButton userID={val['issueid']} severity={val['severity']}
-                    customLabels={{
-                        "active": "Low",
-                        "inactive": "Medium"
-                    }} />,
+                "Severity" :  <SeverityButton userID={val['issueid']} severity = {val['severity']} 
+				customLabels={{
+					"active": "Low",
+					"inactive": "Medium"
+				}}/>,
                 "Subject": val['subject'],
-                "Tagged/Recipient": Tagged(val['recipientuserid']),
-                "Details": val,
-                "status": (val["status"]) == "A" ? "Active" : "Closed"
+                "Tagged/Recipient" : Tagged(val['recipientuserid']),
+                "Details" : val,
+                "status":(val["status"])=="A"?"Active":"Closed"
             }
         })
         data.sort(function (a, b) {
@@ -129,7 +126,7 @@ function RequestList() {
                 return a[sortMapping[sortBy]].localeCompare(b[sortMapping[sortBy]])
             }
             else {
-
+               
                 return a["status"].localeCompare(b["status"])
             }
         });
@@ -148,13 +145,13 @@ function RequestList() {
     useEffect(() => {
         renderremarkslist();
     }, [request, tableFilter, sortBy, sortOrder]);
-
+    
     return (
-        <div style={{ height: "100%" }}>
+        <div style={{height: "100%"}}>
             <div className="" style={{ background: "white", position: "relative", height: "100%", gridArea: "1 / 1 / 6 / 6", borderRadius: "20px" }}>
-                {isDetail == 0 ? <div className='MainHeader pd-5 ' style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between", "alignItems": "center" }}>
+                {isDetail == 0 ? <div className='MainHeader pd-5 ' style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between", "alignItems" : "center"}}>
                     <h4 className='text-white'>Issue / Request List</h4>
-                    <div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center" }}>
+                    <div  style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center" }}>
                         <button className='createRequestBtn' onClick={() => {
                             navigate("/session/issuemanagement/createIssue");
                         }}>

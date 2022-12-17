@@ -12,16 +12,16 @@ import { AiOutlineArrowLeft } from 'react-icons/ai'
 import { useNavigate } from "react-router-dom";
 
 export default function CreateIssue() {
-    const [baseImage, setBaseImage] = useState("")
+    const [baseImage, setBaseImage ] = useState("")
 
     const fileNameArray = [];
     const fileTypeArray = [];
-    const filebase64Array = [];
-
+    const filebase64Array = [];  
+    
     const navigate = useNavigate();
 
     const [tags, setTags] = React.useState([]);
-
+    
     const [fileNameArray2, setFileName] = React.useState([]);
     const [fileTypeArray2, setFileType] = React.useState([]);
     const [filebase64Array2, setFileData] = React.useState([]);
@@ -64,7 +64,7 @@ export default function CreateIssue() {
                     }),
                 }
             );
-
+  
             // var x = document.getElementById("formDocuments")
             // let encoded = base64_encode(x);
             // console.log("Encoded:- "+encoded +"x" +x);
@@ -73,16 +73,15 @@ export default function CreateIssue() {
 
             console.log(response);
             const data = await response.json();
-            console.log(data, "data")
-            // console.log("data" + data);
-            // console.log("Message:" + data["message"])
-            if (response.status == 200) {
+            console.log("data" + data);
+            console.log("Message:" + data["message"])
+            if (data["message"] === "Issue created successfully") {
                 document.getElementById("form").reset();
-                alert(data["message"]);
-                window.location.pathname = "/session/issuemanagement";
+                alert("Created Successfully");
+                window.location.pathname = "/session/issuemanagement/createIssue";
             } else {
-                alert(data["message"]);
-
+                alert("Failed!");
+            
             }
         } catch (err) {
             console.log(err);
@@ -98,32 +97,32 @@ export default function CreateIssue() {
 
     // }
 
-    function handleLength() {
-        let len = document.getElementById("formSubject").value.length;
+    function handleLength(){
+      let len = document.getElementById("formSubject").value.length;
 
-        if (len >= 127) {
-            alert("Maximum Subject length is 128 Characters")
-        }
+      if(len >= 127){
+        alert("Maximum Subject length is 128 Characters")
+      }
     }
     function remarkLen() {
         let remarkLen = document.getElementById("formRemarks").value.length;
-        if (remarkLen >= 255) {
+        if(remarkLen >= 255){
             alert("Maximum Remarks length is 256 Characters")
         }
 
-    }
+      }
 
-    const uploadImage = async (e) => {
+    const uploadImage = async (e) =>{
         const files = e.target.files;
         console.log(files)
 
         const totalFiles = files.length;
         console.log(totalFiles)
-
+        
         var fileNumber = 0;
-
-        while (fileNumber < totalFiles) {
-            var x = fileNumber + 1;
+        
+        while (fileNumber < totalFiles){
+            var x = fileNumber +1;
             console.log("fileNumber: " + x)
 
             const file = e.target.files[fileNumber];
@@ -140,11 +139,11 @@ export default function CreateIssue() {
             const fileNameo = fullFileName.slice(0, indexDot);
             // console.log("fileName"+ fileNameo);
 
+            
 
 
-
-            window.fileType = fileParts[fileArrayLength - 1];
-
+            window.fileType = fileParts[fileArrayLength -1];
+        
             const filePartsNew = fileParts.pop();
             console.log(fileParts);
             const fileName = fileParts.join(".");
@@ -155,14 +154,14 @@ export default function CreateIssue() {
             setBaseImage(convertedFile)
             console.log("FILE" + convertedFile)
             // const indexC = convertedFile.indexOf(",")
-
+            
             // var base64Converted = "";
             // if(window.fileType === "JPG" || window.fileType === "jpeg" ){
             //     var base64Converted = convertedFile.slice(indexC + 5)
             // }else{
-            var base64Converted = convertedFile;
+             var base64Converted = convertedFile;
             // }
-
+        
             // console.log("base64-1" + window.base64Converted)
             console.log("type:" + window.fileType)
             fileNumber += 1;
@@ -176,7 +175,7 @@ export default function CreateIssue() {
             setFileData(arr => [...arr, base64Converted])
 
             console.log("Arrays:-")
-            console.log("fileNameArray: " + fileNameArray);
+            console.log("fileNameArray: " +fileNameArray);
             console.log(fileTypeArray);
             console.log(filebase64Array);
             console.log(document.getElementById("formRemarks").value)
@@ -191,12 +190,12 @@ export default function CreateIssue() {
         // window.fileName = fullFileName.slice(0, indexDot);
         // console.log("fileName"+ window.fileName);
         // window.fileType = fullFileName.slice(indexDot+1);
-
+        
         // window.base64Converted = await convertBase64(file);
-
+        
         // console.log("base64-1" + window.base64Converted)
         // console.log("type:" + window.fileType)
-
+        
 
         // const file2 = e.target.files[1];
         // window.base64Converted2 = await convertBase64(file2);
@@ -209,7 +208,7 @@ export default function CreateIssue() {
         // window.fileName2 = fullFileName2.slice(0, indexDot2);
         // console.log("fileName2"+ window.fileName2);
         // window.fileType2 = fullFileName.slice(indexDot2+1);
-
+        
         // window.base64Converted2 = await convertBase64(file2);
         // console.log("base64-2" + window.base64Converted2)
         // console.log("type2:" + window.fileType2)
@@ -401,9 +400,9 @@ export default function CreateIssue() {
                     <div className="w-full div3Container"> */}
                         <p className="text-lg flex" > Remarks<span className="text-orange-600">*</span></p>
                         <textarea required className="textarea flex" id="formRemarks" name="w3review" rows="" cols=""
-                            onChange={() => remarkLen()}
-                            maxlength="256"
-                            placeholder="Text Input">
+                        onChange={() => remarkLen()}
+                        maxlength="256"
+                        placeholder="Text Input">
 
                         </textarea>
                     </div>

@@ -141,77 +141,60 @@ export default function ModifyWarehouse() {
 
 
   // }
-  function logOut() {
-    const response = fetch(
-      `${process.env.REACT_APP_API_SERVER}/user/UserLogout`,
-      {
-        method: "GET",
-        credentials: 'same-origin',
-        headers: {
-          "Content-Type": "application/json",
-        },
-        mode: 'no-cors'
-      }
-    );
+	function logOut() {
+		const response = fetch(
+			`${process.env.REACT_APP_API_SERVER}/user/UserLogout`,
+			{
+			  method: "GET",
+			  credentials: 'same-origin',
+			  headers: {
+				"Content-Type": "application/json",
+			  },
+			  mode: 'no-cors'
+			}
+		  );
 
-    sessionStorage.removeItem("sessionToken", null);
-    // props.SetSession(null)
-    // setUserData(null)
-    // localStorage.setItem("token", null);
-    window.location.replace("/login");
-  }
+		sessionStorage.removeItem("sessionToken", null);
+		// props.SetSession(null)
+		// setUserData(null)
+		// localStorage.setItem("token", null);
+		window.location.replace("/login");
+	}
 
-  // const dataObj = await response.json();
-  // const data = dataObj["data"];
-  // console.log(dataObj, "dataObj")
-  // const coordinates = data[5];
-  // const myArr = coordinates.split(",");
-  // const lat = myArr[0].substring(1);
-  // const lng = myArr[1].slice(0, -1);
-  // data.push(lat);
-  // data.push(lng);
 
   async function getDetails(e) {
     console.log(e)
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_SERVER}/warehouse/warehouseDetails`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          }
-        }
-      )
+		try {
+			const response = await fetch(
+				`${process.env.REACT_APP_API_SERVER}/warehouse/warehouseDetails`,
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+          credentials: 'include',
+          body: JSON.stringify({
+            warehouseID:e,
+          }),
+				})
 
-      const dataObj = await response.json();
-      const data = dataObj["data"];
-      console.log(dataObj, "dataObj")
-      const coordinates = data[5];
-      const myArr = coordinates.split(",");
-      const lat = myArr[0].substring(1);
-      const lng = myArr[1].slice(0, -1);
-      data.push(lat);
-      data.push(lng);
+			const data = await response.json();
+			console.log(data);
+			// setWhdetails(data["warehouseDetails"])
+      const status = await response;
+      console.log(status.status);
+			// console.log(data["data"], "data")
+      if(status.status === 401){
+        logOut();
+        alert("Your session expired please login again")
+        
+      }
+		} catch (error) {
 
-      console.log(data[7]);
-      setDoubleLockSystem(data[7]);
-      setAddress(data[6]);
-      setBuildingType(data[2]);
-      setLat(data[14]);
-      setLng(data[15]);
-      setUserId1(data[8]);
-      setUserId2(data[9]);
-      // setWarehousDetails(data);
-      // setValues(data);
+			console.log(error)
+		}
 
-
-    } catch (error) {
-
-      console.log(error)
-    }
-
-  }
+	}
 
   useEffect(() => {
     getDetails();

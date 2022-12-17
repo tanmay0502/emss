@@ -9,6 +9,8 @@ import UserImageTest from '../../assets/UserImageTest.png'
 function EditPhysicalVerification() {
 
 
+    const [Add_Temporary_Users, setAdd_Temporary_Users] = React.useState([]);
+
     const row21 = {
         'User_ID': 'MH00000CEO',
         "": <div style={{ display: "flex", flexDirection: "row", alignItems: "right", justifyContent: "flex-start", paddingLeft: "40px" }}><img src={UserImageTest} /></div>,
@@ -59,14 +61,11 @@ function EditPhysicalVerification() {
             const EPV = await response.json();
             if (response.status == 200) {
                 if (EPV) {
-                    const data = EPV['data']
-                    setEPVList(data["epv"][0]);
-                    setTemporary_Users(data["temp_users"])
+                    setEPVList(EPV["epv"][0]);
+                    setTemporary_Users(EPV["temp_users"])
                     steFl(1)
                 }
             }
-            else
-                alert(EPV['message'])
         } catch (err) {
             console.log(err);
         }
