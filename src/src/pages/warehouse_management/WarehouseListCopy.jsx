@@ -103,7 +103,7 @@ function WarehouseList() {
 	useEffect(() => {
 		console.log(user);
 		if (user) {
-			console.log({user});
+			console.log({ user });
 			setIsDetail(1);
 		}
 	}, [user]);
@@ -133,7 +133,7 @@ function WarehouseList() {
 				"Warehouse ID": val["type"] == 'P' ?
 					<Fragment><span style={{ display: 'flex', justifyContent: 'left', alignItems: 'center', marginLeft: "12%" }}>
 						<FaCircle size='0.8em' className='PermaWarehouse' />
-						<span style={{ marginLeft: '15px', marginRight: '15px' }}>
+						<span style={{ marginLeft: '25px', marginRight: '25px' }}>
 							{val['warehouseid']}</span>{val['doublelock'] ?
 								<Fragment><FaKey className='keyColor' />
 									<FaKey className='keyColor' /></Fragment>
@@ -142,7 +142,7 @@ function WarehouseList() {
 					:
 					<Fragment><span style={{ display: 'flex', justifyContent: 'left', alignItems: 'center', marginLeft: "12%" }}>
 						<FaCircle size='0.8em' className='TempWarehouse' />
-						<span style={{ marginLeft: '15px', marginRight: '15px' }}>{val['warehouseid']}</span>{val['doublelock'] ?
+						<span style={{ marginLeft: '25px', marginRight: '25px' }}>{val['warehouseid']}</span>{val['doublelock'] ?
 							<Fragment>
 								<FaKey className='keyColor' />
 								<FaKey className='keyColor' />
@@ -256,7 +256,7 @@ function WarehouseList() {
 					<div className='label d-flex d-flex-center'><span><FaKey className='keyColor' /></span> Double Lock Absent</div>
 				</div>
 				{isDetail == 0 ? <div style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between" }}>
-					<h4>Warehouses</h4>
+					<h4>Dependent Warehouses</h4>
 					<div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center" }}>
 						<button className='createUserBtn' onClick={() => {
 							navigate("/session/warehousemanagement/addwarehouse")

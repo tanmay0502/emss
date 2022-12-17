@@ -62,7 +62,7 @@ function UserList() {
 		setUser(null)
 	}
 
-	function editPage(){
+	function editPage() {
 		setIsEdit(1)
 		setIsDetail(0)
 	}
@@ -70,7 +70,7 @@ function UserList() {
 	useEffect(() => {
 		if (users) {
 
-			console.log({users})
+			console.log({ users })
 
 
 			var data = users.filter((elem) => {
@@ -134,19 +134,19 @@ function UserList() {
 					headers: {
 						"Content-Type": "application/json",
 					},
-					credentials:'include'
+					credentials: 'include'
 				}
 			);
 			const tmp = await response.json();
-			
 
-			console.log({tmp})
+
+			console.log({ tmp })
 
 			setNoOfActiveUsers(tmp["active_users"]);
 			setNoOfInActiveUsers(tmp["inactive_users"]);
 			setNoOfTotalUsers(tmp["total_users"]);
 			setUsers(tmp["users"]);
-			
+
 		} catch (err) {
 			console.log(err);
 		}
@@ -199,7 +199,7 @@ function UserList() {
 						method: "POST",
 						headers: {
 							"Content-Type": "application/json",
-							
+
 						},
 						credentials: 'include',
 						body: JSON.stringify({
@@ -228,7 +228,7 @@ function UserList() {
 			<div className="myWrapper" style={{ position: "relative", height: "100%", gridArea: "1 / 1 / 6 / 2" }}>
 
 				{isDetail == 0 && isEdit == 0 ? <div style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between" }}>
-					<h4>Users</h4>
+					<h4>Dependent Users</h4>
 					<div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center" }}>
 						<button className='createUserBtn' onClick={() => {
 							navigate("/session/usermanagement/createUser")
@@ -257,7 +257,7 @@ function UserList() {
 					</div>
 
 				</div> : <></>}
-				{isDetail == 0 && isEdit == 0? <DynamicDataTable className="users-table"
+				{isDetail == 0 && isEdit == 0 ? <DynamicDataTable className="users-table"
 					rows={tableData}
 					fieldsToExclude={["Details", "Edit"]}
 					orderByField={sortMapping[sortBy]}
@@ -279,15 +279,15 @@ function UserList() {
 
 				{
 					isDetail == 1 ? <UserDetail detail={user} close={close} editPage={editPage} />
-					:
-					<></>
+						:
+						<></>
 				}
 
 				{
-					isEdit ==  1 ? <EditUser userdata={user} />
-					:
-					<></>
-					
+					isEdit == 1 ? <EditUser userdata={user} />
+						:
+						<></>
+
 				}
 			</div>
 			<div className='myWrapper' style={{ "gridArea": "1 / 2 / 3 / 3", display: "flex", flexDirection: "column", "alignItems": "center", "justifyContent": "center" }}>
