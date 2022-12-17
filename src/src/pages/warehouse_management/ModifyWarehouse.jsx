@@ -92,54 +92,109 @@ export default function ModifyWarehouse() {
     }
   };
 
+  const URL = window.location.href;
+  const arr = URL.split("/");
+  const param = arr[arr.length - 1];
+  const arr1 = param.split("=");
+  const myId = arr1[1];
+  setWarehouseId(myId);
+
   //Get state list
 
-  const getDetails = async () => {
-    const URL = window.location.href;
-    const arr = URL.split("/");
-    const param = arr[arr.length - 1];
-    const arr1 = param.split("=");
-    const myId = arr1[1];
-    setWarehouseId(myId);
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_SERVER}/warehouse/warehouseDetails/${myId}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          }
-        }
-      )
+  // const getDetails = async () => {
 
-      const dataObj = await response.json();
-      const data = dataObj["data"];
-      const coordinates = data[5];
-      const myArr = coordinates.split(",");
-      const lat = myArr[0].substring(1);
-      const lng = myArr[1].slice(0, -1);
-      data.push(lat);
-      data.push(lng);
+  //   try {
+  //     const response = await fetch(
+  //       `${process.env.REACT_APP_API_SERVER}/warehouse/warehouseDetails/${myId}`,
+  //       {
+  //         method: "GET",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         }
+  //       }
+  //     )
 
-      console.log(data[7]);
-      setDoubleLockSystem(data[7]);
-      setAddress(data[6]);
-      setBuildingType(data[2]);
-      setLat(data[14]);
-      setLng(data[15]);
-      setUserId1(data[8]);
-      setUserId2(data[9]);
-      // setWarehousDetails(data);
-      // setValues(data);
+  //     const dataObj = await response.json();
+  //     const data = dataObj["data"];
+  //     const coordinates = data[5];
+  //     const myArr = coordinates.split(",");
+  //     const lat = myArr[0].substring(1);
+  //     const lng = myArr[1].slice(0, -1);
+  //     data.push(lat);
+  //     data.push(lng);
+
+  //     console.log(data[7]);
+  //     setDoubleLockSystem(data[7]);
+  //     setAddress(data[6]);
+  //     setBuildingType(data[2]);
+  //     setLat(data[14]);
+  //     setLng(data[15]);
+  //     setUserId1(data[8]);
+  //     setUserId2(data[9]);
+  //     // setWarehousDetails(data);
+  //     // setValues(data);
 
 
-    } catch (error) {
-      console.log(error);
-    }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
 
 
-  }
+  // }
+	function logOut() {
+		const response = fetch(
+			`${process.env.REACT_APP_API_SERVER}/user/UserLogout`,
+			{
+			  method: "GET",
+			  credentials: 'same-origin',
+			  headers: {
+				"Content-Type": "application/json",
+			  },
+			  mode: 'no-cors'
+			}
+		  );
 
+		sessionStorage.removeItem("sessionToken", null);
+		// props.SetSession(null)
+		// setUserData(null)
+		// localStorage.setItem("token", null);
+		window.location.replace("/login");
+	}
+
+
+  async function getDetails(e) {
+    console.log(e)
+		try {
+			const response = await fetch(
+				`${process.env.REACT_APP_API_SERVER}/warehouse/warehouseDetails`,
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+          credentials: 'include',
+          body: JSON.stringify({
+            warehouseID:e,
+          }),
+				})
+
+			const data = await response.json();
+			console.log(data);
+			// setWhdetails(data["warehouseDetails"])
+      const status = await response;
+      console.log(status.status);
+			// console.log(data["data"], "data")
+      if(status.status === 401){
+        logOut();
+        alert("Your session expired please login again")
+        
+      }
+		} catch (error) {
+
+			console.log(error)
+		}
+
+	}
 
   useEffect(() => {
     getDetails();

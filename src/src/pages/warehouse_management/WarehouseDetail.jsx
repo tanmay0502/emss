@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { AiOutlineArrowLeft, AiOutlineEdit } from 'react-icons/ai'
-import { useNavigate } from "react-router-dom";
+import { json, useNavigate } from "react-router-dom";
 import AuditDetail from "./auditpage";
 import styles from './css/warehousedetails.module.css';
 
 
 function WarehouseDetail(props) {
+  const [Whdetails, setWhdetails] = useState([]);
   const navigate = useNavigate();
   const [lat, setLat] = useState("")
   const [long, setLong] = useState("")
   const [show, setShow] = useState(0)
+  const [whID, setWhID] = useState("")
 
+  console.log(props.detail["Details"]["warehouseid"])
   function getlatlong(latlong) {
     if(latlong !== undefined){
     let p = latlong.slice(1, (latlong.length - 1))
@@ -36,14 +39,102 @@ function WarehouseDetail(props) {
 
     setLat(lat)
     setLong(long)
+   
   }
   }
 
   useEffect(() => {
-    getlatlong(props.detail["warehouselatlong"])
+    // getlatlong(props.detail["warehouselatlong"])
   },)
   // console.log(props.detail, "details")
+	function logOut() {
+		const response = fetch(
+			`${process.env.REACT_APP_API_SERVER}/user/UserLogout`,
+			{
+			  method: "GET",
+			  credentials: 'same-origin',
+			  headers: {
+				"Content-Type": "application/json",
+			  },
+			  mode: 'no-cors'
+			}
+		  );
 
+		sessionStorage.removeItem("sessionToken", null);
+		props.SetSession(null)
+		// setUserData(null)
+		// localStorage.setItem("token", null);
+		window.location.replace("/login");
+	}
+
+  async function getDetails(e) {
+    console.log(e)
+		try {
+			const response = await fetch(
+				`${process.env.REACT_APP_API_SERVER}/warehouse/warehouseDetails`,
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+          credentials: 'include',
+          body: JSON.stringify({
+            warehouseID:e,
+          }),
+				})
+
+			const data = await response.json();
+			console.log(data);
+			setWhdetails(data["warehouseDetails"])
+      const status = await response;
+      console.log(status.status);
+			// console.log(data["data"], "data")
+      if(status.status === 401){
+        logOut();
+        alert("Your session expired please login again")
+        
+      }
+		} catch (error) {
+
+			console.log(error)
+		}
+
+	}
+  useEffect(() => {
+    props.detail["Details"]["warehouseid"]!== undefined && setWhID(props.detail["Details"]["warehouseid"])
+    // getDetails(props.detail)
+    
+  },[props.detail])
+  useEffect(() => {
+    whID!== "" && getDetails(whID)
+    // getDetails(props.detail)
+  },[whID])
+
+  console.log({Whdetails})
+  const[currLat,setLatitude] = useState("");
+
+  const[currLong , setCurrLong] = useState("");
+  useEffect(() => {
+  try{
+    if(Whdetails !== []){
+      
+      let rem = Whdetails[2].split(",")
+      let lat = rem[0].split("(")[1]
+      let long = rem[1].split(")")[0]
+      
+      setLatitude(lat)
+      setCurrLong(long)
+      // console.log(long)
+      
+    }
+ 
+
+  }catch(err){
+    console.log(err)
+  }
+  },[Whdetails])
+
+  // console.log(Whdetails[6])
 
   return (
     <div className={styles.Scroll}>
@@ -67,7 +158,7 @@ function WarehouseDetail(props) {
           <AiOutlineEdit />
         </button>
       </div>
-      <p className="text-left text-lg font-bold">Warehouse Details - {props.detail["warehouseid"]}</p>
+      <p className="text-left text-lg font-bold">Warehouse Details - {Whdetails[0]}</p>
       <div className="user-details">
         {(
           <div className="w-full px-2 mt-2">
@@ -78,15 +169,15 @@ function WarehouseDetail(props) {
                     <p className="text-left">Type</p>
                   </label>
                   <div className="bg-stone-100 p-3 mt-0 mb-0 rounded-md" style={{ width: "330px" }}>
-                    <p className="text-left">Normal</p>
+                    <p className="text-left">{Whdetails[0] !== undefined && Whdetails[0].slice(8,9)}</p>
                   </div>
                 </div>
                 <div style={{ marginRight: "6%" }}>
                   <label className="font-semibold pl-1 flex">
-                    <p className="text-left">PC</p>
+                    <p className="text-left">District</p>
                   </label>
                   <div className="bg-stone-100 p-3 mt-0 mb-0 rounded-md" style={{ width: "330px" }}>
-                    <p className="text-left"> {props.detail["warehousepc"]}</p>
+                    <p className="text-left"> {Whdetails[0] !== undefined && Whdetails[0].slice(2,5)}</p>
                   </div>
                 </div>
               </div>
@@ -96,7 +187,7 @@ function WarehouseDetail(props) {
                     <p className="text-left">Address</p>
                   </label>
                   <div className="bg-stone-100 p-3 mt-0 mb-0 rounded-md" style={{ width: "330px" }}>
-                    <p className="text-left"> {props.detail["warehouseaddress"]}</p>
+                    <p className="text-left"> {Whdetails[3]}</p>
                   </div>
                 </div>
                 <div style={{ marginRight: "6%" }}>
@@ -104,7 +195,7 @@ function WarehouseDetail(props) {
                     <p className="text-left">State</p>
                   </label>
                   <div className="bg-stone-100 p-3 mt-0 mb-0 rounded-md" style={{ width: "330px" }}>
-                    <p className="text-left">{props.detail["warehousestate"]}</p>
+                    <p className="text-left">{Whdetails[0] !== undefined && Whdetails[0].slice(0,2)}</p>
                   </div>
                 </div>
               </div>
@@ -115,10 +206,10 @@ function WarehouseDetail(props) {
                   </label>
                   <div className="flex justify-between" style={{ width: "330px" }}>
                     <div className="bg-stone-100 p-3 mt-0 mb-0 rounded-md w-2/5" >
-                      <p className="text-left">{lat}</p>
+                      <p className="text-left">{currLat}</p>
                     </div>
                     <div className="bg-stone-100 p-3 mt-0 mb-0 rounded-md w-2/5" >
-                      <p className="text-left">{long}</p>
+                      <p className="text-left">{currLong}</p>
                     </div>
                   </div>
                 </div>
@@ -127,7 +218,7 @@ function WarehouseDetail(props) {
                     <p className="text-left">Double Lock System</p>
                   </label>
                   <div className="bg-stone-100 p-3 mt-0 mb-0 rounded-md" style={{ width: "330px" }}>
-                    <p className="text-left">{props.detail["doublelock"] ? "Yes" : "No"} </p>
+                    <p className="text-left">{Whdetails[4] ? "Yes" : "No"} </p>
                   </div>
                 </div>
               </div>
@@ -137,7 +228,7 @@ function WarehouseDetail(props) {
                     <p className="text-left">Building Type</p>
                   </label>
                   <div className="bg-stone-100 p-3 mt-0 mb-0 rounded-md" style={{ width: "330px" }}>
-                    <p className="text-left">{props.detail["warehousebuildingtype"]}</p>
+                    <p className="text-left">{Whdetails[1]}</p>
                   </div>
                 </div>
                 <div style={{ marginRight: "6%" }}>
@@ -145,7 +236,7 @@ function WarehouseDetail(props) {
                     <p className="text-left">Status</p>
                   </label>
                   <div className="bg-stone-100 p-3 mt-0 mb-0 rounded-md" style={{ width: "330px" }}>
-                    <p className="text-left"> {props.detail["warehousestatus"] === "A" ? "Active" : "Inactive"}</p>
+                    <p className="text-left"> {Whdetails[11] === "A" ? "Active" : "Inactive"}</p>
                   </div>
                 </div>
               </div>
@@ -155,7 +246,7 @@ function WarehouseDetail(props) {
                     <p className="text-left">First Key Holder</p>
                   </label>
                   <div className="bg-stone-100 p-3 mt-0 mb-0 rounded-md" style={{ width: "330px" }}>
-                    <p className="text-left">{props.detail["uidkey1"]}</p>
+                    <p className="text-left">{Whdetails[5]}</p>
                   </div>
                 </div>
                 <div style={{ marginRight: "6%" }}>
@@ -163,7 +254,8 @@ function WarehouseDetail(props) {
                     <p className="text-left">Second Key Holder</p>
                   </label>
                   <div className="bg-stone-100 p-3 mt-0 mb-0 rounded-md" style={{ width: "330px" }}>
-                    <p className="text-left"> {props.detail["uidkey2"] !== "" ? props.detail["uidkey2"] : "N/A"}</p>
+                    {/* <p className="text-left"> "N/A"</p> */}
+                    <p className="text-left"> {Whdetails[6] !== null ? Whdetails[6] : "N/A"}</p>
                   </div>
                 </div>
               </div>
@@ -173,7 +265,7 @@ function WarehouseDetail(props) {
                     <p className="text-left">Creation Time</p>
                   </label>
                   <div className="bg-stone-100 p-3 mt-0 mb-0 rounded-md" style={{ width: "330px" }}>
-                    <p className="text-left">{props.detail["creationtime"]}</p>
+                    <p className="text-left">{Whdetails[7] !== undefined && Whdetails[7].slice(0,10)}</p>
                   </div>
                 </div>
                 <div style={{ marginRight: "6%" }}>
@@ -181,7 +273,7 @@ function WarehouseDetail(props) {
                     <p className="text-left">Last Update Time</p>
                   </label>
                   <div className="bg-stone-100 p-3 mt-0 mb-0 rounded-md" style={{ width: "330px" }}>
-                    <p className="text-left">{props.detail["updatetime"]}</p>
+                    <p className="text-left">{Whdetails[8] !== undefined && Whdetails[8].slice(0,10)}</p>
                   </div>
                 </div>
 
@@ -192,7 +284,7 @@ function WarehouseDetail(props) {
                     <p className="text-left">Last Upadated By</p>
                   </label>
                   <div className="bg-stone-100 p-3 mt-0 mb-0 rounded-md" style={{ width: "330px" }}>
-                    <p className="text-left">{props.detail["updatedbyuid"]}</p>
+                    <p className="text-left">{Whdetails[9]}</p>
                   </div>
                 </div>
               </div>

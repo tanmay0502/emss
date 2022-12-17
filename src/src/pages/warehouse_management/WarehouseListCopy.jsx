@@ -26,8 +26,9 @@ const uri = process.env.REACT_APP_API_SERVER;
 function WarehouseList() {
 	const navigate = useNavigate();
 	const [Details, setDetails] = React.useState([]);
+	
 	const [warehouseMapping, setWarehouseMapping] = useState(null)
-	console.log(window.localStorage.getItem("token"))
+	// console.log(window.localStorage.getItem("token"))
 
 	async function getList() {
 
@@ -50,6 +51,7 @@ function WarehouseList() {
 		}
 
 	}
+	
 	useEffect(() => {
 		MapWarehouseTypes();
 		getList();
