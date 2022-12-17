@@ -39,7 +39,6 @@ export default function UnitList() {
 
   return (
     <>
-      <UnitListTable />
       <StatusUpdate
         activeButtons={cardVisibility}
         onButtonClick={handleButtonClick}
@@ -53,6 +52,8 @@ export default function UnitList() {
       <SecondRandomisationForm
         isVisible={cardVisibility.secondRandomisationForm}
       />
+      <UnitListTable />
+
     </>
   );
 }
@@ -250,9 +251,8 @@ const UnitListTable = () => {
 const ActionButton = ({ isActive, text, name, onClick }) => {
   return (
     <button
-      className={`font-mediumisActive mx-auto mb-8 w-4/5 border-[1px] border-solid border-secondary hover:bg-secondary hover:text-white ${
-        isActive ? "bg-secondary text-white" : "bg-white  text-secondary"
-      }`}
+      className={`font-mediumisActive mx-auto mb-8 w-4/5 border-[1px] border-solid border-secondary hover:bg-secondary hover:text-white ${isActive ? "bg-secondary text-white" : "bg-white  text-secondary"
+        }`}
       name={name ? name : text}
       onClick={onClick}
     >
@@ -357,27 +357,30 @@ const EPForm = ({ isVisible }) => {
     }
     setInputValues(initialValues);
   };
-
   const handleFormSubmit = async (e) => {
-    try {
-      const response = await fetch(`${baseUrl}/ep_mark`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ ...inputValues }),
-      });
-      console.log(response);
-      console.log(JSON.stringify({ ...inputValues }));
-      const data = await response.json();
-      if (data.status === 200) {
-        alert(data.message);
-      } else {
-        alert(data.message);
+    let confirmation = window.confirm("Are you sure you have selected all the Unit")
+    if (confirmation === true) {
+      try {
+        const response = await fetch(`${baseUrl}/ep_mark`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ ...inputValues }),
+        });
+        console.log(response);
+        console.log(JSON.stringify({ ...inputValues }));
+        const data = await response.json();
+        if (data.status === 200) {
+          alert(data.message);
+        } else {
+          alert(data.message);
+        }
+      } catch (err) {
+        alert(`Error occured: ${err}`);
       }
-    } catch (err) {
-      alert(`Error occured: ${err}`);
+      setInputValues(initialValues);
+    } else {
     }
-    setInputValues(initialValues);
   };
   return (
     <>
@@ -498,52 +501,55 @@ const EPUnmarkForm = ({ isVisible }) => {
   };
 
   const handleFormSubmit = async (e) => {
-    e.preventDefault();
-    console.log(JSON.stringify(filebase64Array2));
-    // console.log(filebase64Array2)
-    console.log(
-      inputValues["bulk"],
-      inputValues["destinationLocation"],
-      inputValues["remarks"],
-      inputValues["acLocation"],
-      inputValues["unitIDs"],
-      filebase64Array2,
-      JSON.stringify(filebase64Array2)
-    );
-
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_SERVER}/unit/ep_unmark`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            bulk: inputValues["bulk"],
-            destinationLocation: inputValues["destinationLocation"],
-            unitIDs: inputValues["unitIDs"],
-            acLocation: inputValues["acLocation"],
-            remarks: inputValues["remarks"],
-            courtorderdata: JSON.stringify(filebase64Array2),
-          }),
-          mode: "cors",
-        }
+    let confirmation = window.confirm("Are you sure you have selected all the Unit")
+    if (confirmation === true) {
+      e.preventDefault();
+      console.log(JSON.stringify(filebase64Array2));
+      // console.log(filebase64Array2)
+      console.log(
+        inputValues["bulk"],
+        inputValues["destinationLocation"],
+        inputValues["remarks"],
+        inputValues["acLocation"],
+        inputValues["unitIDs"],
+        filebase64Array2,
+        JSON.stringify(filebase64Array2)
       );
+      try {
+        const response = await fetch(
+          `${process.env.REACT_APP_API_SERVER}/unit/ep_unmark`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({
+              bulk: inputValues["bulk"],
+              destinationLocation: inputValues["destinationLocation"],
+              unitIDs: inputValues["unitIDs"],
+              acLocation: inputValues["acLocation"],
+              remarks: inputValues["remarks"],
+              courtorderdata: JSON.stringify(filebase64Array2),
+            }),
+            mode: "cors",
+          }
+        );
 
-      console.log(response);
-      console.log(JSON.stringify({ ...inputValues }));
-      const data = await response.json();
-      if (data.status == 200) {
-        alert(data.message);
-      } else {
-        alert(data.message);
+        console.log(response);
+        console.log(JSON.stringify({ ...inputValues }));
+        const data = await response.json();
+        if (data.status == 200) {
+          alert(data.message);
+        } else {
+          alert(data.message);
+        }
+
+        // alert('Submitted Successfully')
+      } catch (err) {
+        console.log(err);
       }
-
-      // alert('Submitted Successfully')
-    } catch (err) {
-      console.log(err);
+    } else {
     }
   };
   // const [baseImage, setBaseImage] = useState("")
@@ -751,24 +757,28 @@ const ReplacementForm = ({ isVisible }) => {
   };
 
   const handleFormSubmit = async (e) => {
-    try {
-      const response = await fetch(`${baseUrl}/replace_unit`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ userID, ...inputValues }),
-      });
-      console.log(response);
-      const data = await response.json();
-      if (data.status === 200) {
-        alert(data.message);
-      } else {
-        alert(data.message);
+    let confirmation = window.confirm("Are you sure you have selected all the Unit")
+    if (confirmation === true) {
+      try {
+        const response = await fetch(`${baseUrl}/replace_unit`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ userID, ...inputValues }),
+        });
+        console.log(response);
+        const data = await response.json();
+        if (data.status === 200) {
+          alert(data.message);
+        } else {
+          alert(data.message);
+        }
+      } catch (err) {
+        alert(`Error occured: ${err}`);
       }
-    } catch (err) {
-      alert(`Error occured: ${err}`);
+      setInputValues(initialInputValues);
     }
-    setInputValues(initialInputValues);
+    else { }
   };
 
   return (
@@ -860,8 +870,8 @@ const ReplacementForm = ({ isVisible }) => {
 
 // 1st Randomisation Card
 const FirstRandomisationForm = ({ isVisible }) => {
-  const district_id = userID.slice(2,5); // calc from userId
-  console.log(userID.slice(2,5))
+  const district_id = userID.slice(2, 5); // calc from userId
+  console.log(userID.slice(2, 5))
   const [assemblyData, setAssemblyData] = useState([
     {
       ac_name: "",
@@ -908,45 +918,49 @@ const FirstRandomisationForm = ({ isVisible }) => {
   };
 
   const handleFormSubmit = async (e) => {
-    setIsSubmitted(false);
-    const units_requirement = assemblyData
-      .filter((d) => d.ac_name)
-      .map((d) => {
-        d.cu_count = d.cu_count ? parseInt(d.cu_count) : 0;
-        d.bu_count = d.bu_count ? parseInt(d.bu_count) : 0;
-        d.vt_count = d.vt_count ? parseInt(d.vt_count) : 0;
-        return d;
-      });
-    // console.log(JSON.stringify({ units_requirement }));
-    // fetch request
-    try {
-      const response = await fetch(`${baseUrl}/first_randomization`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: 'include',
-        body: JSON.stringify({
-          units_requirement,
-        }),
-      });
-      const data = await response.json();
-      // console.log("Randomisation results: ", data);
-      if (response.status === 200 && data.hasOwnProperty("allotted_units")) {
-        // useMemo and cache the output result
-        // randomisedData = data.allotted_units;
-        const update = [...randomisedData];
-        update[data.iteration_index - 1] = data.allotted_units;
-        setRandomisedData(update);
-        setIterationIndex(data.iteration_index);
-        setAssemblyData(units_requirement);
-        setIsSubmitted(true);
-        // pass the data to child component & re-render
-      } else {
-        console.log("Could not fetch randomisation results");
-        alert(data.message);
+    let confirmation = window.confirm("Are you sure you have selected all the Unit")
+    if (confirmation === true) {
+      setIsSubmitted(false);
+      const units_requirement = assemblyData
+        .filter((d) => d.ac_name)
+        .map((d) => {
+          d.cu_count = d.cu_count ? parseInt(d.cu_count) : 0;
+          d.bu_count = d.bu_count ? parseInt(d.bu_count) : 0;
+          d.vt_count = d.vt_count ? parseInt(d.vt_count) : 0;
+          return d;
+        });
+      // console.log(JSON.stringify({ units_requirement }));
+      // fetch request
+      try {
+        const response = await fetch(`${baseUrl}/first_randomization`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: 'include',
+          body: JSON.stringify({
+            units_requirement,
+          }),
+        });
+        const data = await response.json();
+        // console.log("Randomisation results: ", data);
+        if (response.status === 200 && data.hasOwnProperty("allotted_units")) {
+          // useMemo and cache the output result
+          // randomisedData = data.allotted_units;
+          const update = [...randomisedData];
+          update[data.iteration_index - 1] = data.allotted_units;
+          setRandomisedData(update);
+          setIterationIndex(data.iteration_index);
+          setAssemblyData(units_requirement);
+          setIsSubmitted(true);
+          // pass the data to child component & re-render
+        } else {
+          console.log("Could not fetch randomisation results");
+          alert(data.message);
+        }
+      } catch (err) {
+        alert(`Error occured: ${err}`);
       }
-    } catch (err) {
-      alert(`Error occured: ${err}`);
     }
+    else { }
   };
 
   const handleFetchingNewIterations = async (iteration_index) => {
@@ -1260,9 +1274,9 @@ const RandomisationOutput = ({
     try {
       const response = await fetch(
         `${baseUrl}/save_first_randomization/` +
-          new URLSearchParams({
-            iteration_index: iterationIndex,
-          }),
+        new URLSearchParams({
+          iteration_index: iterationIndex,
+        }),
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -1405,9 +1419,8 @@ const AssemblyTableRow = ({ row, unitData }) => {
             >
               {cell.column.Header === "Assembly Segment" && (
                 <ChevronDown
-                  className={`absolute left-0 top-1/2 ml-7 h-5 w-5 -translate-y-1/2 translate-x-1/2 transition-transform ease-in-out ${
-                    !isExpanded && "-rotate-90"
-                  }`}
+                  className={`absolute left-0 top-1/2 ml-7 h-5 w-5 -translate-y-1/2 translate-x-1/2 transition-transform ease-in-out ${!isExpanded && "-rotate-90"
+                    }`}
                 />
               )}
               {cell.render("Cell")}
