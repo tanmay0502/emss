@@ -942,13 +942,11 @@ const FirstRandomisationForm = ({ isVisible }) => {
         });
         const data = await response.json();
         // console.log("Randomisation results: ", data);
-        if (response.status === 200 && data.hasOwnProperty("allotted_units")) {
-          // useMemo and cache the output result
-          // randomisedData = data.allotted_units;
-          const update = [...randomisedData];
-          update[data.iteration_index - 1] = data.allotted_units;
-          setRandomisedData(update);
-          setIterationIndex(data.iteration_index);
+        if (response.status === 200) {//
+          //const update = [...randomisedData];
+          //update[data.iteration_index - 1] = data.allotted_units;
+          setRandomisedData(data);
+          setIterationIndex(3);
           setAssemblyData(units_requirement);
           setIsSubmitted(true);
           // pass the data to child component & re-render
@@ -1230,7 +1228,7 @@ const RandomisationOutput = ({
   randomData,
   fetchNewIterations,
 }) => {
-  const iterationText = ["First", "Second", "Third"];
+  const iterationText = ["Third Last", "Second Last", "Latest"];
   const [isRandomisationSaved, setIsRandomisationSaved] = useState(false);
   const data = useMemo(() => assemblyData, [assemblyData]);
   const columns = useMemo(
@@ -1273,7 +1271,7 @@ const RandomisationOutput = ({
   const handleRadomisationSave = async () => {
     try {
       const response = await fetch(
-        `${baseUrl}/save_first_randomization/` +
+        `${baseUrl}/save_first_randomization?` +
         new URLSearchParams({
           iteration_index: iterationIndex,
         }),
@@ -1434,7 +1432,7 @@ const AssemblyTableRow = ({ row, unitData }) => {
             <div className="px-4 text-left">
               <h6 className="text-lg">CU</h6>
               <div className="mx-auto mb-2 grid grid-cols-7 text-center font-sans text-base">
-                {unitData.CU.map((unit, _id) => (
+                {unitData.cu.map((unit, _id) => (
                   <p className="m-0" key={_id}>
                     {unit}
                   </p>
@@ -1447,7 +1445,7 @@ const AssemblyTableRow = ({ row, unitData }) => {
               </div>
               <h6 className="text-lg">BU</h6>
               <div className="mx-auto mb-2 grid grid-cols-7 text-center font-sans text-base">
-                {unitData.BU.map((unit, _id) => (
+                {unitData.bu.map((unit, _id) => (
                   <p className="m-0" key={_id}>
                     {unit}
                   </p>
@@ -1460,7 +1458,7 @@ const AssemblyTableRow = ({ row, unitData }) => {
               </div>
               <h6 className="text-lg">VT</h6>
               <div className="mx-auto mb-2 grid grid-cols-7 text-center font-sans text-base">
-                {unitData.VT.map((unit, _id) => (
+                {unitData.vt.map((unit, _id) => (
                   <p className="m-0" key={_id}>
                     {unit}
                   </p>
