@@ -43,9 +43,10 @@ function WarehouseList() {
 				})
 
 			const data = await response.json();
-			console.log(data);
-			setDetails(data["data"])
-			console.log(data["data"], "data")
+			if (response.status == 200)
+				setDetails(data["data"])
+			else
+				alert(data['message'])
 		} catch (error) {
 			console.log(error)
 		}
@@ -69,12 +70,14 @@ function WarehouseList() {
 					credentials: 'include'
 				}
 			)
-			const types = await response.json();
+			const data = await response.json();
 			// data.map(arr => {
 			// 	arr = {...arr, "warehousebuildingtype": }
 			// })
 			// console.log(data);
-			setWarehouseMapping(types);
+			console.log(data, "data")
+			if (response.status == 200)
+				setWarehouseMapping(data);
 		} catch (error) {
 			console.log(error);
 		}

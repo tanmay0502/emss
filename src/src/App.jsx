@@ -31,7 +31,9 @@ import ScheduleElection from './pages/unit_management/ScheduleElection';
 import ScheduleList from './pages/unit_management/ScheduleList';
 import ScheduleTnaList from './pages/unit_management/TnaList';
 import ScheduleTna from './pages/unit_management/ScheduleTna'
-import PhysicalVarification from './pages/unit_management/PhysicalVar';
+
+import EditPhysicalVerification from './pages/unit_management/PhysicalVarEdit';
+import PhysicalVerification from './pages/unit_management/PhysicalVar';
 import VarificationList from './pages/unit_management/PhysicalVarList';
 import ScheduleFLC from './pages/unit_management/ScheduleFlc';
 import FLCList from './pages/unit_management/FlcList'
@@ -107,7 +109,7 @@ function App() {
             <Route
               path="/session/unitmanagement/unitlist"
               element={<UnitList />}
-            />    
+            />
             {/* <Route
               path="/session/unitmanagement/statusHistory"
               element={<kljfd />}
@@ -140,13 +142,17 @@ function App() {
               path="/session/unitmanagement/tna_scheduling"
               element={<ScheduleTna />}
             />
-                        <Route
+            <Route
               path="/session/unitmanagement/edit_tna/:id"
               element={<EditTna />}
             />
             <Route
               path="/session/unitmanagement/varification_scheduling"
-              element={<PhysicalVarification />}
+              element={<PhysicalVerification />}
+            />
+            <Route
+              path="/session/unitmanagement/edit_verification/:id"
+              element={<EditPhysicalVerification />}
             />
             <Route
               path="/session/unitmanagement/schedule_varification_list"
@@ -230,12 +236,12 @@ function App() {
               path="/session/ordermanagement/ordertypes"
               element={<OrderTypes />}
             />
-            
+
             <Route
               path="/session/ordermanagement/orderdetails/:orderID"
               element={<ViewOrderDetails />}
             />
-           <Route
+            <Route
               path="/session/ordermanagement/createorder/generateorder/:orderType"
               element={<GenerateOrder />}
             />
@@ -247,7 +253,7 @@ function App() {
               path="/session/ordermanagement/orderflowtwo/:orderID"
               element={<OrderFlowTwo />}
             />
-           
+
             <Route
               path="/session/services"
               element={<>Other Services</>}

@@ -15,124 +15,123 @@ function WarehouseDetail(props) {
 
   console.log(props.detail["Details"]["warehouseid"])
   function getlatlong(latlong) {
-    if(latlong !== undefined){
-    let p = latlong.slice(1, (latlong.length - 1))
-    console.log(p)
+    if (latlong !== undefined) {
+      let p = latlong.slice(1, (latlong.length - 1))
+      console.log(p)
 
-    let lat = ""
-    let long = ""
-    let f = 0
-    for (let i = 0; i < p.length; i++) {
-      if (p[i] != ',' && f == 0) {
-        lat = lat + p[i];
-      }
-      else if (p[i] == ",") {
-        f = 1;
-        continue
-      }
-      if (f == 1) {
-        long = long + p[i];
+      let lat = ""
+      let long = ""
+      let f = 0
+      for (let i = 0; i < p.length; i++) {
+        if (p[i] != ',' && f == 0) {
+          lat = lat + p[i];
+        }
+        else if (p[i] == ",") {
+          f = 1;
+          continue
+        }
+        if (f == 1) {
+          long = long + p[i];
 
+        }
       }
+      console.log(lat, "jj", long)
+
+      setLat(lat)
+      setLong(long)
     }
-    console.log(lat, "jj", long)
-
-    setLat(lat)
-    setLong(long)
-   
-  }
   }
 
   useEffect(() => {
     // getlatlong(props.detail["warehouselatlong"])
   },)
   // console.log(props.detail, "details")
-	function logOut() {
-		const response = fetch(
-			`${process.env.REACT_APP_API_SERVER}/user/UserLogout`,
-			{
-			  method: "GET",
-			  credentials: 'same-origin',
-			  headers: {
-				"Content-Type": "application/json",
-			  },
-			  mode: 'no-cors'
-			}
-		  );
+  function logOut() {
+    const response = fetch(
+      `${process.env.REACT_APP_API_SERVER}/user/UserLogout`,
+      {
+        method: "GET",
+        credentials: 'same-origin',
+        headers: {
+          "Content-Type": "application/json",
+        },
+        mode: 'no-cors'
+      }
+    );
 
-		sessionStorage.removeItem("sessionToken", null);
-		props.SetSession(null)
-		// setUserData(null)
-		// localStorage.setItem("token", null);
-		window.location.replace("/login");
-	}
+    sessionStorage.removeItem("sessionToken", null);
+    props.SetSession(null)
+    // setUserData(null)
+    // localStorage.setItem("token", null);
+    window.location.replace("/login");
+  }
 
   async function getDetails(e) {
     console.log(e)
-		try {
-			const response = await fetch(
-				`${process.env.REACT_APP_API_SERVER}/warehouse/warehouseDetails`,
-				{
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_SERVER}/warehouse/warehouseDetails`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
           credentials: 'include',
           body: JSON.stringify({
-            warehouseID:e,
+            warehouseID: e,
           }),
-				})
+        })
 
-			const data = await response.json();
-			console.log(data);
-			setWhdetails(data["warehouseDetails"])
+      const data = await response.json();
+      console.log(data);
+      setWhdetails(data["warehouseDetails"])
       const status = await response;
       console.log(status.status);
-			// console.log(data["data"], "data")
-      if(status.status === 401){
+      // console.log(data["data"], "data")
+      if (status.status === 401) {
         logOut();
         alert("Your session expired please login again")
-        
+
       }
-		} catch (error) {
+    } catch (error) {
 
-			console.log(error)
-		}
-
-	}
-  useEffect(() => {
-    props.detail["Details"]["warehouseid"]!== undefined && setWhID(props.detail["Details"]["warehouseid"])
-    // getDetails(props.detail)
-    
-  },[props.detail])
-  useEffect(() => {
-    whID!== "" && getDetails(whID)
-    // getDetails(props.detail)
-  },[whID])
-
-  console.log({Whdetails})
-  const[currLat,setLatitude] = useState("");
-
-  const[currLong , setCurrLong] = useState("");
-  useEffect(() => {
-  try{
-    if(Whdetails !== []){
-      
-      let rem = Whdetails[2].split(",")
-      let lat = rem[0].split("(")[1]
-      let long = rem[1].split(")")[0]
-      
-      setLatitude(lat)
-      setCurrLong(long)
-      // console.log(long)
-      
+      console.log(error)
     }
- 
 
-  }catch(err){
-    console.log(err)
   }
-  },[Whdetails])
+  useEffect(() => {
+    props.detail["Details"]["warehouseid"] !== undefined && setWhID(props.detail["Details"]["warehouseid"])
+    // getDetails(props.detail)
+
+  }, [props.detail])
+  useEffect(() => {
+    whID !== "" && getDetails(whID)
+    // getDetails(props.detail)
+  }, [whID])
+
+  console.log({ Whdetails })
+  const [currLat, setLatitude] = useState("");
+
+  const [currLong, setCurrLong] = useState("");
+  useEffect(() => {
+    try {
+      if (Whdetails !== []) {
+
+        let rem = Whdetails[2].split(",")
+        let lat = rem[0].split("(")[1]
+        let long = rem[1].split(")")[0]
+
+        setLatitude(lat)
+        setCurrLong(long)
+        // console.log(long)
+
+      }
+
+
+    } catch (err) {
+      console.log(err)
+    }
+  }, [Whdetails])
 
   // console.log(Whdetails[6])
 
@@ -169,7 +168,7 @@ function WarehouseDetail(props) {
                     <p className="text-left">Type</p>
                   </label>
                   <div className="bg-stone-100 p-3 mt-0 mb-0 rounded-md" style={{ width: "330px" }}>
-                    <p className="text-left">{Whdetails[0] !== undefined && Whdetails[0].slice(8,9)}</p>
+                    <p className="text-left">{Whdetails[0] !== undefined && Whdetails[0].slice(8, 9)}</p>
                   </div>
                 </div>
                 <div style={{ marginRight: "6%" }}>
@@ -177,7 +176,7 @@ function WarehouseDetail(props) {
                     <p className="text-left">District</p>
                   </label>
                   <div className="bg-stone-100 p-3 mt-0 mb-0 rounded-md" style={{ width: "330px" }}>
-                    <p className="text-left"> {Whdetails[0] !== undefined && Whdetails[0].slice(2,5)}</p>
+                    <p className="text-left"> {Whdetails[0] !== undefined && Whdetails[0].slice(2, 5)}</p>
                   </div>
                 </div>
               </div>
@@ -195,7 +194,7 @@ function WarehouseDetail(props) {
                     <p className="text-left">State</p>
                   </label>
                   <div className="bg-stone-100 p-3 mt-0 mb-0 rounded-md" style={{ width: "330px" }}>
-                    <p className="text-left">{Whdetails[0] !== undefined && Whdetails[0].slice(0,2)}</p>
+                    <p className="text-left">{Whdetails[0] !== undefined && Whdetails[0].slice(0, 2)}</p>
                   </div>
                 </div>
               </div>
@@ -265,7 +264,7 @@ function WarehouseDetail(props) {
                     <p className="text-left">Creation Time</p>
                   </label>
                   <div className="bg-stone-100 p-3 mt-0 mb-0 rounded-md" style={{ width: "330px" }}>
-                    <p className="text-left">{Whdetails[7] !== undefined && Whdetails[7].slice(0,10)}</p>
+                    <p className="text-left">{Whdetails[7] !== undefined && Whdetails[7].slice(0, 10)}</p>
                   </div>
                 </div>
                 <div style={{ marginRight: "6%" }}>
@@ -273,7 +272,7 @@ function WarehouseDetail(props) {
                     <p className="text-left">Last Update Time</p>
                   </label>
                   <div className="bg-stone-100 p-3 mt-0 mb-0 rounded-md" style={{ width: "330px" }}>
-                    <p className="text-left">{Whdetails[8] !== undefined && Whdetails[8].slice(0,10)}</p>
+                    <p className="text-left">{Whdetails[8] !== undefined && Whdetails[8].slice(0, 10)}</p>
                   </div>
                 </div>
 

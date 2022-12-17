@@ -49,7 +49,7 @@ export default function AddWarehouse() {
 
   // Get realm Start
   const [realm, setRealm] = useState();
-  
+
   async function getRealm() {
     try {
       const response = await fetch(
@@ -69,15 +69,18 @@ export default function AddWarehouse() {
 
 
       console.log(data2);
-      setRealm(data2)
+      if (response.status == 200)
+        setRealm(data2['data'])
+      else
+        alert(data2['message'])
     } catch (err) {
       console.log(err);
     }
 
 
   }
- 
- 
+
+
 
   useEffect(() => {
     if (window.sessionStorage.getItem("sessionToken") === null) {
@@ -88,18 +91,18 @@ export default function AddWarehouse() {
     getRealm();
   }, []);
 
-  console.log({realm})
+  console.log({ realm })
   const [currAC, setCurrAC] = useState([])
   const [currDist, setCurrDist] = useState([])
   const [currState, setCurrState] = useState([])
   useEffect(() => {
-    try{
+    try {
       setCurrAC(realm["ac"])
       setCurrDist(realm["dist"])
       setCurrState(realm["state"])
 
-    }catch(err){
-      console.log("Error in setting Current vars"+err)
+    } catch (err) {
+      console.log("Error in setting Current vars" + err)
     }
   }, [realm]);
   // console.log(currAC)
@@ -201,70 +204,70 @@ export default function AddWarehouse() {
 
   //Get state list
 
-  async function getState() {
-    try {
-      const response = await fetch(
-        // `${process.env.REACT_APP_API_SERVER}/user/getStateList`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+  // async function getState() {
+  //   try {
+  //     const response = await fetch(
+  //       // `${process.env.REACT_APP_API_SERVER}/user/getStateList`,
+  //       {
+  //         method: "GET",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
 
-      try {
-        const response = await fetch(
-          `${process.env.REACT_APP_API_SERVER}/user/getPCListbyState/${window.sessionStorage.getItem("sessionToken").substring(0, 2)}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+  //     try {
+  //       const response = await fetch(
+  //         `${process.env.REACT_APP_API_SERVER}/user/getPCListbyState/${window.sessionStorage.getItem("sessionToken").substring(0, 2)}`,
+  //         {
+  //           method: "GET",
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //           },
+  //         }
+  //       );
 
-        const data = await response.json();
+  //       const data = await response.json();
 
-        console.log(data);
-        if (data["PCs"])
-          setPCs(data["PCs"]);
-        // setPCcodes(data["pccode"]);
-      } catch (error) {
-        console.log(error);
-        setPCs(["00"]);
-        // setPCcodes(["00"]);
-      }
+  //       console.log(data, "data");
+  //       if (data["PCs"])
+  //         setPCs(data["PCs"]);
+  //       // setPCcodes(data["pccode"]);
+  //     } catch (error) {
+  //       console.log(error);
+  //       setPCs(["00"]);
+  //       // setPCcodes(["00"]);
+  //     }
 
-      const StateData = await response.json();
-      if (StateData) {
-        console.log(StateData)
+  //     const StateData = await response.json();
+  //     if (StateData) {
+  //       console.log(StateData)
 
-        const ans = getKeyByValue(StateData['states'], first2)
+  //       const ans = getKeyByValue(StateData['states'], first2)
 
-        console.log("Val")
+  //       console.log("Val")
 
-        if (["EC", "ME", "MB"].includes(
-          window.sessionStorage.getItem("sessionToken").substring(0, 2)
-        )) {
-          setStates(StateData['states']);
-          // setStatesCode(StateData['stcodes']);
-        }
-        else {
-          setStates({
-            [ans]: first2
-          });
-          // setStatesCode([first2]);
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  //       if (["EC", "ME", "MB"].includes(
+  //         window.sessionStorage.getItem("sessionToken").substring(0, 2)
+  //       )) {
+  //         setStates(StateData['states']);
+  //         // setStatesCode(StateData['stcodes']);
+  //       }
+  //       else {
+  //         setStates({
+  //           [ans]: first2
+  //         });
+  //         // setStatesCode([first2]);
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
 
-  useEffect(() => {
-    getState();
-  }, []);
+  // useEffect(() => {
+  //   getState();
+  // }, []);
 
   async function generateWarehouseId() {
     // try {
@@ -306,7 +309,7 @@ export default function AddWarehouse() {
         );
 
         const data = await response.json();
-        console.log(data);
+        console.log(data, "iampc");
         if (data["PCs"])
           setPCs(data["PCs"]);
         // setPCcodes(data["pccode"]);
@@ -437,7 +440,7 @@ export default function AddWarehouse() {
                     onChange={(e) => {
                       setStateFunc(e.target.value)
                     }}
-                    // disabled={true}
+                  // disabled={true}
                   >
                     {/* <option value="" disabled selected>
                       --Select--
