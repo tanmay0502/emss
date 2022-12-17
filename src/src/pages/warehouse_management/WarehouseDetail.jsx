@@ -52,7 +52,7 @@ function WarehouseDetail(props) {
 			`${process.env.REACT_APP_API_SERVER}/user/UserLogout`,
 			{
 			  method: "GET",
-			  credentials: 'same-origin',
+			  credentials: 'include',
 			  headers: {
 				"Content-Type": "application/json",
 			  },
@@ -236,7 +236,7 @@ function WarehouseDetail(props) {
                     <p className="text-left">Status</p>
                   </label>
                   <div className="bg-stone-100 p-3 mt-0 mb-0 rounded-md" style={{ width: "330px" }}>
-                    <p className="text-left"> {Whdetails[11] === "A" ? "Active" : "Inactive"}</p>
+                    <p className="text-left"> {Whdetails[10] === "A" ? "Active" : "Inactive"}</p>
                   </div>
                 </div>
               </div>

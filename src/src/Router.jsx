@@ -170,7 +170,7 @@ function Routed(props) {
 		if (location.pathname === '/session/unitmanagement/schedule_varification_list' || location.pathname === '/session/unitmanagement/varification_scheduling') {
 			return (<>
 				<UnitManagementIcon />
-				<span>Physical Varification</span>
+				<span>Physical Verification</span>
 			</>);
 		}
 		if (location.pathname === '/session/unitmanagement/schedule_tna_list' || location.pathname === '/session/unitmanagement/tna_scheduling' || location.pathname.startsWith('/session/unitmanagement/edit_tna')) {

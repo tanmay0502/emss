@@ -77,13 +77,13 @@ export default function ScheduleList() {
     return (
         <div className={`${styles.myWrapper1}`} style={{ position: "relative", height: "100%" }}>
             {isDetail == 0 ? <div className='MainHeader pd-5 ' style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between", "alignItems": "center" }}>
-                <h4 className='text-white'>Physical Varification List</h4>
+                <h4 className='text-white'>Physical Verification List</h4>
 
                 <div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center" }}>
                     <button className='createRequestBtn' onClick={() => {
                         window.location.pathname = "/session/unitmanagement/varification_scheduling";
                     }}>
-                        Schedule Physical Varification
+                        Schedule Physical Verification
                     </button>
 
                     <div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center", background: "#F9FBFF", borderRadius: "10px", padding: "7.5px 15px 7.5px 0", fontSize: "0.8em" }}>

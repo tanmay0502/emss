@@ -78,11 +78,13 @@ export default function ModifyWarehouse() {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials:"include",
         body: JSON.stringify(reqBody),
       }
     );
     const status = await response;
     console.log(status);
+    console.log("Submitting: ",reqBody)
     alert(
       status.status == 200
         ? "Warehouse Updated Successfully"
