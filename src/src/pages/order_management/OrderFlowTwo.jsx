@@ -8,9 +8,8 @@ import SourceLocationPin from '../../assets/src_location_pin.png'
 import DestLocationPin from '../../assets/dest_location_pin.png'
 import { DynamicDataTable } from '@langleyfoxall/react-dynamic-data-table';
 
-export default function OrderFlowTwo() {
-  const OrderID = useParams();
-  const id=OrderID["orderID"];
+export default function OrderFlowTwo({OrderID}) {
+  const id=OrderID
   let orderID="";
   for(let i=0;i<id.length;i++){
     if(id[i]=='-'){

@@ -36,6 +36,7 @@
     "react-tag-input-component": "^2.0.2",
     "react-tooltip": "^4.5.1",
     "reactjs-popup": "^2.0.5",
+    "tippy.js": "^6.3.7",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

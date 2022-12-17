@@ -7,10 +7,11 @@ import OrderAllocationTable from './OrderAllocationTable'
 import styles2 from './styles/suborder.module.css'
 import UnitTrackerTable from './UnitTrackerTable'
 import SuborderTable from './SuborderTable';
+import SubOrder from "./SubOrder";
 
-export default function OrderFlowOne() {
-  const OrderID = useParams();
-  const id=OrderID["orderID"];
+export default function OrderFlowOne({OrderID}) {
+  
+  const id=OrderID
   console.log(id);
   let orderID="";
   for(let i=0;i<id.length;i++){
@@ -28,7 +29,37 @@ export default function OrderFlowOne() {
   const [orderById, setOrderById] = useState({});
   const [orderDetailPage, setOrderDetailPage] = useState("-1");
   const UserId = window.sessionStorage.getItem('sessionToken');
+  const [subDat,setSubDat] = useState([]);
   const [flag, setFlag] = useState(0);
+
+  function getSubOrder(val) {
+    let suborderid = [];
+    console.log(val[0]);
+    console.log(orderID);
+    val.map(function(order){
+      if(order['referenceorderid']===orderID) {
+        suborderid.push(order['orderid']);
+      }
+    });
+    console.log(suborderid);
+    let suborderdat = [];
+    suborderid.map(function(v){
+      val.map(function(order){
+        if(order['referenceorderid']===v) {
+          suborderdat.push({
+            "source" : order['source'],
+            "destination" : order['destination'],
+            "item" : order["item"],
+            "itemmodel": order['itemmodel'],
+            "itemquantity": order['itemquantity']
+          });
+        }
+      });
+    });
+    console.log("Here");
+    console.log(suborderdat);
+    setSubDat(suborderdat);
+  }
 
   useEffect(() => {
     async function getOrders() {
@@ -46,8 +77,12 @@ export default function OrderFlowOne() {
           }
         );
         const data2 = await response.json();
-        if(data2['data'])
-            setAllOrders(data2["data"])
+        if(data2['data']) {
+            console.log("Order Data");
+            console.log(data2['data']);
+            getSubOrder(data2['data']);
+            setAllOrders(data2["data"]);
+        }
       } catch (err) {
         console.log(err);
       }
@@ -59,7 +94,30 @@ export default function OrderFlowOne() {
 
   },[])
 
-
+  async function fun() {
+    try {
+      const body = orderID
+      console.log(orderID);
+      const response = await fetch(
+        `${process.env.REACT_APP_API_SERVER}/order/senderOrderApproval/?orderID=${orderID}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: 'include'
+        }
+      );
+      const data2 = await response.json();
+      if(data2) {
+          console.log(data2);
+          alert("Order Issued Successfully");
+          window.location = '/session/ordermanagement'
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
   
   useEffect(() => {
     let orderBy_Id = {}
@@ -97,20 +155,12 @@ export default function OrderFlowOne() {
 
     setOrderById(orderBy_Id)
   }, [allOrders])
-
-
+  console.log("Y");
+  console.log(subDat);
 
   return (
     <>
-    <div className={styles.viewDetailsContainer}>
-      {
-        flag == 1 &&
-        <>
-          <UnitDescription Order={allOrders} OrderID={orderID} />
-          <OrderActions Order={allOrders} OrderID={orderID}/>
-        </>
-      }
-    </div >
+   
     {/* <div className={styles2.orderAllocationContainer}> */}
 			<div className={styles2.optimisedAllocationContainer}>
 				<div className={styles2.optimisedAllocationHeader}>
@@ -119,9 +169,12 @@ export default function OrderFlowOne() {
 				<div className={styles2.optimisedAllocationTablesContainer}>
 					<div className={styles2.optimisedAllocationTablesScrollContainer}>
 						<div className={styles2.optimisedAllocationTables}>
-							<SuborderTable />
-							<SuborderTable />
-							<SuborderTable />
+							{subDat.map(function(dat){
+                console.log("Sub");
+                console.log(dat);
+                return <SuborderTable val={dat}/>
+              })}
+              <button onClick={fun} className="text-white">Submit</button>
 						</div>
 					</div>
 				</div>
