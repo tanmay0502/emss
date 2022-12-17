@@ -495,7 +495,9 @@ export default function HomePage() {
                                             <tr>
                                                 <td className="text-black text-sm" style={{ textAlign: "left" }}>
                                                     <div>{val.unit_type}<br/>
-                                                    {`(${countUnites(val.ECIL)}, ${countUnites(val.BEL)})`}
+                                                    {`ECIL:${countUnites(val.ECIL)}`}
+                                                    <br/>
+                                                    {`BEL:${countUnites(val.BEL)}`}
                                                     </div>
                                                 </td>
                                                 <td className="text-black text-sm mr-2 pl-5">
@@ -593,7 +595,9 @@ export default function HomePage() {
                                             <td>
                                             <button style={{backgroundColor:'white'}} onClick={handleButtonClick} name={val.unit_type}>{val.unit_type}
                                             <br/>
-                                            {`(${countUnites(val.ECIL)}, ${countUnites(val.BEL)})`}
+                                            {`ECIL:${countUnites(val.ECIL)}`}
+                                            <br/>
+                                            {`BEL:${countUnites(val.BEL)}`}
                                             </button>
                                             </td>
                                             <td>
