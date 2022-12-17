@@ -29,7 +29,7 @@ const statesCode = [
     {code:"UK",state:"Uttarakhand"},
     {code:"UP",state:"Uttar Pradesh"},
     {code:"WB",state:"West Bengal"},
-    {code:"CH",state:"Chhattisgarh"}
+    {code:"CG",state:"Chhattisgarh"}
 ]
 	
 
