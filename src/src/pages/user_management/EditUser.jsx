@@ -166,7 +166,7 @@ function EditUser(props) {
         console.log(data2);
         if (response.status === 200) {
           alert("User Modified Successfully");
-          // window.location.pathname = "/session/usermanagement";
+          window.location.pathname = "/session/usermanagement";
           // document.getElementById("createUserForm").reset();
         } else {
           alert("Unable to Modify User.");
@@ -187,7 +187,8 @@ function EditUser(props) {
             <button
               className="flex justify-center rounded-full aspect-square "
               onClick={() => {
-                navigate('/session/usermanagement')
+                // navigate('/session/usermanagement')
+                window.location.reload()
               }}
               style={{ "background": "#84587C", color: "white" }}
             >
