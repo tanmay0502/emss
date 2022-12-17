@@ -5,7 +5,7 @@ import SourceLocationPin from '../../assets/src_location_pin.png'
 import DestLocationPin from '../../assets/dest_location_pin.png'
 import { DynamicDataTable } from '@langleyfoxall/react-dynamic-data-table'
 
-function OrderAllocationTable({body, setBody, setUpdate, }) {
+function OrderAllocationTable({body, setBody, setUpdate, wearhouse }) {
 
   return (
     <div className=" w-full">
@@ -28,9 +28,9 @@ function OrderAllocationTable({body, setBody, setUpdate, }) {
                         setUpdate((prev)=>{return (prev+1)%10});
                       }}
                     >
-                      <option>{val.source}</option>
-                      {
-                        ["Wearhouse Source"].map((val) => (
+                      <option>{val.source?val.source:"Select"}</option>
+                      { wearhouse.Supply&&
+                        wearhouse.Supply.map((val) => (
                           <option value={val} className="text-black">
                             {val}
                           </option>
@@ -59,9 +59,9 @@ function OrderAllocationTable({body, setBody, setUpdate, }) {
                         }}
                       >
                         {" "}
-                        <option>{val.destination}</option>
-                        {
-                          ["Wearhouse Destination"].map((val) => (
+                        <option>{val.destination?val.destination:"Select"}</option>
+                        {wearhouse.Demand&&
+                          wearhouse.Demand.map((val) => (
                             <option value={val} className="text-black">
                               {val}
                             </option>
@@ -101,13 +101,13 @@ function OrderAllocationTable({body, setBody, setUpdate, }) {
                           }}
                         >
                           <option
-                          >{val.item}</option>
+                          >{val.item?val.item:"Select"}</option>
                           <option value="BU">BU</option>
                           <option value="CU">CU</option>
                           <option value="VVPAT">VVPAT</option>
                         </select></td>
                         <td>
-                          <input type="number" value={val.itemquantity} className=" w-2/3 p-2 rounded-lg border mb-2"
+                          <input type="number" placeholder='0' value={val.itemquantity?val.itemquantity:""} className=" w-2/3 p-2 rounded-lg border mb-2"
                             onChange={(e) => {
                               setBody((prev)=>{
                                 prev.details[ind].unitDetails[ind2].itemquantity = e.target.value;
@@ -128,7 +128,7 @@ function OrderAllocationTable({body, setBody, setUpdate, }) {
                             }}
                           >
                             <option
-                            >{val.itemmodel}</option>
+                            >{val.itemmodel?val.itemmodel:"Select"}</option>
                             <option value="M2">M2</option>
                             <option value="M3">M3</option>
                           </select>
@@ -146,7 +146,7 @@ function OrderAllocationTable({body, setBody, setUpdate, }) {
 
                           >
                             <option
-                            >{val.manufacturer}</option>
+                            >{val.manufacturer?val.manufacturer:"Select"}</option>
                             <option value="ECIL">ECIL</option>
                             <option value="BEL">BEL</option>
                           </select>
@@ -174,7 +174,14 @@ function OrderAllocationTable({body, setBody, setUpdate, }) {
                       "manufacturer": "",
                       "itemquantity": 0
                     }
-                    prev.details[ind].unitDetails.push(temp)
+                    let n = prev.details[ind].unitDetails.length;
+                    if (n) {
+                      if(prev.details[ind].unitDetails[n-1].itemquantity){
+                        prev.details[ind].unitDetails.push(temp)
+                      }
+                    } else {
+                      prev.details[ind].unitDetails.push(temp)
+                    }
                     return prev;
                   })
                   setUpdate((prev)=>{return (prev+1)%10});
@@ -193,13 +200,6 @@ function OrderAllocationTable({body, setBody, setUpdate, }) {
           ))}
 
           <div className="flex justify-end">
-          {/* <button type="button" className="text-white bg-red-600 p-1 text-2xl w-10 h-10 -mt-5 " style={{ borderRadius: "50%" }}onClick={()=>{
-            setBody((prev)=>{
-                prev.details.pop();
-                return prev;
-            })
-            setUpdate((prev)=>{return (prev+1)%10});
-          }}> -</button> */}
             <button onClick={() => {
             setBody((prev) => {
               let temp = {
@@ -214,8 +214,14 @@ function OrderAllocationTable({body, setBody, setUpdate, }) {
                   }
                 ]
               }
-              prev.details.push(temp)
-              console.log("Card added")
+              let n = prev.details.length;
+              if (n) {
+                if(prev.details[n-1].source&&prev.details[n-1].destination){
+                  prev.details.push(temp)
+                }
+              } else {
+                prev.details.push(temp)
+              }
               return prev;
             })
             setUpdate((prev)=>{return (prev+1)%10});

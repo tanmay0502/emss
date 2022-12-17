@@ -17,8 +17,8 @@ function AllocateOrder({OrderID, type}) {
   		"type": type,
         "details": [
           {
-            "source": "Wearhouse1",
-            "destination": "Wearhouse2",
+            "source": "TS533000K03",
+            "destination": "TS533000K02",
             "unitDetails": [
               {
                 "item": "CU",
@@ -31,30 +31,6 @@ function AllocateOrder({OrderID, type}) {
                 "itemmodel": "M3",
                 "manufacturer": "ECIL",
                 "itemquantity": 102
-              },
-              {
-                "item": "BU",
-                "itemmodel": "M2",
-                "manufacturer": "BEL",
-                "itemquantity": 103
-              }
-            ]
-          },
-          {
-            "source": "Wearhouse3",
-            "destination": "Wearhouse4",
-            "unitDetails": [
-              {
-                "item": "VVPAT",
-                "itemmodel": "M3",
-                "manufacturer": "BELL",
-                "itemquantity": 201
-              },
-              {
-                "item": "CU",
-                "itemmodel": "M1",
-                "manufacturer": "ECIL",
-                "itemquantity": 202
               }
             ]
           }
@@ -98,7 +74,7 @@ function AllocateOrder({OrderID, type}) {
     }, [update])
 
 	const submmit = async () => {
-		console.log("submit clicked")
+		// console.log("submit clicked")
 		body.details.map(function (val) {
 			let b = [];
 			val.unitDetails.map(function (v) {
@@ -111,7 +87,7 @@ function AllocateOrder({OrderID, type}) {
 		});
 		
 		try {
-			console.log("submitted body",body);
+			// console.log("submitted body",body);
 		  const response = await fetch(
 			`${process.env.REACT_APP_API_SERVER}/order/allocateOrder/`,
 			{
@@ -124,41 +100,47 @@ function AllocateOrder({OrderID, type}) {
 			}
 		  );
 		  const data2 = await response.json();
-		  console.log(data2);
+		//   console.log(data2);
 		  if (response["status"] == 200) {
-			alert("Order Submitted Successfully");
+			alert("Order allocated Successfully");
+			window.location = '/session/ordermanagement'
+		  }
+		  if (response["status"] == 200) {
+			window.location = '/session/ordermanagement'
 		  }
 		} catch (err) {
 		  console.log(err);
 		}
-		console.log("Submitted", body)
+		// console.log("Submitted", body)
 	  };
+	  
+	const [wearhouse, setWearhouse] = useState({})
+	useEffect(() => {
+		async function getState() {
+		try {
+			let uri = `${process.env.REACT_APP_API_SERVER}/order/OptimalOrderGeneration/`
+			const response = await fetch(
+			uri,
+			{
+				method: "POST",
+				headers: {
+				"Content-Type": "application/json",
+				},
+				credentials: 'include',
+				body: JSON.stringify({"orderid": OrderID})
+			}
+			);
+			const data2 = await response.json();
+			console.log("wearhouse received",data2)
+			setWearhouse(data2);
+		//   setWearhouse(data2);
+			} catch (err) {
+				console.log(err);
+			}
+		}
+		getState();
+	}, [])
 	
-	// useEffect(() => {
-	// console.log("use stater", body);
-	// }, [body])
-	
-	
-	//   async function getState() {
-	// 	try {
-	// 	  let uri = `${process.env.REACT_APP_API_SERVER}/user/getRealm`
-	// 	  const response = await fetch(
-	// 		uri,
-	// 		{
-	// 		  method: "POST",
-	// 		  headers: {
-	// 			"Content-Type": "application/json",
-	// 		  },
-	// 		  credentials: 'include',
-	// 		  body: {}
-	// 		}
-	// 	  );
-	// 	  const data2 = await response.json();
-	// 	  setStates(data2["state"]);
-	// 	} catch (err) {
-	// 	  console.log(err);
-	// 	}
-	//   }
 	
     
 
@@ -171,7 +153,7 @@ function AllocateOrder({OrderID, type}) {
 				<div className={styles.optimisedAllocationTablesContainer}>
 					<div className={styles.optimisedAllocationTablesScrollContainer}>
 						<div className={styles.optimisedAllocationTables}>
-							<OrderAllocationTable body={body} setBody={setBody} setUpdate={setUpdate} update={update}/>
+							<OrderAllocationTable body={body} setBody={setBody} setUpdate={setUpdate} update={update} wearhouse={wearhouse}/>
 						</div>
 					</div>
 

@@ -6,8 +6,9 @@ import SourceLocationPin from '../../assets/src_location_pin.png'
 import DestLocationPin from '../../assets/dest_location_pin.png'
 import { DynamicDataTable } from '@langleyfoxall/react-dynamic-data-table'
 
-function SuborderTable() {
-
+function SuborderTable(props) {
+  console.log("Here");
+    console.log(props);
     const initialVisibilityValues = {
         vehicleDetails: false
       };
@@ -16,16 +17,9 @@ function SuborderTable() {
 
     const [data, setData] = useState([
         {
-            'Model': 'M1',
-            'Quantity CU': 50,
-            'Quantity BU': 50,
-            'Quantity VVPAT': 20
-        },
-        {
-            'Model': 'M2',
-            'Quantity CU': 50,
-            'Quantity BU': 50,
-            'Quantity VVPAT': 20
+            'Item' : props.val.item,
+            'Model': props.val.itemmodel,
+            'Quantity': props.val.itemquantity
         }
     ])
 
@@ -82,8 +76,8 @@ function SuborderTable() {
                 <img src={SourceLocationPin} />
             </div>
             <div>
-                <p className={styles.allocationLocationDetailsSource}><span>Source: </span> {'AA1122'} </p>
-                <p><span>Incharge: </span> {'Jane'} </p>
+                <p className={styles.allocationLocationDetailsSource}><span>Source: </span> {props.val.destination} </p>
+               
             </div>
             <div className={styles.allocationLocationArrow}>
                 
@@ -92,8 +86,8 @@ function SuborderTable() {
                 <img src={DestLocationPin} />
             </div>
             <div>
-                <p className={styles.allocationLocationDetailsDestination}><span>Destination: </span> {'BB1122'} </p>
-                <p><span>Incharge: </span> {'Jose'} </p>
+                <p className={styles.allocationLocationDetailsDestination}><span>Destination: </span> {props.val.source} </p>
+  
             </div>
         </div>
         <div className={styles.allocationDetailsTable}>

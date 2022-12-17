@@ -8,6 +8,7 @@ import WareHouseListUnitTrackerFillDemand from './warehouseListUnitTrackerfillde
 import VehicleDetails from './vehicledetails'
 import WareHouseListUnitTrackerFillAvailability from './warehouseListUnitTrackerfillavailability'
 import { useEffect } from 'react'
+import OrderFlowOne from './OrderFlowOne'
 
 function OrderActions(props) {
 
@@ -22,6 +23,7 @@ function OrderActions(props) {
     const [f3,setf3]=useState(0)
     const [f4,setf4]=useState(0)
     const [f5,setf5]=useState(0)
+    const [f6,setf6]=useState(0)
     
     const [ind,setInd]=useState(4);
     const [filldemand, setFilldemand] = useState(0);
@@ -60,6 +62,7 @@ function OrderActions(props) {
                     else {
                         setf5(0);
                     }
+                    if(order["orderstatus"]=="");
                 
                 
             }
@@ -128,7 +131,8 @@ function OrderActions(props) {
     const actions = (role) => {
         if (role == 'sender') {
             return [
-                "Fill Availability"
+                "Fill Availability",
+                "Issue Order"
             ]
         }
         else if (role == 'recipient') {
@@ -157,6 +161,8 @@ function OrderActions(props) {
             switch (actions(roles[ind])[actionIndex]) {
                 case 'Fill Availability':
                     return <WareHouseListUnitTrackerFillAvailability Order={senderOrder} OrderID={props.OrderID} />
+                case 'Issue Order':
+                    return <OrderFlowOne OrderID={props.OrderID}/>
             }
         }
         else if (roles[ind] == 'recipient') {
@@ -166,7 +172,7 @@ function OrderActions(props) {
                 case 'Optimal Allocation':
                     return <AllocateOrder OrderID={props.OrderID} type={order.type}/>
                 case 'Vehicle Details':
-                    return <VehicleDetails/>
+                    return <OrderFlowOne OrderID={props.OrderID}/>
             }
         }
         else if (roles[ind] == 'both') {
@@ -189,13 +195,18 @@ function OrderActions(props) {
                 filldemand == 0 &&
                 <div className=' text-white m-5 p-5'>
                     {
-                        ind == 0 && <>
+                        ind == 0 && <div className='flex justify-between w-full'>
                             <button disabled={!f1}  className={`${f1==0 ? 'bg-gray-400' : 'bg-orange-500'}`} onClick={() => {
                                 setAction(renderAction(0))
                             }}>
                                 Fill Availability
                             </button>
-                        </>
+                            <button disabled={!f5}  className={`${f5==0 ? 'bg-gray-400' : 'bg-orange-500'}`} onClick={() => {
+                                setAction(renderAction(1))
+                            }}>
+                                Issue Order
+                            </button>
+                        </div>
                     }
                
                     {    ind ==1 && 
