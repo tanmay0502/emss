@@ -1,6 +1,7 @@
 import React, { ReactComponent } from "react";
 import { useState, useEffect } from "react";
 import { AiOutlineArrowLeft, AiOutlineEdit } from 'react-icons/ai'
+import { useNavigate } from "react-router-dom";
 
 function UserDetail(props) {
   const myFont = {
@@ -56,6 +57,36 @@ function UserDetail(props) {
   }
 
 
+  const [baseImage, setBaseImage ] = useState("")
+
+  const convertBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+        const fileReader = new FileReader();
+        fileReader.readAsDataURL(file);
+
+        fileReader.onload = () => {
+            resolve(fileReader.result);
+        }
+
+        fileReader.onerror = (error) => {
+            reject(error);
+        }
+    })
+}
+
+
+  const uploadImage = async (e) =>{
+    const files = e.target.files;
+    console.log(files)
+    const file = e.target.files[0];
+    const fullFileName = file.name;
+    console.log(fullFileName)
+    const convertedFile = await convertBase64(file);
+    setBaseImage(convertedFile)
+   
+}
+console.log(baseImage)
+
   return (
     <div className="user-details">
       <div className="flex justify-between">
@@ -86,7 +117,7 @@ function UserDetail(props) {
         {editPic == 0 && (<><img
           src="/template_0.webp"
           className="w-1/6"
-          style={{ borderRadius: "50%" }}
+          style={{borderRadius: "50%"}}
         />
           <button3
             className="text-white bg-green-600 bottom-16 z-index-10  p-3  h-10 cursor-pointer -ml-10 flex justify-center rounded-full aspect-square"
@@ -101,9 +132,15 @@ function UserDetail(props) {
         {editPic == 1 && (
 
           <div>
-            <p2 className="font-bold">Choose Your Image</p2>
+            <p2 className="font-bold">Choose Your Imagee</p2>
             <div className="ml-6 text-sm mt-4" style={{ width: "80%" }}>
-              <input type="file" required />
+            <input
+                  type="file"
+                  required
+                  onChange={(e) => {
+                    uploadImage(e);
+                }}
+            ></input>
             </div>
             <div className="flex justify-between mt-5 mb-7">
               <button3 onClick={editProfile} className="bg-red-600 cursor-pointer text-white p-2 rounded-lg">Cancel</button3>

@@ -69,9 +69,10 @@
 }
 
 .warehouses-table th:first-child{
-	padding-left: 10px;
+	/* padding-left: 10px;
 	display: flex;
-	margin-left: 15%;
+	margin-left: 15%; */
+	padding-right: 43%;
 }
 
 .warehouses-table td:first-child{

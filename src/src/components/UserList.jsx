@@ -35,6 +35,7 @@ function UserList() {
 	const [noOfActiveUsers, setNoOfActiveUsers] = useState(0);
 	const [noOfInActiveUsers, setNoOfInActiveUsers] = useState(0);
 	const [noOfTotalUsers, setNoOfTotalUsers] = useState(0);
+	const [currImage, setCurrImage] = useState("");
 
 	const sortMapping = {
 		"None": null,
@@ -82,9 +83,10 @@ function UserList() {
 					return (elem["userid"].toLowerCase().includes(filter) || elem["name"].toLowerCase().includes(filter))
 				}
 			}).map((val) => {
+				
 				return {
 					"User ID": val["userid"],
-					"": <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", paddingRight: "15px" }}><img src={UserImageTest} /></div>,
+					"": <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", paddingRight: "15px" }}><img src={UserImageTest} alt="Img"/></div>,
 					"User Name": val["name"],
 					"Phone Number": val["mobilenumber"].substring(0, 3) + " " + val["mobilenumber"].substring(3, 6) + " " + val["mobilenumber"].substring(6),
 					"Role": val["userid"].slice(8),
@@ -102,16 +104,6 @@ function UserList() {
 					}} />
 				}
 			})
-			// data.sort(function (a, b) {
-			// 	if (sortMapping[sortBy] !== null) {
-			// 		return a[sortMapping[sortBy]].localeCompare(b[sortMapping[sortBy]])
-			// 	}
-			// 	else return 0;
-			// });
-			// if (sortMapping[sortBy] !== null && sortOrder === 'desc') {
-			// 	data.reverse();
-			// }
-			// console.log(data)
 
 			setTableData(data)
 
@@ -121,6 +113,29 @@ function UserList() {
 		}
 	}, [users, tableFilter, sortBy, sortOrder])
 
+    async function getCurrImage(id) {
+        try {
+            const response = await fetch(
+                `${process.env.REACT_APP_API_SERVER}/user/getprofilepicture/${id}`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: 'same-origin',
+                    // mode: "cors"
+                }
+            );
+            const data = await response.json();
+            if (response.status == 200) {
+                setCurrImage(data)
+				console.log("Image Data: " , data)
+				console.log(currImage)
+            }
+        } catch (err) {
+            console.log({ err });
+        }
+    }
 
 	async function getUser() {
 		// let token = localStorage.getItem("token");
@@ -155,6 +170,7 @@ function UserList() {
 	useEffect(() => {
 		console.log("Use Effect Here")
 		getUser();
+		getCurrImage("TS657000DEO")
 	}, []);
 
 	const activateUser = async (myId) => {
@@ -384,90 +400,7 @@ function UserList() {
 				</ul>
 			</div>
 		</div>
-		// <div className="">
-		//   <div className="myIconLabels">
-		//     <ul>
-		//       <li><FaCircle className="activeCircle" /> <span>Active User</span></li>
-		//       <li><FaCircle className="inactiveCircle" /> <span>Inactive User</span></li>
-		//     </ul>
-		//   </div>
-		//   {isDetail == 1 && <UserDetail detail={user} close={close} />}
-		//   {isDetail == 0 && (
-		//     <>
-		//       <div className="table-container">
-		//         <table className="table-columns-header">
-		//           <thead>
-		//             <tr
-		//               style={{
-		//                 background: "var(--background-gray)",
-		//                 borderRadius: "var(--border-radius)",
-		//               }}
-		//             >
-		//               <th>Active</th>
-		//               <th>User ID</th>
-		//               <th>User Name</th>
-		//               <th>User Profile</th>
-		//               <th>Modify</th>
-		//               <th>Activate/Deactivate</th>
-		//             </tr>
-		//           </thead>
-		//           <tbody className="table-content">
-		//             {users.length > 0 &&
-		//               users.map((value) => (
-		//                 <tr>
-		//                   <td className="text-black text-sm">
-		//                     <center>{value[7] == "A" ? <FaCircle className="activeCircle" /> : <FaCircle className="inactiveCircle" />}</center>
-		//                   </td>
-		//                   <td className="text-black text-sm">{value[0]}</td>
-		//                   <td className="text-black text-sm">{value[2]}</td>
-		//                   <td>
-		//                     <button
-		//                       className="userDetailsBtn p-2 text-white"
-		//                       onClick={(e) => {
-		//                         details(value);
-		//                       }}
-		//                     >
-		//                       <FaUserAlt />
-		//                     </button>
-		//                   </td>
-		//                   <td className="text-black text-sm">
-		//                     <button className="modifyBtn p-2 text-white" disabled={true}>
-		//                       <FaUserEdit style={{ transform: "translateX(1px)" }} />
-		//                     </button>
-		//                   </td>
-		//                   <td>
-		//                     <ToggleSwitch key={value[0]}
-		//                       warehouseID={value[0]}
-		//                       label={value[7] == "A" ? "Deactivate" : "Activate"}
-		//                       checked={value[7] == "A"}
-		//                       onToggle={(e) => {
-		//                         if (value[7] == "A") {
-		//                           deactivateUser(e)
-		//                         }
-		//                         else {
-		//                           activateUser(e)
-		//                         }
-		//                       }
-		//                       }
-		//                     />
-		//                   </td>
-		//                 </tr>
-		//               ))}
-		//           </tbody>
-		//         </table>
-		//       </div>
-		//       <div className="w-full flex justify-end mt-2">
-		//         <button
-		//           onClick={() => {
-		//             window.location.pathname = "/session/usermanagement/createUser";
-		//           }}
-		//         >
-		//           Add User
-		//         </button>
-		//       </div>
-		//     </>
-		//   )}
-		// </div>
+
 	);
 }
 export default UserList

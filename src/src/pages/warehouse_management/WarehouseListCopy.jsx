@@ -37,6 +37,7 @@ function WarehouseList() {
 				`${process.env.REACT_APP_API_SERVER}/warehouse/listWarehouses`,
 				{
 					method: "POST",
+					credentials: "include",
 					headers: {
 						"Content-Type": "application/json",
 					},
@@ -70,10 +71,6 @@ function WarehouseList() {
 				}
 			)
 			const types = await response.json();
-			// data.map(arr => {
-			// 	arr = {...arr, "warehousebuildingtype": }
-			// })
-			// console.log(data);
 			setWarehouseMapping(types);
 		} catch (error) {
 			console.log(error);

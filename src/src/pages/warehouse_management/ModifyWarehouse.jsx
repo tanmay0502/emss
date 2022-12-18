@@ -10,22 +10,26 @@ import { BsFillPersonFill } from "react-icons/bs";
 import { useState } from "react";
 import { AiOutlineArrowLeft } from 'react-icons/ai'
 import { useNavigate } from "react-router-dom";
+import loader from './css/auditpage.module.css';
 
 export default function ModifyWarehouse() {
   const navigate = useNavigate();
 
-  const [WarehouseId, setWarehouseId] = useState("");
+  const [Warehouseid, setWarehouseId] = useState("");
+  const [Whdetails, setWhdetails] = useState("");
 
   //Form filed states....
   const [BuildingType, setBuildingType] = useState("");
-  const [isSealed, setisSealed] = useState("");
+  const [Status, setStatus] = useState("");
   const [Address, setAddress] = useState("");
   const [Lat, setLat] = useState("");
   const [Lng, setLng] = useState("");
   const [userId1, setUserId1] = useState("");
   const [userId2, setUserId2] = useState("");
   const [doubleLockSystem, setDoubleLockSystem] = useState("");
+  const [whIncharge, setWhIncharge] = useState("")
   const [WarehouseDetails, setWarehousDetails] = useState([]);
+  
   //Form filed states end....
 
 
@@ -33,13 +37,10 @@ export default function ModifyWarehouse() {
   const onFormSubmit = async (e) => {
     e.preventDefault();
     const buildingType = document.getElementById("input_buildingtype").value;
-
     const lat = document.getElementById("input_lat").value;
     const lon = document.getElementById("input_lng").value;
-
     const address = document.getElementById("input_address").value;
     let double_lock = document.getElementById("double_lock_yes").checked;
-
     console.log(double_lock);
     const person2_ID = double_lock ? document.getElementById("input_personName_2").value : "";
     double_lock = double_lock == true ? "TRUE" : "FALSE";
@@ -48,7 +49,7 @@ export default function ModifyWarehouse() {
     let reqBody = {};
     if (double_lock === "TRUE") {
       reqBody = {
-        warehouseID: WarehouseId,
+        warehouseID: Warehouseid,
         warehouseBuildingType: buildingType,
         warehouseLatLong: [lat, lon],
         warehouseAddress: address,
@@ -59,7 +60,7 @@ export default function ModifyWarehouse() {
       };
     } else {
       reqBody = {
-        warehouseID: WarehouseId,
+        warehouseID: Warehouseid,
         warehouseBuildingType: buildingType,
         warehouseLatLong: [lat, lon],
         warehouseAddress: address,
@@ -68,7 +69,7 @@ export default function ModifyWarehouse() {
         updatedByUID: window.sessionStorage.getItem("sessionToken"),
       };
     }
-    console.log(reqBody);
+    // console.log(reqBody);
 
     const response = await fetch(
       `${process.env.REACT_APP_API_SERVER}/warehouse/modifyWarehouse`,
@@ -92,55 +93,8 @@ export default function ModifyWarehouse() {
     }
   };
 
-  const URL = window.location.href;
-  const arr = URL.split("/");
-  const param = arr[arr.length - 1];
-  const arr1 = param.split("=");
-  const myId = arr1[1];
-  setWarehouseId(myId);
-
-  //Get state list
-
-  // const getDetails = async () => {
-
-  //   try {
-  //     const response = await fetch(
-  //       `${process.env.REACT_APP_API_SERVER}/warehouse/warehouseDetails/${myId}`,
-  //       {
-  //         method: "GET",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         }
-  //       }
-  //     )
-
-  //     const dataObj = await response.json();
-  //     const data = dataObj["data"];
-  //     const coordinates = data[5];
-  //     const myArr = coordinates.split(",");
-  //     const lat = myArr[0].substring(1);
-  //     const lng = myArr[1].slice(0, -1);
-  //     data.push(lat);
-  //     data.push(lng);
-
-  //     console.log(data[7]);
-  //     setDoubleLockSystem(data[7]);
-  //     setAddress(data[6]);
-  //     setBuildingType(data[2]);
-  //     setLat(data[14]);
-  //     setLng(data[15]);
-  //     setUserId1(data[8]);
-  //     setUserId2(data[9]);
-  //     // setWarehousDetails(data);
-  //     // setValues(data);
 
 
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-
-
-  // }
 	function logOut() {
 		const response = fetch(
 			`${process.env.REACT_APP_API_SERVER}/user/UserLogout`,
@@ -180,7 +134,7 @@ export default function ModifyWarehouse() {
 
 			const data = await response.json();
 			console.log(data);
-			// setWhdetails(data["warehouseDetails"])
+			setWhdetails(data["warehouseDetails"])
       const status = await response;
       console.log(status.status);
 			// console.log(data["data"], "data")
@@ -195,12 +149,49 @@ export default function ModifyWarehouse() {
 		}
 
 	}
+  // console.log(Whdetails[0])
 
   useEffect(() => {
-    getDetails();
+    
+    try{
+    const coordinates = Whdetails[2];
+    const myArr = coordinates.split(",");
+    const lat = myArr[0].substring(1);
+    const lng = myArr[1].slice(0, -1);
+
+    setDoubleLockSystem(Whdetails[4]);
+    setAddress(Whdetails[3]);
+    setBuildingType(Whdetails[1]);
+    setLat(lat);
+    setLng(lng);
+    setUserId1(Whdetails[5]);
+    setUserId2(Whdetails[6]);
+    setStatus(Whdetails[10]);
+    setWhIncharge(Whdetails[11]);
+    }catch(err){
+      console.log(err)
+    }
+
+
+  }, [Whdetails]);
+
+  useEffect(() => {
+    const URL = window.location.href;
+    const arr = URL.split("/");
+    const param = arr[arr.length - 1];
+    const arr1 = param.split("=");
+    const myId = arr1[1];
+    setWarehouseId(myId);
+
   }, []);
 
+  useEffect(() => {
+    getDetails(Warehouseid);
+  }, [Warehouseid]);
 
+  console.log(Whdetails)
+  const [edit, setEdit] = useState(true);
+  console.log(doubleLockSystem)
   return (
     // <div className="flex-col justify-center align-middle">
     // <div className="myWrapper">
@@ -217,10 +208,14 @@ export default function ModifyWarehouse() {
             <AiOutlineArrowLeft />
           </button>
           <FaWarehouse />
-          <span>Modify Warehouse Details - {WarehouseId}</span>
+
+          <div 
+            className="hover:cursor-pointer"
+            onClick = {() => {setEdit(true)}}
+          ><span>Modify Warehouse Details - {Warehouseid}</span></div>
         </h4>
       </div>
-
+      {Status === "A" || Status === "I"? 
       <form
         id="create-warehouse-form"
         className="myForm"
@@ -240,45 +235,90 @@ export default function ModifyWarehouse() {
                 <div className="form_label">
                   <label htmlFor="">Building Type</label>
                 </div>
-                <div className="form_select">
+                
+                {edit === false ?
+                <div className="form_input disabled">
+                    <input 
+                    id="input_buildingtype"
+                    disabled = {true}
+                    defaultValue={BuildingType}
+                    type = "text"
+                    className=" selectBox"
+                    
+                    >
+                    </input></div>:
+                  <>
+                  <div className="form_select">
                   <select
                     required
                     name=""
                     id="input_buildingtype"
                     onChange={(e) => setBuildingType(e.target.value)}
+                    defaultValue={BuildingType}
                   >
-                    <option value="P" selected={BuildingType == "P" ? true : false}>Permanent</option>
-                    <option value="T" selected={BuildingType == "T" ? true : false}>Temporary</option>
+                    <option value="P" selected={BuildingType === "P" ? true : false}>Permanent</option>
+                    <option value="T" selected={BuildingType === "T" ? true : false}>Temporary</option>
                   </select>
+                  </div>
+                  </>
+                  }  
                   <div className="input_icon">
                     <FaRegBuilding size="1em" />
-                  </div>
-                </div>
+                  </div>  
               </div>
 
               <div className="form_group">
                 <div className="form_label">
-                  <label htmlFor="">Sealed</label>
+                  <label htmlFor="">Warehouse Status</label>
                 </div>
+                {edit === false ?
+                <div className="form_input disabled">
+                    <input 
+                    id="input_buildingtype"
+                    disabled = {true}
+                    defaultValue={Status}
+                    type = "text"
+                    className=" selectBox"
+                    
+                    >
+                    
+                    </input></div>:
                 <div className="form_select">
                   <select
                     required
                     name=""
                     id="input_sealed"
-                    onChange={(e) => setisSealed(e.target.value)}
+                    defaultValue={Status}
+                    onChange={(e) => setStatus(e.target.value)}
                   >
-                    <option value="I">Yes</option>
-                    <option value="A">No</option>
+                    <option value="I" selected={Status === "I" ? true : false}>Inactive</option>
+                    <option value="A" selected={Status === "A" ? true : false}>Active</option>
                   </select>
+
+                </div>
+                }
                   <div className="input_icon">
                     <BsShieldLockFill size="1em" />
                   </div>
-                </div>
               </div>
               <div className="form_group">
                 <div className="form_label">
                   <label htmlFor="">Latitude</label>
                 </div>
+
+
+                {edit === false ?
+                <div className="form_input disabled">
+                    <input 
+                    id="input_buildingtype"
+                    disabled = {true}
+                    defaultValue={Lat}
+                    type = "text"
+                    className=" selectBox"
+                    
+                    >
+                    
+                    </input></div>:
                 <div className="form_input">
                   <input
                     required
@@ -291,16 +331,32 @@ export default function ModifyWarehouse() {
                     onChange={(e) => setLat(e.target.value)}
                     value={Lat}
                   />
+                  {/* <div className="input_icon">
+                    <FaLaptopHouse size="1em" />
+                  </div> */}
+                </div>
+                }
                   <div className="input_icon">
                     <FaLaptopHouse size="1em" />
                   </div>
-                </div>
               </div>
 
               <div className="form_group">
                 <div className="form_label">
                   <label htmlFor="">Longitude</label>
                 </div>
+                {edit === false ?
+                <div className="form_input disabled">
+                    <input 
+                    id="input_buildingtype"
+                    disabled = {true}
+                    defaultValue={Lng}
+                    type = "text"
+                    className=" selectBox"
+                    
+                    >
+                    </input></div>:
+                    <>
                 <div className="form_input">
                   <input
                     required
@@ -313,15 +369,32 @@ export default function ModifyWarehouse() {
                     onChange={(e) => setLng(e.target.value)}
                     value={Lng}
                   />
-                  <div className="input_icon">
-                    <FaLaptopHouse size="1em" />
-                  </div>
+
+                </div>
+
+                </>
+                }
+                <div className="input_icon">
+                  <FaLaptopHouse size="1em" />
                 </div>
               </div>
               <div className="form_group">
                 <div className="form_label">
                   <label htmlFor="">Address</label>
                 </div>
+                {edit === false ?
+                <div className="form_input disabled">
+                    <input 
+                    id="input_buildingtype"
+                    disabled = {true}
+                    defaultValue={Address}
+                    type = "text"
+                    className=" selectBox"
+                    
+                    >
+                    
+                    </input></div>:
+                    <>
                 <div className="form_input">
                   <input
                     required
@@ -332,11 +405,52 @@ export default function ModifyWarehouse() {
                     value={Address}
                     placeholder="Warehouse Address"
                   />
-                  <div className="input_icon">
-                    <FaMapMarkedAlt size="1em" />
-                  </div>
+
                 </div>
+
+
+                  </>
+                    }
+                  <div className="input_icon">
+                  <FaMapMarkedAlt size="1em" />
+                  </div>
               </div>
+              {/* Uncomment the below once the Warehouse Incharge is added in backend */}
+              
+              {/* <div className="form_group">
+                <div className="form_label">
+                  <label htmlFor="">Warehouse Incharge</label>
+                </div>
+                {edit === false ?
+                <div className="form_input disabled">
+                    <input 
+                    id="input_buildingtype"
+                    disabled = {true}
+                    defaultValue={whIncharge}
+                    type = "text"
+                    className=" selectBox"                
+                    >            
+                    </input></div>:
+                    <>
+                <div className="form_input">
+                  <input
+                    required
+                    id="input_address"
+                    name=""
+                    className=""
+                    onChange={(e) => setWhIncharge(e.target.value)}
+                    value={whIncharge}
+                    placeholder="Warehouse Incharge"
+                  />
+                </div>
+                  </>
+                    }
+                
+                  <div className="input_icon">
+                    <BsFillPersonFill size="1em" />
+                  </div> 
+              </div> */}
+
             </div>
           </div>
           <div class="warehouse-personnel">
@@ -355,21 +469,24 @@ export default function ModifyWarehouse() {
                     name="double_lock"
                     id="double_lock_yes"
                     // defaultChecked={true}
+                    disabled = {!edit}
                     value="1"
                     onChange={(e) => {
                       setDoubleLockSystem(true);
                     }}
-                    checked={doubleLockSystem === true ? true : false}
+                    checked={doubleLockSystem}
                   />
                   <label htmlFor="double_lock_no">No </label>
                   <input
                     type={"radio"}
                     name="double_lock"
                     id="double_lock_no"
+                    disabled={!edit}
                     value="0"
                     onChange={(e) => {
                       setDoubleLockSystem(false);
                     }}
+                    checked={!doubleLockSystem}
                   />
                 </div>
               </div>
@@ -377,6 +494,18 @@ export default function ModifyWarehouse() {
                 <div className="form_label">
                   <label htmlFor="">User ID of First Key Holder</label>
                 </div>
+                {edit === false ?
+                <div className="form_input disabled">
+                    <input 
+                    id="input_buildingtype"
+                    disabled = {true}
+                    defaultValue={userId1}
+                    type = "text"
+                    className=" selectBox"
+                    
+                    >
+                    
+                    </input></div>:
                 <div className="form_input">
                   <input
                     required
@@ -386,16 +515,30 @@ export default function ModifyWarehouse() {
                     onChange={(e) => setUserId1(e.target.value)}
                     value={userId1}
                   />
+
+                </div>
+                    }
                   <div className="input_icon">
                     <BsFillPersonFill size="1em" />
                   </div>
-                </div>
               </div>
 
               <div className="form_group" hidden={!doubleLockSystem}>
                 <div className="form_label">
                   <label htmlFor="">User ID of Second Key Holder</label>
                 </div>
+                {edit === false ?
+                <div className="form_input disabled">
+                    <input 
+                    id="input_buildingtype"
+                    disabled = {true}
+                    defaultValue={userId2}
+                    type = "text"
+                    className=" selectBox"
+                    
+                    >
+                    
+                    </input></div>:
                 <div className="form_input">
                   <input
                     required={doubleLockSystem}
@@ -405,10 +548,11 @@ export default function ModifyWarehouse() {
                     onChange={(e) => setUserId2(e.target.value)}
                     value={userId2}
                   />
+                </div>
+                  }
                   <div className="input_icon">
                     <BsFillPersonFill size="1em" />
                   </div>
-                </div>
               </div>
             </div>
           </div>
@@ -418,9 +562,9 @@ export default function ModifyWarehouse() {
           </input>
         </center>
       </form>
+      : <div className="flex justify-center"><p className={`${loader.loader}`}></p></div> }
     </div>
   );
 }
-
 
 

@@ -3,45 +3,30 @@ import { AiOutlineArrowLeft } from 'react-icons/ai'
 import { ReactComponent as WarehouseManagementIcon } from "../../assets/WarehouseManagement.svg";
 import { FaWarehouse } from "react-icons/fa";
 import { FaRegBuilding } from "react-icons/fa";
-// import { FaMapMarkerAlt } from 'react-icons/fa';
 import { FaMapMarkedAlt } from "react-icons/fa";
 import { FaLaptopHouse } from "react-icons/fa";
-// import { FaLock } from 'react-icons/fa';
 import { BsShieldLockFill } from "react-icons/bs";
 import { BsFillPersonFill } from "react-icons/bs";
-// import { BsFillTelephoneFill } from 'react-icons/bs'
-// import { MdWork } from "react-icons/md";
-// import { BsCheck2 } from 'react-icons/bs'
 import { useState } from "react";
 import './css/AddWarehouse.css'
 import { useNavigate } from "react-router-dom";
-
 import { getKeyByValue } from '../../assets/helper/ObjectHelpers.js'
 
 export default function AddWarehouse() {
 
   const userId = sessionStorage.getItem('sessionToken');
   const first2 = userId.slice(0, 2);
-
-
-
   const navigate = useNavigate();
   const [doubleLockSystem, setDoubleLockSystem] = useState(true);
-
   const [states, setStates] = useState([]);
   const [statesCode, setStatesCode] = useState([]);
-  const [PCs, setPCs] = useState([]);
+  const [dists, setdists] = useState([]);
   const [ACs, setACs] = useState([]);
-  const [PCcodes, setPCcodes] = useState([]);
-
-  // const [userid_1, setUserId_1] = useState('');
-  // const [userid_2, setUserId_2] = useState('');
-
-
+  const [distcodes, setdistcodes] = useState([]);
 
   //Form filed states....
   const [myState, setmyState] = useState("");
-  const [myPCcode, setmyPCcode] = useState("");
+  const [mydistcode, setmydistcode] = useState("");
   const [myACcode, setmyACcode] = useState("");
   const [WarehouseType, setWarehouseType] = useState("");
   const [userState, setUserState] = useState("");
@@ -104,11 +89,7 @@ export default function AddWarehouse() {
   }, [realm]);
   // console.log(currAC)
 
-  // Realm End
-
-
-
-
+  // Realm End 
 
 
   const onFormSubmit = async (e) => {
@@ -136,7 +117,7 @@ export default function AddWarehouse() {
       const warehouseType = document.getElementById("input_warehousetype").value;
       const buildingType = document.getElementById("input_buildingtype").value;
       const state = document.getElementById("input_state").value;
-      const dist = document.getElementById("input_PC").value;
+      const dist = document.getElementById("input_dist").value;
       const AC = document.getElementById("input_AC").value;
       const lat = document.getElementById("input_lat").value;
       const lon = document.getElementById("input_lng").value;
@@ -167,7 +148,7 @@ export default function AddWarehouse() {
         warehouseAC: AC,
       };
       console.log(JSON.stringify(reqBody))
-      console.log(PCs)
+      console.log(dists)
 
       if (double_lock) {
         reqBody["UIDKey2"] = person2_ID;
@@ -215,7 +196,7 @@ export default function AddWarehouse() {
 
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_API_SERVER}/user/getPCListbyState/${window.sessionStorage.getItem("sessionToken").substring(0, 2)}`,
+          `${process.env.REACT_APP_API_SERVER}/user/getdistListbyState/${window.sessionStorage.getItem("sessionToken").substring(0, 2)}`,
           {
             method: "GET",
             headers: {
@@ -227,13 +208,13 @@ export default function AddWarehouse() {
         const data = await response.json();
 
         console.log(data);
-        if (data["PCs"])
-          setPCs(data["PCs"]);
-        // setPCcodes(data["pccode"]);
+        if (data["dists"])
+          setdists(data["dists"]);
+        // setdistcodes(data["distcode"]);
       } catch (error) {
         console.log(error);
-        setPCs(["00"]);
-        // setPCcodes(["00"]);
+        setdists(["00"]);
+        // setdistcodes(["00"]);
       }
 
       const StateData = await response.json();
@@ -266,63 +247,19 @@ export default function AddWarehouse() {
     getState();
   }, []);
 
-  async function generateWarehouseId() {
-    // try {
-    //   const response = await fetch(
-    //     `${process.env.REACT_APP_API_SERVER}/warehouse/listWarehouses`,
-    //     {
-    //       method: "POST",
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //       },
-    //       body: JSON.stringify({
-    //         stateCode: myState,
-    //         pcCode: myPCcode,
-    //       }),
-    //     }
-    //   );
-    // } catch (error) {
-    //   console.log(error);
-    // }
 
-    return myState + myPCcode + WarehouseType;
-  }
   async function setStateFunc(st) {
     if (st !== "-1") {
       // console.log(st, states, statesCode);
       const selectedCode = states[st];
       setmyState(selectedCode);
-      // console.log(selectedCode)
-
-      try {
-        const response = await fetch(
-          `${process.env.REACT_APP_API_SERVER}/user/getPCListbyState/${selectedCode}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        const data = await response.json();
-        console.log(data);
-        if (data["PCs"])
-          setPCs(data["PCs"]);
-        // setPCcodes(data["pccode"]);
-      } catch (error) {
-        console.log(error);
-        setPCs(["00"]);
-        // setPCcodes(["00"]);
-      }
-
     }
   }
 
-  async function setPcFunc(pc) {
-    if (pc !== "-1") {
-      const pcCode = PCs[pc];
-      setmyPCcode(pcCode);
+  async function setdistFunc(dist) {
+    if (dist !== "-1") {
+      const distCode = dists[dist];
+      setmydistcode(distCode);
     }
   }
   async function setAcFunc(Ac) {
@@ -341,7 +278,6 @@ export default function AddWarehouse() {
     alert("You have entered invalid UserId!")
     return (false)
   }
-
 
 
   return (
@@ -378,7 +314,7 @@ export default function AddWarehouse() {
             >
               <div className="form_group">
                 <div className="form_label" >
-                  <label htmlFor="">Room Type</label>
+                  <label htmlFor="">Warehouse Type</label>
                 </div>
                 <div className="form_select">
                   <select
@@ -401,7 +337,7 @@ export default function AddWarehouse() {
                     <option value="D">District Strong Room</option>
 
                     <option value="E">Strong Room for AC</option>
-                    <option value="F">Strong Room for AS (PC)</option>
+                    <option value="F">Strong Room for AS (dist)</option>
                     <option value="G">Strong Room for Polled Units</option>
                     <option value="H">
                       Strong Room for Units under Counting
@@ -529,8 +465,8 @@ export default function AddWarehouse() {
                   <select
                     required
                     name=""
-                    id="input_PC"
-                    onChange={(e) => setPcFunc(e.target.value)}
+                    id="input_dist"
+                    onChange={(e) => setdistFunc(e.target.value)}
                   >
                     <option value="">--Select--</option>
                     {currDist.map((dist) => (

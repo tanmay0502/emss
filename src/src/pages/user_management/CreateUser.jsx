@@ -49,8 +49,9 @@ function CreateUser() {
   const lev1 = {
     "ECI-Admin": lev2,
   };
-
+  
   const [isTemporary, setIsTemporary] = useState(false);
+  const [baseImage, setBaseImage ] = useState("");
   const [state, setState] = useState("");
   const [states, setStates] = useState({});
   const [statesCode, setStatesCode] = useState({});
@@ -71,6 +72,8 @@ function CreateUser() {
   const [pcDisable, setPcDisable] = useState(false);
   const [acDisable, setAcDisable] = useState(false);
   const [realm, setRealm] = useState();
+  const [imageName, setImageName] = useState();
+  
 
   async function getRoleList() {
     try {
@@ -518,8 +521,8 @@ function CreateUser() {
         address: document.getElementById("formUserAddress").value,
         otherContactNum1: document.getElementById("formUserAltNumber1").value,
         otherContactNum2: document.getElementById("formUserAltNumber2").value,
-        photoFilename: photoFileName,
-        photoFileData: photoFileData,
+        photoFilename: imageName,
+        photoFileData: baseImage,
         active: "A"
         // createdBy: window.sessionStorage.getItem("sessionToken")
       }
@@ -564,6 +567,37 @@ function CreateUser() {
     }
     return () => { };
   }, [isTemporary]);
+
+  const convertBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+        const fileReader = new FileReader();
+        fileReader.readAsDataURL(file);
+
+        fileReader.onload = () => {
+            resolve(fileReader.result);
+        }
+
+        fileReader.onerror = (error) => {
+            reject(error);
+        }
+    })
+}
+
+
+  const uploadImage = async (e) =>{
+    const files = e.target.files;
+    console.log(files)
+    const file = e.target.files[0];
+    const fullFileName = file.name;
+    console.log(fullFileName)
+    const convertedFile = await convertBase64(file);
+    setBaseImage(convertedFile)
+    setImageName(fullFileName)
+}
+// console.log(baseImage)
+
+
+
 
   return (
     <div className="flex-col justify-center align-middle">
@@ -826,16 +860,16 @@ function CreateUser() {
             </label>
           </div>
           <div className="form_group">
+
             <input
               id="formUserImage"
               required={isTemporary}
               type="file"
-              placeholder="Choose Image (Upto 5 MB)"
+              placeholder="Choose Image (Upto 1 MB)"
               accept="image/*"
-              onChange={async (e) => {
-                setPhotoFileName(e.target.value.replace(/^.*[\\\/]/, ''))
-                setPhotoFileData(await getBase64(e.target.files[0]))
-              }}
+              onChange={(e) => {
+                uploadImage(e);
+            }}
             />
           </div>
         </div>
