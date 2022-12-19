@@ -9,12 +9,15 @@ import VehicleDetails from './vehicledetails'
 import WareHouseListUnitTrackerFillAvailability from './warehouseListUnitTrackerfillavailability'
 import { useEffect } from 'react'
 import OrderFlowOne from './OrderFlowOne'
+import OrderFlowTwo from './OrderFlowTwo'
+import OrderFlowTwoSender from './OrderFlowTwoSender'
 
-function OrderActions(props) {
+function OrderActions2(props) {
 
     console.log("Order acetion:", props.Order)
     const order=props.Order[0]
-    console.log("action 1")
+
+    console.log("action 2")
 
     const [action, setAction] = useState(null)
     const [senderOrder,setSenderOrder] =useState([])
@@ -34,8 +37,7 @@ function OrderActions(props) {
         "recipient", // fill demand, optimal allocation, view vehicle details
         "both",
         "creator", // view
-        "other", // view
-        "admin"
+        "other" // view
     ]
 
     useEffect(()=>{  
@@ -58,7 +60,7 @@ function OrderActions(props) {
                     else {
                         setf1(0);
                     }
-                    if(order["orderstatus"]=="RA" || order["orderstatus"]=="SI" || order["orderstatus"]=="IT" || order["orderstatus"]=="OC"){
+                    if(order["orderstatus"]=="RA"){
                         setf5(1);
                     }
                     else {
@@ -86,19 +88,13 @@ function OrderActions(props) {
                 else {
                     setf3(0);
                 }
-                if(order["orderstatus"]=="RA" || order["orderstatus"]=="SI" || order["orderstatus"]=="IT" || order["orderstatus"]=="OC"){
+                if(order["orderstatus"]=="SI"){
                     setf4(1);
                 }
                 else {
                     setf4(0);
                 }
 
-            }
-            else if("ADM"==userid.substring(8)){
-                setInd(5);
-                if(order["orderstatus"]=="RA" || order["orderstatus"]=="SI" || order["orderstatus"]=="IT" || order["orderstatus"]=="OC"){
-                    setf6(1);
-                }
             }
         
         })
@@ -112,7 +108,7 @@ function OrderActions(props) {
 
         
         
-        console.log(f1,f2,f3,f4,f5,f6);
+        console.log(f1,f2,f3,f4,f5);
             setSenderOrder(sender_order);
          
             setRecipientOrder(recipient_order);
@@ -128,10 +124,7 @@ function OrderActions(props) {
         else if(recipient_order.length>0){
             setInd(1);
         }
-        else if("ADM"==userid.substring(8)){
-            setInd(5);
-        }
-        else{
+        else {
             setInd(4)
         }
         console.log(sender_order)
@@ -140,6 +133,7 @@ function OrderActions(props) {
     },[])
 
     const actions = (role) => {
+        console.log(role)
         if (role == 'sender') {
             return [
                 "Fill Availability",
@@ -161,13 +155,9 @@ function OrderActions(props) {
                 "Vehicle Details",
             ]
         }
-        else if (role == 'admin') {
-            return [
-                "admin",
-            ]
-        }
         else {
-            return []
+            console.log("jdjd")
+            return ["Order Flow2"]
         }
     }
 
@@ -178,7 +168,7 @@ function OrderActions(props) {
                 case 'Fill Availability':
                     return <WareHouseListUnitTrackerFillAvailability Order={senderOrder} OrderID={props.OrderID} />
                 case 'Issue Order':
-                    return <OrderFlowOne Order={senderOrder} OrderID={props.OrderID} isSender={1}/>
+                    return <OrderFlowOne OrderID={props.OrderID}/>
             }
         }
         else if (roles[ind] == 'recipient') {
@@ -188,7 +178,7 @@ function OrderActions(props) {
                 case 'Optimal Allocation':
                     return <AllocateOrder OrderID={props.OrderID} type={order.type}/>
                 case 'Vehicle Details':
-                    return <OrderFlowOne Order={recipientOrder} OrderID={props.OrderID} isSender={0}/>
+                    return <OrderFlowOne OrderID={props.OrderID}/>
             }
         }
         else if (roles[ind] == 'both') {
@@ -203,11 +193,12 @@ function OrderActions(props) {
                     return <VehicleDetails/>
             }
         }
-        else if (roles[ind] == 'admin') {
-            console.log("ss")
+        else  {
+            console.log("hdhdh")
             switch (actions(roles[ind])[actionIndex]) {
-                case 'admin':
-                    return <OrderFlowOne OrderID={props.OrderID} isSender={0}/>
+               
+                case 'Order Flow2':
+                    return <OrderFlowTwoSender OrderID={props.OrderID}/>
             }
         }
     }
@@ -227,7 +218,7 @@ function OrderActions(props) {
                             <button disabled={!f5}  className={`${f5==0 ? 'bg-gray-400' : 'bg-orange-500'}`} onClick={() => {
                                 setAction(renderAction(1))
                             }}>
-                                Sub Orders
+                                Issue Order
                             </button>
                         </div>
                     }
@@ -247,7 +238,7 @@ function OrderActions(props) {
                                 <button disabled={!f4}  className={`${f4==0 ? 'bg-gray-400' : 'bg-orange-500'}`}  onClick={() => {
                                     setAction(renderAction(2))
                                 }} >
-                                    Sub Orders
+                                    Vehicle Details
                                 </button>
                             </div>
                     }
@@ -275,15 +266,12 @@ function OrderActions(props) {
                                 </button>
                             </div>
                     }
-                    {    ind ==5 && 
-                            <div className='flex justify-center w-full'>
-                                <button disabled={!f6}  className={`${f6==0 ? 'bg-gray-400' : 'bg-orange-500'}`} onClick={() => {
-                                    setAction(renderAction(0))
-                                }}>
-                                    Sub Orders
-                                </button>
-                                
-                            </div>
+                    {
+                        ind ==4 && ( <button   className={`${f4==0 ? 'bg-gray-400' : 'bg-orange-500'}`}  onClick={() => {
+                            setAction(renderAction(0))
+                        }} >
+                            Vehicle Details
+                        </button>)
                     }
                 </div>
             }
@@ -299,4 +287,4 @@ function OrderActions(props) {
     )
 }
 
-export default OrderActions
+export default OrderActions2

@@ -11,26 +11,21 @@ function AllocateOrder({OrderID, type}) {
     const [total_CU_M3, setTotal_CU_M3] = useState(0)
     const [total_VVPAT_M2, setTotal_VVPAT_M2] = useState(0)
     const [total_VVPAT_M3, setTotal_VVPAT_M3] = useState(0)
+	const [update, setUpdate] = useState(0);
 
 	const sampleBody = {
 		"referenceorderid": OrderID,
   		"type": type,
         "details": [
           {
-            "source": "TS533000K03",
-            "destination": "TS533000K02",
+            "source": "",
+            "destination": "",
             "unitDetails": [
               {
-                "item": "CU",
-                "itemmodel": "M1",
-                "manufacturer": "ECIL",
-                "itemquantity": 101
-              },
-              {
-                "item": "VVPAT",
-                "itemmodel": "M3",
-                "manufacturer": "ECIL",
-                "itemquantity": 102
+                "item": "",
+                "itemmodel": "",
+                "manufacturer": "",
+                "itemquantity": 0
               }
             ]
           }
@@ -39,7 +34,36 @@ function AllocateOrder({OrderID, type}) {
 
 	const [body, setBody] = useState(sampleBody)
 
-    const [update, setUpdate] = useState(0);
+	useEffect(()=>{
+		async function getState() {
+			try {
+				let uri = `${process.env.REACT_APP_API_SERVER}/order/getoptimalallocation/`
+				const response = await fetch(
+				uri,
+				{
+					method: "POST",
+					headers: {
+					"Content-Type": "application/json",
+					},
+					credentials: 'include',
+					body: JSON.stringify({"orderid": OrderID})
+				}
+				);
+				const data2 = await response.json();
+				console.log("getoptimalallocation",data2.allocation)
+				setBody(prev=>{
+					prev.details=data2.allocation;
+					return prev;
+				})
+				setUpdate(prev=>(prev+1)%10)
+			} catch (err) {
+					console.log(err);
+				}
+			}
+			getState();
+	},[])
+
+    
     useEffect(() => {
         setTotal_BU_M2(0);
         setTotal_BU_M3(0);
@@ -101,6 +125,10 @@ function AllocateOrder({OrderID, type}) {
 		  );
 		  const data2 = await response.json();
 		//   console.log(data2);
+		  if (response["status"] == 200) {
+			alert("Order allocated Successfully");
+			window.location = '/session/ordermanagement'
+		  }
 		  if (response["status"] == 200) {
 			alert("Order allocated Successfully");
 			window.location = '/session/ordermanagement'

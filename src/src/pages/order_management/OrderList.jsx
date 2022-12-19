@@ -137,7 +137,8 @@ export default function OrderList() {
     useEffect(() => {
         if (data) {
             const tmp = [...new Set(data.map((val) => {
-                if (1) {
+                const id = sessionStorage.getItem("sessionToken").substring(8)
+                if ((id=="WHM" && val["referenceorderid"].split(':__').length>1) || (id!="WHM" && val["referenceorderid"].split(':__').length==1)) {
                     return JSON.stringify({
                         'displayID': val['orderid'].split(':__')[0],
                         'type': val['type'],

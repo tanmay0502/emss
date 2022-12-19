@@ -161,6 +161,7 @@ export default function GenarateOrderITRS() {
 
 
   async function getState() {
+    console.log("ff");
     try {
       let uri = `${process.env.REACT_APP_API_SERVER}/user/getRealm`
       const response = await fetch(
@@ -175,6 +176,7 @@ export default function GenarateOrderITRS() {
         }
       );
       const data2 = await response.json();
+      console.log(data2)
       setStates(data2["state"]);
     } catch (err) {
       console.log(err);

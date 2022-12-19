@@ -550,8 +550,8 @@ function CreateUser() {
       console.log(data2);
       if (response.status === 200) {
         alert("User Created Successfully");
-        // window.location.pathname = "/session/usermanagement";
-        // document.getElementById("createUserForm").reset();
+        window.location.pathname = "/session/usermanagement";
+        document.getElementById("createUserForm").reset();
       } else {
         alert("Unable to Create User.");
       }

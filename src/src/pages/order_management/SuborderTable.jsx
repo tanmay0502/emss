@@ -76,7 +76,7 @@ function SuborderTable(props) {
                 <img src={SourceLocationPin} />
             </div>
             <div>
-                <p className={styles.allocationLocationDetailsSource}><span>Source: </span> {props.val.destination} </p>
+                <p className={styles.allocationLocationDetailsSource}><span>Source: </span> {props.val.source} </p>
                
             </div>
             <div className={styles.allocationLocationArrow}>
@@ -86,7 +86,7 @@ function SuborderTable(props) {
                 <img src={DestLocationPin} />
             </div>
             <div>
-                <p className={styles.allocationLocationDetailsDestination}><span>Destination: </span> {props.val.source} </p>
+                <p className={styles.allocationLocationDetailsDestination}><span>Destination: </span> {props.val.destination} </p>
   
             </div>
         </div>

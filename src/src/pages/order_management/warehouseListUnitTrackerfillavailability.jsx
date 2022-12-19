@@ -363,6 +363,7 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
                     body: JSON.stringify({
                         "stateCode": code
                     }),
+                    credentials:'include'
                 })
 
             const data = await response.json();

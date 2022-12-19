@@ -3,6 +3,7 @@ import UnitDescription from "./Unit_description"
 import { useParams } from "react-router-dom";
 import styles from './styles/order.module.css'
 import OrderActions from "./OrderActions";
+import OrderActions2 from "./OrderActions2";
 
 export default function ViewOrderDetails() {
   const OrderID = useParams();
@@ -17,8 +18,11 @@ export default function ViewOrderDetails() {
   }
 
 
+  const [flow,setFlow] = useState(1);
+
   const [Order, setOrder] = useState([]);
   const [allOrders, setAllOrders] = useState([]);
+  const [validallOrders, setValidAllOrders] = useState([]);
   const [orderById, setOrderById] = useState({});
   const [orderDetailPage, setOrderDetailPage] = useState("-1");
   const UserId = window.sessionStorage.getItem('sessionToken');
@@ -61,11 +65,18 @@ export default function ViewOrderDetails() {
     let orderBy_Id = {}
     if (flag == 0 && allOrders != [] && allOrders) {
       setOrder([]);
+      let validOrder=[]
       let myorder={
         units:[]
       }
+      const ID = sessionStorage.getItem("sessionToken").substring(8);
       
       allOrders.map((order) => {
+
+        if((ID=="WHM" && order["referenceorderid"].split(':__').length>1) || (ID!="WHM" && order["referenceorderid"].split(':__').length==1)){
+          validOrder.push(order)
+          setFlow(2);
+        }
 
         setFlag(1)
         
@@ -88,8 +99,10 @@ export default function ViewOrderDetails() {
         
       })
       setOrder(myorder)
+      setValidAllOrders(validOrder)
     }
     
+   
 
     setOrderById(orderBy_Id)
   }, [allOrders])
@@ -101,8 +114,9 @@ export default function ViewOrderDetails() {
       {
         flag == 1 &&
         <>
-          {allOrders && <UnitDescription Order={allOrders} OrderID={orderID} />}
-          {allOrders && <OrderActions Order={allOrders} OrderID={orderID}/>}
+          {validallOrders && <UnitDescription Order={validallOrders} OrderID={orderID} />}
+          {validallOrders && flow==2 && <OrderActions Order={validallOrders} OrderID={orderID}/>}
+          {validallOrders && flow==1 && <OrderActions2 Order={validallOrders} OrderID={orderID}/>}
         </>
       }
     </div >

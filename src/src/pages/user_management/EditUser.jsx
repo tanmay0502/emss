@@ -167,7 +167,7 @@ function EditUser(props) {
         if (response.status === 200) {
           alert("User Modified Successfully");
           window.location.pathname = "/session/usermanagement";
-          // document.getElementById("createUserForm").reset();
+          document.getElementById("createUserForm").reset();
         } else {
           alert("Unable to Modify User.");
         }

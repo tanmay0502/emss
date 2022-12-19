@@ -67,7 +67,7 @@ function Home1() {
 	useEffect(()=>{
 		if(content2&&statesCode.find(e=>e.state==content2)&&!indiaMap){
 			const ID = statesCode.find(e=>e.state==content2).code+window.sessionStorage.getItem('sessionToken').slice(2,11);
-			// console.log(ID)
+			console.log(ID)
 			let getData = async ()=>{
 				try {
 					console.log("GET "+uri+ID)
@@ -82,7 +82,7 @@ function Home1() {
 						}
 					  );
 						let data2 = await response.json();
-						// console.log("Data fetched", data2);
+						console.log("Data fetched", data2);
 						// console.log("Data fetched", data2['data']);
 						let data = data2['data'];
 						// console.log(data2)
@@ -96,6 +96,7 @@ function Home1() {
 	},[content2,indiaMap])
 	useEffect(()=>{
 		if (indiaMap) {
+			console.log("ddd")
 			let getData = async ()=>{
 			try {
 				const ID = "IN"+window.sessionStorage.getItem('sessionToken').slice(2,11);
@@ -112,7 +113,7 @@ function Home1() {
 				  );
 					let data2 = await response.json();
 					let data = data2['data'];
-					// console.log(data2)
+					console.log(data2)
 					setFetchData(data);
 				} catch (err) {
 					console.log(err);

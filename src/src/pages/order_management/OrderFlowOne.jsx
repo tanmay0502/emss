@@ -9,7 +9,7 @@ import UnitTrackerTable from './UnitTrackerTable'
 import SuborderTable from './SuborderTable';
 import SubOrder from "./SubOrder";
 
-export default function OrderFlowOne({OrderID}) {
+export default function OrderFlowOne({OrderID,isSender}) {
   
   const id=OrderID
   console.log(id);
@@ -31,6 +31,7 @@ export default function OrderFlowOne({OrderID}) {
   const UserId = window.sessionStorage.getItem('sessionToken');
   const [subDat,setSubDat] = useState([]);
   const [flag, setFlag] = useState(0);
+  const [type,setType] = useState(0);
 
   function getSubOrder(val) {
     let suborderid = [];
@@ -39,6 +40,7 @@ export default function OrderFlowOne({OrderID}) {
     val.map(function(order){
       if(order['referenceorderid']===orderID) {
         suborderid.push(order['orderid']);
+        setType(order["orderstatus"]=="RA")
       }
     });
     console.log(suborderid);
@@ -174,7 +176,7 @@ export default function OrderFlowOne({OrderID}) {
                 console.log(dat);
                 return <SuborderTable val={dat}/>
               })}
-              <button onClick={fun} className="text-white">Submit</button>
+             {isSender==1 && <button onClick={fun} disabled={!type}  className={`${type==0 ? 'bg-gray-400 text-white' : 'bg-orange-500 text-white'}`}>Hand Shake</button>}
 						</div>
 					</div>
 				</div>
