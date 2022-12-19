@@ -14,8 +14,8 @@
     grid-template-rows: repeat(3, 1fr);
     grid-column-gap: 0px;
     grid-row-gap: 0px;
-    height: 100%;
-    /* overflow-y: scroll; */
+    height: 150vh;
+    overflow-y: scroll;
     overflow-x: visible;
 
 }   
@@ -33,7 +33,7 @@
 
 
 .myCardSample{
-    height: 385px;
+    /* height: 385px; */
     width: 458px !important;
     background-color: var(--background-secondary);
     box-shadow: 0px 7px 60px rgba(0, 0, 0, 0.05);
@@ -52,13 +52,42 @@
 
 .myCardSample select{
     width: 372px;
-height: 41px;
-font-size: 16px;
-margin-left: auto;
-margin-right: auto;
-margin-top: 10px;
-border: 1px solid rgba(0, 0, 0, 0.28);
+    height: 41px;
+    font-size: 16px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.28);
 }
+.myCardSampleHome{
+    height: 385px;
+    width: 458px !important;
+    background-color: var(--background-secondary);
+    box-shadow: 0px 7px 60px rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    padding: 15px 30px;
+    text-align: left !important;
+    margin-top: 25px;
+}
+
+.myCardSampleHome .card_title{
+    font-style: normal;
+    font-weight: 500;
+    font-size: 17.2741px;
+}
+
+
+.myCardSampleHome select{
+    width: 372px;
+    height: 41px;
+    font-size: 16px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.28);
+}
+
+
 
 .myCardSampleHover{
     height: 385px;

@@ -108,7 +108,7 @@ function EditUser(props) {
 
   async function modUser() {
 
-    console.log("HELLOOOOOOo")
+    // console.log("HELLOOOOOOo")
     console.log(userID)
     if (ValidateEmail(document.getElementById("formUserEmail").value) == false) {
       document.getElementById("formUserEmail").value = ''
@@ -187,7 +187,7 @@ function EditUser(props) {
             <button
               className="flex justify-center rounded-full aspect-square "
               onClick={() => {
-                // navigate('/session/usermanagement')
+                // window.location.pathname = "/session/usermanagement"
                 window.location.reload()
               }}
               style={{ "background": "#84587C", color: "white" }}

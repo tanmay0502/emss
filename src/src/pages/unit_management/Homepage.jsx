@@ -96,62 +96,57 @@ export default function HomePage() {
                 let flcVT = 0;
                 data.map(function(val){
                     if(val.unit_type==='CU') {
-                        val.unit_list.map(function(v){
-                            cuDat.push({
-                                modelId: v[0],
-                                modelStatus: v[1],
-                                modelType: v[2],
-                                model_Id: v[3]
-                            });
-                        }); 
+                        cuDat.push({
+                            modelId: val.unit_type,
+                            modelStatus: val.status,
+                            modelType: val.model
+                            // model_Id: v[3]
+                        });
+                        
                     }
                     else if(val.unit_type==='BU') {
-                        val.unit_list.map(function(v){
-                            buDat.push({
-                                modelId: v[0],
-                                modelStatus: v[1],
-                                modelType: v[2],
-                                model_Id: v[3]
-                            });
-                        }); 
+                        
+                        buDat.push({
+                            modelId: val.unit_type,
+                            modelStatus: val.status,
+                            modelType: val.model
+                            // model_Id: v[3]
+                        });
+                        
                     }
                     else if(val.unit_type==='VT') {
-                        val.unit_list.map(function(v){
-                            vtDat.push({
-                                modelId: v[0],
-                                modelStatus: v[1],
-                                modelType: v[2],
-                                model_Id: v[3]
-                            });
-                        }); 
+                    
+                        vtDat.push({
+                            modelId: val.unit_type,
+                            modelStatus: val.status,
+                            modelType: val.model
+                            // model_Id: v[3]
+                        });
+                      
                     }
                 });
-
                 data.map(function(val){
                     let k = 0;
                     sDat.map(function(v){
                         if(v.status===val.status) {
                             k = 1;
-                            val.unit_list.map(function(o){
-                                v.type.push({
-                                    modelId: o[0],
-                                    modelStatus: o[1],
-                                    modelType: o[2],
-                                    model_Id: o[3]
-                                });
+                            v.type.push({
+                                modelId: val.unit_type,
+                                modelStatus: val.status,
+                                modelType: val.model
+                                // model_Id: v[3]
                             });
                         }
                     });
                     if(k==0) {
                         let T = [];
-                        val.unit_list.map(function(o){
-                            T.push({
-                                modelId: o[0],
-                                modelStatus: o[1],
-                                modelType: o[2],
-                                model_Id: o[3]
-                            });
+                        T.push({
+                            modelId: val.unit_type,
+                            modelStatus: val.status,
+                            modelType: val.model
+                            // model_Id: v[3]
                         });
+                        
                         sDat.push({
                             status: val.status,
                             type: T
@@ -288,7 +283,7 @@ export default function HomePage() {
                         })
                     }
                 }
-                // console.log(finalData)
+                console.log(finalData)
                 
                 let statusData = [];
                 for (let i = 0; i < data.length; i++) {
@@ -311,6 +306,7 @@ export default function HomePage() {
                         })
                     }
                 }
+                console.log("jaadu",data);
                 for (let i = 0; i < data.length; i++) {
                     let ele = data[i];
                     for (let j = 0; j < statusData.length; j++) {
@@ -330,10 +326,10 @@ export default function HomePage() {
                                 }
                             }
                             statusData[j].unitList.push({
-                                modelId : data[i].unit_list[0],
-                                modelStatus: data[i].unit_list[1],
-                                modelType: data[i].unit_list[2],
-                                model_Id: data[i].unit_list[3]
+                                modelId : data[i].unit_type,
+                                modelStatus: data[i].status,
+                                modelType: data[i].model
+                                // model_Id: data[i].unit_list[3]
                             });
                             if (!found) {
                                 let temp = {
@@ -559,7 +555,7 @@ export default function HomePage() {
 
         <div className={styles.parent}>
             <div className={styles.parent3}>
-                <div className={styles.myCardSample}>
+                <div className={styles.myCardSampleHome}>
                     <div className={styles.s}>
                         <span>State Wise Unit Count</span>
                     </div>
@@ -962,6 +958,7 @@ export default function HomePage() {
                         </li>
                     </div>
                 </div>
+                <div className="pb-10">
                 <div className={styles.myCardSampleHover} onClick={()=>{navigate(`/session/unitmanagement/schedule_varification_list`)}}>
                     <div className={styles.card_title}>
                         <span>Physical Verification</span>
@@ -1022,6 +1019,7 @@ export default function HomePage() {
                             </span>
                         </li>
                     </div>
+                </div>
                 </div>
             </div>
 
