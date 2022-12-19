@@ -33,25 +33,39 @@ export default function HomePage() {
     const [flcOkCountVT,setFlcOkCountVT] = useState(0);
     const [startDate,setStartDate] = useState("");
     const [endDate,setEndDate] = useState("");
+    const [data,setData] = useState([]);
     const navigate = useNavigate();
+
+    useEffect(()=>{
+        const getData = async()=>{
+            try {
+                const ID = window.sessionStorage.getItem('sessionToken');
+                const response = await fetch(
+            uri+ID,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials:'include'
+            }
+            );
+            let data2 = await response.json();
+            console.log("/unit/total_counts", data2.data);
+            if (data2.data.length) {
+                console.log("data updated")
+                setData(data2.data);
+            }
+        } catch (err) {
+            console.log(err)
+        }
+        }
+        getData()
+    },[])
 
     useEffect(()=>{
         let getData = async () => {
             try {
-                const ID = window.sessionStorage.getItem('sessionToken');
-                const response = await fetch(
-                uri+ID,
-                {
-                  method: "GET",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  credentials:'include'
-                }
-              );
-                let data2 = await response.json();
-                console.log("Data fetched", data2);
-                let data = data2['data'];
                 const response2 = await fetch(
                     uri2,
                     {
@@ -283,7 +297,7 @@ export default function HomePage() {
                         })
                     }
                 }
-                console.log(finalData)
+                console.log("Final data displayed",finalData)
                 
                 let statusData = [];
                 for (let i = 0; i < data.length; i++) {
@@ -409,7 +423,7 @@ export default function HomePage() {
           }
           console.log(getData());
         
-        },[])       
+        },[data])       
 
     let dataByStatus = statusData;
     let dataByUnitType = unitData;
