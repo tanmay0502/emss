@@ -253,7 +253,7 @@ function WarehouseList() {
 					<div className='label d-flex d-flex-center'><span><FaKey className='keyColor' /></span> Double Lock Absent</div>
 				</div>
 				{isDetail == 0 ? <div style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between" }}>
-					<h4>Dependent Warehouses</h4>
+					<h4>Associated Warehouses</h4>
 					<div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center" }}>
 						<button className='createUserBtn' onClick={() => {
 							navigate("/session/warehousemanagement/addwarehouse")

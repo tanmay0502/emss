@@ -49,6 +49,7 @@ import HomePageUnit from './pages/unit_management/Homepage';
 import Announce_Flc from './pages/unit_management/announce_flc'
 import FillDemand from './pages/order_management/FillDemand';
 import FillAvailability from './pages/order_management/FillAvailability';
+import Usermanual from './components/Usermanual';
 function App() {
 
   const [sessionState, setSessionState] = useState({
@@ -70,6 +71,11 @@ function App() {
               <Login Session={sessionState} SetSession={setSessionState} />
             }
           />
+          <Route
+            path="/usermanual"
+            element={<Usermanual />}
+          />
+
           <Route path="/session/" element={<Routed Session={sessionState} SetSession={setSessionState} />}>
             <Route path="/session/home" element={<Home1 />} />{" "}
             Dashboard Component goes here

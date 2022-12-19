@@ -1,6 +1,15 @@
 import React from "react";
 import { useState } from "react";
+import Usermanual from "./Usermanual";
+import { Outlet, useNavigate, useLocation } from 'react-router-dom'
+
+
+
 const Footer = (props) => {
+
+  const navigate = useNavigate()
+
+
     const mystyle={
         fontFamily: 'Nunito Sans',
         fontStyle: "normal",
@@ -21,7 +30,10 @@ const Footer = (props) => {
       </div>
       <div className="w-full">
         <h2 style={mystyle} className="mt-3 text-center">
-          <a href="" className="text-white">
+          <a  className='text-white'
+          onClick={() => {
+            navigate("/usermanual")
+          }}>
             User Manual
           </a>{" "}
           |{" "}
@@ -33,13 +45,13 @@ const Footer = (props) => {
             About EMS
           </a>{" "}
           |{" "}
-          <a href="" className="text-white">
+          <a href="http://localhost:8100/static/tnc.pdf" className="text-white">
             Terms & Conditions
           </a>
         </h2>
         <br></br>
         <h2 style={mystyle} className="-mt-4 text-center ">
-          <a href="" className="text-white">
+          <a href="http://localhost:8100/static/Privacy_Policy.pdf" className="text-white">
             Privacy Policy
           </a>{" "}
           |{" "}
