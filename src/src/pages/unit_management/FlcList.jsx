@@ -27,20 +27,19 @@ export default function FLCList() {
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    credentials: 'same-origin',
-                    mode: "cors"
+                    credentials: 'include'
                 }
             );
             const data = await response.json();
+            console.log("Flc data",data)
 
-            if (response.status == 200) {
+            if (data.length) {
                 setFlc(data)
             }
         } catch (err) {
             console.log({ err });
         }
     }
-    console.log(flc, "I am flc")
 
     useEffect(() => {
         if (flc) {
