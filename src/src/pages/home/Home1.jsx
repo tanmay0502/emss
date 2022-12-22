@@ -57,10 +57,11 @@ function Home1() {
 
 	useEffect(()=>{
 		if(stateID!="IN"){
-			setIndiaMap(0);
-			setSTName(statesCode.find(e=>e.code==stateID).state)
-		}
-		if (stateID==="IN") {
+			if (statesCode.find(e=>e.code==stateID)) {
+				setIndiaMap(0);
+				setSTName(statesCode.find(e=>e.code==stateID).state)
+			}
+		} else {
 			setIndiaMap(1)
 		}
 	},[stateID])
@@ -206,8 +207,7 @@ function Home1() {
 				headers: {
 					"Content-Type": "application/json",
 				},
-				credentials: 'same-origin',
-				mode: "cors",
+				credentials: 'include',
 			}
 		);
 
