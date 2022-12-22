@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styles2 from './styles/suborder.module.css'
 import SuborderTable from './SuborderTable';
 
-export default function OrderFlowOne({OrderID}) {
+export default function OrderFlowOne({OrderID,isSender}) {
   
   const id=OrderID
   let orderID="";
