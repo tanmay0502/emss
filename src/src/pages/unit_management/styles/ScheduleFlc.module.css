@@ -4,7 +4,7 @@
   grid-template-rows: 1fr;
   grid-column-gap: 90px;
   grid-row-gap: 0px;
-  width: 50%;
+  width: 100%;
   padding-top: 50px;
   margin-left:25%
 }

@@ -14,7 +14,8 @@
     grid-template-rows: repeat(3, 1fr);
     grid-column-gap: 0px;
     grid-row-gap: 0px;
-    height: 150vh;
+    height: calc(100vh - 120px);
+    padding-bottom: 2%;
     overflow-y: scroll;
     overflow-x: visible;
 
@@ -27,8 +28,8 @@
     grid-column-gap: 2%;
     grid-row-gap: 2%;
     height: 100%;
-    /* overflow-y: scroll; */
-    overflow-x: visible;
+    overflow-y: visible;
+    overflow-x: scroll;
 }    
 
 

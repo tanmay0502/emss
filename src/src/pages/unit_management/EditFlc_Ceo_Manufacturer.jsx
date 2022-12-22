@@ -422,12 +422,12 @@ function EditFlc_Ceo_Manufacturer(props) {
             <form id="form" onSubmit={onFormSubmit}>
                 <div className={scheduleStyles.Schedule_container}>
                     <div className={scheduleStyles.Schedule_header}>
-                    
+
                         <h4>
                             Schedule FLC
                         </h4>
-                    
-                    {Role == 'CEO' && edit == false && <button className={scheduleStyles.editBtn} onClick={(e) => { edit == true ? setEdit(false) : setEdit(true) }}> Edit </button>}
+
+                        {Role == 'CEO' && edit == false && <button className={scheduleStyles.editBtn} onClick={(e) => { edit == true ? setEdit(false) : setEdit(true) }}> Edit </button>}
                     </div>
                     <div class={scheduleStyles.parent}>
 
@@ -696,8 +696,8 @@ function EditFlc_Ceo_Manufacturer(props) {
                         >
                             <div id="root" className=''>
                                 <div className='flex justify-center items-center'>
-                                    {console.log("Name: " ,photoFileName)}
-                                    {console.log("DATA: " ,photoFileData["data"])}
+                                    {console.log("Name: ", photoFileName)}
+                                    {console.log("DATA: ", photoFileData["data"])}
                                     {/* {<embed style={{ width: "600px", height: "600px", padding: "10px" }} src={``} />} */}
                                     {photoFileData["data"] && <embed style={{ width: "1000px", height: "800px", padding: "10px" }} src={`${photoFileData["data"]}`} />}
                                 </div>
@@ -779,11 +779,11 @@ function EditFlc_Ceo_Manufacturer(props) {
                                                             onChange={(e) => handleInputChange_Assigned_Engineer_email(e, id)}
                                                             disabled={manufacture_edit === true ? false : true}
                                                         />
-                                                        
+
                                                     </td>
-                                                    
+
                                                     {manufacture_edit == true && <td className="text-black text-sm" onClick={() => handleRemoveClick_Assigned_Engineer(id)}>{row12['']}</td>}
-                                                
+
                                                 </tr>
                                             </tbody>
                                         )

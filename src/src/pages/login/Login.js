@@ -153,10 +153,10 @@ const Login = () => {
 				if (key != undefined) {
 					pccode = pwpcode;
 				}
-				console.log(pwpcode,pccode)
+				console.log(pwpcode, pccode)
 
 				if (getKeyByValue(PCs, pccode) !== undefined) {
-					console.log("lkk",key);
+					console.log("lkk", key);
 					if (document.getElementById("pcDropdown")) {
 						console.log("l", PCs[pccode]);
 						document.getElementById("pcDropdown").value =
@@ -210,7 +210,7 @@ const Login = () => {
 					document.getElementById("acDropdown").value = "0";
 
 
-					
+
 
 
 			}
@@ -298,8 +298,8 @@ const Login = () => {
 				);
 				const data2 = await response.json();
 				console.log(data2);
-				console.log(userID,userID.substring(2,5)=="000")
-				
+				console.log(userID, userID.substring(2, 5) == "000")
+
 				if (userID.length != 0) {
 					if (data2["status"] == 502) {
 						setPCs({});
@@ -307,14 +307,14 @@ const Login = () => {
 					else {
 						setPCs(data2["districts"]);
 					}
-				
-			}
+
+				}
 
 			} catch (err) {
 				console.log(err);
 				setPCs({});
 			}
-			setPCs(prevState => ({ ...prevState, "None": "000"}));
+			setPCs(prevState => ({ ...prevState, "None": "000" }));
 
 
 			if (changeUserID) {
@@ -326,7 +326,7 @@ const Login = () => {
 		}
 	}
 	async function setPCFunc(st, changeUserID = true) {
-		console.log(st,PCs[st])
+		console.log(st, PCs[st])
 		// setPC(PCs[st]);
 		if (state !== "Select:") {
 			if (0) {
@@ -345,8 +345,8 @@ const Login = () => {
 					const data2 = await response.json();
 					console.log("ACs");
 					console.log(data2);
-					console.log(userID,userID.substring(5,8)=="000")
-				
+					console.log(userID, userID.substring(5, 8) == "000")
+
 					if (userID.length != 0) {
 
 						if (data2["status"] == 502) {
@@ -355,14 +355,14 @@ const Login = () => {
 						else {
 							setACs(data2["acs"])
 						}
-					
-				}
+
+					}
 				} catch (err) {
 					console.log(err);
 					setACs({})
 				}
 
-				setACs(prevState => ({ ...prevState, "None": "000"}));
+				setACs(prevState => ({ ...prevState, "None": "000" }));
 
 			}
 			if (changeUserID) {
@@ -399,11 +399,11 @@ const Login = () => {
 			// 		document.getElementById("acDropdown").value = "000";
 			// 		setAC("000")
 			// }
-			
+
 			if (userID.length != 0) {
-				let p1=[]
-				let p2=[]
-				Object.keys(data2["roles"]).map((key)=>{
+				let p1 = []
+				let p2 = []
+				Object.keys(data2["roles"]).map((key) => {
 					p1.push(key);
 					p2.push(data2["roles"][key])
 				})
@@ -411,13 +411,13 @@ const Login = () => {
 				setRoles(p1);
 				setRolesCode(p2);
 			}
-		
+
 
 		} catch (err) {
 			console.log(err);
 		}
 		if (changeUserID) {
-			console.log(state,PC,ACs,ACs[st])
+			console.log(state, PC, ACs, ACs[st])
 			setUserID(
 				state +
 				("000" + PC).slice(-3) +
@@ -567,7 +567,7 @@ const Login = () => {
 			// 	}
 			// }
 			// textBox
-
+			console.log("hiiiiiiiiiiiiiiiiii")
 			try {
 				const response = await fetch(
 					`${process.env.REACT_APP_API_SERVER}/user/GenerateOTPRequest`,
@@ -585,14 +585,14 @@ const Login = () => {
 				const data2 = await response.json();
 				console.log(data2);
 
-				if(response.status == 200 && data2['userID']){
+				if (response.status == 200 && data2['userID']) {
 					setUserIds(data2['userID'])
 					setNonce(data2['nonce'])
 					setMobile(data2['mobilenumber'])
-					if(data2['userID'].length !== 1){
+					if (data2['userID'].length !== 1) {
 						setSelectUserBlock(1)
 					}
-					else{
+					else {
 						setSelectUserBlock(0)
 						setUserID(data2['userID'][0])
 					}
@@ -665,7 +665,7 @@ const Login = () => {
 						"Content-Type": "application/json",
 					},
 					credentials: 'include',
-					
+
 					body: JSON.stringify({
 						'mobilenumber': mobile.toString(),
 						'userid': userID.toString(),
@@ -702,9 +702,9 @@ const Login = () => {
 		}
 	}
 
-	useEffect(()=>{
+	useEffect(() => {
 		console.log(PC);
-	},[PC]);
+	}, [PC]);
 
 	return (
 		<div>
@@ -852,7 +852,7 @@ const Login = () => {
 														</option>
 													</select>
 												</div>}
-												{PCs != {} &&  (
+												{PCs != {} && (
 													<select
 														className="pl-3 pr-3 mt-7 h-13 text-black outline-none rounded-md w-full mb-5"
 														style={{ fontFamily: "nunito sans" }}
@@ -872,7 +872,7 @@ const Login = () => {
 															))}
 													</select>
 												)}
-												
+
 											</div>
 											<div className="dropdown">
 												<p
@@ -959,7 +959,7 @@ const Login = () => {
 											onClick={requestOTP}
 											type="button"
 											className="pl-3 pr-3 mt-7 h-12 outline-none rounded-md w-full text-white bg-violet-500 hover:bg-violet-600 active:bg-violet-700 focus:outline-none focus:ring focus:ring-violet-300"
-											
+
 										>
 											Request OTP
 										</button>

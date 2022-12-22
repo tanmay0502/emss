@@ -37,7 +37,7 @@ function Second_Randomisation_Scheduling() {
         console.log(time, document.getElementById("enddate") ? document.getElementById("enddate").value + " " + time : "")
         try {
             const response = await fetch(
-                `${process.env.REACT_APP_API_SERVER}/unit/scheduleSecondRandomization`,
+                `${process.env.REACT_APP_API_SERVER}/unit/schedule-second-randomization`,
                 {
                     method: "POST",
                     headers: {

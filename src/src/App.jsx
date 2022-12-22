@@ -42,6 +42,9 @@ import ScheduleCDP from './pages/unit_management/ScheduleCDP';
 import First_Randomisation_Scheduling from './pages/unit_management/first_Randomisation_Scheduling'
 import Second_Randomisation_Scheduling from './pages/unit_management/second_Randomisation_Scheduling'
 
+import FirstRandomization from './pages/unit_management/FirstRandomization';
+import SecondRandomization from './pages/unit_management/SecondRandomization';
+
 import EditFLC from './pages/unit_management/EditFlc'
 import EditTna from './pages/unit_management/EditTna';
 import EditElection from './pages/unit_management/EditElection';
@@ -109,7 +112,6 @@ function App() {
               path="/session/unitmanagement/"
               element={<HomePageUnit />}
             />
-
             <Route
               path="/session/unitmanagement/unitlist"
               element={<UnitList />}
@@ -129,6 +131,14 @@ function App() {
             <Route
               path="/session/unitmanagement/second_randomisation_scheduling"
               element={<Second_Randomisation_Scheduling />}
+            />
+            <Route
+              path="/session/unitmanagement/firstrandomization"
+              element={<FirstRandomization />}
+            />
+            <Route
+              path="/session/unitmanagement/secondrandomization"
+              element={<SecondRandomization />}
             />
             <Route
               path="/session/unitmanagement/schedule_list"
@@ -187,8 +197,6 @@ function App() {
               path="/session/unitmanagement/Schedule_List_CDP"
               element={<Schedule_List_CDP />}
             />
-
-
             <Route
               path="/session/warehousemanagement/"
               element={<WarehouseManagement />}
