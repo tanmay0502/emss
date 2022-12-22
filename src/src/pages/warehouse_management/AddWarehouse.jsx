@@ -272,7 +272,7 @@ export default function AddWarehouse() {
 
   function validate(ID) {
 
-    if (/^[A-Z]{2}[0-9]{6}[A-Z]{3,10}$/.test(ID)) {
+    if (/^[A-Z]{5}[0-9]{3}[A-Z]{3,10}$/.test(ID)) {
       return (true)
     }
     alert("You have entered invalid UserId!")

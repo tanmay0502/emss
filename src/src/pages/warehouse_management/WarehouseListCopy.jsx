@@ -161,7 +161,15 @@ function WarehouseList() {
 				// 	"inactive": "Temporary"
 				// }
 				// }/>,
-				"Status": val['status']
+				"Status": <ToggleButton warehouseID={val["warehouseid"]} checked={val["status"] == 'A'} onToggle={(e) => {
+					if (val["status"] == "A") {
+						DectivateWarehouse(val["warehouseid"])
+					}
+					else {
+						ActivateWarehouse(val["warehouseid"])
+					}
+					console.log(val["warehouseid"])
+				}}/>
 			}
 		})
 		data.sort(function (a, b) {
@@ -187,12 +195,16 @@ function WarehouseList() {
 			try {
 
 				const response = await fetch(
-					`${process.env.REACT_APP_API_SERVER}/warehouse/activateWarehouse/${myId}`,
+					`${process.env.REACT_APP_API_SERVER}/warehouse/activateWarehouse`,
 					{
 						method: "POST",
 						headers: {
 							"Content-Type": "application/json",
-						}
+						},
+						credentials: "include",
+						body: JSON.stringify({
+							"warehouseID": myId
+						})
 					}
 				)
 
@@ -217,12 +229,16 @@ function WarehouseList() {
 			try {
 
 				const response = await fetch(
-					`${process.env.REACT_APP_API_SERVER}/warehouse/deactivateWarehouse/${myId}`,
+					`${process.env.REACT_APP_API_SERVER}/warehouse/deactivateWarehouse/`,
 					{
 						method: "POST",
 						headers: {
 							"Content-Type": "application/json",
-						}
+						},
+						credentials: "include",
+						body: JSON.stringify({
+							"warehouseID": myId
+						})
 					}
 				)
 
