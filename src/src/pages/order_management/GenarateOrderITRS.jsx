@@ -18,8 +18,10 @@ export default function GenarateOrderITRS() {
   const [total_VVPAT_M3, setTotal_VVPAT_M3] = useState(0)
   const [photoFileName, setPhotoFileName] = useState("")
   const [photoFileData, setPhotoFileData] = useState("")
+  const [availableUnits, setAvailableUnits] = useState([])
   const [flag, setflag] = useState(0);
   const [modalIsOpen, setIsOpen] = React.useState(false);
+  
 
   function openModal() {
     setIsOpen(true);
@@ -70,12 +72,39 @@ export default function GenarateOrderITRS() {
       console.log({ err });
     }
   }
-
+  
   if (flag == 0) {
     if (photoFileName) {
       getcertificate();
     }
   }
+  
+  useEffect(()=>{
+    const getUnits = async ()=>{
+      try {
+        const ID = window.sessionStorage.getItem('sessionToken');
+        console.log(ID)
+        const response = await fetch(
+          `${process.env.REACT_APP_API_SERVER}/unit/available_units/?oprnd=${ID}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: 'include'
+          }
+        );
+        const data = await response.json();
+        console.log("/unit/available_units/",data);
+        if (data.data.length) {
+          setAvailableUnits(data.data);
+        }
+      } catch (err) {
+        console.log({ err });
+      }
+    }
+    getUnits()
+  },[])
 
   const sampleBody = {
     "type": orderType,
@@ -326,10 +355,11 @@ export default function GenarateOrderITRS() {
               <div className="border rounded-md p-3">
                 <table className="w-full">
                   <tr>
-                    <th className="font-normal w-1/4">Type</th>
-                    <th className="font-normal w-1/4">Quantity</th>
-                    <th className="font-normal w-1/4">Model</th>
-                    <th className="font-normal w-1/4">Manufacturer</th>
+                    <th className="font-normal w-1/5">Type</th>
+                    <th className="font-normal w-1/5">Model</th>
+                    <th className="font-normal w-1/5">Manufacturer</th>
+                    <th className="font-normal w-1/5">Quantity</th>
+                    <th className="font-normal w-1/5">Available</th>
                   </tr>
                   <br />
 
@@ -353,17 +383,6 @@ export default function GenarateOrderITRS() {
                           <option value="VVPAT">VVPAT</option>
                         </select></td>
                         <td>
-                        <input type="number" placeholder="No of Units" className=" mb-2" style={{height:"46px"}}
-
-                            onChange={(e) => {
-                              setBody((prev)=>{
-                                prev.details[ind].unitDetails[ind2].itemquantity = e.target.value;
-                                return prev;
-                              })
-                              setUpdate((prev)=>{return (prev+1)%10});
-                            }} required></input>
-                        </td>
-                        <td>
                           <select className="border p-2 mb-2"
                             required
                             onChange={(e) => {
@@ -382,7 +401,7 @@ export default function GenarateOrderITRS() {
                           </select>
                         </td>
                         <td>
-                          <select className="border p-2 mb-2 ml-3 mr-7"
+                          <select className="border p-2 mb-2"
                             required
                             onChange={(e) => {
                               setBody((prev)=>{
@@ -399,6 +418,48 @@ export default function GenarateOrderITRS() {
                             <option value="BEL">BEL</option>
                           </select>
                         </td>
+                        <td>
+                          <input type="number" placeholder="No of Unit" className="w-2/3 p-2 rounded-lg border mb-2"
+                            onChange={(e) => {
+                              setBody((prev)=>{
+                                prev.details[ind].unitDetails[ind2].itemquantity = e.target.value;
+                                return prev;
+                              })
+                              setUpdate((prev)=>{return (prev+1)%10});
+                            }} required></input>
+                        </td>
+                        <td>
+                          {[0].map(()=>{
+                            let sum = 0;
+                            const dict = {
+                              "B": "BEL",
+                              "E": "ECIL",
+                              "BU": "BU",
+                              "CU": "CU",
+                              "VT": "VVPAT",
+                            }
+                            for (let i = 0; i < availableUnits.length; i++) {
+                              const e = availableUnits[i];
+                              if (dict[e.unit_type] === val.item && dict[e.manufacturer] === val.manufacturer && e.model === val.itemmodel) {
+                                sum+=e.count;
+                              }
+                            }
+                            if(parseInt(val.itemquantity)){
+                              sum-=parseInt(val.itemquantity)
+                            }
+                            return <div>{sum}</div>;
+                          })}
+                        </td>
+                        <div className='mt-2'><button type="button" className="text-white bg-red-600 p-1 text-2xl w-8 h-8 -mt-5 " style={{ borderRadius: "50%" }}
+                        onClick={()=>{
+                            setBody((prev)=>{
+                                let temp = prev.details[ind].unitDetails.filter((e)=>e!=val);
+                                prev.details[ind].unitDetails = temp;
+                                return prev;
+                            })
+                            setUpdate((prev)=>{return (prev+1)%10});
+                        }}
+                        > -</button></div>
                       </tr>
                     ))
                   }
@@ -411,20 +472,33 @@ export default function GenarateOrderITRS() {
                       "manufacturer": "",
                       "itemquantity": 0
                     }
-                    console.log("add", prev.details[ind].unitDetails[prev.details[ind].unitDetails.length - 1].itemquantity)
-                    if (prev.details[ind].unitDetails[prev.details[ind].unitDetails.length - 1].itemquantity === 0) {
-                      return prev;
+                    let n = prev.details[ind].unitDetails.length;
+                    if (n) {
+                      if(prev.details[ind].unitDetails[n-1].itemquantity){
+                        prev.details[ind].unitDetails.push(temp)
+                      }
+                    } else {
+                      prev.details[ind].unitDetails.push(temp)
                     }
-                    const newBody = { ...prev };
-                    prev.details[ind].unitDetails.push(temp)
-                    return newBody;
+                    return prev;
                   })
+                  setUpdate((prev)=>{return (prev+1)%10});
                 }} className="bg-orange-600 text-white  p-3  " >Add row</button></div>
               </div>
+              <div className='flex justify-end mt-1'>
+                    <button type="button" className="text-white bg-red-600 p-1 text-2xl w-10 h-10 -mt-5 " style={{ borderRadius: "50%" }}onClick={()=>{
+                    setBody((prev)=>{
+                        prev.details = prev.details.filter((ele)=>ele!=val);
+                        return prev;
+                    })
+                    setUpdate((prev)=>{return (prev+1)%10});
+                }}> -</button>
+                </div>
             </div>
           ))}
 
-          <div className="flex justify-end"><button onClick={() => {
+            <div className="flex justify-end">
+            <button onClick={() => {
             setBody((prev) => {
               let temp = {
                 "source": "",
@@ -438,20 +512,22 @@ export default function GenarateOrderITRS() {
                   }
                 ]
               }
-              if (prev.details[prev.details.length - 1].destination === "") {
-                return prev;
+              let n = prev.details.length;
+              if (n) {
+                if(prev.details[n-1].source&&prev.details[n-1].destination){
+                  prev.details.push(temp)
+                }
+              } else {
+                prev.details.push(temp)
               }
-              const newBody = { ...prev };
-              newBody.details.push(temp)
-              return newBody;
+              return prev;
             })
+            setUpdate((prev)=>{return (prev+1)%10});
           }} type="button" className="text-white bg-orange-600 p-1 text-2xl w-10 h-10 -mt-5 " style={{ borderRadius: "50%" }}> +</button></div>
         </div>
         <div className="w-2/5">
           <div className="bg-white p-6 rounded-lg shadow-lg mt-2 w-full m-4 ">
             <p className="text-left font-semibold">Recent Orders</p>
-
-
             <div className="flex mt-2">
               <div className="w-5"><div className="h-2 w-2 rounded-full mt-1" style={{ backgroundColor: "#84587C" }}></div></div>
               <p className="w-4/6 text-left">First Randomisation completed in district - Bhind, Gwalior, Indor and Bhopal</p>
