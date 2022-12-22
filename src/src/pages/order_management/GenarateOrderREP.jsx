@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ReactComponent as CreateIssueIcon } from "../../assets/create_issue_request.svg";
 import { useParams } from "react-router-dom";
-import "./styles/generateOrder.css";
-import UnitTraker from "./UnitTracker";
 import Modal from 'react-modal';
 
 export default function GenarateOrderREP() {
@@ -166,7 +164,7 @@ if (flag == 0) {
         }
       );
       const data2 = await response.json();
-      console.log("Data fetched",data2)
+      console.log(data2)
       setStates(data2["state"]);
     } catch (err) {
       console.log(err);
@@ -177,11 +175,53 @@ if (flag == 0) {
     if (isPageLoaded == 0) {
       getState();
       setIsPageLoaded(1);
-
     }
   })
 
-  const[manufacturer, setManufacturer] = useState("");
+
+  const[manufacturer, setManufacturer] = useState("select");
+
+  function kk(){
+    console.log("kdkd")
+  }
+
+  useEffect(()=>{
+    console.log("manu",manufacturer)
+  },[manufacturer])
+
+  const [update, setUpdate] = useState(0);
+  useEffect(() => {
+    setTotal_BU_M2(0);
+    setTotal_BU_M3(0);
+    setTotal_CU_M2(0);
+    setTotal_CU_M3(0);
+    setTotal_VVPAT_M2(0);
+    setTotal_VVPAT_M3(0);
+    for (let i = 0; i < body.details.length; i++) {
+      const ele = body.details[i];
+      for (let j = 0; j < ele.unitDetails.length; j++) {
+        const e = ele.unitDetails[j];
+        if (e.item === "BU" && e.itemmodel === "M2") {
+          setTotal_BU_M2(prev=>prev+=parseInt(e.itemquantity));
+        }
+        if (e.item === "BU" && e.itemmodel === "M3") {
+          setTotal_BU_M3(prev=>prev+=parseInt(e.itemquantity));
+        }
+        if (e.item === "CU" && e.itemmodel === "M2") {
+          setTotal_CU_M2(prev=>prev+=parseInt(e.itemquantity));
+        }
+        if (e.item === "CU" && e.itemmodel === "M3") {
+          setTotal_CU_M3(prev=>prev+=parseInt(e.itemquantity));
+        }
+        if (e.item === "VVPAT" && e.itemmodel === "M2") {
+          setTotal_VVPAT_M2(prev=>prev+=parseInt(e.itemquantity));
+        }
+        if (e.item === "VVPAT" && e.itemmodel === "M3") {
+          setTotal_VVPAT_M3(prev=>prev+=parseInt(e.itemquantity));
+        }
+      }
+    }
+  },[update])
 
   return (
     <div className="p-3">
@@ -222,15 +262,17 @@ if (flag == 0) {
                       className="w-5/6 h-10 p-2 border rounded-md "
                       placeholder="Type"
                       required
+                      onChange={(e)=>{
+                        setBody((prevBody)=>{
+                          prevBody.details[ind].source=e.target.value;
+                          setManufacturer(e.target.value);
+                          return(prevBody);
+                        })
+                      }}
                     >
                       <option>Select</option>
                       {["ECIL", "BEL"].map((val) => (
-                          <option value={val} className="text-black" onClick={()=>{
-                            let prevBody=body;
-                            prevBody.details[ind].source=val;
-                            setBody(prevBody);
-                            setManufacturer(val)
-                          }}>
+                          <option value={val} className="text-black" >
                             {val}
                           </option>
                         ))}
@@ -249,17 +291,19 @@ if (flag == 0) {
                         className="h-10 p-2 border rounded-md"
                         placeholder="Type"
                         required
+                        onChange={(e) => {
+                          setBody((prevBody) => {
+                            prevBody.details[ind].destination = e.target.value;
+                            return (prevBody);
+                          })
+                        }}
 
                       >
                         {" "}
                         <option>Select</option>
                         {states &&
                           states.map((st) => (
-                            <option value={st} className="text-black" onClick={()=>{
-                              let prevBody=body;
-                              prevBody.details[ind].destination=st;
-                              setBody(prevBody);
-                            }}>
+                            <option value={st} className="text-black">
                               {st}
                             </option>
                           ))}
@@ -289,41 +333,40 @@ if (flag == 0) {
                       <tr className="border-b-2 ">
                         <td><select className="border p-2 mb-2"
                           required
+                          onChange={(e) => {
+                            setBody((prevBody) => {
+                              prevBody.details[ind].unitDetails[ind2].item = e.target.value;
+                              return (prevBody);
+                            })
+                            setUpdate((prev)=>{return (prev+1)%10});
+                          }}
                         >
                           <option
                           >select</option>
-                          <option value="BU"onClick={()=>{
-                            let prevBody=body;
-                            prevBody.details[ind].unitDetails[ind2].item="BU";
-                            setBody(prevBody);
-                          }}>BU</option>
-                          <option value="CU"onClick={()=>{
-                            let prevBody=body;
-                            prevBody.details[ind].unitDetails[ind2].item="CU";
-                            setBody(prevBody);
-                          }}>CU</option>
-                          <option value="VVPAT"onClick={()=>{
-                            let prevBody=body;
-                            prevBody.details[ind].unitDetails[ind2].item="VT";
-                            setBody(prevBody);
-                          }}>VVPAT</option>
+                          <option value="BU">BU</option>
+                          <option value="CU">CU</option>
+                          <option value="VVPAT">VVPAT</option>
                         </select></td>
                         <td>
-                          <input type="number" placeholder="No of Unit" className=" w-2/3 p-2 rounded-lg border mb-2" 
-                          onChange={(e)=>{
-                            let prevBody=body;
-                            prevBody.details[ind].unitDetails[ind2].itemquantity=e.target.value;
-                            setBody(prevBody);
-                          }} required></input>
+                          <input type="number" placeholder="No of Unit" className=" mb-2" style={{height:"46px"}}
+                           onChange={(e) => {
+                              setBody((prev)=>{
+                                prev.details[ind].unitDetails[ind2].itemquantity = e.target.value;
+                                return prev;
+                              })
+                              setUpdate((prev)=>{return (prev+1)%10});
+                            }} required></input>
                         </td>
                         <td>
                           <select className="border p-2 mb-2"
                             required
-                            onChange={(e)=>{
-                              let prevBody=body;
-                              prevBody.details[ind].unitDetails[ind2].itemmodel=e.target.value;
-                              prevBody.details[ind].unitDetails[ind2].manufacturer=manufacturer;
-                              setBody(prevBody);
+                            onChange={(e) => {
+                              setBody((prev)=>{
+                                prev.details[ind].unitDetails[ind2].itemmodel = e.target.value;
+                                prev.details[ind].unitDetails[ind2].manufacturer = prev.details[ind].source;
+                                return prev;
+                              })
+                              setUpdate((prev)=>{return (prev+1)%10});
                             }}
 
                           >
@@ -336,8 +379,7 @@ if (flag == 0) {
                         <td>
                           <select className="border p-2 mb-2 ml-3 mr-7"
                             required>
-                            <option
-                            >{manufacturer}</option>
+                            <option value={manufacturer}>{manufacturer}</option>
                           </select>
                         </td>
                       </tr>
@@ -413,8 +455,100 @@ if (flag == 0) {
               <p className="w-2/6 text-right text-sm text-gray-400">3hrs ago</p>
             </div>
             <hr />
+
+
           </div>
-          <UnitTraker body={body}/>
+          <div className="bg-white p-6 rounded-lg shadow-lg mt-2 w-full m-4 ">
+            <p className=" text-lg font-semibold text-center">Unit Tracker</p>
+
+            <div className="rounded-lg shadow-md mt-5 bg-white">
+              <div
+                className="rounded-t-lg p-2 text-left "
+                style={{ backgroundColor: "#84587C" }}
+              >
+                <span className="text-white text-lg ml-5">Ballot Units</span>
+              </div>
+              <div className="p-2">
+                <table className="w-full mt-4 ">
+                  <tr className="text-red-400 border-b-2 ">
+                    <td className="">Model</td>
+                    <td>Quantity</td>
+                  </tr>
+                  <br />
+                  <tr className=" border-b-2 ">
+                    <td>M2</td>
+                    <td>{total_BU_M2}</td>
+                  </tr>
+                  <br />
+                  <tr className=" border-b-2 ">
+                    <td>M3</td>
+                    <td>{total_BU_M3}</td>
+                  </tr>
+                  <br />
+
+                </table>
+
+              </div>
+            </div>
+            <div className="rounded-lg shadow-md mt-5 bg-white">
+              <div
+                className="rounded-t-lg p-2 text-left "
+                style={{ backgroundColor: "#84587C" }}
+              >
+                <span className="text-white text-lg ml-5">Control Units</span>
+              </div>
+              <div className="p-2">
+                <table className="w-full mt-4 ">
+                  <tr className="text-red-400 border-b-2 ">
+                    <td className="">Model</td>
+                    <td>Quantity</td>
+                  </tr>
+                  <br />
+                  <tr className=" border-b-2 ">
+                    <td>M2</td>
+                    <td>{total_CU_M2}</td>
+                  </tr>
+                  <br />
+                  <tr className=" border-b-2 ">
+                    <td>M3</td>
+                    <td>{total_CU_M3}</td>
+                  </tr>
+                  <br />
+
+                </table>
+
+              </div>
+            </div>
+            <div className="rounded-lg shadow-md mt-5 bg-white">
+              <div
+                className="rounded-t-lg p-2 text-left "
+                style={{ backgroundColor: "#84587C" }}
+              >
+                <span className="text-white text-lg ml-5">VVPAT</span>
+              </div>
+              <div className="p-2">
+                <table className="w-full mt-4 ">
+                  <tr className="text-red-400 border-b-2 ">
+                    <td className="">Model</td>
+                    <td>Quantity</td>
+                  </tr>
+                  <br />
+                  <tr className=" border-b-2 ">
+                    <td>M2</td>
+                    <td>{total_VVPAT_M2}</td>
+                  </tr>
+                  <br />
+                  <tr className=" border-b-2 ">
+                    <td>M3</td>
+                    <td>{total_VVPAT_M3}</td>
+                  </tr>
+                  <br />
+                </table>
+              </div>
+            </div>
+
+
+          </div>
         </div>
       </div>
       <button className="text-white bg-orange-600" onClick={()=>submmit()}>Submit</button>

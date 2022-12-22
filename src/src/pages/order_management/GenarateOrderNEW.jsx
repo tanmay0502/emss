@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ReactComponent as CreateIssueIcon } from "../../assets/create_issue_request.svg";
 import { useParams } from "react-router-dom";
-import "./styles/generateOrder.css";
 import Modal from 'react-modal';
 
 export default function GenarateOrderNEW() {
@@ -165,6 +164,7 @@ if (flag == 0) {
         }
       );
       const data2 = await response.json();
+      console.log(data2)
       setStates(data2["state"]);
     } catch (err) {
       console.log(err);
@@ -179,8 +179,49 @@ if (flag == 0) {
   })
 
 
-  const[manufacturer, setManufacturer] = useState("");
+  const[manufacturer, setManufacturer] = useState("select");
 
+  function kk(){
+    console.log("kdkd")
+  }
+
+  useEffect(()=>{
+    console.log("manu",manufacturer)
+  },[manufacturer])
+
+  const [update, setUpdate] = useState(0);
+  useEffect(() => {
+    setTotal_BU_M2(0);
+    setTotal_BU_M3(0);
+    setTotal_CU_M2(0);
+    setTotal_CU_M3(0);
+    setTotal_VVPAT_M2(0);
+    setTotal_VVPAT_M3(0);
+    for (let i = 0; i < body.details.length; i++) {
+      const ele = body.details[i];
+      for (let j = 0; j < ele.unitDetails.length; j++) {
+        const e = ele.unitDetails[j];
+        if (e.item === "BU" && e.itemmodel === "M2") {
+          setTotal_BU_M2(prev=>prev+=parseInt(e.itemquantity));
+        }
+        if (e.item === "BU" && e.itemmodel === "M3") {
+          setTotal_BU_M3(prev=>prev+=parseInt(e.itemquantity));
+        }
+        if (e.item === "CU" && e.itemmodel === "M2") {
+          setTotal_CU_M2(prev=>prev+=parseInt(e.itemquantity));
+        }
+        if (e.item === "CU" && e.itemmodel === "M3") {
+          setTotal_CU_M3(prev=>prev+=parseInt(e.itemquantity));
+        }
+        if (e.item === "VVPAT" && e.itemmodel === "M2") {
+          setTotal_VVPAT_M2(prev=>prev+=parseInt(e.itemquantity));
+        }
+        if (e.item === "VVPAT" && e.itemmodel === "M3") {
+          setTotal_VVPAT_M3(prev=>prev+=parseInt(e.itemquantity));
+        }
+      }
+    }
+  },[update])
 
   return (
     <div className="p-3">
@@ -221,16 +262,17 @@ if (flag == 0) {
                       className="w-5/6 h-10 p-2 border rounded-md "
                       placeholder="Type"
                       required
+                      onChange={(e)=>{
+                        setBody((prevBody)=>{
+                          prevBody.details[ind].source=e.target.value;
+                          setManufacturer(e.target.value);
+                          return(prevBody);
+                        })
+                      }}
                     >
                       <option>Select</option>
                       {["ECIL", "BEL"].map((val) => (
-                          <option value={val} className="text-black" onClick={()=>{
-                            setBody((prevBody)=>{
-                              prevBody.details[ind].source=val;
-                              setManufacturer(val);
-                              return(prevBody);
-                            })
-                          }}>
+                          <option value={val} className="text-black" >
                             {val}
                           </option>
                         ))}
@@ -249,17 +291,19 @@ if (flag == 0) {
                         className="h-10 p-2 border rounded-md"
                         placeholder="Type"
                         required
+                        onChange={(e) => {
+                          setBody((prevBody) => {
+                            prevBody.details[ind].destination = e.target.value;
+                            return (prevBody);
+                          })
+                        }}
 
                       >
                         {" "}
                         <option>Select</option>
                         {states &&
                           states.map((st) => (
-                            <option value={st} className="text-black" onClick={()=>{
-                              let prevBody=body;
-                              prevBody.details[ind].destination=st;
-                              setBody(prevBody);
-                            }}>
+                            <option value={st} className="text-black">
                               {st}
                             </option>
                           ))}
@@ -289,41 +333,40 @@ if (flag == 0) {
                       <tr className="border-b-2 ">
                         <td><select className="border p-2 mb-2"
                           required
+                          onChange={(e) => {
+                            setBody((prevBody) => {
+                              prevBody.details[ind].unitDetails[ind2].item = e.target.value;
+                              prevBody.details[ind].unitDetails[ind2].manufacturer = prevBody.details[ind].source;
+                              return (prevBody);
+                            })
+                            setUpdate((prev)=>{return (prev+1)%10});
+                          }}
                         >
                           <option
                           >select</option>
-                          <option value="BU"onClick={()=>{
-                            let prevBody=body;
-                            prevBody.details[ind].unitDetails[ind2].item="BU";
-                            setBody(prevBody);
-                          }}>BU</option>
-                          <option value="CU"onClick={()=>{
-                            let prevBody=body;
-                            prevBody.details[ind].unitDetails[ind2].item="CU";
-                            setBody(prevBody);
-                          }}>CU</option>
-                          <option value="VVPAT"onClick={()=>{
-                            let prevBody=body;
-                            prevBody.details[ind].unitDetails[ind2].item="VT";
-                            setBody(prevBody);
-                          }}>VVPAT</option>
+                          <option value="BU">BU</option>
+                          <option value="CU">CU</option>
+                          <option value="VVPAT">VVPAT</option>
                         </select></td>
                         <td>
-                          <input type="number" placeholder="No of Unit" className=" w-2/3 p-2 rounded-lg border mb-2" 
-                          onChange={(e)=>{
-                            let prevBody=body;
-                            prevBody.details[ind].unitDetails[ind2].itemquantity=e.target.value;
-                            setBody(prevBody);
-                          }} required></input>
+                          <input type="number" placeholder="No of Units" className=" mb-2" style={{height:"46px"}}
+                          onChange={(e) => {
+                              setBody((prev)=>{
+                                prev.details[ind].unitDetails[ind2].itemquantity = e.target.value;
+                                return prev;
+                              })
+                              setUpdate((prev)=>{return (prev+1)%10});
+                            }} required></input>
                         </td>
                         <td>
                           <select className="border p-2 mb-2"
                             required
-                            onChange={(e)=>{
-                              let prevBody=body;
-                              prevBody.details[ind].unitDetails[ind2].itemmodel=e.target.value;
-                              prevBody.details[ind].unitDetails[ind2].manufacturer=manufacturer;
-                              setBody(prevBody);
+                            onChange={(e) => {
+                              setBody((prev)=>{
+                                prev.details[ind].unitDetails[ind2].itemmodel = e.target.value;
+                                return prev;
+                              })
+                              setUpdate((prev)=>{return (prev+1)%10});
                             }}
 
                           >

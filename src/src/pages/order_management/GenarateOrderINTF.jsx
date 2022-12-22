@@ -184,6 +184,40 @@ if (flag == 0) {
     }
   })
 
+  const [update, setUpdate] = useState(0);
+  useEffect(() => {
+    setTotal_BU_M2(0);
+    setTotal_BU_M3(0);
+    setTotal_CU_M2(0);
+    setTotal_CU_M3(0);
+    setTotal_VVPAT_M2(0);
+    setTotal_VVPAT_M3(0);
+    for (let i = 0; i < body.details.length; i++) {
+      const ele = body.details[i];
+      for (let j = 0; j < ele.unitDetails.length; j++) {
+        const e = ele.unitDetails[j];
+        if (e.item === "BU" && e.itemmodel === "M2") {
+          setTotal_BU_M2(prev=>prev+=parseInt(e.itemquantity));
+        }
+        if (e.item === "BU" && e.itemmodel === "M3") {
+          setTotal_BU_M3(prev=>prev+=parseInt(e.itemquantity));
+        }
+        if (e.item === "CU" && e.itemmodel === "M2") {
+          setTotal_CU_M2(prev=>prev+=parseInt(e.itemquantity));
+        }
+        if (e.item === "CU" && e.itemmodel === "M3") {
+          setTotal_CU_M3(prev=>prev+=parseInt(e.itemquantity));
+        }
+        if (e.item === "VVPAT" && e.itemmodel === "M2") {
+          setTotal_VVPAT_M2(prev=>prev+=parseInt(e.itemquantity));
+        }
+        if (e.item === "VVPAT" && e.itemmodel === "M3") {
+          setTotal_VVPAT_M3(prev=>prev+=parseInt(e.itemquantity));
+        }
+      }
+    }
+  },[update])
+
   return (
     <div className="p-3">
     <Modal
@@ -223,15 +257,17 @@ if (flag == 0) {
                       className="w-5/6 h-10 p-2 border rounded-md "
                       placeholder="Type"
                       required
+                      onChange={(e) => {
+                        setBody((prevBody) => {
+                          prevBody.details[ind].source = e.target.value;
+                          return (prevBody);
+                        })
+                      }}
                     >
                       <option>Select</option>
                       {warehouses &&
                         warehouses.map((st) => (
-                          <option value={st} className="text-black" onClick={()=>{
-                            let prevBody=body;
-                            prevBody.details[ind].source=st;
-                            setBody(prevBody);
-                          }}>
+                          <option value={st} className="text-black" >
                             {st}
                           </option>
                         ))}
@@ -250,17 +286,19 @@ if (flag == 0) {
                         className="h-10 p-2 border rounded-md"
                         placeholder="Type"
                         required
+                        onChange={(e) => {
+                          setBody((prevBody) => {
+                            prevBody.details[ind].destination = e.target.value;
+                            return (prevBody);
+                          })
+                        }}
 
                       >
                         {" "}
                         <option>Select</option>
                         {warehouses &&
                           warehouses.map((st) => (
-                            <option value={st} className="text-black" onClick={()=>{
-                              let prevBody=body;
-                              prevBody.details[ind].destination=st;
-                              setBody(prevBody);
-                            }}>
+                            <option value={st} className="text-black">
                               {st}
                             </option>
                           ))}
@@ -290,40 +328,40 @@ if (flag == 0) {
                       <tr className="border-b-2 ">
                         <td><select className="border p-2 mb-2"
                           required
+                          onChange={(e) => {
+                            setBody((prevBody) => {
+                              prevBody.details[ind].unitDetails[ind2].item = e.target.value;
+                              return (prevBody);
+                            })
+                            setUpdate((prev)=>{return (prev+1)%10});
+                          }}
                         >
                           <option
                           >select</option>
-                          <option value="BU"onClick={()=>{
-                            let prevBody=body;
-                            prevBody.details[ind].unitDetails[ind2].item="BU";
-                            setBody(prevBody);
-                          }}>BU</option>
-                          <option value="CU"onClick={()=>{
-                            let prevBody=body;
-                            prevBody.details[ind].unitDetails[ind2].item="CU";
-                            setBody(prevBody);
-                          }}>CU</option>
-                          <option value="VVPAT"onClick={()=>{
-                            let prevBody=body;
-                            prevBody.details[ind].unitDetails[ind2].item="VT";
-                            setBody(prevBody);
-                          }}>VVPAT</option>
+                          <option value="BU">BU</option>
+                          <option value="CU">CU</option>
+                          <option value="VVPAT">VVPAT</option>
                         </select></td>
                         <td>
-                          <input type="number" placeholder="No of Unit" className=" w-2/3 p-2 rounded-lg border mb-2" 
-                          onChange={(e)=>{
-                            let prevBody=body;
-                            prevBody.details[ind].unitDetails[ind2].itemquantity=e.target.value;
-                            setBody(prevBody);
-                          }} required></input>
+                        <input type="number" placeholder="No of Units" className=" mb-2" style={{height:"46px"}}
+
+                              onChange={(e) => {
+                              setBody((prev)=>{
+                                prev.details[ind].unitDetails[ind2].itemquantity = e.target.value;
+                                return prev;
+                              })
+                              setUpdate((prev)=>{return (prev+1)%10});
+                            }} required></input>
                         </td>
                         <td>
                           <select className="border p-2 mb-2"
                             required
-                            onChange={(e)=>{
-                              let prevBody=body;
-                              prevBody.details[ind].unitDetails[ind2].itemmodel=e.target.value;
-                              setBody(prevBody);
+                            onChange={(e) => {
+                              setBody((prev)=>{
+                                prev.details[ind].unitDetails[ind2].itemmodel = e.target.value;
+                                return prev;
+                              })
+                              setUpdate((prev)=>{return (prev+1)%10});
                             }}
 
                           >
@@ -336,10 +374,12 @@ if (flag == 0) {
                         <td>
                           <select className="border p-2 mb-2 ml-3 mr-7"
                             required
-                            onChange={(e)=>{
-                              let prevBody=body;
-                              prevBody.details[ind].unitDetails[ind2].manufacturer=e.target.value;
-                              setBody(prevBody);
+                            onChange={(e) => {
+                              setBody((prev)=>{
+                                prev.details[ind].unitDetails[ind2].manufacturer = e.target.value;
+                                return prev;
+                              })
+                              setUpdate((prev)=>{return (prev+1)%10});
                             }}
 
                           >
