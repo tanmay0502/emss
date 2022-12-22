@@ -43,75 +43,6 @@ export default function ScheduleList() {
             console.log({err});
         }
     }
-   
-
-    // {
-    //     elections !== undefined && console.log(elections[0])
-    // }
-
-
-    const sortMapping = {
-        "None": null,
-        "State": "State",
-        "Start Date": "Start Date",
-        "End Date": "End Date",
-        "AC" : "AC",
-        "PC" : "PC",
-        "Election Type": "Election Type",
-       
-    }
-    const row1 = {
-        'State': 'Madhya Pradesh',
-        'PC': 'Bhopal',
-        "AC": 'Govindpura',
-        "Election Type": 'Assembly',
-        "Start Date": '22-09-2021',
-        "End Date": '15-10-2021',
-        "Edit":
-        <div className={styles.editBtn}>
-            <img src={Edit} />
-        </div>
-        
-    }
-    const row2 = {
-        'State': 'Madhya Pradesh',
-        'PC': 'Bhopal',
-        "AC": 'Govindpura',
-        "Election Type": 'Assembly',
-        "Start Date": '22-09-2021',
-        "End Date": '15-10-2021',
-        "Edit":
-        <div className={styles.editBtn}>
-            <img src={Edit} />
-        </div>
-    }
-    const row3 = {
-        'State': 'Madhya Pradesh',
-        'PC': 'Bhopal',
-        "AC": 'Govindpura',
-        "Election Type": 'Assembly',
-        "Start Date": '22-09-2021',
-        "End Date": '15-10-2021',
-        "Edit":
-        <div className={styles.editBtn}>
-            <img src={Edit} />
-        </div>
-    }
-    const dummydata = [row1, row2, row3, row2, row1, row2,row1, row2, row3, row2, row1, row2,];
-    console.log(dummydata[0])
-
-
-
-
-    // const data1 = [row1, row2, row1];
-
-    // const Table = [
-    //     <Collapse orderId='XYZ/20' data={data} time='22-09-2021' />,
-    //     <Collapse orderId='XYZ/12' data={data} time='12-12-2021' />,
-    //     <Collapse orderId='XYZ/14' data={data1} time='2-05-2021' bottom={true} />
-    // ]
-
-    
 
     function makeElctionList(elections){
         let eList = []
@@ -119,7 +50,7 @@ export default function ScheduleList() {
             console.log("i " + i + "data: " + elections[i][0])
             const row = {
                 'State': elections[i][0],
-                'PC': elections[i][1],
+                'Dist': elections[i][1],
                 "AC": elections[i][2],
                 "Election Type": elections[i][3],
                 "Start Date": elections[i][4].slice(0,10),
@@ -188,7 +119,7 @@ export default function ScheduleList() {
                             <option value={"Start Date"}>Start Date</option>
                             <option value={"End Date"}>End Date</option>
                             <option value={"AC"}>AC</option>
-                            <option value={"PC"}>PC</option>
+                            <option value={"Dist"}>District</option>
                             <option value={"Election Type"}>Election Type</option>
                         </select>
                         <ChevronDown />

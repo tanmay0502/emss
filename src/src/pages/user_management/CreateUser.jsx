@@ -55,12 +55,12 @@ function CreateUser() {
   const [state, setState] = useState("");
   const [states, setStates] = useState({});
   const [statesCode, setStatesCode] = useState({});
-  const [PCs, setPCs] = useState([]);
-  const [PCsCode, setPCsCode] = useState(["00"]);
+  const [Dists, setDists] = useState([]);
+  const [DistsCode, setDistsCode] = useState(["00"]);
   const [ACs, setACs] = useState([]);
   const [ACsCode, setACsCode] = useState(["00"]);
   const [userID, setUserID] = useState("");
-  const [PC, setPC] = useState("");
+  const [Dist, setDist] = useState("");
   const [AC, setAC] = useState("");
   const [role, setRole] = useState("TU");
   const [roles, setRoles] = useState([]);
@@ -69,7 +69,7 @@ function CreateUser() {
   const [photoFileData, setPhotoFileData] = useState("")
 
   const [stateDisable, setStateDisable] = useState(false);
-  const [pcDisable, setPcDisable] = useState(false);
+  const [DistDisable, setDistDisable] = useState(false);
   const [acDisable, setAcDisable] = useState(false);
   const [realm, setRealm] = useState();
   const [imageName, setImageName] = useState();
@@ -248,22 +248,22 @@ function CreateUser() {
 
   useEffect(() => {
     if (window.sessionStorage.getItem("sessionToken")) {
-      const pwpcode = window.sessionStorage
+      const pwDistode = window.sessionStorage
         .getItem("sessionToken")
         .substring(2, 4);
-      if (getKeyByValue(PCs, pwpcode) != -1) {
+      if (getKeyByValue(Dists, pwDistode) != -1) {
         if (1) {
-          console.log("pp", pwpcode);
+          console.log("pp", pwDistode);
         }
-        setPCFunc(PCs[PCsCode.indexOf(pwpcode)]);
+        setDistFunc(Dists[DistsCode.indexOf(pwDistode)]);
         // document.getElementById("input_state").setAttribute('disabled', 'true')
       }
     } else {
-      if (document.getElementById("pcDropdown"))
-        document.getElementById("pcDropdown").value = "";
+      if (document.getElementById("DistDropdown"))
+        document.getElementById("DistDropdown").value = "";
       document.getElementById("input_state").setAttribute('disabled', 'false')
     }
-  }, [PCs]);
+  }, [Dists]);
 
   useEffect(() => {
     console.log(ACs, ACsCode)
@@ -274,7 +274,7 @@ function CreateUser() {
         .getItem("sessionToken")
         .substring(4, 7)
         .toString();
-      console.log("pc", accode);
+      console.log("Dist", accode);
       if (1) {
         console.log("pp", accode);
         if (1) {
@@ -311,28 +311,11 @@ function CreateUser() {
       ) {
       }
       else {
-        try {
-          const response = await fetch(
-            `${process.env.REACT_APP_API_SERVER}/user/getPCListbyState/${states[st]
-            }`,
-            {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          );
-          const data2 = await response.json();
-          if (data2["PCs"]) {
-            setPCs(data2["PCs"]);
-          }
-        } catch (err) {
-          console.log(err);
-        }
+        
       }
       if (changeUserID) {
         setUserID(
-          states[st] + ("00" + PC).slice(-2) + AC + role
+          states[st] + ("00" + Dist).slice(-2) + AC + role
         );
       }
     }
@@ -349,23 +332,23 @@ function CreateUser() {
     document.getElementById("formUserAltNumber2").value = '';
     document.getElementById("formUserImage").value = '';
     document.getElementById("input_Roles").value = '';
-    document.getElementById("input_PC").value = '';
+    document.getElementById("input_Dist").value = '';
     document.getElementById("input_AC").value = '';
 
   }
 
 
-  async function setPCFunc(st, changeUserID = true, filterStr = window.sessionStorage.getItem("sessionToken").substring(7)) {
-    setPC(PCs[st]);
+  async function setDistFunc(st, changeUserID = true, filterStr = window.sessionStorage.getItem("sessionToken").substring(7)) {
+    setDist(Dists[st]);
 
     if ((filterStr == 'CEO' && role == 'DEO') || (filterStr == 'CEO' && role == 'DDEO')) return;
     if (state && state.trim() != "" && state !== "Select:") {
       if (state == "IN" || state == "EL" || state == "BL") {
       } else {
-        console.log("State Val at setPCFunc: " + state)
+        console.log("State Val at setDistFunc: " + state)
         try {
           const response = await fetch(
-            `${process.env.REACT_APP_API_SERVER}/user/getACListbyStatePC/${state}`,
+            `${process.env.REACT_APP_API_SERVER}/user/getACListbyStateDist/${state}`,
             {
               method: "GET",
               headers: {
@@ -381,7 +364,7 @@ function CreateUser() {
       }
       if (changeUserID) {
         setUserID(
-          state + ("00" + PCs[st]).slice(-2) + AC + role
+          state + ("00" + Dists[st]).slice(-2) + AC + role
         );
       }
     }
@@ -394,7 +377,7 @@ function CreateUser() {
     if (changeUserID) {
       setUserID(
         state +
-        ("00" + PC).slice(-2) +
+        ("00" + Dist).slice(-2) +
         ("000" + ACs[st]).slice(-3) +
         role
       );
@@ -412,20 +395,20 @@ function CreateUser() {
 
       //Reset
       setStateDisable(false);
-      setPcDisable(false);
+      setDistDisable(false);
       setAcDisable(false);
 
       if ((filterStr == 'ECI-Admin') && (st == 'Chief Electoral Officer' || st == 'Chief Electoral Officer Office' || st == 'STATE NODAL OFFICER')) {
-        setPC("00");
-        setPcDisable(true);
+        setDist("00");
+        setDistDisable(true);
         setAC("000");
         setAcDisable(true);
       }
       else if ((filterStr == 'CEO' && st == "STATE NODAL OFFICER") || (filterStr == 'CEO' && st == "Chief Electoral Officer Office")) {
         setStateDisable(true);
         setStateFunc(window.sessionStorage.getItem("sessionToken").substring(0, 2));
-        setPC("00");
-        setPcDisable(true);
+        setDist("00");
+        setDistDisable(true);
         setAC("000");
         setAcDisable(true);
       }
@@ -439,7 +422,7 @@ function CreateUser() {
 
       if (changeUserID) {
         setUserID(
-          state + (PC != undefined ? ("00" + PC).slice(-2) : '00') + AC + rolesCode[roles.indexOf(st)]
+          state + (Dist != undefined ? ("00" + Dist).slice(-2) : '00') + AC + rolesCode[roles.indexOf(st)]
         );
       }
       console.log(userID);
@@ -449,9 +432,9 @@ function CreateUser() {
 
   useEffect(() => {
     setUserID(
-      state + (PC != undefined ? ("00" + PC).slice(-2) : '00') + AC + role
+      state + (Dist != undefined ? ("00" + Dist).slice(-2) : '00') + AC + role
     );
-  }, [state, AC, PC, role])
+  }, [state, AC, Dist, role])
 
   function ValidateEmail(mail) {
     if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)) {
@@ -478,7 +461,7 @@ function CreateUser() {
   async function addUser() {
 
     // console.log(userID)
-    const id = (isTemporary)? (document.getElementById("input_state").value + document.getElementById("input_PC").value + document.getElementById("input_AC").value + "TMP"):(document.getElementById("input_state").value + document.getElementById("input_PC").value + document.getElementById("input_AC").value + document.getElementById("input_Roles").value);
+    const id = (isTemporary)? (document.getElementById("input_state").value + document.getElementById("input_Dist").value + document.getElementById("input_AC").value + "TMP"):(document.getElementById("input_state").value + document.getElementById("input_Dist").value + document.getElementById("input_AC").value + document.getElementById("input_Roles").value);
     console.log(id)
     if (ValidateEmail(document.getElementById("formUserEmail").value) == false) {
       console.log("Invalid Email")
@@ -553,7 +536,7 @@ function CreateUser() {
         window.location.pathname = "/session/usermanagement";
         document.getElementById("createUserForm").reset();
       } else {
-        alert("Unable to Create User.");
+        alert(data2["message"]);
       }
     } catch (err) {
       console.log(err);
@@ -752,13 +735,13 @@ function CreateUser() {
               <select
                 disabled={false}
                 name=""
-                id="input_PC"
-                onChange={(e) => setPCFunc(e.target.value)}
+                id="input_Dist"
+                onChange={(e) => setDistFunc(e.target.value)}
               >
                 <option value="" disabled selected>
                   --Select--
                 </option>
-                {/* {PCs && PCs != {} && Object.keys(PCs).map((st) => (
+                {/* {Dists && Dists != {} && Object.keys(Dists).map((st) => (
                   <option value={st} className="text-black">
                     {st}
                   </option>

@@ -172,7 +172,7 @@ function ScheduleFLC() {
                                 className="selectBox"
                                 placeholder='Enter District'
                                 disabled
-                                defaultValue={flc[1]}
+                                defaultValue={flc !== undefined && flc[1]}
                             ></input>
                             {/* <select
                                 //   required={!isTemporary}
@@ -197,7 +197,7 @@ function ScheduleFLC() {
                                 className="selectBox"
                                 placeholder='Enter Year'
                                 disabled
-                                defaultValue={flc[9]}
+                                defaultValue={flc !== undefined &&  flc[9]}
                             ></input>
                         </div>
 
@@ -210,7 +210,7 @@ function ScheduleFLC() {
                                 className="selectBox"
                                 placeholder='Full Name'
                                 disabled
-                                defaultValue={flc[2]}
+                                defaultValue={flc !== undefined &&  flc[2]}
                             ></input>
                         </div>
 
@@ -223,7 +223,7 @@ function ScheduleFLC() {
                                 className="selectBox"
                                 placeholder='ECI Supervisor Name'
                                 disabled
-                                defaultValue={flc[5]}
+                                defaultValue={flc !== undefined &&  flc[5]}
                             ></input>
 
                         </div>
@@ -238,7 +238,7 @@ function ScheduleFLC() {
                                 className="selectBox"
                                 placeholder='Type of election'
                                 disabled
-                                defaultValue={flc[11]}
+                                defaultValue={flc !== undefined &&  flc[11]}
                             ></input>
                             {/* <select
                                 //   required={!isTemporary}
@@ -273,7 +273,7 @@ function ScheduleFLC() {
                                 className="selectBox"
                                 placeholder='Tentative month of election'
                                 disabled
-                                defaultValue={flc[10]}
+                                defaultValue={flc !== undefined &&  flc[10]}
                             ></input>
                         </div>
 
@@ -286,7 +286,7 @@ function ScheduleFLC() {
                                 className="selectBox"
                                 placeholder='xyz@example.com'
                                 disabled
-                                defaultValue={flc[4]}
+                                defaultValue={flc !== undefined &&  flc[4]}
                             ></input>
                         </div>
 
@@ -299,7 +299,7 @@ function ScheduleFLC() {
                                 className="selectBox"
                                 placeholder='Enter Number'
                                 disabled
-                                defaultValue={flc[3]}
+                                defaultValue={flc !== undefined &&  flc[3]}
                             ></input>
                         </div>
                         {photoFileName !== "" &&

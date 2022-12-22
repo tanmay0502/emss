@@ -11,7 +11,7 @@ function FlcEdit() {
 
     const User_ID = sessionStorage.getItem("sessionToken");
     const Role = User_ID.substring(8)
-    const Status = flc['status'];
+    const Status = flc !== undefined && flc['status'];
     // upload pending
 
     async function getFLC() {

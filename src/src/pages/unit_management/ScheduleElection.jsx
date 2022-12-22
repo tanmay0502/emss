@@ -28,8 +28,8 @@ function ScheduleElection() {
     // console.log(time)
 
 
-    const [PC, setPC] = useState("");
-    const [PCs, setPCs] = useState("");
+    const [Dist, setDist] = useState("");
+    const [Dists, setDists] = useState("");
     const [AC, setAC] = useState("");
 
     const [state, setState] = useState("");
@@ -87,73 +87,20 @@ function ScheduleElection() {
           );
     
           const data = await response.json();
-        //   console.log(data);
           setStates(data["states"]);
-          getPCListbyState();
         } catch (err) {
           console.log(err);
         }
         
       }
 
-    async function getPCListbyState(){
-        try {
-            const response = await fetch(
-              `${process.env.REACT_APP_API_SERVER}/user/getPCListbyState/${states[state]}`,
-              {
-                method: "GET",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-              }
-            );
-            const data2 = await response.json();
-            if (data2["PCs"]) {
-              setPCs(data2["PCs"]);
-            }
-          } catch (err) {
-            console.log(err);
-          }
-    }
-    
-    async function getACListbyState(){
-        try {
-            const response = await fetch(
-              `${process.env.REACT_APP_API_SERVER}/user/getACListbyStatePC/${states[state]}`,
-              {
-                method: "GET",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-              }
-            );
-            const data2 = await response.json();
-            // console.log(data2)
-            if (data2["ACs"]) {
-              setAC(data2["ACs"]);
-            }
-          } catch (err) {
-            console.log(err);
-          }
-    }
-
-
-
-    console.log(states[state])
-    // getPCListbyState()
     useEffect(() => {
         // getState();
 
     },[])
 
-    useEffect(() => {
-        getPCListbyState()
-        getACListbyState()
-    },[state])
 
-    console.log({PCs})
-
-    
+    // Check Replacement for Dist in new API: 
     async function postElection() {
 
         try {
@@ -168,7 +115,7 @@ function ScheduleElection() {
                     body: JSON.stringify({
                         // Severity: document.getElementById("formSeverity").value.slice(-1),
                         State: document.getElementById("1").value,
-                        PC: document.getElementById("2").value,
+                        // Dist: document.getElementById("2").value,
                         AC: document.getElementById("3").value,
                         electionType: document.getElementById("4").value.slice(-1),
                         startDate: document.getElementById("5").value + " " + time,
@@ -259,7 +206,7 @@ function ScheduleElection() {
                 </div>
 
                 <div class={styles.div2}> 
-                <p> PC</p>
+                <p> District</p>
                     <select
                         //   required={!isTemporary}
                         required
@@ -269,10 +216,10 @@ function ScheduleElection() {
                     //   onChange={(e) => setRoleFunc(e.target.value)}
                     >
                         <option value="0" disabled selected>
-                            Select PC
+                            Select Dist
                         </option>
                         {/* {console.log(states)} */}
-                        {PCs && Object.keys(PCs).map((st) => (
+                        {Dists && Object.keys(Dists).map((st) => (
                             <option value={st} className="text-black">
                             {st}
                             </option>

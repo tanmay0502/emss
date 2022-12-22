@@ -75,6 +75,7 @@ function UserList() {
 
 
 			var data = users.filter((elem) => {
+				
 				if (tableFilter === "") {
 					return true;
 				}
@@ -83,10 +84,12 @@ function UserList() {
 					return (elem["userid"].toLowerCase().includes(filter) || elem["name"].toLowerCase().includes(filter))
 				}
 			}).map((val) => {
-				
+				console.log(val["photodata"].slice(0,22) + val["photodata"].slice(24))
 				return {
 					"User ID": val["userid"],
-					"": <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", paddingRight: "15px" }}><img src={UserImageTest} alt="Img"/></div>,
+					"": <div  style={{borderRadius: "50%", display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", paddingRight: "15px" }}>
+						<img className='thimage' style={{ height: "35px", width: "35px" }} src={val["photodata"] !== '' ? val["photodata"].slice(0,22) + val["photodata"].slice(24,-1): UserImageTest} alt="Img"/>
+						</div>,
 					"User Name": val["name"],
 					"Phone Number": val["mobilenumber"].substring(0, 3) + " " + val["mobilenumber"].substring(3, 6) + " " + val["mobilenumber"].substring(6),
 					"Role": val["userid"].slice(8),
@@ -113,34 +116,8 @@ function UserList() {
 		}
 	}, [users, tableFilter, sortBy, sortOrder])
 
-    async function getCurrImage(id) {
-        try {
-            const response = await fetch(
-                `${process.env.REACT_APP_API_SERVER}/user/getprofilepicture/${id}`,
-                {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    credentials: 'same-origin',
-                    // mode: "cors"
-                }
-            );
-            const data = await response.json();
-            if (response.status == 200) {
-                setCurrImage(data)
-				console.log("Image Data: " , data)
-				console.log(currImage)
-            }
-        } catch (err) {
-            console.log({ err });
-        }
-    }
-
 	async function getUser() {
-		// let token = localStorage.getItem("token");
-		// console.log(JSON.parse(token));
-		// const access_token=JSON.parse(token)["access_token"];
+
 		try {
 			const response = await fetch(
 				`${process.env.REACT_APP_API_SERVER}/user/getSubordinateUsers`,
@@ -170,7 +147,7 @@ function UserList() {
 	useEffect(() => {
 		console.log("Use Effect Here")
 		getUser();
-		getCurrImage("TS657000DEO")
+		// getCurrImage("TS657000DEO")
 	}, []);
 
 	const activateUser = async (myId) => {
@@ -336,9 +313,7 @@ function UserList() {
 						</div>
 						<div className="userStatsText">
 							<span>Inactive Users</span>
-							{/* <h3>{tableData.filter((elem) => {
-								return elem["Details"] && elem["Details"][7] !== 'A'
-							}).length.toLocaleString()}</h3> */}
+
 							<h3>{noOfInActiveUsers}</h3>
 						</div>
 					</li>

@@ -31,8 +31,6 @@ class MyMap extends Component{
 
     onEachState = (state, layer) => {
         const stateName = state.properties.STNAME;
-        //layer.bindPopup(stateName)
-        // console.log(state)
         layer.on({
             mouseover: (event) => {
                 event.target.setStyle(

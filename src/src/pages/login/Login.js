@@ -34,7 +34,7 @@ const Login = () => {
 	const [password, setPassword] = useState("");
 	const [mobile, setMobile] = useState("");
 	const [state, setState] = useState("");
-	const [PC, setPC] = useState("");
+	const [Dist, setDist] = useState("");
 	const [AC, setAC] = useState("");
 	const [role, setRole] = useState("");
 	const [invaliduser, setInvalidUser] = useState("");
@@ -46,8 +46,8 @@ const Login = () => {
 	const [userIDs, setUserIds] = useState([]);
 	const [states, setStates] = useState({});
 	// const [statesCode, setStatesCode] = useState([]);
-	const [PCs, setPCs] = useState({});
-	// const [PCsCode, setPCsCode] = useState(["00"]);
+	const [Dists, setDists] = useState({});
+	// const [DistsCode, setDistsCode] = useState(["00"]);
 	const [ACs, setACs] = useState({});
 	// const [ACsCode, setACsCode] = useState(["000"]);
 	const [roles, setRoles] = useState([]);
@@ -61,9 +61,9 @@ const Login = () => {
 
 	useEffect(() => {
 
-		if (PCs === {}) {
-			if (document.getElementById("pcDropdown"))
-				document.getElementById("pcDropdown").value = "0";
+		if (Dists === {}) {
+			if (document.getElementById("DistDropdown"))
+				document.getElementById("DistDropdown").value = "0";
 		}
 		if (ACs === {}) {
 			if (document.getElementById("acDropdown"))
@@ -73,22 +73,22 @@ const Login = () => {
 			if (document.getElementById("roleDropdown"))
 				document.getElementById("roleDropdown").value = "0";
 		}
-		if ((PCs && ACs && roles) && (PCs != {} || ACs != {} || roles.length != 0)) {
+		if ((Dists && ACs && roles) && (Dists != {} || ACs != {} || roles.length != 0)) {
 			// checkEmpty();
 		}
 
-	}, [states, PCs, ACs, roles])
+	}, [states, Dists, ACs, roles])
 
 	function checkEmpty() {
 		if (userID.length == 0) {
-			if (document.getElementById("stateDropdown") && document.getElementById("pcDropdown") && document.getElementById("roleDropdown") && document.getElementById("acDropdown")) {
+			if (document.getElementById("stateDropdown") && document.getElementById("DistDropdown") && document.getElementById("roleDropdown") && document.getElementById("acDropdown")) {
 				document.getElementById("stateDropdown").value = "0";
-				document.getElementById("pcDropdown").value = "0";
+				document.getElementById("DistDropdown").value = "0";
 				document.getElementById("acDropdown").value = "0";
 				document.getElementById("roleDropdown").value = "0";
 
 			}
-			setPCs({})
+			setDists({})
 			setACs({})
 			setRoles([])
 			// console.log("checked")
@@ -98,24 +98,24 @@ const Login = () => {
 	useEffect(() => {
 
 		if ((userID.length > 0 && Number(userID)) || (userID.length > 0 && userID[0] == "0")) {
-			if (document.getElementById("stateDropdown") && document.getElementById("pcDropdown") && document.getElementById("roleDropdown") && document.getElementById("acDropdown") && document.getElementById("dropDowns")) {
+			if (document.getElementById("stateDropdown") && document.getElementById("DistDropdown") && document.getElementById("roleDropdown") && document.getElementById("acDropdown") && document.getElementById("dropDowns")) {
 				document.getElementById("stateDropdown").setAttribute("disabled", "disabled")
-				document.getElementById("pcDropdown").setAttribute("disabled", "disabled")
+				document.getElementById("DistDropdown").setAttribute("disabled", "disabled")
 				document.getElementById("acDropdown").setAttribute("disabled", "disabled")
 				document.getElementById("roleDropdown").setAttribute("disabled", "disabled")
 				document.getElementById("dropDowns").style.opacity = "1"
 				setFlag1(1)
 			}
 			getState()
-			setPCs({})
+			setDists({})
 			setACs({})
 			setRoles([])
 			// console.log("hurry")
 		}
 		else {
-			if (document.getElementById("stateDropdown") && document.getElementById("pcDropdown") && document.getElementById("roleDropdown") && document.getElementById("acDropdown") && document.getElementById("dropDowns")) {
+			if (document.getElementById("stateDropdown") && document.getElementById("DistDropdown") && document.getElementById("roleDropdown") && document.getElementById("acDropdown") && document.getElementById("dropDowns")) {
 				document.getElementById("stateDropdown").removeAttribute("disabled")
-				document.getElementById("pcDropdown").removeAttribute("disabled")
+				document.getElementById("DistDropdown").removeAttribute("disabled")
 				document.getElementById("acDropdown").removeAttribute("disabled")
 				document.getElementById("roleDropdown").removeAttribute("disabled")
 				document.getElementById("dropDowns").style.opacity = "1"
@@ -142,36 +142,36 @@ const Login = () => {
 			else {
 				if (document.getElementById("stateDropdown"))
 					document.getElementById("stateDropdown").value = "0";
-				setPCs([])
+				setDists([])
 
 
 			}
-			if (userID.length >= 5 && PCs) {
-				var pccode = parseInt(userID.substring(2, 5)).toString();
-				const pwpcode = userID.substring(2, 5);
-				var key = PCs != {} ? getKeyByValue(PCs, pwpcode) : undefined
+			if (userID.length >= 5 && Dists) {
+				var Distcode = parseInt(userID.substring(2, 5)).toString();
+				const pwDistode = userID.substring(2, 5);
+				var key = Dists != {} ? getKeyByValue(Dists, pwDistode) : undefined
 				if (key != undefined) {
-					pccode = pwpcode;
+					Distcode = pwDistode;
 				}
-				console.log(pwpcode, pccode)
+				console.log(pwDistode,Distcode)
 
-				if (getKeyByValue(PCs, pccode) !== undefined) {
-					console.log("lkk", key);
-					if (document.getElementById("pcDropdown")) {
-						console.log("l", PCs[pccode]);
-						document.getElementById("pcDropdown").value =
-							PCs != {} ? getKeyByValue(PCs, pccode) : "";
+				if (getKeyByValue(Dists, Distcode) !== undefined) {
+					console.log("lkk",key);
+					if (document.getElementById("DistDropdown")) {
+						console.log("l", Dists[Distcode]);
+						document.getElementById("DistDropdown").value =
+							Dists != {} ? getKeyByValue(Dists, Distcode) : "";
 					}
-					setPCFunc(key, false);
+					setDistFunc(key, false);
 				} else {
 					console.log("lkk")
-					if (document.getElementById("pcDropdown"))
-						document.getElementById("pcDropdown").value = "Select:";
+					if (document.getElementById("DistDropdown"))
+						document.getElementById("DistDropdown").value = "Select:";
 				}
 			}
 			else {
-				if (document.getElementById("pcDropdown"))
-					document.getElementById("pcDropdown").value = "0";
+				if (document.getElementById("DistDropdown"))
+					document.getElementById("DistDropdown").value = "0";
 				setACs({})
 
 
@@ -302,19 +302,19 @@ const Login = () => {
 
 				if (userID.length != 0) {
 					if (data2["status"] == 502) {
-						setPCs({});
+						setDists({});
 					}
 					else {
-						setPCs(data2["districts"]);
+						setDists(data2["districts"]);
 					}
 
 				}
 
 			} catch (err) {
 				console.log(err);
-				setPCs({});
+				setDists({});
 			}
-			setPCs(prevState => ({ ...prevState, "None": "000" }));
+			setDists(prevState => ({ ...prevState, "None": "000"}));
 
 
 			if (changeUserID) {
@@ -325,15 +325,15 @@ const Login = () => {
 			setInvalidUser("");
 		}
 	}
-	async function setPCFunc(st, changeUserID = true) {
-		console.log(st, PCs[st])
-		// setPC(PCs[st]);
+	async function setDistFunc(st, changeUserID = true) {
+		console.log(st,Dists[st])
+		// setDist(Dists[st]);
 		if (state !== "Select:") {
 			if (0) {
 			} else {
 				try {
 					const response = await fetch(
-						`${process.env.REACT_APP_API_SERVER}/user/getACList/${state}/${PC}`,
+						`${process.env.REACT_APP_API_SERVER}/user/getACList/${state}/${Dist}`,
 						{
 							method: "GET",
 							headers: {
@@ -367,18 +367,18 @@ const Login = () => {
 			}
 			if (changeUserID) {
 				setUserID(
-					state + ("000" + PCs[st]).slice(-3)
+					state + ("000" + Dists[st]).slice(-3)
 				);
-				setPC(PCs[st]);
+				setDist(Dists[st]);
 			}
 			setInvalidUser("");
 		}
-		console.log(PC)
+		console.log(Dist)
 	}
 	async function setACFunc(st, changeUserID = true) {
 		setAC(ACs[st]);
 		console.log(ACs)
-		console.log(PC)
+		console.log(Dist)
 		try {
 			const response = await fetch(
 				`${process.env.REACT_APP_API_SERVER}/user/getRolesList`,
@@ -417,10 +417,9 @@ const Login = () => {
 			console.log(err);
 		}
 		if (changeUserID) {
-			console.log(state, PC, ACs, ACs[st])
 			setUserID(
 				state +
-				("000" + PC).slice(-3) +
+				("000" + Dist).slice(-3) +
 				("000" + ACs[st]).slice(-3)
 			);
 		}
@@ -433,7 +432,7 @@ const Login = () => {
 
 			if (changeUserID) {
 				setUserID(
-					state + ("000" + PC).slice(-3) + AC + rolesCode[roles.indexOf(st)]
+					state + ("000" + Dist).slice(-3) + AC + rolesCode[roles.indexOf(st)]
 				);
 			}
 			setInvalidUser("");
@@ -702,9 +701,7 @@ const Login = () => {
 		}
 	}
 
-	useEffect(() => {
-		console.log(PC);
-	}, [PC]);
+
 
 	return (
 		<div>
@@ -836,36 +833,36 @@ const Login = () => {
 											</div>
 											<div className="dropdown">
 												<p
-													htmlFor="pc"
+													htmlFor="Dist"
 													className="text-black ml-2 -mb-6 text-sm font-semibold"
 													style={{ fontFamily: "nunito sans" }}
 												>
-													{(PCs === {} || flag1 == 1) && <span className="opacity-40">District Code</span>}
-													{(PCs !== {} && flag1 == 0) && <>District Code</>}
+													{(Dists === {} || flag1 == 1) && <span className="opacity-40">District Code</span>}
+													{(Dists !== {} && flag1 == 0) && <>District Code</>}
 												</p>
-												{PCs == {} && <div>
+												{Dists == {} && <div>
 													<select className="pl-3 pr-3 mt-7 h-13 text-black outline-none rounded-md w-full mb-5 opacity-40" disabled
-														id="pcDropdown"
+														id="DistDropdown"
 													>
 														<option value="0" className="text-black">
 															Select:
 														</option>
 													</select>
 												</div>}
-												{PCs != {} && (
+												{Dists != {} &&  (
 													<select
 														className="pl-3 pr-3 mt-7 h-13 text-black outline-none rounded-md w-full mb-5"
 														style={{ fontFamily: "nunito sans" }}
-														id="pcDropdown"
-														name="pc"
-														// value={PC}
-														onChange={(e) => setPCFunc(e.target.value)}
+														id="DistDropdown"
+														name="Dist"
+														// value={Dist}
+														onChange={(e) => setDistFunc(e.target.value)}
 													>
 														<option value="0" className="text-black">
 															Select:
 														</option>
-														{PCs &&
-															Object.keys(PCs).map((st) => (
+														{Dists &&
+															Object.keys(Dists).map((st) => (
 																<option value={st} className="text-black">
 																	{st}
 																</option>

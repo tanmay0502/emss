@@ -5,39 +5,15 @@ import {
   AiOutlineSortAscending,
   AiOutlineSortDescending,
 } from "react-icons/ai";
-import { GrClose } from "react-icons/gr"
-import Modal from 'react-modal';
+
+import {GrClose}  from "react-icons/gr" 
 import { ReactComponent as OptionsIndicator } from "../../../assets/Options_Indicator.svg";
 import { ReactComponent as SearchInputElement } from "../../../assets/searchInputIcon.svg";
 import { expD } from "../Homepage";
+import Modal from "react-modal"
 
 
 const UnitListCard = () => {
-
-  // const initialVisibilityValues = {
-  //   mfgECIL: false,
-  //   mfgBEL: false,
-  //   unitTypeCU: false,
-  //   unitTypeBU: false,
-  //   unitTypeVT: false,
-  //   modelM2: false,
-  //   modelM3: false,
-
-  // };
-
-  // const [cardVisibility, setCardVisibility] = useState(initialVisibilityValues);
-
-  // const handleButtonClick = (e) => {
-  //   const { name } = e.currentTarget;
-  //   const update = { ...initialVisibilityValues };
-  //   if (cardVisibility[name]) {
-  //     update[name] = false;
-  //   } else {
-  //     update[name] = true;
-  //   }
-  //   setCardVisibility(update);
-  // };
-
 
   const ActionButton = ({ isActive, text, name, onClick }) => {
     return (
@@ -402,6 +378,156 @@ const UnitListCard = () => {
                     <h3>Filter </h3>
                   </div>
                   <button className="m-4 cursor-pointer flex justify-center text-white" onClick={ResetFunction}>Reset </button>
+                  <Modal
+                      isOpen={modalIsOpen}
+                      onAfterOpen={afterOpenModal}
+                      onRequestClose={closeModal}
+                      style={customStyles}
+                  >
+                      <div id="root" className=''>
+                          <div className="grid grid-cols-3">
+                          <div onClick={closeModal} className=" cursor-pointer hover:scale-110 flex items-center justify-center"  > <GrClose /> </div>
+                          
+                          <div className='flex justify-center items-center'>
+                              <h3>Filter</h3>
+                          </div>
+                          <div className="m-4 cursor-pointer flex justify-center"> Reset </div>
+                          </div>
+                            
+                          <div>
+                            <div className="flex flex-col"> 
+
+                            
+                              <label className="mb-2 w-full text-base font-bold pt-6">
+                                  Manufacturer
+                              </label>
+                              <div className="flex flex-row gap-3 px-4" >
+
+                                <ActionButton
+                                    // isActive={activeButtons.firstRandomisationForm}
+                                    text="ECIL"
+                                    name="firstRandomisationForm"
+                                    // onClick={onButtonClick}
+                                  />
+                                <ActionButton
+                                    // isActive={activeButtons.firstRandomisationForm}
+                                    text="BEL"
+                                    name="firstRandomisationForm"
+                                    // onClick={onButtonClick}
+                                  />
+                                  
+
+                              </div>
+
+                              <label className="mb-2 w-full text-base font-bold">
+                                  Unit Type
+                              </label>
+                              <div className="flex flex-row gap-3 px-4">
+
+                                  <ActionButton
+                                    // isActive={activeButtons.firstRandomisationForm}
+                                    text="CU"
+                                    name="firstRandomisationForm"
+                                    // onClick={onButtonClick}
+                                  />
+                                  <ActionButton
+                                    // isActive={activeButtons.firstRandomisationForm}
+                                    text="BU"
+                                    name="firstRandomisationForm"
+                                    // onClick={onButtonClick}
+                                  />
+                                  <ActionButton
+                                    // isActive={activeButtons.firstRandomisationForm}
+                                    text="VT"
+                                    name="firstRandomisationForm"
+                                    // onClick={onButtonClick}
+                                  />
+                                  {/* <ActionButton
+                                    // isActive={activeButtons.firstRandomisationForm}
+                                    text="SC"
+                                    name="firstRandomisationForm"
+                                    // onClick={onButtonClick}
+                                  /> */}
+        
+                            </div>
+                              <label className="mb-2 w-full text-base font-bold">
+                                  Model
+                              </label>
+                              <div className="flex flex-row gap-3 px-4" >
+
+                              <ActionButton
+                                  // isActive={activeButtons.firstRandomisationForm}
+                                  text="M2"
+                                  name="firstRandomisationForm"
+                                  // onClick={onButtonClick}
+                                />
+                              <ActionButton
+                                  // isActive={activeButtons.firstRandomisationForm}
+                                  text="M3"
+                                  name="firstRandomisationForm"
+                                  // onClick={onButtonClick}
+                                />
+                                
+
+                              </div>
+
+
+                              {/* <label className="mb-2 w-full text-base font-bold">
+                                  Sort By AC/Polling Station
+                              </label>
+                              <div className="flex flex-row gap-3 px-4" >
+
+                                <ActionButton
+                                    // isActive={activeButtons.firstRandomisationForm}
+                                    text="AC"
+                                    name="firstRandomisationForm"
+                                    // onClick={onButtonClick}
+                                  />
+                                <ActionButton
+                                    // isActive={activeButtons.firstRandomisationForm}
+                                    text="Polling"
+                                    name="firstRandomisationForm"
+                                    // onClick={onButtonClick}
+                                  />
+                                  
+
+                              </div> */}
+                              </div>
+                          </div>
+
+                      </div>
+
+                  </Modal>
+
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  background: "var(--lightGrayBG )",
+                  borderRadius: "10px",
+                  padding: "7.5px 15px 7.5px 0",
+                  fontSize: "0.8em",
+                }}
+              >
+                <SearchInputElement
+                  style={{ margin: "0 7.5px", width: "20px" }}
+                />
+                <input
+                  type="search"
+                  value={tableFilter}
+                  onChange={(e) => {
+                    setTableFilter(e.target.value);
+                  }}
+                  placeholder="Search"
+                  style={{
+                    outline: "none",
+                    background: "transparent",
+                    height: "100%",
+                  }}
+                />
+              </div>
 
                 </div>
 

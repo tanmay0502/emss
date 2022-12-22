@@ -1,6 +1,6 @@
 import React from 'react'
 import { Outlet, useNavigate, useLocation } from 'react-router-dom'
-
+import UserImageTest from './assets/UserImageTest.png'
 import ECIIcon from './assets/eci_logo.png';
 import { ReactComponent as DashboardIcon } from './assets/Dashboard.svg';
 import { ReactComponent as UserManagementIcon } from './assets/Users.svg';
@@ -210,6 +210,8 @@ function Routed(props) {
 		return await response.json().then(val => val[0].name);
 	}
 
+	
+
 	useEffect(() => {
 		// console.log(sessionStorage.getItem('sessionToken'))
 		const flag = sessionStorage.getItem('sessionToken');
@@ -246,6 +248,48 @@ function Routed(props) {
 	//   }
 	// }, [location])
 
+	//Profile Image Start
+	const [currImage, setCurrImage] = useState(0)
+    async function getCurrImage(id) {
+        try {
+            const response = await fetch(
+                `${process.env.REACT_APP_API_SERVER}/user/profilepicture`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                      "userID": id
+                    }),
+                    // mode: "cors"
+                }
+                
+            );
+            const data = await response.json();
+			console.log(data["data"])
+            if (response.status == 200) {
+                if(data["data"] !== undefined){
+                  setCurrImage(data["data"].slice(0,22) +data["data"].slice(24,-1))
+                }else{
+                  setCurrImage(UserImageTest)
+                }
+            }else if(response.status == 404){
+              setCurrImage(UserImageTest)
+            }
+        } catch (err) {
+            console.log({ err });
+        }
+    }
+	useEffect(() => {
+		// console.log(userData["userId"])
+		getCurrImage(userData["userId"])
+	}, [userData])
+	useEffect(() => {
+		console.log(currImage)
+	}, [currImage])
+	//Profile Image End
 
 	return (
 		<div className="App">
@@ -355,7 +399,12 @@ function Routed(props) {
 						</div>
 						<div className="nav-right">
 							<div className="userImage">
-
+								{console.log({currImage})}
+									<img
+										src={currImage !== 0 ? currImage : UserImageTest}
+										style={{borderRadius: "50%", height:"37.5px", width:"37.5px"}}
+										alt="profile"
+									/>
 							</div>
 							<div style={{ display: "flex", "flexDirection": "column", alignItems: "center", "justifyContent": "center", overflowY: "visible", maxHeight: "100%" }}>
 								<span tyle={{ position: "relative" }}>{userData.userId ? userData.userId : ""}

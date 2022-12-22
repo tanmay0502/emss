@@ -17,12 +17,7 @@ export default function CeoDashboard(){
             <div className="content-path">
 				<HomeIcon /><a href='/usermanagement'>Home</a><ChevronRightIcon /><span>Dashboard</span>
 			</div>
-            {/* <div className="addressMenu pt-6 pl-8 pb-10 ">
-            <p> <span className="pr-4"><img className="sideMenuImg" src={homeImg} alt="logo"/></span>
-                <span className="pr-4"><img className="sideMenuImg" src={rightIcon} alt="logo"/></span>
-                CEO Dashboard    
-            </p>
-            </div> */}
+
 
             <div className="grid grid-cols-12 gap-8 dashboard">
                 <div className="col-span-1"></div>

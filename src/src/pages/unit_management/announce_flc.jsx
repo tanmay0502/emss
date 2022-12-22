@@ -180,7 +180,7 @@ function Announce_Flc() {
                         </div>
 
                         <div class={styles.div4}>
-                            <p> ECI Supervisor</p>
+                            <p> Election Supervisor</p>
                             <input
                                 class={styles.input}
                                 type="text"

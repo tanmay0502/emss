@@ -120,7 +120,7 @@ function EditFlc_Ceo_Manufacturer(props) {
 
         try {
             const response = await fetch(
-                `${process.env.REACT_APP_API_SERVER}/unit/getPreparenessCertificate/${photoFileName}`,
+                `${process.env.REACT_APP_API_SERVER}/unit/getunitdocument/${photoFileName}`,
                 {
                     method: "GET",
                     headers: {
@@ -479,7 +479,7 @@ function EditFlc_Ceo_Manufacturer(props) {
 
 
                         <div class={scheduleStyles.div4}>
-                            <p> ECI Supervisor</p>
+                            <p> ElectionSupervisor</p>
                             <input
                                 class={scheduleStyles.input}
                                 required

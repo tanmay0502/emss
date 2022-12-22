@@ -2,6 +2,7 @@ import React, { ReactComponent } from "react";
 import { useState, useEffect } from "react";
 import { AiOutlineArrowLeft, AiOutlineEdit } from 'react-icons/ai'
 import { useNavigate } from "react-router-dom";
+import UserImageTest from '../assets/UserImageTest.png'
 
 function UserDetail(props) {
   const myFont = {
@@ -22,10 +23,74 @@ function UserDetail(props) {
   console.log(props.detail)
 
   const [editPic, setEditPic] = useState(0)
+  const [currImage, setCurrImage] = useState(0)
+  const [uploadPending ,setUploadPending] = useState(0)
 
   function editProfile() {
     setEditPic(editPic ^ 1);
   }
+
+    async function getCurrImage(id) {
+        try {
+            const response = await fetch(
+                `${process.env.REACT_APP_API_SERVER}/user/profilepicture`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                      "userID": id
+                    }),
+                    // mode: "cors"
+                }
+                
+            );
+            const data = await response.json();
+            if (response.status == 200) {
+                if(data["data"] !== undefined){
+                  setCurrImage(data["data"].slice(0,22) +data["data"].slice(24,-1))
+                }else{
+                  setCurrImage(UserImageTest)
+                }
+            }else if(response.status == 404){
+              setCurrImage(UserImageTest)
+            }
+        } catch (err) {
+            console.log({ err });
+        }
+    }
+
+    async function submitImage() {
+      try {
+        // console.log(currImage)
+          const response = await fetch(
+            `${process.env.REACT_APP_API_SERVER}/user/ModifyUserDetails`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              credentials: 'include',
+              body: JSON.stringify({
+                "userID": props.detail["userid"],
+                "photoFileData":  currImage,
+              })
+            }
+              
+          );
+          const data = await response.json();
+          if (response.status == 200) {
+              setCurrImage(data["data"].slice(0,22) +data["data"].slice(24,-1))
+              // console.log("Image Data: " , data["data"].slice(0,22) +data["data"].slice(24,-1) )
+              // console.log(currImage)
+          }
+      } catch (err) {
+          console.log({ err });
+      }
+  }
+
 
   const ResetPassword = async () => {
     const userId = props.detail["userid"];
@@ -46,13 +111,6 @@ function UserDetail(props) {
         )
         const msg = await response.json();
         console.log(msg)
-        // if (msg['message'] = 'Password reset successfully') {
-        //   alert(msg['message']);
-        //   window.location = window.location.href;
-        // }
-        // else {
-        //   alert('Error in resetting password, Please try again');
-        // }
     }
   }
 
@@ -82,17 +140,38 @@ function UserDetail(props) {
     const fullFileName = file.name;
     console.log(fullFileName)
     const convertedFile = await convertBase64(file);
-    setBaseImage(convertedFile)
+    setCurrImage(convertedFile)
+    setUploadPending(1);
    
 }
-console.log(baseImage)
+// console.log(baseImage)
+
+
+useEffect(() => {
+  console.log("Use Effect Here")
+  getCurrImage(props.detail["userid"]);
+  // getCurrImage("TS657000DEO")
+}, []);
+// const [back, setBack ] = useState(0)
+
+useEffect(() => {
+    if(uploadPending == 1){
+      console.log("Image submitting")
+      submitImage()
+    }
+}, [uploadPending]);
+
 
   return (
     <div className="user-details">
       <div className="flex justify-between">
         <button
           className="flex justify-center rounded-full aspect-square "
-          onClick={props.close}
+          onClick={() => {           
+            window.location.reload()
+          }
+          
+          }
           style={{ "background": "#84587C", color: "white" }}
         >
           <AiOutlineArrowLeft />
@@ -114,10 +193,11 @@ console.log(baseImage)
         </div>
       </div>
       <div className="rounded-full justify-center flex " style={{ position: "relative" }}>
-        {editPic == 0 && (<><img
-          src="/template_0.webp"
-          className="w-1/6"
-          style={{borderRadius: "50%"}}
+        {editPic == 0 && (<>
+        <img
+          src={currImage !== null ? currImage : UserImageTest}
+          className="w-1/6 pt"
+          style={{borderRadius: "50%", height:"200px", width:"200px"}}
         />
           <button3
             className="text-white bg-green-600 bottom-16 z-index-10  p-3  h-10 cursor-pointer -ml-10 flex justify-center rounded-full aspect-square"
@@ -137,6 +217,7 @@ console.log(baseImage)
             <input
                   type="file"
                   required
+                  accept="image/png" 
                   onChange={(e) => {
                     uploadImage(e);
                 }}
@@ -150,55 +231,49 @@ console.log(baseImage)
           </div>
         )}
       </div>
-      {/* <div className="rounded-full  justify-center flex ">
-        <img
-          src="/template_0.webp"
-          className="w-1/6"
-          style={{ borderRadius: "50%" }}
-        ></img>
-      </div> */}
+
       {props.detail && (
         <div className="w-full px-2 py-8">
           <div className="user-details-grid">
 
-            <b>User ID : </b>
+            <b className="pt-1">User ID : </b>
             <p className="text-md">
               {props.detail["userid"]}
             </p>
 
-            <b>Status : </b>
+            <b className="pt-1">Status : </b>
             <p className="text-md">
               {props.detail["active"] === "A" ? "Active" : "Inactive"}
             </p>
 
-            <b>User Name : </b>
+            <b className="pt-1">User Name : </b>
             <p className="text-md">
               {props.detail["name"]}
             </p>
 
-            <b>Mobile : </b>
+            <b className="pt-1">Mobile : </b>
             <p className="text-md">
               {props.detail["mobilenumber"]}
             </p>
 
-            <b>Created By : </b>
+            <b className="pt-1">Created By : </b>
             <p className="text-md">
-              {props.detail[10]}
+              {props.detail[''] !== undefined ? props.detail[5] : "Not Available"}
             </p>
 
-            <b>Email : </b>
+            <b className="pt-1">Email : </b>
             <p className="text-md">
               {props.detail["email"]}
             </p>
 
-            <b>Alt Number 1 :</b>
+            <b className="pt-1">Alt Number 1 :</b>
             <p className="text-md">
-              {props.detail[5]}
+              {props.detail[5] !== undefined ? props.detail[5] : "Not Available"}
             </p>
 
-            <b>Address : </b>
+            <b className="pt-1">Address : </b>
             <p className="text-md">
-              {props.detail[4]}
+              {props.detail["address"]}
             </p>
 
           </div>

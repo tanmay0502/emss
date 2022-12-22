@@ -87,8 +87,9 @@ export default function CreateIssue() {
             console.log(err);
         }
     }
+    // check levelarray: District was replaced 
     const typeArray = ["Stock Entry-STE", "Scanning-SCN", "FLC Related-FLC", "Randomization-RND", "Recieving/Sending-RNS", "Confilct-CON", "Defective Machines-DEF", "EP Related-EPT", "Physical Verification-PHV", "User Related-USR", "Mobile App-APP", "Awareness-AWR", "Status Marking-SRW", "Strong Room/Warehouse-APN", "Application-APN", "Miscellaneous-MSC"]
-    const levelArray = ["Unit-UN", "Warehouse-WH", "AC-AC", "PC-PC", "State-ST"];
+    const levelArray = ["Unit-UN", "Warehouse-WH", "AC-AC", "District-District", "State-ST"];
     const severityArray = ["Low-L", "Medium-M", "High-H"];
 
     // const base64Converted = ''

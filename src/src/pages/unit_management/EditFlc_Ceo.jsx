@@ -38,12 +38,12 @@ function EditFlc_Ceo(props) {
         },
     };
 
-    async function getcertificate() {
+    async function getcertificate(file) {
         setflag(1)
 
         try {
             const response = await fetch(
-                `${process.env.REACT_APP_API_SERVER}/unit/getPreparenessCertificate/${photoFileName+ ".pdf"}`,
+                `${process.env.REACT_APP_API_SERVER}/unit/getunitdocument/${photoFileName + ".pdf"}`,
                 {
                     method: "GET",
                     headers: {
@@ -66,7 +66,7 @@ function EditFlc_Ceo(props) {
 
     if (flag == 0) {
         if (photoFileName) {
-            getcertificate();
+            getcertificate(photoFileName);
         }
     }
 
@@ -217,7 +217,7 @@ function EditFlc_Ceo(props) {
                                 id="1"
                                 className="selectBox"
                                 placeholder='Enter FLC District'
-                                defaultValue={flc['district']}
+                                defaultValue={flc !== undefined && flc['district']}
                                 disabled
                             ></input>
 
@@ -229,7 +229,7 @@ function EditFlc_Ceo(props) {
                                 required
                                 class={scheduleStyles.input}
                                 type="number"
-                                defaultValue={flc['tentativeyear']}
+                                defaultValue={flc !== undefined && flc['tentativeyear']}
                                 id="2"
                                 className="selectBox"
                                 disabled
@@ -243,7 +243,7 @@ function EditFlc_Ceo(props) {
                                 required
                                 class={scheduleStyles.input}
                                 type="text"
-                                value={flc['manufacturername']}
+                                value={flc !== undefined &&  flc['manufacturername']}
                                 id="3"
                                 className="selectBox"
                                 disabled
@@ -253,12 +253,12 @@ function EditFlc_Ceo(props) {
 
 
                         <div class={scheduleStyles.div4}>
-                            <p> ECI Supervisor</p>
+                            <p> Election Supervisor</p>
                             <input
                                 class={scheduleStyles.input}
                                 required
                                 type="text"
-                                value={flc['ecisupervisor']}
+                                value={flc !== undefined &&  flc['ecisupervisor']}
                                 id="4"
                                 className="selectBox"
                                 disabled
@@ -274,7 +274,7 @@ function EditFlc_Ceo(props) {
                                 name=""
                                 id="5"
                                 disabled
-                                value={flc['electiontype']}
+                                value={flc !== undefined && flc['electiontype']}
                                 className=" selectBox"
                             //   onChange={(e) => setRoleFunc(e.target.value)}
                             >
@@ -304,7 +304,7 @@ function EditFlc_Ceo(props) {
                                 type="number"
                                 disabled
                                 className=" selectBox"
-                                value={flc['tentativemonth']}
+                                value={flc !== undefined && flc['tentativemonth']}
 
                             //   onChange={(e) => setRoleFunc(e.target.value)}
                             >
@@ -361,7 +361,7 @@ function EditFlc_Ceo(props) {
                                 disabled
                                 className="selectBox"
                                 placeholder='xyz@example.com'
-                                value={flc['manufactureremailid']}
+                                value={flc !== undefined && flc['manufactureremailid']}
                             ></input>
                         </div>
 
@@ -373,7 +373,7 @@ function EditFlc_Ceo(props) {
                                 type="number"
                                 id="8"
                                 className="selectBox"
-                                value={flc['manufacturermobno']}
+                                value={flc !== undefined &&  flc['manufacturermobno']}
                                 disabled
                                 placeholder='Enter Number'
                             ></input>

@@ -46,7 +46,7 @@ export default function WarehouseDetails() {
                 data[3] = val;
             });
 
-            getPCName(data[3], data[4], data);
+          
 
         } catch (error) {
             console.log(error);
@@ -98,34 +98,6 @@ export default function WarehouseDetails() {
 
     }
 
-    const getPCName = async (state_code, pc_code, data) => {
-        try {
-            const response = await fetch(
-                `${process.env.REACT_APP_API_SERVER}/user/getPCListbyState/${state_code}`,
-                {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                    }
-                }
-            )
-
-            const list_pc = await response.json();
-            const pc_codes = list_pc["pccode"];
-            const pc_names = list_pc["pcname"];
-
-            for (let i = 0; i < pc_codes.length; i++) {
-                if (pc_codes[i] == pc_code) {
-                    data[4] = pc_names[i];
-                    break;
-                }
-            }
-            setWarehousDetails(data);
-        } catch (error) {
-            console.log(error);
-        }
-
-    }
     useEffect(() => {
         getDetails();
     }, []);
@@ -203,7 +175,7 @@ export default function WarehouseDetails() {
 
                                 <div className="form_group">
                                     <div className="form_label1">
-                                        <label htmlFor="">PC Code : </label>
+                                        <label htmlFor=""> District: </label>
                                     </div>
                                     <div className="form_input">
                                         {WarehouseDetails[4]}
