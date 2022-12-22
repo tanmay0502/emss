@@ -84,11 +84,11 @@ function UserList() {
 					return (elem["userid"].toLowerCase().includes(filter) || elem["name"].toLowerCase().includes(filter))
 				}
 			}).map((val) => {
-				console.log(val["photodata"].slice(0,22) + val["photodata"].slice(24))
+				console.log(val["photodata"])
 				return {
 					"User ID": val["userid"],
 					"": <div  style={{borderRadius: "50%", display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", paddingRight: "15px" }}>
-						<img className='thimage' style={{ height: "35px", width: "35px" }} src={val["photodata"] !== '' ? val["photodata"].slice(0,22) + val["photodata"].slice(24,-1): UserImageTest} alt="Img"/>
+						<img className='thimage' style={{ height: "35px", width: "35px" }} src={val["photodata"] !== '' ? val["photodata"]: UserImageTest} alt="Img"/>
 						</div>,
 					"User Name": val["name"],
 					"Phone Number": val["mobilenumber"].substring(0, 3) + " " + val["mobilenumber"].substring(3, 6) + " " + val["mobilenumber"].substring(6),

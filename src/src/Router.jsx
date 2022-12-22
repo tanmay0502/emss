@@ -271,7 +271,7 @@ function Routed(props) {
 			console.log(data["data"])
             if (response.status == 200) {
                 if(data["data"] !== undefined){
-                  setCurrImage(data["data"].slice(0,22) +data["data"].slice(24,-1))
+                  setCurrImage(data["data"])
                 }else{
                   setCurrImage(UserImageTest)
                 }

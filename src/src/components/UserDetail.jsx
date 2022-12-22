@@ -50,7 +50,7 @@ function UserDetail(props) {
             const data = await response.json();
             if (response.status == 200) {
                 if(data["data"] !== undefined){
-                  setCurrImage(data["data"].slice(0,22) +data["data"].slice(24,-1))
+                  setCurrImage(data["data"])
                 }else{
                   setCurrImage(UserImageTest)
                 }
@@ -82,7 +82,7 @@ function UserDetail(props) {
           );
           const data = await response.json();
           if (response.status == 200) {
-              setCurrImage(data["data"].slice(0,22) +data["data"].slice(24,-1))
+              setCurrImage(data["data"])
               // console.log("Image Data: " , data["data"].slice(0,22) +data["data"].slice(24,-1) )
               // console.log(currImage)
           }
@@ -141,10 +141,8 @@ function UserDetail(props) {
     console.log(fullFileName)
     const convertedFile = await convertBase64(file);
     setCurrImage(convertedFile)
-    setUploadPending(1);
-   
+    // setUploadPending(1);
 }
-// console.log(baseImage)
 
 
 useEffect(() => {
@@ -157,7 +155,7 @@ useEffect(() => {
 useEffect(() => {
     if(uploadPending == 1){
       console.log("Image submitting")
-      submitImage()
+     
     }
 }, [uploadPending]);
 
@@ -212,7 +210,7 @@ useEffect(() => {
         {editPic == 1 && (
 
           <div>
-            <p2 className="font-bold">Choose Your Imagee</p2>
+            <p2 className="font-bold">Choose Your Image</p2>
             <div className="ml-6 text-sm mt-4" style={{ width: "80%" }}>
             <input
                   type="file"
@@ -225,7 +223,7 @@ useEffect(() => {
             </div>
             <div className="flex justify-between mt-5 mb-7">
               <button3 onClick={editProfile} className="bg-red-600 cursor-pointer text-white p-2 rounded-lg">Cancel</button3>
-              <button3 onClick={editProfile} className="bg-green-600 cursor-pointer text-white p-2 pl-4 pr-4 rounded-lg">Set</button3>
+              <button3 onClick={() =>{editProfile(); submitImage()}} className="bg-green-600 cursor-pointer text-white p-2 pl-4 pr-4 rounded-lg">Set</button3>
             </div>
             <hr />
           </div>
