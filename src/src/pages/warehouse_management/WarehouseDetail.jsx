@@ -85,7 +85,7 @@ function WarehouseDetail(props) {
 
 			const data = await response.json();
 			console.log(data);
-			setWhdetails(data["warehouseDetails"])
+			setWhdetails(data["data"])
       const status = await response;
       console.log(status.status);
 			// console.log(data["data"], "data")
