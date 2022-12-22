@@ -28,6 +28,9 @@ export default function GenarateOrderSEC() {
 
   console.log(photoFileName+ ".pdf", ":filename")
 
+  
+  const man = {"ECIL":"ME", "BEL":"MB"}
+
   function openModal() {
       setIsOpen(true);
   }
@@ -268,12 +271,11 @@ if (flag == 0) {
                       className="w-5/6 h-10 p-2 border rounded-md "
                       placeholder="Type"
                       required
-                      onChange={(e) => {
-                          setBody((prevBody) => {
-                            prevBody.details[ind].destination = e.target.value;
-                            return (prevBody);
-                          })
-                        }}
+                      onClick={(e)=>{
+                        let prevBody=body;
+                        prevBody.details[ind].source=e.target.value;
+                        setBody(prevBody);
+                      }}
                     >
                       <option>Select</option>
                       {warehouses &&
@@ -297,19 +299,18 @@ if (flag == 0) {
                         className="h-10 p-2 border rounded-md"
                         placeholder="Type"
                         required
-                        onChange={(e) => {
-                          setBody((prevBody) => {
-                            prevBody.details[ind].destination = e.target.value;
-                            return (prevBody);
-                          })
+                        onClick={(e)=>{
+                          let prevBody=body;
+                          prevBody.details[ind].destination=e.target.value;
+                          setBody(prevBody);
                         }}
 
                       >
                         {" "}
                         <option>Select</option>
                         
-                          {["ECIL","BEL"].map((st) => (
-                            <option value={st} className="text-black">
+                          {Object.keys(man).map((st) => (
+                            <option value={man[st]} className="text-black">
                               {st}
                             </option>
                           ))}

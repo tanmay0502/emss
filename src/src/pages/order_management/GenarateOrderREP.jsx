@@ -23,6 +23,9 @@ export default function GenarateOrderREP() {
     setIsOpen(true);
 }
 
+  const manr = {"ME":"ECIL", "MB":"BEL"}
+  const man = {"ECIL":"ME", "BEL":"MB"}
+
 function afterOpenModal() {
     // references are now sync'd and can be accessed.
     //   subtitle.style.color = '#f00';
@@ -271,8 +274,8 @@ if (flag == 0) {
                       }}
                     >
                       <option>Select</option>
-                      {["ECIL", "BEL"].map((val) => (
-                          <option value={val} className="text-black" >
+                      {Object.keys(man).map((val) => (
+                          <option value={man[val]} name={val} className="text-black" >
                             {val}
                           </option>
                         ))}
@@ -363,7 +366,7 @@ if (flag == 0) {
                             onChange={(e) => {
                               setBody((prev)=>{
                                 prev.details[ind].unitDetails[ind2].itemmodel = e.target.value;
-                                prev.details[ind].unitDetails[ind2].manufacturer = prev.details[ind].source;
+                                prev.details[ind].unitDetails[ind2].manufacturer = manr[prev.details[ind].source];
                                 return prev;
                               })
                               setUpdate((prev)=>{return (prev+1)%10});
@@ -379,7 +382,7 @@ if (flag == 0) {
                         <td>
                           <select className="border p-2 mb-2 ml-3 mr-7"
                             required>
-                            <option value={manufacturer}>{manufacturer}</option>
+                            <option value={manr[manufacturer]}>{manr[manufacturer]}</option>
                           </select>
                         </td>
                       </tr>

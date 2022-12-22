@@ -96,6 +96,9 @@ const Login = () => {
 	}
 
 	useEffect(() => {
+		if(userID.length===0){
+			checkEmpty();
+		}
 
 		if ((userID.length > 0 && Number(userID)) || (userID.length > 0 && userID[0] == "0")) {
 			if (document.getElementById("stateDropdown") && document.getElementById("DistDropdown") && document.getElementById("roleDropdown") && document.getElementById("acDropdown") && document.getElementById("dropDowns")) {

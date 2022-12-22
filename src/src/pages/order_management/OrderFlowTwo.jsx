@@ -19,7 +19,87 @@ export default function OrderFlowTwo({OrderID}) {
     orderID+=id[i];
   }
 
-  const [initialTempD,setInitalTempD] = useState([
+ 
+
+  function removeUser(userid,orderid){
+    console.log(userid,orderid)
+
+
+        setAvialable((prev)=>{
+            let newdata = []
+            prev.map((val)=>{
+                if(val["User Id"]!==userid){
+                    newdata.push(val)
+                }
+                else{
+                   
+                        console.log(allocateUsers)
+                        let newdata = [...allocateUsers] 
+                        allocateUsers.map((value,id)=>{
+                            if(value["orderid"]==orderid && (newdata[id]["users"].length==0||  newdata[id]["users"][newdata[id]["users"].length-1]!=val)){
+                                newdata[id]["users"].push(val)
+                            }
+                        })
+                        setAllocateUsers(newdata)
+                    
+                }
+            })   
+            console.log(newdata)
+            
+            return newdata         
+        })
+
+       
+
+
+
+  }
+
+  function subuser(userid,orderid){
+    console.log(userid,orderid)
+
+        
+       setAllocateUsers((prev)=>{
+            let newdata=[]
+            console.log(prev)
+            prev.map((val)=>{
+                if(val["orderid"]==orderid){
+                    console.log(val)
+                    newdata.push({
+                        "orderid":orderid,
+                        "users":[]
+                    })
+                val["users"].map((val2)=>{
+                    if(val2["User Id"]!=userid && (newdata[newdata.length-1]["users"].length==0 || newdata[newdata.length-1]["users"][newdata[newdata.length-1]["users"].length-1]!=val2)){
+                        console.log(val2)
+                        newdata[newdata.length-1]["users"].push(val2)
+                        
+                    }
+                    else{
+                        let pp=[...available];
+                        if(pp.length==0 ||(pp[pp.length-1])!=val2){
+                            pp.push(val2)
+                        }
+                        setAvialable(pp);
+                    }
+                   
+                })
+            }
+            else{
+                newdata.push(val);
+            }
+
+            })
+
+            return newdata
+       })
+
+
+  }
+
+  
+
+  const [available,setAvialable] = useState([
     {
         "User Id" : "SSPPAARR1",
         "Name" : "Kunj Gupta"
@@ -35,9 +115,7 @@ export default function OrderFlowTwo({OrderID}) {
     {
         "User Id" : "SSRIOARR4",
         "Name" : "Atal Jasoria"
-    }
-  ]);
-  const [initialAssignD,setInitialAssignD] = useState([
+    },
     {
         "User Id" : "SSPPAARR5",
         "Name" : "Rajesh Singh"
@@ -55,6 +133,11 @@ export default function OrderFlowTwo({OrderID}) {
         "Name" : "Atal Gupta"
     }
   ]);
+
+  const [allocateUsers,setAllocateUsers] = useState();
+  const [Usertable,setUserTable] = useState();
+
+
   const [Order, setOrder] = useState([]);
   const [allOrders, setAllOrders] = useState([]);
   const [isPageLoaded, setIsPageLoaded] = useState(0);
@@ -62,9 +145,6 @@ export default function OrderFlowTwo({OrderID}) {
   const [orderDetailPage, setOrderDetailPage] = useState("-1");
   const UserId = window.sessionStorage.getItem('sessionToken');
   const [flag, setFlag] = useState(0);
-  const [tempD,setTempD] = useState([]);
-  const [assignD,setAssignD] = useState(initialAssignD);
-  const [isDetail, setIsDetail] = useState(0);
   const [initialVisibilityValues,setInitialVisibilityValues] = useState({
     assignUsers: false,
     fillVehicleDetails: false
@@ -110,42 +190,19 @@ export default function OrderFlowTwo({OrderID}) {
     }
     getOrders();
   },[])
-  useEffect(() => {
-    let orderBy_Id = {}
-    if (flag == 0 && allOrders != []) {
-      setOrder([]);
-      let myorder={
-        units:[]
-      }
-      
-      allOrders.map((order) => {
 
-        setFlag(1)
-        
-        const id = (orderID)
-        if(order["referenceorderid"]==id){
-          myorder["orderid"]=order["referenceorderid"]
-          myorder["creatoruserid"]=order["creatoruserid"]
-          myorder["orderstatus"]=order["orderstatus"]
-          myorder["source"]=order["source"]
-          myorder["destination"]=order["destination"]
-          myorder["type"]=order["type"]
-          let unit={}
-          unit["item"]=order["item"]
-          unit["itemmodel"]=order["itemmodel"]
-          unit["itemquantity"]=order["itemquantity"]
-          unit["manufacturer"]=order["manufacturer"]
-          myorder["units"].push(unit)
-          myorder["timestamp"]=order["timestamp"]
-        }
-        
-      })
-      setOrder(myorder)
-    }
+  useEffect(()=>{
+    let p = []
+    allOrders.map((val)=>{
+        p.push({
+            "orderid":val["orderid"],
+            "users":[]
+        })
+    })
+    setAllocateUsers(p);
+  },[allOrders])
+ 
     
-
-    setOrderById(orderBy_Id)
-  }, [allOrders])
 
    
 
@@ -173,165 +230,166 @@ export default function OrderFlowTwo({OrderID}) {
         update[name] = true;
     }
     setCardVisibility(update);
+    console.log(update)
     };
 
-    function addToTemp(val) {
-        const t = {
-            "User Id" : val["User Id"],
-            "Name" : val["Name"],
-            "Sub" : (<button  onClick={(e)=>{addToTemp(val)}} className="text-white">-</button>)
-        };
-        setTempD((prev)=>{
-            const newBody = [...prev];
-            newBody.push({
-                "User Id" : val["User Id"],
-                "Name" : val["Name"],
-                "Add" : (<button onClick={()=>{addToAssign(val)}} className="text-white">+</button>)
-            });
-            return newBody;
-        });
-        setAssignD((prev)=>{
-            const newBody = [];
-            prev.map(function(val){
-                if(val["User Id"]!=t["User Id"]) {
-                    newBody.push(val);
-                } 
-            });
-            return newBody;
-        });
-    };
-
-    function addToAssign(val) {
-        const t = val["User Id"];
-        setAssignD((prev)=>{
-            const newBody = [...prev];
-            newBody.push({
-                "User Id" : val["User Id"],
-                "Name" : val["Name"],
-                "Sub" : (<button  onClick={(e)=>{addToTemp(val)}} className="text-white">-</button>)
-            });
-            return newBody;
-        });
-        setTempD((prev)=>{
-            const newBody = [];
-            prev.map(function(val){
-                if(val["User Id"]!=t) {
-                    newBody.push(val);
-                } 
-            });
-            return newBody;
-        });
-    };
-
-    function getTempD(v) {
-        if (v) {
-            const tmp = [...new Set(v.map((val) => {
-                    return JSON.stringify({
-                        'User Id': val['User Id'],
-                        'Name' : val['Name']
-                    })
-                
-            }).filter(val => val))]
-            // setTableData(tmp.map(val => JSON.parse(val)));
-            let pp=tmp.map(val => JSON.parse(val));
-            for(let i=0;i<pp.length;i++){
-                pp[i]["Add"]=(<button onClick={()=>{addToAssign(pp[i])}} className="text-white">+</button>);
-            }
-            console.log("HP");
-            console.log(pp);
-            setTempD(pp);
-            console.log(tempD);
-        }
-    }
-
-    useEffect(() => {
-        getTempD(initialTempD);
-    }, [initialTempD])
-
-    useEffect(() => {
-        if (initialAssignD) {
-            const tmp = [...new Set(initialAssignD.map((val) => {
-                if (1) {
-                    return JSON.stringify({
-                        'User Id': val['User Id'],
-                        'Name' : val['Name']
-                    })
-                }
-                else {
-                    return null
-                }
-            }).filter(val => val))]
-            let pp=tmp.map(val => JSON.parse(val));
-            for(let i=0;i<pp.length;i++){
-                pp[i]["Sub"]=(<button  onClick={(e)=>{
-                    console.log("Clicked - "+pp[i]["User Id"]);
-                    addToTemp(pp[i]);
-                }} className="text-white">-</button>);
-            }
-            console.log(pp);
-            setAssignD(pp);
-        }
-    }, [initialAssignD])
-
+    
     const AssignUser = ({isVisible}) =>{
         
+        
+        return ( isVisible &&
+        
 
-        return isVisible2?(isVisible&&<>
-            <div className={`${styles.myWrapper1}`} style={{ position: "relative", height: "100%", width:"96%", margin: "2%" }}>
-            {isDetail == 0 ? <div className='MainHeader pd-5 ' style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between", "alignItems": "center" }}>
-                <h4 className='text-white'>Assign Users</h4>
-            </div> : <></>}
-            {isDetail == 0 ?
-                <>
-                <div className="grid" style={{display: "grid", gridTemplateColumns: "1fr 1fr"}}>
-                    <div className={styles.Scroll} style={{width: "100%"}}>
-                        <h5 style={{textAlign: "center", margin: "2%"}}>Temporary Users</h5>
-                        <DynamicDataTable
-                            rows={tempD}
-                            buttons={[]}
-                        />
-                    </div>
-                    <div className={styles.Scroll} style={{width: "100%"}}>
-                        <h5 style={{textAlign: "center", margin: "2%"}}>Assigned Users</h5>
-                        <DynamicDataTable
-                            rows={assignD}
-                            buttons={[]}
-                        />
-                    </div>
-                    
-                </div>
-                <button onClick={()=>{
-                    console.log("Submitted");
-                    setIsVisible2(false)}} className="text-white" style={{width: "15%",marginTop:"0", alignContent:"center"}}>Submit</button> 
-                </>
-                : ''
-            }
-            </div>
-        </>):(
-            isVisible&&<div className={`${styles.myWrapper1}`} style={{ position: "relative", height: "100%", width:"96%", margin: "2%" }}>
+        <div className="shadow-lg mb-10 pb-10 bg-white" style={{borderRadius:"2%"}}>
             <div className='MainHeader pd-5 ' style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between", "alignItems": "center" }}>
-                <h4 className='text-white'>Assigned Users</h4>
-            </div>
-                    <div className={styles.Scroll} style={{width: "100%"}}>
-                        <DynamicDataTable
-                            rows={assignD}
-                            fieldsToExclude={['Sub']}
-                            buttons={[]}
-                        />
+                    <h4 className='text-white'>Assign Users</h4>
+                </div>
+            {allocateUsers && allocateUsers.map((order,id)=>(
+                <div className="border-2 border-black rounded-md m-10  p-4 bg-white" >
+                    <p className="text-lg"> Order Id :  {order["orderid"]}</p>
+                    <div className="flex justify-around">
+                        <div className="w-1/2">
+                            <p className=" text-lg mb-4">All Non Asigned Users</p>
+                            <div className="border-black   pl-4 m-1  pr-4">
+                            <table className="w-full">
+                                <tr className="text-orange-500 h-10">
+                                    <th>
+                                        User Id
+                                    </th>
+                                    <th>
+                                        Name
+                                    </th>
+                                    <th>
+                                        Add
+                                    </th>
+                                    
+                                </tr>
+                               
+                                <br/>
+                                <tr><td colSpan={3}>
+                                {available.length==0 && (<p className="text-center">No data</p>)}
+                                </td></tr>
+                            {available.map((user)=>(
+
+                            <>
+                            <tr>
+                                    <td colSpan={3}><hr /></td>
+                                </tr>
+                                <tr >
+                                    <td>
+                                        {user["User Id"]}
+                                    </td>
+                                    <td>
+                                        {user["Name"]}
+
+                                    </td>
+                                    <td>
+                                        <button className="text-white" onClick={(e)=>removeUser(user["User Id"],order["orderid"])}>
+                                            +
+                                        </button>
+
+                                    </td>
+                                    
+                                </tr>
+                               
+
+                                </>
+                                
+                            
+                            ))}
+                            </table>
+                            
+                            </div>
+                        
+
+                        </div>
+                        <div className="w-1 bg-slate-500 mt-5"></div>
+                        <div className="w-1/2">
+                            <p className=" text-lg mb-4">Asigned Users</p>
+                            <div className="border-black  pl-4 m-1 pr-4">
+                            <table className="w-full">
+                                <tr className="text-orange-500 h-10">
+                                    <th>
+                                        User Id
+                                    </th>
+                                    <th>
+                                        Name
+                                    </th>
+                                    <th>
+                                        Subtract
+                                    </th>
+                                    
+                                </tr>
+                                <br/>
+                                <tr><td colSpan={3}>
+                                {order["users"].length==0 && (<p className="text-center">No data</p>)}
+                                </td></tr>
+                           
+                            {order["users"].map((user)=>(
+
+                            <>
+                            <tr>
+                                <td colSpan="3"><hr></hr></td>
+                               </tr>
+                                <tr >
+                                    <td>
+                                        {user["User Id"]}
+                                    </td>
+                                    <td>
+                                        {user["Name"]}
+
+                                    </td>
+                                    <td>
+                                        <button className="text-white" onClick={(e)=>subuser(user["User Id"],order["orderid"])}>
+                                            -
+                                        </button>
+
+                                    </td>
+                                    
+                                </tr>
+                              
+
+                                </>
+                                
+                            
+                            ))}
+                            </table>
+                            </div>
+                        
+
+                        </div>
+                       
                     </div>
-            </div>
-        )
-    }
+                   
+                </div>
+            ))
+             }
+             <button className="text-white">Submit</button>
+        </div>
+    )}
 
     const FVDetails = ({isVisible}) =>{
-        const sampleBody = [{
+        const sampleBody = [];
+        const oneVehicle={
             vehicleNumber : "",
             driverName : "",
             escortName : "",
             senderIncharge : "",
             driverContact : "",
             escortContact : ""
-        }];
+        };
+
+        allOrders.map((order)=>{
+            let x={
+                "OrderId":order["orderid"],
+                "vehicleDetails":[oneVehicle]
+
+            }
+            sampleBody.push(x);
+        })
+
+        // console.log(sampleBody)
+        
         const [body, setBody] = useState(sampleBody)
         const baseUrl = "http://localhost:8100/unit";
         const handleFormSubmit = async (e) => {
@@ -356,28 +414,44 @@ export default function OrderFlowTwo({OrderID}) {
         console.log(body);
         };
 
+        useEffect(()=>{
+            console.log(body)
+        },[body])
+
         return isVisible&&<>
             <div className={`${styles.myWrapper1}`} style={{ position: "relative", height: "100%", width:"96%", margin: "2%" }}>
                 <div className='MainHeader pd-5 ' style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between", "alignItems": "center" }}>
                     <h4 className='text-white'>Fill Vehicle Details</h4>
                 </div>
+                
+               
+               
+                {body.map((oneorder,ind1)=>(
+
+               
                 <div className="flex w-full">
+                    
                     <div className=" w-full">
-                    {body.map((val, ind) => (
-                        <div className="bg-white p-1 rounded-lg shadow-lg mt-2 w-full">
+
+                    <h4 style={{margin:"auto", textAlign:"center", marginTop:"4%"}} className="w-full">Order Id : {oneorder["OrderId"]}</h4>
+                       
+                    {oneorder["vehicleDetails"].map((val, ind) => (
+                        <div className="bg-white p-1 rounded-lg shadow-lg  w-full">
+
                         <div className="" style={{border: "solid 1px", borderRadius: "10px", width:"94%", margin:"3%"}} >
+                            
                     <div className="">
-                        <h4 style={{margin:"auto", textAlign:"center", marginTop:"1%"}} className="w-full">Order Id : OM12993455</h4>
                         <div className=" w-full flex justify-center">
                             <div style={{margin:"3%",marginTop:"3%"}} className="w-1/2">
                                 <label>Vehicle Number : </label>
                                 <input
-                                className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                                className=" border-l-purple-400 border-1  h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
                                 name="vehicleNumber"
                                 placeholder="Vehicle Number"
+                                type="text"
                                 onChange={(e) => {
                                     setBody((prevBody) => {
-                                    prevBody[ind].vehicleNumber = e.target.value;
+                                    prevBody[ind1]["vehicleDetails"][ind].vehicleNumber = e.target.value;
                                     return (prevBody);
                                     })
                                 }}
@@ -386,12 +460,13 @@ export default function OrderFlowTwo({OrderID}) {
                                 <br/>
                                 <label>Driver Name : </label>
                                 <input
-                                className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                                className=" border-l-purple-400 border-1  h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
                                 name="driverName"
                                 placeholder="Driver Name"
+                                type="text"
                                 onChange={(e) => {
                                     setBody((prevBody) => {
-                                    prevBody[ind].driverName = e.target.value;
+                                    prevBody[ind1]["vehicleDetails"][ind].driverName = e.target.value;
                                     return (prevBody);
                                     })
                                 }}
@@ -400,12 +475,13 @@ export default function OrderFlowTwo({OrderID}) {
                                 <br/>
                                 <label>Escort Name : </label>
                                 <input
-                                className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                                className=" border-l-purple-400 border-1  h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
                                 name="escortName"
                                 placeholder="Escort Name"
+                                type="text"
                                 onChange={(e) => {
                                     setBody((prevBody) => {
-                                    prevBody[ind].escortName = e.target.value;
+                                    prevBody[ind1]["vehicleDetails"][ind].escortName = e.target.value;
                                     return (prevBody);
                                     })
                                 }}
@@ -414,12 +490,13 @@ export default function OrderFlowTwo({OrderID}) {
                             <div style={{margin:"3%",marginTop:"3%"}} className="w-1/2">
                                 <label>Sender Incharge : </label>
                                 <input
-                                className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                                className=" border-l-purple-400 border-1  h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
                                 name="senderIncharge"
                                 placeholder="Sender Incharge"
+                                type="text"
                                 onChange={(e) => {
                                     setBody((prevBody) => {
-                                    prevBody[ind].senderIncharge = e.target.value;
+                                    prevBody[ind1]["vehicleDetails"][ind].senderIncharge = e.target.value;
                                     return (prevBody);
                                     })
                                 }}
@@ -428,12 +505,13 @@ export default function OrderFlowTwo({OrderID}) {
                                 <br/>
                                 <label>Driver Contact : </label>
                                 <input
-                                className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                                className=" border-l-purple-400 border-1  h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary "
                                 name="driverContact"
                                 placeholder="Driver Contact"
+                                type='number'
                                 onChange={(e) => {
                                     setBody((prevBody) => {
-                                    prevBody[ind].driverContact = e.target.value;
+                                    prevBody[ind1]["vehicleDetails"][ind].driverContact = e.target.value;
                                     return (prevBody);
                                     })
                                 }}
@@ -442,12 +520,13 @@ export default function OrderFlowTwo({OrderID}) {
                                 <br/>
                                 <label>Escort Contact : </label>
                                 <input
-                                className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                                className=" border-l-purple-400 border-1  h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
                                 name="escortContact"
                                 placeholder="Escort Contact"
+                                type="number"
                                 onChange={(e) => {
                                     setBody((prevBody) => {
-                                    prevBody[ind].escortContact = e.target.value;
+                                    prevBody[ind1]["vehicleDetails"][ind].escortContact = e.target.value;
                                     return (prevBody);
                                     })
                                 }}
@@ -461,7 +540,7 @@ export default function OrderFlowTwo({OrderID}) {
                         </div>
                     ))}
 
-                    <div className="flex justify-end"><button onClick={() => {
+                    <div className="flex justify-end"><button onClick={(e) => {
                         setBody((prev) => {
                         let temp = {
                             vehicleNumber : "",
@@ -471,13 +550,18 @@ export default function OrderFlowTwo({OrderID}) {
                             driverContact : "",
                             escortContact : ""
                         };
-                        const newBody = [ ...prev ];
-                        newBody.push(temp);
+                        let newBody = [ ...prev ];
+                        console.log(newBody)
+                        if(newBody[ind1]["vehicleDetails"][newBody[ind1]["vehicleDetails"].length-1].vehicleNumber!="" && newBody[ind1]["vehicleDetails"][newBody[ind1]["vehicleDetails"].length-1].driverName!="" && newBody[ind1]["vehicleDetails"][newBody[ind1]["vehicleDetails"].length-1].driverContact!=""){
+                             newBody[ind1]["vehicleDetails"].push(temp);
+                        }
+                        console.log(newBody)
                         return newBody;
                         })
                     }} type="button" className="text-white bg-orange-600 p-1 text-2xl w-10 h-10 -mt-5 " style={{ borderRadius: "50%" }}> +</button></div>
                     </div>
                 </div>
+                 ))}
                 <button onClick={handleFormSubmit} className="text-white">Submit</button>
             </div>
         </>

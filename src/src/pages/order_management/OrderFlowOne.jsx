@@ -1,18 +1,10 @@
 import React, { useState, useEffect } from "react";
-import UnitDescription from "./Unit_description"
-import { useParams } from "react-router-dom";
-import styles from './styles/order.module.css'
-import OrderActions from "./OrderActions";
-import OrderAllocationTable from './OrderAllocationTable'
 import styles2 from './styles/suborder.module.css'
-import UnitTrackerTable from './UnitTrackerTable'
 import SuborderTable from './SuborderTable';
-import SubOrder from "./SubOrder";
 
 export default function OrderFlowOne({OrderID,isSender}) {
   
   const id=OrderID
-  console.log(id);
   let orderID="";
   for(let i=0;i<id.length;i++){
     if(id[i]=='-'){
@@ -35,15 +27,12 @@ export default function OrderFlowOne({OrderID,isSender}) {
 
   function getSubOrder(val) {
     let suborderid = [];
-    console.log(val[0]);
-    console.log(orderID);
     val.map(function(order){
       if(order['referenceorderid']===orderID) {
         suborderid.push(order['orderid']);
         setType(order["orderstatus"]=="RA")
       }
     });
-    console.log(suborderid);
     let suborderdat = [];
     suborderid.map(function(v){
       val.map(function(order){
@@ -58,9 +47,56 @@ export default function OrderFlowOne({OrderID,isSender}) {
         }
       });
     });
-    console.log("Here");
-    console.log(suborderdat);
-    setSubDat(suborderdat);
+    let finalsubdat = [];
+    let i = 0;
+    let included ={}
+
+    console.log(suborderdat)
+
+    suborderdat.map((val)=>{
+      console.log(val)
+      let detail={
+        "item":val["item"],
+        "itemmodel":val["itemmodel"],
+        "itemquantity":val["itemquantity"]
+      }
+      if(val["source"] in included){
+        if(val["destination"] in included[val["source"]]){
+          
+          
+          included[val["source"]][val["destination"]].push(detail)
+        }
+        else{
+          included[val["source"]][val["destination"]]=[]
+          included[val["source"]][val["destination"]].push(detail)
+        }
+      }
+      else{
+        included[val["source"]]={
+          [val["destination"]]:[]
+        }
+        included[val["source"]][val["destination"]].push(detail)
+
+      }
+
+    })
+
+    console.log(included)
+    Object.keys(included).map((val)=>{
+      Object.keys(included[val]).map((val2)=>{
+        finalsubdat.push(
+          {
+            "source":val,
+            "destination":val2,
+            "details":included[val][val2]
+          }
+        )
+      })
+    })
+    console.log(included)
+
+    console.log(finalsubdat)
+    setSubDat(finalsubdat);
   }
 
   useEffect(() => {
@@ -80,8 +116,7 @@ export default function OrderFlowOne({OrderID,isSender}) {
         );
         const data2 = await response.json();
         if(data2['data']) {
-            console.log("Order Data");
-            console.log(data2['data']);
+          console.log(data2["data"])
             getSubOrder(data2['data']);
             setAllOrders(data2["data"]);
         }
@@ -99,7 +134,6 @@ export default function OrderFlowOne({OrderID,isSender}) {
   async function fun() {
     try {
       const body = orderID
-      console.log(orderID);
       const response = await fetch(
         `${process.env.REACT_APP_API_SERVER}/order/senderOrderApproval/?orderID=${orderID}`,
         {
@@ -112,7 +146,6 @@ export default function OrderFlowOne({OrderID,isSender}) {
       );
       const data2 = await response.json();
       if(data2) {
-          console.log(data2);
           alert("Order Issued Successfully");
           window.location = '/session/ordermanagement'
       }
@@ -157,8 +190,6 @@ export default function OrderFlowOne({OrderID,isSender}) {
 
     setOrderById(orderBy_Id)
   }, [allOrders])
-  console.log("Y");
-  console.log(subDat);
 
   return (
     <>
@@ -172,11 +203,9 @@ export default function OrderFlowOne({OrderID,isSender}) {
 					<div className={styles2.optimisedAllocationTablesScrollContainer}>
 						<div className={styles2.optimisedAllocationTables}>
 							{subDat.map(function(dat){
-                console.log("Sub");
-                console.log(dat);
                 return <SuborderTable val={dat}/>
               })}
-             {isSender==1 && <button onClick={fun} disabled={!type}  className={`${type==0 ? 'bg-gray-400 text-white' : 'bg-orange-500 text-white'}`}>Hand Shake</button>}
+              {isSender==1 && <button onClick={fun} disabled={!type}  className={`${type==0 ? 'bg-gray-400 text-white' : 'bg-orange-500 text-white'}`}>Hand Shake</button>}
 						</div>
 					</div>
 				</div>
@@ -185,3 +214,5 @@ export default function OrderFlowOne({OrderID,isSender}) {
     </>
   );
 }
+
+

@@ -129,13 +129,8 @@ function AllocateOrder({OrderID, type}) {
 			alert("Order allocated Successfully");
 			window.location = '/session/ordermanagement'
 		  }
-		  if (response["status"] == 200) {
-			alert("Order allocated Successfully");
-			window.location = '/session/ordermanagement'
-		  }
-		  if (response["status"] == 200) {
-			window.location = '/session/ordermanagement'
-		  }
+		  
+		  
 		} catch (err) {
 		  console.log(err);
 		}

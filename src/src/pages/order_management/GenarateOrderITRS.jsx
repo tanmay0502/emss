@@ -353,7 +353,8 @@ export default function GenarateOrderITRS() {
                           <option value="VVPAT">VVPAT</option>
                         </select></td>
                         <td>
-                          <input type="number" placeholder="No of Unit" className=" w-2/3 p-2 rounded-lg border mb-2"
+                        <input type="number" placeholder="No of Units" className=" mb-2" style={{height:"46px"}}
+
                             onChange={(e) => {
                               setBody((prev)=>{
                                 prev.details[ind].unitDetails[ind2].itemquantity = e.target.value;

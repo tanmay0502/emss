@@ -14,6 +14,7 @@ function OrderActions(props) {
 
     console.log("Order acetion:", props.Order)
     const order=props.Order[0]
+    console.log(props.Order)
     console.log("action 1")
 
     const [action, setAction] = useState(null)

@@ -7,21 +7,13 @@ import DestLocationPin from '../../assets/dest_location_pin.png'
 import { DynamicDataTable } from '@langleyfoxall/react-dynamic-data-table'
 
 function SuborderTable(props) {
-  console.log("Here");
-    console.log(props);
     const initialVisibilityValues = {
         vehicleDetails: false
       };
 
     const [cardVisibility, setCardVisibility] = useState(initialVisibilityValues);
 
-    const [data, setData] = useState([
-        {
-            'Item' : props.val.item,
-            'Model': props.val.itemmodel,
-            'Quantity': props.val.itemquantity
-        }
-    ])
+    const [data, setData] = useState(props.val.details)
 
     const [vehicleData,setVehicleDate] = useState([
         {
@@ -91,7 +83,7 @@ function SuborderTable(props) {
             </div>
         </div>
         <div className={styles.allocationDetailsTable}>
-            <DynamicDataTable rows={data} buttons={[]} />
+            <DynamicDataTable rows={data} buttons={[]} fieldMap={{'item': 'Item Type','itemmodel': 'Model','itemquantity': 'Quantity'}} />
         </div>
         <div>
         <ActionButton

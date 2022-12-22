@@ -92,6 +92,9 @@ if (flag == 0) {
       }
     ]
   }
+
+  const man = {"ECIL":"ME", "BEL":"MB"}
+  const manr = {"ME":"ECIL", "MB":"BEL"}
   const [body, setBody] = useState(sampleBody)
 
   const submmit = async () => {
@@ -271,8 +274,8 @@ if (flag == 0) {
                       }}
                     >
                       <option>Select</option>
-                      {["ECIL", "BEL"].map((val) => (
-                          <option value={val} className="text-black" >
+                      {Object.keys(man).map((val) => (
+                          <option value={man[val]} name={val} className="text-black" >
                             {val}
                           </option>
                         ))}
@@ -336,7 +339,7 @@ if (flag == 0) {
                           onChange={(e) => {
                             setBody((prevBody) => {
                               prevBody.details[ind].unitDetails[ind2].item = e.target.value;
-                              prevBody.details[ind].unitDetails[ind2].manufacturer = prevBody.details[ind].source;
+                              prevBody.details[ind].unitDetails[ind2].manufacturer = manr[prevBody.details[ind].source];
                               return (prevBody);
                             })
                             setUpdate((prev)=>{return (prev+1)%10});
@@ -378,8 +381,11 @@ if (flag == 0) {
                         </td>
                         <td>
                           <select className="border p-2 mb-2 ml-3 mr-7"
+                          value={manr[manufacturer]}
                             required>
-                            <option value={manufacturer}>{manufacturer}</option>
+
+                            <option >Select </option>
+                            <option >{manr[manufacturer]}</option>
                           </select>
                         </td>
                       </tr>

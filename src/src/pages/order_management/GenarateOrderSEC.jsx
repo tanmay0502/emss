@@ -101,6 +101,9 @@ if (flag == 0) {
       }
     ]
   }
+
+  
+  const man = {"ECIL":"ME", "BEL":"MB"}
   const [body, setBody] = useState(sampleBody)
 
   const submmit = async () => {

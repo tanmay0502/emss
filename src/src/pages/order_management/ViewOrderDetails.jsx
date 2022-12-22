@@ -72,10 +72,15 @@ export default function ViewOrderDetails() {
       const ID = sessionStorage.getItem("sessionToken").substring(8);
       
       allOrders.map((order) => {
+        console.log(ID)
 
         if((ID=="WHM" && order["referenceorderid"].split(':__').length>1) || (ID!="WHM" && order["referenceorderid"].split(':__').length==1)){
           validOrder.push(order)
-          setFlow(2);
+          if(ID=="WHM"){
+            console.log("under whm")
+            setFlow(2);
+          }
+          
         }
 
         setFlag(1)
@@ -115,8 +120,8 @@ export default function ViewOrderDetails() {
         flag == 1 &&
         <>
           {validallOrders && <UnitDescription Order={validallOrders} OrderID={orderID} />}
-          {validallOrders && flow==2 && <OrderActions Order={validallOrders} OrderID={orderID}/>}
-          {validallOrders && flow==1 && <OrderActions2 Order={validallOrders} OrderID={orderID}/>}
+          {validallOrders && flow==1 && <OrderActions Order={validallOrders} OrderID={orderID}/>}
+          {validallOrders && flow==2 && <OrderActions2 Order={validallOrders} OrderID={orderID}/>}
         </>
       }
     </div >

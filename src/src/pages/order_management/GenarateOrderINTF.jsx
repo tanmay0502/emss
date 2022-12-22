@@ -33,6 +33,8 @@ function closeModal() {
     setIsOpen(false);
 }
 
+
+const man = {"ECIL":"ME", "BEL":"MB"}
 const customStyles = {
     content: {
         top: '50%',

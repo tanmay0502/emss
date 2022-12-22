@@ -10,6 +10,7 @@ import Modal from 'react-modal';
 export default function UnitDescription(props) {
 
     const [Length, setLength] = useState(0);
+    console.log(props.Order)
     const units = [props.Order]
     const OrderID = props.OrderID
     const [photoFileName, setPhotoFileName] = useState("")
