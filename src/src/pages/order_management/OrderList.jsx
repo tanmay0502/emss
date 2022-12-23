@@ -21,6 +21,8 @@ export default function OrderList() {
     const [flag, setflag] = useState(0);
     const [modalIsOpen, setIsOpen] = React.useState(false);
 
+    const [passingOrder,setPassingOrder]  = useState({})
+
     function downloadPDF(pdf) {
         const linkSource = `data:application/pdf;base64,${pdf}`;
         const downloadLink = document.createElement("a");
@@ -113,7 +115,7 @@ export default function OrderList() {
                 const response = await fetch(
                     `${process.env.REACT_APP_API_SERVER}/order/list_orders/`,
                     {
-                        method: "GET",
+                        method: "POST",
                         headers: {
                             "Content-Type": "application/json",
                         },
@@ -136,22 +138,59 @@ export default function OrderList() {
 
     useEffect(() => {
         if (data) {
+            console.log("HEre");
+            console.log(data);
+            let subordid = [];
+            let mapping = {}
             const tmp = [...new Set(data.map((val) => {
-                const id = sessionStorage.getItem("sessionToken").substring(8)
-                if ((id=="WHM" && val["referenceorderid"].split(':__').length>1) || (id!="WHM" && val["referenceorderid"].split(':__').length==1)) {
+                const id = sessionStorage.getItem("sessionToken").substring(8);
+                console.log("Here " + val['referenceorderid'] );
+                console.log(val["referenceorderid"].split(':__').length);
+                if (id!="WHM" && val["referenceorderid"].split(':__').length==1) {
+                    
+                    
                     return JSON.stringify({
                         'displayID': val['orderid'].split(':__')[0],
                         'type': val['type'],
                         'creatoruserid': val['creatoruserid'],
                         'orderstatus': val['orderstatus'] == 'OC' ? 'Completed' : 'Pending',
                         'timestamp': new Date(val['timestamp']).toLocaleDateString('en-us', { year: "numeric", month: "short", day: "numeric", hour: 'numeric', minute: 'numeric' }),
-                        
                     })
+                }
+                else if((id=="WHM" && val["referenceorderid"].split(':__').length>1)) {
+                    let thiorder = val['orderid'];
+                    if(!subordid.includes(val['orderid'])) {
+                        subordid.push(val['orderid']);
+                        data.map(function(v){
+                            if(v["referenceorderid"].split(':__').length>1 && v['orderid']!=val['orderid']) {
+                                if(val["referenceorderid"].split(':__')[0]===v["referenceorderid"].split(':__')[0]) {
+                                    thiorder = thiorder + ',' + v['orderid'];
+                                    subordid.push(v['orderid']);
+                                }
+                            }
+                        });
+                       
+                        mapping[thiorder]=val["referenceorderid"].split(':__')[0]
+                        console.log(mapping)
+                    // setPassingOrder(pp);
+                  
+                        return JSON.stringify({
+                            'displayID': thiorder,
+                            'type': val['type'],
+                            'creatoruserid': val['creatoruserid'],
+                            'orderstatus': val['orderstatus'] == 'OC' ? 'Completed' : 'Pending',
+                            'timestamp': new Date(val['timestamp']).toLocaleDateString('en-us', { year: "numeric", month: "short", day: "numeric", hour: 'numeric', minute: 'numeric' }),
+                        })
+                    }
+                    
                 }
                 else {
                     return null
                 }
             }).filter(val => val))]
+            console.log(mapping)
+            setPassingOrder(mapping)
+
 
             // setTableData(tmp.map(val => JSON.parse(val)));
             let pp=tmp.map(val => JSON.parse(val));
@@ -253,8 +292,18 @@ export default function OrderList() {
                         ]}
                         onClick={(event, row) => {
                             let passingID = "";
-                            const id=row["displayID"];
-                            console.log(id.lenght);
+                            let id;
+                            console.log(Object.keys(passingOrder).length)
+                            console.log(row["displayID"])
+
+                            if(Object.keys(passingOrder).length!=0){
+                                console.log("heh")
+                                id=passingOrder[row["displayID"]]
+                            }
+                            else{
+                                id=row["displayID"]
+                            }
+                            console.log(id);
                             for(let i=0;i<id.length;i++){
                                 // console.log(id[i])
                                 if(id[i]=='/'){
@@ -265,7 +314,12 @@ export default function OrderList() {
                                 }
                             }
                             console.log(passingID)
+                            if(Object.keys(passingOrder).length!=0)
+                            navigate("/session/ordermanagement/orderdetails/" + passingID + "," +row["displayID"])
+
+                            else
                             navigate("/session/ordermanagement/orderdetails/" + passingID)
+
                         }}
                     />
                 </div>

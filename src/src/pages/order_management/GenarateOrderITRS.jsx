@@ -85,13 +85,16 @@ export default function GenarateOrderITRS() {
         const ID = window.sessionStorage.getItem('sessionToken');
         console.log(ID)
         const response = await fetch(
-          `${process.env.REACT_APP_API_SERVER}/unit/available_units/?oprnd=${ID}`,
+          `${process.env.REACT_APP_API_SERVER}/unit/available_units/`,
           {
-            method: "GET",
+            method: "POST",
             headers: {
               "Content-Type": "application/json",
             },
-            credentials: 'include'
+            credentials: 'include',
+            body:JSON.stringify({
+              "oprnd":ID
+            })
           }
         );
         const data = await response.json();
@@ -205,8 +208,8 @@ export default function GenarateOrderITRS() {
         }
       );
       const data2 = await response.json();
-      console.log(data2)
-      setStates(data2["state"]);
+      console.log(data2["data"])
+      setStates(data2["data"]["state"]);
     } catch (err) {
       console.log(err);
     }

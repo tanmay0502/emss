@@ -448,16 +448,16 @@ const Login = () => {
 				const data2 = await response.json();
 				console.log(data2);
 
-				if (response.status == 200 && data2['userID']) {
-					setUserIds(data2['userID'])
-					setNonce(data2['nonce'])
-					setMobile(data2['mobilenumber'])
-					if (data2['userID'].length !== 1) {
+				if (response.status == 200 && data2["data"]['userID']) {
+					setUserIds(data2["data"]['userID'])
+					setNonce(data2["data"]['nonce'])
+					setMobile(data2["data"]['mobilenumber'])
+					if (data2["data"]['userID'].length !== 1) {
 						setSelectUserBlock(1)
 					}
 					else {
 						setSelectUserBlock(0)
-						setUserID(data2['userID'][0])
+						setUserID(data2["data"]['userID'][0])
 					}
 					setIsOTPSent(1);
 					setPasswordBlock(1)

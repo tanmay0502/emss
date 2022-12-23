@@ -6,18 +6,43 @@ import OrderActions from "./OrderActions";
 import OrderActions2 from "./OrderActions2";
 
 export default function ViewOrderDetails() {
-  const OrderID = useParams();
-  const id=OrderID?OrderID["orderID"]:[];
-  let orderID="";
-  for(let i=0;i<id.length;i++){
-    if(id[i]=='-'){
-      orderID+="/";
+  const param = useParams();
+  const id=param?param["orderID"]:[];
+  const [newId,setNewId] = useState("0")
+  const [isPageLoaded,setIsPageLoaded]=useState(0);
+  const [orderID,setOrderID]  = useState()
+
+  useEffect(()=>{
+    if(isPageLoaded==0){
+    let pp="";
+    let showingSubOrder = ""
+    let f=0;
+    for(let i=0;i<id.length;i++){
+  
+      if(f==1){
+        showingSubOrder+=id[i];
+        continue;
+      }
+      if(id[i]==","){
+        f=1;
+        continue;
+      }
+      if(id[i]=='-'){
+        pp+="/";
+      }
+      else{
+      pp+=id[i];
+      }
     }
-    else
-    orderID+=id[i];
+    setOrderID(pp)
+  
+    console.log(pp,showingSubOrder)
+  
+    if(showingSubOrder!="") setNewId(showingSubOrder)
+  setIsPageLoaded(1);
   }
-
-
+  })
+ 
   const [flow,setFlow] = useState(1);
 
   const [Order, setOrder] = useState([]);
@@ -48,6 +73,8 @@ export default function ViewOrderDetails() {
         console.log("fetcjed", data2)
         if (data2["data"]) {
           setAllOrders(data2["data"])
+         
+
         }
       } catch (err) {
         console.log(err);
@@ -57,7 +84,7 @@ export default function ViewOrderDetails() {
       getOrders();
     }
 
-  },[OrderID])
+  },[orderID])
 
 
   
@@ -104,6 +131,7 @@ export default function ViewOrderDetails() {
         
       })
       setOrder(myorder)
+      console.log(validOrder)
       setValidAllOrders(validOrder)
     }
     
@@ -119,9 +147,9 @@ export default function ViewOrderDetails() {
       {
         flag == 1 &&
         <>
-          {validallOrders && <UnitDescription Order={validallOrders} OrderID={orderID} />}
-          {validallOrders && flow==1 && <OrderActions Order={validallOrders} OrderID={orderID}/>}
-          {validallOrders && flow==2 && <OrderActions2 Order={validallOrders} OrderID={orderID}/>}
+          {validallOrders && <UnitDescription Order={validallOrders} OrderID={newId=="0"?orderID:newId} />}
+          {validallOrders && flow==1 && <OrderActions Order={validallOrders} OrderID={newId=="0"?orderID:newId}/>}
+          {validallOrders && flow==2 && <OrderActions2 Order={validallOrders} OrderID={newId=="0"?orderID:newId}/>}
         </>
       }
     </div >
