@@ -14,7 +14,7 @@ function ViewPermission(){
 				const response = await fetch(
 					`${process.env.REACT_APP_API_SERVER}/user/view_permission`,
 					{
-						method: "GET",
+						method: "POST",
 						headers: {
 							"Content-Type": "application/json",
 						}
@@ -22,6 +22,7 @@ function ViewPermission(){
 				);
 				const data2 = await response.json();
 				console.log(data2);
+                if(data2 && data2.length!=0)
                 setPermission(data2)
 				
 
