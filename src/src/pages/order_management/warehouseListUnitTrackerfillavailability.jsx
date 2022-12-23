@@ -20,7 +20,7 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
     const [sortBy, setSortBy] = useState("None");
     const [sortOrder, setSortOrder] = useState("asc");
     const [WareHouse_List, setWareHouse_List] = React.useState([]);
-    const [warehouseMapping, setWarehouseMapping] = useState(null)
+    const [warehouseMapping, setWarehouseMapping] = useState({})
     const [Details, setDetails] = React.useState([]);
     const [pageLoaded,setPageLoaded] =  useState(0);
 
@@ -58,10 +58,58 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
     const  [total_VVPAT_M3, settotal_VVPAT_M3] = useState(0)
     const  [filled_VVPAT_M3, setfilled_VVPAT_M3] = useState(0)
     const  [leftout_VVPAT_M3, setleftout_VVPAT_M3] = useState(0)
+    const  [availableUnits, setAvailableUnits] = useState([])
+
+    useEffect(()=>{
+        const getUnits = async ()=>{
+            try {
+              const ID = window.sessionStorage.getItem('sessionToken');
+              console.log("available_units ID = ", ID)
+              const response = await fetch(
+                `${process.env.REACT_APP_API_SERVER}/unit/available_units/`,
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  credentials: 'include',
+                  body:JSON.stringify({
+                    "oprnd": ID
+                  })
+                }
+              );
+              const data = await response.json();
+              console.log("/unit/available_units/",data);
+              if (data.data.length) {
+                setAvailableUnits(data.data);
+              }
+            } catch (err) {
+              console.log({ err });
+            }
+        }
+        getUnits()
+    },[])
+
+    const countAvlUnits = (item, manufacturer, itemmodel)=>{
+        let sum = 0;
+        const dict = {
+            "B": "BEL",
+            "E": "ECIL",
+            "BU": "BU",
+            "CU": "CU",
+            "VT": "VVPAT",
+          }
+        for (let i = 0; i < availableUnits.length; i++) {
+            const e = availableUnits[i];
+            if (dict[e.unit_type] === item && dict[e.manufacturer] === manufacturer && e.model === itemmodel) {
+              sum+=e.count;
+            }
+        }
+          return sum;
+    }
 
     function setUnits(){
         const stateCode = sessionStorage.getItem("sessionToken").substring(0,2);
-        console.log(stateCode)
         if(pageLoaded==0){
         props.Order.map((order)=>{
             setPageLoaded(1);
@@ -93,7 +141,6 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
             }
         })
         }
-        console.log(total_BU_M2,total_BU_M3,total_CU_M3,total_CU_M2,total_VVPAT_M2,total_VVPAT_M3);
     }
 
     useEffect(()=>{
@@ -120,7 +167,6 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
             temp[index][(parseInt(Object.keys(temp[index])[(Object.keys(temp[index]).length - 1).toString()]) + 1).toString()]=v3
         }
         
-        console.log(temp)
         setOrderCount({ ...temp });
     
       }
@@ -137,29 +183,26 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
 
         let new_wdetails=WareHouse_List;
         
-        console.log(orderCount)
         console.log("calculate",id1,id2,key, value)
-        // console.log((filled_CU_M2),filled_BU_M3)
         let dummy2 =orderCount;
         if(key=="quantity")
         dummy2[id1][id2][key]=Number(value).toString();
         else
         dummy2[id1][id2][key]=value
-        console.log(dummy2)
 
         Object.keys(dummy2).map((key1)=>{
-            new_wdetails[key1]["maxCUM2ECIL"]=1000
-                new_wdetails[key1]["maxCUM2BEL"]=1000
-                new_wdetails[key1]["maxCUM3ECIL"]=1000
-                new_wdetails[key1]["maxCUM3BEL"]=1000
-                new_wdetails[key1]["maxBUM2ECIL"]=1000
-                new_wdetails[key1]["maxBUM2BEL"]=1000
-                new_wdetails[key1]["maxBUM3ECIL"]=1000
-                new_wdetails[key1]["maxBUM3BEL"]=1000
-                new_wdetails[key1]["maxVVPATM2ECIL"]=1000
-                new_wdetails[key1]["maxVVPATM2BEL"]=1000
-                new_wdetails[key1]["maxVVPATM3ECIL"]=1000
-                new_wdetails[key1]["maxVVPATM3BEL"]=1000
+            new_wdetails[key1]["maxCUM2ECIL"]=countAvlUnits("CU", "ECIL", "M2")
+                new_wdetails[key1]["maxCUM2BEL"]=countAvlUnits("CU", "BEL", "M2")
+                new_wdetails[key1]["maxCUM3ECIL"]=countAvlUnits("CU", "ECI", "M3")
+                new_wdetails[key1]["maxCUM3BEL"]=countAvlUnits("CU", "BEL", "M3")
+                new_wdetails[key1]["maxBUM2ECIL"]=countAvlUnits("BU", "ECIL", "M2")
+                new_wdetails[key1]["maxBUM2BEL"]=countAvlUnits("BU", "BEL", "M2")
+                new_wdetails[key1]["maxBUM3ECIL"]=countAvlUnits("BU", "ECIL", "M3")
+                new_wdetails[key1]["maxBUM3BEL"]=countAvlUnits("BU", "BEL", "M3")
+                new_wdetails[key1]["maxVVPATM2ECIL"]=countAvlUnits("VVPAT", "ECIL", "M2")
+                new_wdetails[key1]["maxVVPATM2BEL"]=countAvlUnits("VVPAT", "BEL", "M2")
+                new_wdetails[key1]["maxVVPATM3ECIL"]=countAvlUnits("VVPAT", "ECIL", "M3")
+                new_wdetails[key1]["maxVVPATM3BEL"]=countAvlUnits("VVPAT", "BEL", "M3")
                 new_wdetails[key1]["fillCUM2ECIL"]=0
                 new_wdetails[key1]["fillCUM2BEL"]=0
                 new_wdetails[key1]["fillCUM3ECIL"]=0
@@ -189,7 +232,6 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
       
         
     
-        console.log(_total_CU_M2, _total_CU_M3, _total_BU_M2, _total_BU_M3, _total_VVPAT_M2, _total_VVPAT_M3)
         setfilled_BU_M2(_total_BU_M2)
         setfilled_BU_M3(_total_BU_M3)
         setfilled_CU_M2(_total_CU_M2)
@@ -207,8 +249,6 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
     
         
         setOrderCount({...dummy2})
-        console.log(WareHouse_List)
-        console.log(new_wdetails)
         setWareHouse_List(new_wdetails);
       }
 
@@ -289,7 +329,7 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
         }).map((val) => {
             return {
                 "Warehouse ID": val["type"] == 'P' ? <Fragment><span style={{ display: 'flex', justifyContent: 'left', alignItems: 'left', marginLeft: "35%" }}><FaCircle size='0.8em' className='PermaWarehouse' /><span style={{ marginLeft: '10px', marginRight: '10px' }}>{val["warehouseid"]}</span>{val['doublelock'] ? <Fragment><FaKey className='keyColor' /><FaKey className='keyColor' /></Fragment> : <FaKey className='keyColor' />}</span></Fragment> : <Fragment><span style={{ display: 'flex', justifyContent: 'left', alignItems: 'left', marginLeft: "35%" }}><FaCircle size='0.8em' className='TempWarehouse' /><span style={{ marginLeft: '10px', marginRight: '10px' }}>{val["warehouseid"]}</span>{val['doublelock'] ? <Fragment><FaKey className='keyColor' /><FaKey className='keyColor' /></Fragment> : <FaKey className='keyColor' />}</span></Fragment>,
-                "Room Type": warehouseMapping ? warehouseMapping["data"][val[2]] : "",
+                "Room Type": warehouseMapping.data ? warehouseMapping["data"][val[2]] : "",
                 "Warehouse Type": val["type"]=="P" ?"Parmanent" : "Temporary",
                 "Status": <ToggleButton userID={val["warehouseid"]} checked={val[3] === 'A'} onToggle={(e) => {
                     if (val["status"] !== "A") {
@@ -340,7 +380,6 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
         if (sortMapping[sortBy] !== null && sortOrder === 'desc') {
             data.reverse();
         }
-        console.log(data)
         setWareHouse_List(data)
         return () => {
         }
@@ -367,7 +406,6 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
                 })
 
             const data = await response.json();
-            console.log(data)
             let activedata=[]
            
             data["data"].map((warehouse)=>{
@@ -394,7 +432,6 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
             fillDemand[id.toString()]={};
         })
         
-        console.log(fillDemand)
         setOrderCount(fillDemand);
     },[Details])
 
@@ -423,10 +460,6 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
                 }
             )
             const types = await response.json();
-            // data.map(arr => {
-            // 	arr = {...arr, "warehousebuildingtype": }
-            // })
-            // console.log(data);
             setWarehouseMapping(types);
         } catch (error) {
             console.log(error);
@@ -434,7 +467,6 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
     }
     const FillCapacity = async (id) => {
         if (showFill.includes(id) == true) {
-            console.log(showFill.includes(id))
             setShowFill(showFill.filter(item => item !== id));
         }
         else {
@@ -473,7 +505,6 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
               if(detail["unitDetails"].length!=0)
               data["details"].push(detail);
         })
-        console.log(data)
 
         try {
             const response = await fetch(
@@ -491,7 +522,6 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
               }
             );
             const data2 = await response.json();
-              console.log(response)
               if (response["status"] == 200) {
                 alert("Fill availability done sucessfully");
               }
