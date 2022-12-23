@@ -27,23 +27,6 @@ function Routed(props) {
 	const [userData, setUserData] = useState({
 		username: null
 	})
-	const theme = () => {
-		var r = document.querySelector(':root');
-		r.style.setProperty('--light', 'white');
-		r.style.setProperty('--background-gray', 'black');
-	}
-	// theme();
-
-	// function viewProfile(){
-	// 	if(profileView==0){
-	// 		setProfileOption(0);
-	// 	}
-	// 	setProfileView(profileView^1);	
-	// }
-
-	// function optionForProfile(){
-	// 	setProfileOption(profileOption^1);
-	// }
 
 	function logOut() {
 		const response = fetch(
@@ -57,17 +40,12 @@ function Routed(props) {
 			  credentials:'include'
 			}
 		  );
-
 		sessionStorage.removeItem("sessionToken", null);
 		props.SetSession(null)
 		setUserData(null)
 		// localStorage.setItem("token", null);
 		window.location.replace("/login");
 	}
-	// getUser();
-	//   useEffect(() => {
-	// getUser();
-	//   }, [userData]);
 
 	const navigate = useNavigate()
 	const location = useLocation()
@@ -195,28 +173,7 @@ function Routed(props) {
 
 		return <></>;
 	}
-
-	const fetchUserData = async (userid) => {
-		const response = await fetch(
-			`${process.env.REACT_APP_API_SERVER}/user/getNameFromUserID/${userid}`,
-			{
-				method: "GET",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				mode: "cors"
-			}
-		);
-		return await response.json().then(val => val[0].name);
-	}
-
-	
-
 	useEffect(() => {
-		// console.log(sessionStorage.getItem('sessionToken'))
-		const flag = sessionStorage.getItem('sessionToken');
-		// sessionStorage.setItem("log", null);
-		// console.log(flag, null)
 		if (!sessionStorage.getItem('sessionToken')) {
 			// console.log(flag)
 			window.location.href = '/login'
@@ -225,13 +182,6 @@ function Routed(props) {
 
 		setUserData({
 			userId: sessionStorage.getItem('sessionToken')
-		})
-
-		fetchUserData(sessionStorage.getItem('sessionToken')).then((val) => {
-			setUserData({
-				userId: sessionStorage.getItem('sessionToken'),
-				username: val
-			})
 		})
 		return () => {
 
@@ -268,14 +218,13 @@ function Routed(props) {
                 
             );
             const data = await response.json();
-			console.log(data["data"])
-            if (response.status == 200) {
+            if (response.status === 200) {
                 if(data["data"] !== undefined){
                   setCurrImage(data["data"])
                 }else{
                   setCurrImage(UserImageTest)
                 }
-            }else if(response.status == 404){
+            }else if(response.status === 404){
               setCurrImage(UserImageTest)
             }
         } catch (err) {
@@ -283,12 +232,8 @@ function Routed(props) {
         }
     }
 	useEffect(() => {
-		// console.log(userData["userId"])
 		getCurrImage(userData["userId"])
 	}, [userData])
-	useEffect(() => {
-		console.log(currImage)
-	}, [currImage])
 	//Profile Image End
 
 	return (
@@ -298,7 +243,7 @@ function Routed(props) {
 				<div className="nav-panel">
 					<div className="nav-panel-top">
 						<div className='app-info'>
-							<img className='App-Icon' src={ECIIcon} />
+							<img className='App-Icon' src={ECIIcon} alt="ECI"/>
 							EVM Management System
 						</div>
 						{/* <span>Welcome, {userData.username}</span> */}
@@ -404,7 +349,6 @@ function Routed(props) {
 						<div className="nav-right">
 							
 							<div className="userImage">
-								{console.log({currImage})}
 									<img
 										src={currImage !== 0 ? currImage : UserImageTest}
 										style={{borderRadius: "50%", height:"37.5px", width:"37.5px"}}
@@ -414,7 +358,6 @@ function Routed(props) {
 							<div style={{ display: "flex", "flexDirection": "column", alignItems: "center", "justifyContent": "center", overflowY: "visible", maxHeight: "100%" }}>
 								<span tyle={{ position: "relative" }}>{userData.userId ? userData.userId : ""}
 									<button3 tabIndex={1} className="navBarDropDownBtn" style={{ position: "relative", overflowY: "visible" }} onClick={() => {
-										// console.log("Helloo!")
 										document.getElementsByClassName('navBarDropDownBtn')[0].focus()
 									}}>
 										<ChevronRight style={{ transform: "rotateZ(90deg)", maxWidth: "1.2em", marginLeft: "10px" }} />

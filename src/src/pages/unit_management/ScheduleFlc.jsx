@@ -164,7 +164,7 @@ function ScheduleFLC() {
                     <div class={styles.parent}>
 
                         <div class={styles.div1}>
-                            <p>FLC District</p>
+                            <p>Warehouse ID</p>
                             <input
                                 class={styles.input}
                                 type="text"

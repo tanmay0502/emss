@@ -23,7 +23,7 @@ export default function FLCList() {
             const response = await fetch(
                 `${process.env.REACT_APP_API_SERVER}/unit/listFLC`,
                 {
-                    method: "GET",
+                    method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
@@ -64,11 +64,12 @@ export default function FLCList() {
 
                 return {
                     'Flcid': val['flcid'],
-                    'District': val['district'],
+                    'Warehouse ID': val['warehouseid'],
                     'Manufacturer Name': val['manufacturername'],
                     "Status": val['status'],
                     "ECI Supervisor's Name": val['ecisupervisor'],
                     "No. Of Engineers": val['numengineers'],
+                    'Tentative year':val["tentativeyear"],
                     "Start Date Of FLC":st,
                     "End Date Of FLC": ed,
                 }
@@ -131,7 +132,7 @@ export default function FLCList() {
                 <div class={styles.table}>
                     <DynamicDataTable
                         rows={flcValue !== undefined ? tableData : "No Data"}
-                        fieldsToExclude={["Flcid"]}
+                        fieldsToExclude={["Flcid", "Status", "ECI Supervisor's Name", "No. Of Engineers"]}
                         buttons={[]}
                         onClick={(event, row) => {
                             navigate('/session/unitmanagement/editFlc/' + row["Flcid"])

@@ -2,10 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { DynamicDataTable } from '@langleyfoxall/react-dynamic-data-table'
 import styles from './styles/announce_flc.module.css'
 
-
-
-
-
 function Announce_Flc() {
 
     var currentdate = new Date();
@@ -13,6 +9,7 @@ function Announce_Flc() {
     var mins = currentdate.getMinutes();
     var secs = currentdate.getSeconds();
     const [District, setDistrict] = useState([])
+    const [details,setDetails] = useState([])
 
     if (hrs < 10) {
         hrs = "0" + hrs;
@@ -31,36 +28,34 @@ function Announce_Flc() {
 
     console.log(time)
 
-    async function GetDistrict() {
-
-        try {
-            const response = await fetch(
-                `${process.env.REACT_APP_API_SERVER}/user/getRealm`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    credentials: 'same-origin',
-                }
-            );
-
-            const data = await response.json();
-            console.log(data, "I am response");
-
-            if (response.status == 200) {
-                setDistrict(data['dist'])
+    
+        async function getList() {
+    
+            try {
+                const response = await fetch(
+                    `${process.env.REACT_APP_API_SERVER}/warehouse/listWarehouses`,
+                    {
+                        method: "POST",
+                        credentials: "include",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    })
+    
+                const data = await response.json();
+                // console.log(data);
+                setDetails(data["data"])
+                // console.log(data["data"], "data")
+            } catch (error) {
+                console.log(error)
             }
-
-        } catch (err) {
-            console.log(err);
+    
         }
-    }
 
     useEffect(() => {
-        GetDistrict();
+        getList();
     }, []);
-
+    console.log(details)
 
 
 
@@ -77,16 +72,15 @@ function Announce_Flc() {
                     },
                     credentials: 'include',
                     body: JSON.stringify({
-
-                        district: document.getElementById("1") ? document.getElementById("1").value : "",
-                        ManufacturerName: document.getElementById("3") ? document.getElementById("3").value : "",
-                        ManufacturerMobNo: document.getElementById("8") ? document.getElementById("8").value : "",
-                        ManufacturerEmailID: document.getElementById("7") ? document.getElementById("7").value : "",
-                        ECISupervisor: document.getElementById("4") ? document.getElementById("4").value : "",
-                        TentativeYear: document.getElementById("2") ? document.getElementById("2").value : "",
-                        TentativeMonth: document.getElementById("6") ? document.getElementById("6").value : "",
-                        ElectionType: document.getElementById("5") ? document.getElementById("5").value : "",
-
+                        warehouseId: document.getElementById("1") ? document.getElementById("1").value : "",
+                        manufacturerName: document.getElementById("3") ? document.getElementById("3").value : "",
+                        manufacturerMobNo: document.getElementById("8") ? document.getElementById("8").value : "",
+                        manufacturerEmailId: document.getElementById("7") ? document.getElementById("7").value : "",
+                        tentativeYear: document.getElementById("4") ? document.getElementById("4").value : "",
+                        tentativeMonth: document.getElementById("6") ? document.getElementById("6").value : "",
+                        electionType: document.getElementById("5") ? document.getElementById("5").value : "",
+                        startDate: document.getElementById("2") ? document.getElementById("2").value : "",
+                        endDate: document.getElementById("9") ? document.getElementById("9").value : "",
                     }),
                 }
             );
@@ -125,41 +119,32 @@ function Announce_Flc() {
                     <div class={styles.parent}>
 
                         <div class={styles.div1}>
-                            <p>FLC District</p>
-                            <input
-                                class={styles.input}
-                                type="text"
-                                id="1"
-                                className="selectBox"
-                                placeholder='Enter District'
-                            ></input>
-                            {/* <select
-                                disabled={District.length == 0 ? true : false}
+                            <p>Warehouse ID</p>
+                            <select
                                 required
                                 name=""
                                 id="1"
                                 className=" selectBox"
-                            //   onChange={(e) => setRoleFunc(e.target.value)}
                             >
                                 <option value="" disabled selected>
-                                    Select District
+                                    Select Warehouse
                                 </option>
-                                {District.length > 0 && District.map((val) => (
-                                    <option value={val} >
-                                        {val}
+                                {details.length > 0 && details.map((val) => (
+                                    <option value={val['warehouseid']} >
+                                        {val['warehouseid']}
                                     </option>
                                 ))
                                 }
 
-                            </select> */}
+                            </select>
                         </div>
 
-                        <div class={styles.div2}>
+                        <div class={styles.div6}>
                             <p>Tentative Year Of Election</p>
                             <input
                                 class={styles.input}
                                 type="number"
-                                id="2"
+                                id="4"
                                 className="selectBox"
                                 placeholder='Enter Year'
                             ></input>
@@ -167,7 +152,7 @@ function Announce_Flc() {
                         </div>
 
 
-                        <div class={styles.div3}>
+                        <div class={styles.div7}>
                             <p> Manufacturer </p>
                             <input
                                 class={styles.input}
@@ -179,18 +164,27 @@ function Announce_Flc() {
 
                         </div>
 
-                        <div class={styles.div4}>
-                            <p> Election Supervisor</p>
+                        <div class={styles.div2}>
+                        <p>Start date</p>
                             <input
-                                class={styles.input}
-                                type="text"
-                                id="4"
-                                className="selectBox"
-                                placeholder='Full Name'
+                                class={styles.dateInput}
+                                type="date"
+                                id="2"
+                                className=" selectBox"
                             ></input>
                         </div>
 
-                        <div class={styles.div5}>
+                        <div class={styles.div3}>
+                        <p>End date</p>
+                            <input
+                                class={styles.dateInput}
+                                type="date"
+                                id="9"
+                                className=" selectBox"
+                            ></input>
+                        </div>
+
+                        <div class={styles.div4}>
                             <p> Type of election</p>
                             <select
                                 //   required={!isTemporary}
@@ -210,12 +204,12 @@ function Announce_Flc() {
                                     Lok Sabha-L
                                 </option>
                                 <option value="B">
-                                    By elections
+                                    By elections-B
                                 </option>
                             </select>
                         </div>
 
-                        <div class={styles.div6}>
+                        <div class={styles.div5}>
                             <p>Tentative month of election</p>
                             <select
                                 required
@@ -268,7 +262,7 @@ function Announce_Flc() {
                         </div>
 
 
-                        <div class={styles.div7}>
+                        <div class={styles.div9}>
                             <p>Manufacturer Email ID</p>
                             <input
                                 class={styles.input}
