@@ -145,9 +145,7 @@ function UserList() {
 	}
 
 	useEffect(() => {
-		console.log("Use Effect Here")
 		getUser();
-		// getCurrImage("TS657000DEO")
 	}, []);
 
 	const activateUser = async (myId) => {

@@ -415,7 +415,7 @@ function Routed(props) {
 										<ChevronRight style={{ transform: "rotateZ(90deg)", maxWidth: "1.2em", marginLeft: "10px" }} />
 										<div id='nav-bar-drop-down' className='navBarDropDown absolute top-12 right-6 rounded-full' style={{ width: "160px", zIndex: "999", "overflow": 'hidden' }}>
 											<button className="text-white cursor-pointer w-full p-3   rounded-sm" style={{ backgroundColor: "#84587C" }} onClick={() => {
-												navigate('/session/user-profile')
+												navigate(`/session/user-profile/${userData.userId ? userData.userId : ""}`)
 											}} >My Profile</button>
 											<hr />
 											<button className='text-white cursor-pointer   w-full p-3   rounded-sm' onClick={logOut} style={{ backgroundColor: "#84587C" }}>

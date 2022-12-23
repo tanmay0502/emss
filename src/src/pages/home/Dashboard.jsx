@@ -4,8 +4,8 @@ import { timeSince } from "../../assets/helper/DateTimeHelpers.js";
 
 import "./styles/Home1.css"
 import "./styles/Newversion.css";
-import MapDialog from '../../components/MapDialog';
-import MapIndia from '../../components/MapIndia';
+import MapDialog from '../../components/MapDialog.js';
+import MapIndia from '../../components/MapIndia.js';
 import { ReactComponent as Vector } from '../../assets/Vector.svg'
 import CUImg from '../../assets/CU_1.png'
 import BUImg from '../../assets/BU 1.png'
@@ -16,9 +16,9 @@ import DestIcon from '../../assets/location-pin 1.png'
 import { ReactComponent as ChevronRight } from '../../assets/chevron-right.svg';
 import { ReactComponent as OtherServicesIcon } from '../../assets/OtherServices.svg';
 import { useNavigate } from 'react-router-dom';
-import UnitCard from './UnitCard';
+import UnitCard from './UnitCard.jsx';
 import { PieChart } from 'react-minimal-pie-chart';
-import Data from './Data';
+import Data from './Data.js';
 import statesCode from './StatesCode.js';
 
 
@@ -296,7 +296,11 @@ function Home1() {
 				))}
 
 
-				{otherElements.includes('Warehouse') && <div className="myCardSample">
+				{otherElements.includes('Warehouse') && <div
+								className="myCardSample hover:cursor-pointer transition delay-50 hover:scale-105"
+								onClick={() => {
+									navigate("/session/warehousemanagement") }}
+				>
 					<div className="card_title d-flex justify-content-between">
 						<span>Warehouse</span> <OtherServicesIcon />
 					</div>
@@ -395,7 +399,12 @@ function Home1() {
 				</div>}
 
 
-				{otherElements.includes("Order Status") && <div className='myCardSample transCard' >
+				{otherElements.includes("Order Status") && 
+				<div  
+				className="myCardSample transCard hover:cursor-pointer transition delay-50 hover:scale-105"
+				onClick={() => {
+					navigate("/session/ordermanagement") }}
+				>
 					<div className="card_title"><span>Order Status</span></div>
 
 					<div className="cardBody cardList" >
@@ -549,9 +558,17 @@ function Home1() {
 					</div>
 				</div>}
 
-				{otherElements.includes("Recent Issues") && <div className="myCardSample " >
+				{otherElements.includes("Recent Issues") && 
+				
+				<div 
+				className="myCardSample hover:cursor-pointer transition delay-100 hover:scale-105"
+				onClick={() => {
+					navigate("/session/issuemanagement") }}
+				>
 
-					<div className="card_header_noti ">
+					<div
+					
+					className="card_header_noti">
 						<div className="heading">Recent Issues</div>
 						<div className='hBox'>
 							<ul className='li_noti '>

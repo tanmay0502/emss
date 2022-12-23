@@ -1,31 +1,16 @@
-import React, { ReactComponent } from "react";
+import React from "react";
 import { useState, useEffect } from "react";
 import { AiOutlineArrowLeft, AiOutlineEdit } from 'react-icons/ai'
-import { useNavigate } from "react-router-dom";
 import UserImageTest from '../assets/UserImageTest.png'
-
+import { useNavigate } from "react-router-dom";
 function UserDetail(props) {
-  const myFont = {
-    fontFamily: "Nunito Sans",
-    fontStyle: "normal",
-    fontWeight: "800",
-    fontSize: "19px",
-    lineHeight: "35px",
-  };
-  const myFont2 = {
-    fontFamily: "Nunito Sans",
-    fontStyle: "normal",
-    fontWeight: "500",
-    fontSize: "19px",
-    lineHeight: "35px",
-    color: "black"
-  };
-  console.log(props.detail)
-
+  const navigate = useNavigate()
+  console.log({props})
   const [editPic, setEditPic] = useState(0)
   const [currImage, setCurrImage] = useState(0)
-  const [uploadPending ,setUploadPending] = useState(0)
-
+  const [uploadPending, setUploadPending] = useState(0)
+  
+  
   function editProfile() {
     setEditPic(editPic ^ 1);
   }
@@ -48,13 +33,13 @@ function UserDetail(props) {
                 
             );
             const data = await response.json();
-            if (response.status == 200) {
+            if (response.status === 200) {
                 if(data["data"] !== undefined){
                   setCurrImage(data["data"])
                 }else{
                   setCurrImage(UserImageTest)
                 }
-            }else if(response.status == 404){
+            }else if(response.status === 404){
               setCurrImage(UserImageTest)
             }
         } catch (err) {
@@ -64,7 +49,7 @@ function UserDetail(props) {
 
     async function submitImage() {
       try {
-        // console.log(currImage)
+        console.log(currImage)
           const response = await fetch(
             `${process.env.REACT_APP_API_SERVER}/user/ModifyUserDetails`,
             {
@@ -81,10 +66,8 @@ function UserDetail(props) {
               
           );
           const data = await response.json();
-          if (response.status == 200) {
+          if (response.status === 200) {
               setCurrImage(data["data"])
-              // console.log("Image Data: " , data["data"].slice(0,22) +data["data"].slice(24,-1) )
-              // console.log(currImage)
           }
       } catch (err) {
           console.log({ err });
@@ -115,7 +98,6 @@ function UserDetail(props) {
   }
 
 
-  const [baseImage, setBaseImage ] = useState("")
 
   const convertBase64 = (file) => {
     return new Promise((resolve, reject) => {
@@ -132,7 +114,6 @@ function UserDetail(props) {
     })
 }
 
-
   const uploadImage = async (e) =>{
     const files = e.target.files;
     console.log(files)
@@ -141,22 +122,20 @@ function UserDetail(props) {
     console.log(fullFileName)
     const convertedFile = await convertBase64(file);
     setCurrImage(convertedFile)
-    // setUploadPending(1);
+    setUploadPending(1);
+
 }
 
 
 useEffect(() => {
-  console.log("Use Effect Here")
   getCurrImage(props.detail["userid"]);
-  // getCurrImage("TS657000DEO")
-}, []);
-// const [back, setBack ] = useState(0)
+}, );
 
 useEffect(() => {
-    if(uploadPending == 1){
-      console.log("Image submitting")
-     
-    }
+  if(uploadPending == 1){
+    console.log("Image submitting")
+    submitImage()
+  }
 }, [uploadPending]);
 
 
@@ -166,7 +145,16 @@ useEffect(() => {
         <button
           className="flex justify-center rounded-full aspect-square "
           onClick={() => {           
-            window.location.reload()
+            const URL = window.location.href;
+            const arr = URL.split("/");
+            const param = arr[arr.length - 1];
+            const arr1 = param.split("/");
+            if(arr1[0] === "usermanagement"){
+              return window.location.reload()
+            }else{
+              navigate("/session/home")
+            }
+            
           }
           
           }
@@ -191,11 +179,12 @@ useEffect(() => {
         </div>
       </div>
       <div className="rounded-full justify-center flex " style={{ position: "relative" }}>
-        {editPic == 0 && (<>
+        {editPic === 0 && (<>
         <img
           src={currImage !== null ? currImage : UserImageTest}
           className="w-1/6 pt"
           style={{borderRadius: "50%", height:"200px", width:"200px"}}
+          alt="img"
         />
           <button3
             className="text-white bg-green-600 bottom-16 z-index-10  p-3  h-10 cursor-pointer -ml-10 flex justify-center rounded-full aspect-square"
@@ -207,7 +196,7 @@ useEffect(() => {
           </button3>
         </>
         )}
-        {editPic == 1 && (
+        {editPic === 1 && (
 
           <div>
             <p2 className="font-bold">Choose Your Image</p2>
@@ -223,7 +212,7 @@ useEffect(() => {
             </div>
             <div className="flex justify-between mt-5 mb-7">
               <button3 onClick={editProfile} className="bg-red-600 cursor-pointer text-white p-2 rounded-lg">Cancel</button3>
-              <button3 onClick={() =>{editProfile(); submitImage()}} className="bg-green-600 cursor-pointer text-white p-2 pl-4 pr-4 rounded-lg">Set</button3>
+              <button3 onClick={() =>{editProfile()}} className="bg-green-600 cursor-pointer text-white p-2 pl-4 pr-4 rounded-lg">Set</button3>
             </div>
             <hr />
           </div>
@@ -232,7 +221,7 @@ useEffect(() => {
 
       {props.detail && (
         <div className="w-full px-2 py-8">
-          <div className="user-details-grid">
+          <div className="user-details-grid !mx-16">
 
             <b className="pt-1">User ID : </b>
             <p className="text-md">

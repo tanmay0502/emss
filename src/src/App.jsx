@@ -6,7 +6,7 @@ import ActionIssue from './pages/issue_request_management/ActionIssue';
 import IssueList from './pages/issue_request_management/Requestlist'
 import CreateUser from './pages/user_management/CreateUser';
 import EditUser from './pages/user_management/EditUser';
-import Home1 from './pages/home/Home1';
+import Home1 from './pages/home/Dashboard';
 import ManageUsers from './pages/user_management/ManageUsers';
 import WarehouseManagement from './pages/warehouse_management/WarehouseManagement'
 import AddWarehouse from './pages/warehouse_management/AddWarehouse';
@@ -227,9 +227,8 @@ function App() {
               path='/session/issuemanagement/actionIssue/:id'
               element={<ActionIssue />}
             />
-
             <Route
-              path="/session/user-profile"
+              path="/session/user-profile/:id"
               element={<Profile />}
             />
             <Route
