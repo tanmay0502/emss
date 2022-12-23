@@ -49,12 +49,12 @@ function Routed(props) {
 		const response = fetch(
 			`${process.env.REACT_APP_API_SERVER}/user/UserLogout`,
 			{
-			  method: "GET",
+			  method: "POST",
 			  credentials: 'same-origin',
 			  headers: {
 				"Content-Type": "application/json",
 			  },
-			  mode: 'no-cors'
+			  credentials:'include'
 			}
 		  );
 
@@ -397,7 +397,12 @@ function Routed(props) {
 						<div className="nav-left">
 							{getNav()}
 						</div>
+						<div><button className='text-white'
+						onClick={() => {
+							navigate('/session/viewpermissions')}
+						}>View Permissions</button></div>
 						<div className="nav-right">
+							
 							<div className="userImage">
 								{console.log({currImage})}
 									<img

@@ -53,6 +53,7 @@ import Announce_Flc from './pages/unit_management/announce_flc'
 import FillDemand from './pages/order_management/FillDemand';
 import FillAvailability from './pages/order_management/FillAvailability';
 import Usermanual from './components/Usermanual';
+import ViewPermission from './components/ViewPermission';
 function App() {
 
   const [sessionState, setSessionState] = useState({
@@ -230,6 +231,10 @@ function App() {
             <Route
               path="/session/user-profile/:id"
               element={<Profile />}
+            />
+            <Route
+              path="/session/viewpermissions"
+              element={<ViewPermission />}
             />
             <Route
               path="/session/ordermanagement"

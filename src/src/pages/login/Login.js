@@ -233,16 +233,16 @@ const Login = () => {
 			const response = await fetch(
 				`${process.env.REACT_APP_API_SERVER}/user/getStateList`,
 				{
-					method: "GET",
+					method: "POST",
 					headers: {
-						"Content-Type": "application/json",
+					  "Content-Type": "application/json",
 					},
-					mode: "cors"
+					credentials: 'include',
 				}
 			);
 			const data2 = await response.json();
 			console.log(data2);
-			setStates(data2["states"]);
+			setStates(data2["data"]);
 			checkEmpty()
 		} catch (err) {
 			console.log(err);
@@ -250,28 +250,7 @@ const Login = () => {
 	}
 	// getState();
 
-	async function getRoles() {
-		try {
-			const response = await fetch(
-				`${process.env.REACT_APP_API_SERVER}/user/getRoleList/`,
-				{
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					mode: "cors",
-				}
-			);
-			const data2 = await response.json();
-			// console.log(data2);
-			setRoles(data2["roleName"]);
-			setRolesCode(data2["roleCode"]);
-			checkEmpty()
-
-		} catch (err) {
-			console.log(err);
-		}
-	}
+	
 	useEffect(() => {
 		// sessionStorage.setItem("log", null)
 		// console.log(window.sessionStorage.getItem("sessionToken"), sessionStorage.getItem("log"), null)
@@ -290,25 +269,25 @@ const Login = () => {
 
 			try {
 				const response = await fetch(
-					`${process.env.REACT_APP_API_SERVER}/user/getDistrictList/${states[st]}`,
+					`${process.env.REACT_APP_API_SERVER}/user/getDistrictList`,
 					{
-						method: "GET",
+						method: "POST",
 						headers: {
 							"Content-Type": "application/json",
 						},
-						mode: "cors",
+						body:JSON.stringify({
+							"stateCode":states[st]
+						})
 					}
 				);
 				const data2 = await response.json();
 				console.log(data2);
-				console.log(userID, userID.substring(2, 5) == "000")
-
 				if (userID.length != 0) {
 					if (data2["status"] == 502) {
 						setDists({});
 					}
 					else {
-						setDists(data2["districts"]);
+						setDists(data2["data"]);
 					}
 
 				}
@@ -317,7 +296,7 @@ const Login = () => {
 				console.log(err);
 				setDists({});
 			}
-			setDists(prevState => ({ ...prevState, "None": "000"}));
+		
 
 
 			if (changeUserID) {
@@ -330,29 +309,33 @@ const Login = () => {
 	}
 	async function setDistFunc(st, changeUserID = true) {
 		console.log(st,Dists[st])
-		// setDist(Dists[st]);
+		setDist(Dists[st]);
 		if (state !== "Select:") {
 			if (0) {
 			} else {
 				try {
 					const response = await fetch(
-						`${process.env.REACT_APP_API_SERVER}/user/getACList/${state}/${Dist}`,
+						`${process.env.REACT_APP_API_SERVER}/user/getACList`,
 						{
-							method: "GET",
+							method: "POST",
 							headers: {
 								"Content-Type": "application/json",
 							},
 							mode: "cors",
+							body:JSON.stringify({
+								"stateCode":state,
+								"districtCode":Dist
+							})
+							
 						}
 					);
 					const data2 = await response.json();
 					console.log("ACs");
 					console.log(data2);
-					console.log(userID, userID.substring(5, 8) == "000")
 
 					if (userID.length != 0) {
 
-						if (data2["status"] == 502) {
+						if (data2["data"] == 502) {
 							setACs({})
 						}
 						else {
@@ -370,7 +353,7 @@ const Login = () => {
 			}
 			if (changeUserID) {
 				setUserID(
-					state + ("000" + Dists[st]).slice(-3)
+					state +  Dists[st]
 				);
 				setDist(Dists[st]);
 			}
@@ -386,11 +369,10 @@ const Login = () => {
 			const response = await fetch(
 				`${process.env.REACT_APP_API_SERVER}/user/getRolesList`,
 				{
-					method: "GET",
+					method: "POST",
 					headers: {
 						"Content-Type": "application/json",
-					},
-					mode: "cors",
+					}
 				}
 			);
 			const data2 = await response.json();
@@ -406,9 +388,9 @@ const Login = () => {
 			if (userID.length != 0) {
 				let p1 = []
 				let p2 = []
-				Object.keys(data2["roles"]).map((key) => {
+				Object.keys(data2["data"]).map((key) => {
 					p1.push(key);
-					p2.push(data2["roles"][key])
+					p2.push(data2["data"][key])
 				})
 
 				setRoles(p1);
@@ -442,133 +424,12 @@ const Login = () => {
 			console.log(userID);
 		}
 	}
-	// console.log(selectUserBlock, passwordBlock, isOTPSent, "HIIIIIIIIIIIIIIIII")
 	async function requestOTP() {
 		if (userID == "") {
 			setInvalidUser("Invalid User ID");
 			console.log("none");
 		} else {
-			// if (Number(userID)) {
-			// 	setMobile(userID);
-			// 	try {
-			// 		const response = await fetch(
-			// 			`${process.env.REACT_APP_API_SERVER}/user/getUserIDsByMobileNumber`,
-			// 			{
-			// 				method: "POST",
-			// 				headers: {
-			// 					"Content-Type": "application/json",
-			// 				},
-			// 				body: JSON.stringify({
-			// 					mobileNumber: userID,
-			// 				}),
-			// 				mode: "cors",
-			// 			}
-			// 		);
-			// 		const data2 = await response.json();
-			// 		console.log(data2)
-			// 		console.log(data2["userids"]);
-			// 		setUserIds(data2["userids"]);
-			// 		if (
-			// 			data2["status"] == 404
-			// 		) {
-			// 			setInvalidMobile("Mobile Number is not provided");
-			// 			console.log("not found")
-			// 			setInvalidUser("");
-			// 			setSelectUserBlock(0);
-			// 			setPasswordBlock(0)
-			// 			setIsOTPSent(0);
-			// 		} else {
-			// 			setInvalidMobile("");
-			// 			setInvalidUser("");
-			// 			try {
-			// 				const response = await fetch(
-			// 					`${process.env.REACT_APP_API_SERVER}/user/sendOTP`,
-			// 					{
-			// 						method: "POST",
-			// 						headers: {
-			// 							"Content-Type": "application/json",
-			// 						},
-			// 						body: JSON.stringify({
-			// 							mobileNumber: userID,
-			// 						}),
-			// 						mode: "cors",
-			// 					}
-			// 				);
-			// 				const data2 = await response.json();
-			// 				console.log(data2);
-
-			// 				setIsOTPSent(1);
-			// 				setPasswordBlock(1)
-			// 				setSelectUserBlock(1);
-			// 			} catch (err) {
-			// 				console.log(err);
-			// 			}
-			// 		}
-			// 	} catch (err) {
-			// 		console.log(err);
-			// 	}
-			// } else {
-			// 	console.log(userID)
-			// 	try {
-			// 		const response = await fetch(
-			// 			`${process.env.REACT_APP_API_SERVER}/user/getMobileFromUserID`,
-			// 			{
-			// 				method: "POST",
-			// 				headers: {
-			// 					"Content-Type": "application/json",
-			// 				},
-			// 				body: JSON.stringify({
-			// 					userID: userID,
-			// 				}),
-			// 				mode: "cors",
-			// 			}
-			// 		);
-			// 		const data = await response.json();
-			// 		console.log(data);
-
-			// 		if (data["status"] == 200) {
-			// 			setMobile(data["mobile"][0]);
-			// 			try {
-			// 				const response = await fetch(
-			// 					`${process.env.REACT_APP_API_SERVER}/user/sendOTP`,
-			// 					{
-			// 						method: "POST",
-			// 						headers: {
-			// 							"Content-Type": "application/json",
-			// 						},
-			// 						body: JSON.stringify({
-			// 							mobileNumber: data["mobile"][0],
-			// 						}),
-			// 						mode: "cors",
-			// 					}
-			// 				);
-			// 				const data2 = await response.json();
-			// 				console.log(data2);
-			// 				if (data2["status"] == 200) {
-
-			// 					setIsOTPSent(1);
-			// 					// setSelectUserBlock(1);
-			// 					setPasswordBlock(1);
-			// 				}
-			// 			} catch (err) {
-			// 				console.log(err);
-			// 			}
-			// 			setInvalidUser("");
-			// 			setInvalidMobile("");
-			// 		} else {
-			// 			setMobile(-1);
-			// 			if (invalidMobile == "") {
-			// 				setInvalidUser("Invalid User ID");
-			// 				// setInvalidMobile("");
-			// 			}
-			// 			// console.log(invalidMobile, invaliduser);
-			// 			else setInvalidUser("");
-			// 		}
-			// 	} catch (err) {
-			// 		console.log(err);
-			// 	}
-			// }
-			// textBox
+			
 			console.log("hiiiiiiiiiiiiiiiiii")
 			try {
 				const response = await fetch(
@@ -606,55 +467,7 @@ const Login = () => {
 			}
 		}
 	}
-	// console.log(typeof (userID), typeof (password), typeof (mobile), typeof (OTP))
-
-	// async function requestOTPPasswordBlock() {
-	//   console.log(userID, "UserID")
-	//   try {
-	//     console.log(userID, password, mobile, OTP)
-	//     const response = await fetch(
-	//       "${process.env.REACT_APP_API_SERVER}/user/verifyOTPPassword",
-	//       {
-	//         method: "POST",
-	//         headers: {
-	//           "Content-Type": "application/json",
-	//         },
-	//         body: JSON.stringify({
-	//           'credentials': {
-	//             'userID': userID.toString(),
-	//             'password': password.toString()
-	//           },
-	//           'otp': {
-	//             'mobileNumber': mobile.toString(),
-	//             'otp': OTP.toString()
-	//           }
-	//         }),
-	//         mode: "no-cors",
-	//       }
-	//     );
-	//     console.log("something")
-	//     const data2 = await response.json();
-	//     console.log(data2)
-	//     if (data2["status"] == 200) {
-	//       alert("You are logged In");
-	//       setSelectUserBlock(0);
-	//       setIsOTPSent(0);
-	//       setPasswordBlock(0);
-	//       setIsMobile(0);
-	//       window.sessionStorage.setItem("sessionToken", userID);
-	//       window.location.replace("/session/home");
-	//     }
-
-	//     else {
-	//       setInvalidOTP("OTP or Password is incorrect");
-	//       setOTP("");
-	//       setPassword("");
-	//       setInvalidOTP("User ID or OTP is incorrect");
-	//     }
-	//   } catch (err) {
-	//     console.log(err);
-	//   }
-	// }
+	
 
 	async function requestDashboard(selectedID = null) {
 		console.log(userID, password);
