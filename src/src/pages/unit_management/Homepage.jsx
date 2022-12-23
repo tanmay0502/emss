@@ -73,7 +73,7 @@ export default function HomePage() {
                 const response2 = await fetch(
                     uri2,
                     {
-                        method: "GET",
+                        method: "POST",
                         headers: {
                             "Content-Type": "application/json",
                         },
@@ -83,9 +83,9 @@ export default function HomePage() {
 
                 let rDat = await response2.json();
 
-                console.log(rDat, "rdat")
-                setStartDate(rDat.start_date);
-                setEndDate(rDat.end_date);
+                console.log(rDat["data"], "rdat")
+                setStartDate(rDat["data"].start_date);
+                setEndDate(rDat["data"].end_date);
                 // console.log(data);
                 // let data = Data;
                 // let data = [];
@@ -446,12 +446,12 @@ export default function HomePage() {
             const response = await fetch(
                 `${process.env.REACT_APP_API_SERVER}/unit/getflcdetail`,
                 {
-                    method: "GET",
+                    method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
                     credentials: 'include',
-                    mode: "cors"
+                    // mode: "cors"
                 }
             );
             const data = await response.json();
