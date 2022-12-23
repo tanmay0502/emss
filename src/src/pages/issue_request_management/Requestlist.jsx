@@ -59,7 +59,7 @@ function RequestList() {
                 }
             );
             const data2 = await response.json();
-            console.log(data2)
+            console.log("here",data2)
             if(data2["status"]!=404){
                 setRequest(data2['data']);
             }

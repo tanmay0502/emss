@@ -86,7 +86,8 @@ export default function ViewRequest() {
                     }),
                 }
             )
-            const data = await response.json();
+            const data1 = await response.json();
+            const data = data1["data"];
             console.log({data})
             // console.log(data["remarks"].reverse())
             

@@ -111,7 +111,8 @@ export default function ActionIssue() {
           }),
         }
       )
-      const data = await response.json();
+      const data1 = await response.json();
+      const data = data1["data"];
       console.log(data)
       setDetails(data);
 
@@ -256,7 +257,7 @@ console.log(issue);
 
       const data = await response.json();
       console.log(data)
-      window.location.replace(`/session/issuemanagement/viewRequest/id=${issueId()}`);
+      window.location.replace(`/session/issuemanagement/viewRequest}`);
     } catch (err) {
       console.log(err);
     }
