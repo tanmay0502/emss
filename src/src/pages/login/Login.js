@@ -280,14 +280,16 @@ const Login = () => {
 						})
 					}
 				);
-				const data2 = await response.json();
+				let data2 = await response.json();
 				console.log(data2);
 				if (userID.length != 0) {
 					if (data2["status"] == 502) {
 						setDists({});
 					}
 					else {
+						
 						setDists(data2["data"]);
+
 					}
 
 				}
@@ -296,7 +298,7 @@ const Login = () => {
 				console.log(err);
 				setDists({});
 			}
-		
+			setDists(prevState => ({ ...prevState, All: "ALL"}));
 
 
 			if (changeUserID) {
@@ -313,6 +315,10 @@ const Login = () => {
 		if (state !== "Select:") {
 			if (0) {
 			} else {
+				console.log({
+					"stateCode":state,
+					"districtCode":Dists[st]
+				})
 				try {
 					const response = await fetch(
 						`${process.env.REACT_APP_API_SERVER}/user/getACList`,
@@ -321,10 +327,9 @@ const Login = () => {
 							headers: {
 								"Content-Type": "application/json",
 							},
-							mode: "cors",
 							body:JSON.stringify({
 								"stateCode":state,
-								"districtCode":Dist
+								"districtCode":Dists[st]
 							})
 							
 						}
@@ -333,13 +338,13 @@ const Login = () => {
 					console.log("ACs");
 					console.log(data2);
 
-					if (userID.length != 0) {
+					if (userID.length !== 0) {
 
-						if (data2["data"] == 502) {
+						if (data2["data"] === 502 || Object.keys(data2["data"]).length===0) {
 							setACs({})
 						}
 						else {
-							setACs(data2["acs"])
+							setACs(data2["data"])
 						}
 
 					}
@@ -348,7 +353,7 @@ const Login = () => {
 					setACs({})
 				}
 
-				setACs(prevState => ({ ...prevState, "None": "000" }));
+				setACs(prevState => ({ ...prevState, All: "000" }));
 
 			}
 			if (changeUserID) {
@@ -430,7 +435,6 @@ const Login = () => {
 			console.log("none");
 		} else {
 			
-			console.log("hiiiiiiiiiiiiiiiiii")
 			try {
 				const response = await fetch(
 					`${process.env.REACT_APP_API_SERVER}/user/GenerateOTPRequest`,
@@ -461,6 +465,8 @@ const Login = () => {
 					}
 					setIsOTPSent(1);
 					setPasswordBlock(1)
+				}else{
+					alert(data2["message"])
 				}
 			} catch (err) {
 				console.log(err);

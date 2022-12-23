@@ -51,7 +51,7 @@ function Home1() {
 	const [fetchData, setFetchData] = useState([]);
 	const [indiaMap, setIndiaMap] = useState(0);
 
-	const uri = process.env.REACT_APP_API_SERVER+"/unit/total_counts?oprnd="
+	const uri = process.env.REACT_APP_API_SERVER+"/unit/total_counts"
 
 	const stateID = window.sessionStorage.getItem('sessionToken').slice(0,2)
 
@@ -73,20 +73,24 @@ function Home1() {
 				try {
 					console.log("GET "+uri+ID)
 					const response = await fetch(
-						uri+ID,
+						uri,
 						{
-						  method: "GET",
+						  method: "POST",
 						  headers: {
 							"Content-Type": "application/json",
 						  },
-						  credentials:'include'
+						  credentials:'include',
+						  body: JSON.stringify(
+							{
+								oprnd: ID
+							}
+						  )
 						}
 					  );
 						let data2 = await response.json();
 						console.log("Data fetched", data2);
-						// console.log("Data fetched", data2['data']);
 						let data = data2['data'];
-						// console.log(data2)
+						console.log(data2)
 						setFetchData(data);
 				} catch (err) {
 					console.log(err);
@@ -101,15 +105,19 @@ function Home1() {
 			let getData = async ()=>{
 			try {
 				const ID = "IN"+window.sessionStorage.getItem('sessionToken').slice(2,11);
-				console.log("GET "+uri+ID)
+				// console.log("GET "+uri+ID)
 				const response = await fetch(
-					uri+ID,
+					uri,
 					{
-					  method: "GET",
+					  method: "POST",
 					  headers: {
 						"Content-Type": "application/json",
 					  },
-					  credentials:'include'
+					  credentials:'include',
+					  body: JSON.stringify(
+						{
+							oprnd: ID
+						})
 					}
 				  );
 					let data2 = await response.json();
@@ -201,9 +209,9 @@ function Home1() {
 		const ID = window.sessionStorage.getItem('sessionToken')
 
 		const response = await fetch(
-			`${process.env.REACT_APP_API_SERVER}/issue_requests/list_request/${ID}`,
+			`${process.env.REACT_APP_API_SERVER}/issue_requests/list_request`,
 			{
-				method: "GET",
+				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
 				},
@@ -212,7 +220,7 @@ function Home1() {
 		);
 
 		const respJSON = await response.json();
-		var data = respJSON['data'].slice(-10);
+		var data = respJSON['data'].slice(-10)
 		console.log(data)
 		// data.reverse();
 		data = data.sort((a,b) => {
@@ -290,9 +298,11 @@ function Home1() {
 						</div>
 					</div>
 				</div>}
-
+				{/* {console.log({statusData})} */}
 				{data.length && data.map(val => (
+					
 					<UnitCard title={val} statusData={statusData} />
+					
 				))}
 
 

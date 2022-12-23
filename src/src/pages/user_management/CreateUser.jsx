@@ -75,28 +75,6 @@ function CreateUser() {
   const [imageName, setImageName] = useState();
   
 
-  async function getRoleList() {
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_SERVER}/user/getRoleList`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: 'include',
-        }
-      );
-      const data2 = await response.json();
-      // console.log(data2);
-      filterRoleList(data2);
-    } catch (err) {
-      console.log(err);
-    }
-
-
-  }
-
   async function getRealm() {
     try {
       const response = await fetch(
@@ -186,31 +164,10 @@ function CreateUser() {
       setRolesCode(rc);
     }
   }
-  async function getState() {
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_SERVER}/user/getStateList`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      const data2 = await response.json();
-      // console.log(data2);
-      setStates(data2["states"]);
-    } catch (err) {
-      console.log(err);
-    }
-  }
   useEffect(() => {
     if (window.sessionStorage.getItem("sessionToken") === null) {
       window.location.pathname = "/session/home";
     }
-    getState();
-    getRoleList();
     getRealm();
   }, []);
 
@@ -342,21 +299,6 @@ function CreateUser() {
       if (state == "IN" || state == "EL" || state == "BL") {
       } else {
         console.log("State Val at setDistFunc: " + state)
-        try {
-          const response = await fetch(
-            `${process.env.REACT_APP_API_SERVER}/user/getACListbyStateDist/${state}`,
-            {
-              method: "GET",
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          );
-          const data2 = await response.json();
-          setACs(data2["ACs"]);
-        } catch (err) {
-          console.log(err);
-        }
       }
       if (changeUserID) {
         setUserID(
@@ -422,7 +364,6 @@ function CreateUser() {
         );
       }
       console.log(userID);
-      getState();
     }
   }
 
@@ -844,8 +785,8 @@ function CreateUser() {
               id="formUserImage"
               required={isTemporary}
               type="file"
-              placeholder="Choose Image (Upto 1 MB)"
-              accept="image/*"
+              placeholder="Choose Image (Upto 500KB)"
+              accept="image/png"
               onChange={(e) => {
                 uploadImage(e);
             }}

@@ -53,8 +53,8 @@ export default function AddWarehouse() {
       console.log(response);
 
 
-      console.log(data2);
-      setRealm(data2)
+      console.log({data2});
+      setRealm(data2["data"])
     } catch (err) {
       console.log(err);
     }
@@ -179,74 +179,6 @@ export default function AddWarehouse() {
       }
     }
   };
-
-  //Get state list
-
-  async function getState() {
-    try {
-      const response = await fetch(
-        // `${process.env.REACT_APP_API_SERVER}/user/getStateList`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      try {
-        const response = await fetch(
-          `${process.env.REACT_APP_API_SERVER}/user/getdistListbyState/${window.sessionStorage.getItem("sessionToken").substring(0, 2)}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-
-        const data = await response.json();
-
-        console.log(data);
-        if (data["dists"])
-          setdists(data["dists"]);
-        // setdistcodes(data["distcode"]);
-      } catch (error) {
-        console.log(error);
-        setdists(["00"]);
-        // setdistcodes(["00"]);
-      }
-
-      const StateData = await response.json();
-      if (StateData) {
-        console.log(StateData)
-
-        const ans = getKeyByValue(StateData['states'], first2)
-
-        console.log("Val")
-
-        if (["EC", "ME", "MB"].includes(
-          window.sessionStorage.getItem("sessionToken").substring(0, 2)
-        )) {
-          setStates(StateData['states']);
-          // setStatesCode(StateData['stcodes']);
-        }
-        else {
-          setStates({
-            [ans]: first2
-          });
-          // setStatesCode([first2]);
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  useEffect(() => {
-    getState();
-  }, []);
-
 
   async function setStateFunc(st) {
     if (st !== "-1") {

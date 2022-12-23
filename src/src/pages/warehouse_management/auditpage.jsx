@@ -40,14 +40,16 @@ function AuditDetail(props) {
 
         try {
             const response = await fetch(
-                `${process.env.REACT_APP_API_SERVER}/warehouse/getWarehouseAudit/${props.id}`,
+                `${process.env.REACT_APP_API_SERVER}/warehouse/getWarehouseAudit`,
                 {
-                    method: "GET",
+                    method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
+                    body: JSON.stringify({
+                        warehouseID:props.id
+                    }),
                     credentials: 'include',
-                    mode: "cors"
                 }
             );
             const data = await response.json();

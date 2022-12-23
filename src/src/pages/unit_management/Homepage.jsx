@@ -9,7 +9,7 @@ import ListCard from './ListCard';
 import statesCode from "../home/StatesCode";
 
 
-const uri = process.env.REACT_APP_API_SERVER + "/unit/total_counts?oprnd="
+const uri = process.env.REACT_APP_API_SERVER + "/unit/total_counts"
 const uri2 = process.env.REACT_APP_API_SERVER + "/unit/fetch-first-randomization-schedule"
 
 let expD = [];
@@ -40,20 +40,25 @@ export default function HomePage() {
             try {
                 const ID = window.sessionStorage.getItem('sessionToken');
                 const response = await fetch(
-                    uri + ID,
+                    uri,
                     {
-                        method: "GET",
+                        method: "POST",
                         headers: {
                             "Content-Type": "application/json",
                         },
-                        credentials: 'include'
+                        credentials: 'include',
+                        body: JSON.stringify(
+							{
+								oprnd: ID
+							}
+						)
                     }
                 );
                 let data2 = await response.json();
                 console.log("/unit/total_counts", data2.data);
                 if (data2.data.length) {
                     console.log("data updated")
-                    setData(data2.data);
+                    setData(data2["data"]);
                 }
             } catch (err) {
                 console.log(err)
@@ -557,12 +562,8 @@ export default function HomePage() {
 
 
     const Redirect = (e) => {
-        if (Role == "CEO") {
             navigate("/session/unitmanagement/flc_list")
-        }
-        else if (Role == "DEO") {
-            navigate("/session/unitmanagement/schedule_flc")
-        }
+
 
 
     };

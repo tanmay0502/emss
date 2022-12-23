@@ -114,14 +114,20 @@ function UserDetail(props) {
 }
 
   const uploadImage = async (e) =>{
+
     const files = e.target.files;
     console.log(files)
     const file = e.target.files[0];
     const fullFileName = file.name;
     console.log(fullFileName)
-    const convertedFile = await convertBase64(file);
-    setCurrImage(convertedFile)
-    setUploadPending(1);
+    if(file.size >= 5000){
+      alert("File Size Can't exceed 500KB")
+    }else{
+      const convertedFile = await convertBase64(file);
+      setCurrImage(convertedFile)
+      setUploadPending(1);
+    }
+
 
 }
 

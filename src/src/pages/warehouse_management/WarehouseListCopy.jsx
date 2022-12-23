@@ -63,7 +63,7 @@ function WarehouseList() {
 			const response = await fetch(
 				`${process.env.REACT_APP_API_SERVER}/warehouse/warehouseTypes`,
 				{
-					method: "GET",
+					method: "POST",
 					headers: {
 						"Content-Type": "application/json",
 					},

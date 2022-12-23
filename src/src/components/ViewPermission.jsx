@@ -44,7 +44,7 @@ function ViewPermission(){
     return (
         <div className="shadow-lg mb-10 pb-10 bg-white" style={{borderRadius:"2%"}}>
             <div className='MainHeader pd-5 ' style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between", "alignItems": "center" }}>
-                    <h4 className='text-white'>Permissions</h4>
+                    <h4 className='text-white'>Subordinate Permissions</h4>
                 </div>
            
             <div className='w-full flex justify-between p-10'>

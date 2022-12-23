@@ -1,7 +1,9 @@
 import React from "react";
 import { ReactComponent as ChevronRight } from '../../assets/chevron-right.svg';
+import { useNavigate } from 'react-router-dom';
 
 export default function UnitCard({title, statusData}){
+    const navigate = useNavigate();
     let displayData = [['Ballot Units', 0, 0], ['Control Units', 0, 0], ['VVPAT', 0, 0]];
     // console.log(title, statusData)
     let data = statusData.filter(val=>(val.status===title))
@@ -19,7 +21,10 @@ export default function UnitCard({title, statusData}){
         }
     }
     return (
-        <div className="myCardSample">
+        <div className="myCardSample hover:cursor-pointer transition delay-50 hover:scale-105"
+        onClick={() => {
+            navigate("/session/unitmanagement") }}>
+        <div>
             <div className="card_title d-flex justify-content-start pd-custom">
                 <span>Units</span> <ChevronRight className="chevron" /> <span>{title}</span> 
             </div>
@@ -41,6 +46,7 @@ export default function UnitCard({title, statusData}){
                     ))}
                 </tbody>
             </table>
+    </div>
     </div>
     )
 }

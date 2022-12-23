@@ -14,6 +14,7 @@ import { ReactComponent as DownloadsIcon } from './assets/Downloads.svg';
 import { ReactComponent as ChevronRight } from './assets/chevron-right.svg';
 import { ReactComponent as ServicesIcon } from './assets/ser.svg';
 import { ReactComponent as ReportIcon } from './assets/carbon_report.svg';
+import { ReactComponent as PermissionIcon } from './assets/permission.svg';
 import Switch from "react-switch";
 import { useState, useEffect } from 'react';
 import './sidebar.css';
@@ -169,6 +170,14 @@ function Routed(props) {
 				<UnitManagementIcon />
 				<span>Schedule 2nd Randomisation</span>
 			</>);
+
+			
+		}
+		if (location.pathname.startsWith('/session/viewpermissions')) {
+			return (<>
+				{/* <UnitManagementIcon /> */}
+				<span>Permissions</span>
+			</>);
 		}
 
 		return <></>;
@@ -314,7 +323,14 @@ function Routed(props) {
 							<div><ReportIcon />Report</div>
 							<ChevronRight className="chevron" />
 						</button>
-
+						<button className={window.location.pathname.startsWith("/session/viewpermissions") ? 'nav-button active' : 'nav-button'}
+							onClick={() => {
+								navigate('/session/viewpermissions')}
+							}>
+								
+								<div><PermissionIcon/> View Permissions</div>
+								<ChevronRight className="chevron" />
+						</button>
 
 						<button className={window.location.pathname.startsWith("/session/otherservices") ? 'nav-button active' : 'nav-button'}>
 							<div><OtherServicesIcon />Others</div>
@@ -326,7 +342,7 @@ function Routed(props) {
 							<Switch onChange={handleChange} checked={checked} onColor="#F56A3F" uncheckedIcon={false}
 								checkedIcon={false} />
 						</div>
-						
+
 					</div>
 					{/* <div className="nav-panel-bottom">
 						<button className={window.location.pathname.startsWith("/session/home") ? 'nav-button active' : 'nav-button'} onClick={() => {
@@ -342,10 +358,6 @@ function Routed(props) {
 						<div className="nav-left">
 							{getNav()}
 						</div>
-						<div><button className='text-white'
-						onClick={() => {
-							navigate('/session/viewpermissions')}
-						}>View Permissions</button></div>
 						<div className="nav-right">
 							
 							<div className="userImage">
