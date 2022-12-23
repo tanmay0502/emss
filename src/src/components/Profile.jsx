@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { AiOutlineArrowLeft, AiOutlineEdit } from 'react-icons/ai'
 import UserDetail from "./UserDetail";
 import './styles/UserList.css'
+import EditUser from '../pages/user_management/EditUser';
 
 function Profile() {
   const Id = () => {
@@ -14,6 +15,9 @@ function Profile() {
   }
   const [users, setUsers] = useState([])
   const [profileData, setProfileData] = useState({})
+  const [isDetail, setIsDetail] = useState(0);
+  const [isEdit, setIsEdit] = useState(0);
+
 
   async function getUser() {
 		try {
@@ -29,7 +33,7 @@ function Profile() {
 			);
 			const tmp = await response.json();
 			console.log({ tmp })
-			setUsers(tmp["users"]);
+			setUsers(tmp["data"]["users"]);
 
 		} catch (err) {
 			console.log(err);
@@ -49,10 +53,24 @@ function Profile() {
     }
 	}, [users]);
 
+
+	function editPage() {
+		setIsEdit(1)
+		setIsDetail(0)
+	}
+
+
 return(
   <>
   <div className="myWrapper">
-  <UserDetail detail={profileData}/>
+
+  	
+	  {
+					isEdit == 1 ? <EditUser userdata={profileData} />
+						:
+						<UserDetail detail={profileData} editPage={editPage}/>
+
+				}
   </div>
   
   </>

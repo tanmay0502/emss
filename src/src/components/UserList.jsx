@@ -46,9 +46,9 @@ function UserList() {
 
 
 	useEffect(() => {
-		console.log(user);
+		// console.log(user);
 		if (user) {
-			console.log(user);
+			// console.log(user);
 			setIsDetail(1);
 		}
 	}, [user]);
@@ -84,7 +84,7 @@ function UserList() {
 					return (elem["userid"].toLowerCase().includes(filter) || elem["name"].toLowerCase().includes(filter))
 				}
 			}).map((val) => {
-				console.log(val["photodata"])
+				// console.log(val["photodata"])
 				return {
 					"User ID": val["userid"],
 					"": <div  style={{borderRadius: "50%", display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", paddingRight: "15px" }}>
@@ -132,12 +132,10 @@ function UserList() {
 			const tmp = await response.json();
 
 
-			console.log({ tmp })
-
-			setNoOfActiveUsers(tmp["active_users"]);
-			setNoOfInActiveUsers(tmp["inactive_users"]);
-			setNoOfTotalUsers(tmp["total_users"]);
-			setUsers(tmp["users"]);
+			setNoOfActiveUsers(tmp["data"]["active_users"]);
+			setNoOfInActiveUsers(tmp["data"]["inactive_users"]);
+			setNoOfTotalUsers(tmp["data"]["total_users"]);
+			setUsers(tmp["data"]["users"]);
 
 		} catch (err) {
 			console.log(err);

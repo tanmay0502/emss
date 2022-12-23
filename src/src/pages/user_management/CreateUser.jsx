@@ -110,13 +110,9 @@ function CreateUser() {
         }
       );
       const data2 = await response.json();
-
-
-      console.log(response);
-
-
-      console.log(data2);
-      setRealm(data2)
+      // console.log(response);
+      // console.log(data2);
+      setRealm(data2['data'])
     } catch (err) {
       console.log(err);
     }

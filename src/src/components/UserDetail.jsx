@@ -5,7 +5,6 @@ import UserImageTest from '../assets/UserImageTest.png'
 import { useNavigate } from "react-router-dom";
 function UserDetail(props) {
   const navigate = useNavigate()
-  console.log({props})
   const [editPic, setEditPic] = useState(0)
   const [currImage, setCurrImage] = useState(0)
   const [uploadPending, setUploadPending] = useState(0)
@@ -169,13 +168,6 @@ useEffect(() => {
           <div className="right_btn" onClick={() => ResetPassword()}>
             Reset Password
           </div>
-          {/* <button
-            className="flex justify-center rounded-full aspect-square "
-            style={{ "background": "#16c09861", color: "#008767" }}
-          // onClick={props.close}
-          >
-            <AiOutlineEdit />
-          </button> */}
         </div>
       </div>
       <div className="rounded-full justify-center flex " style={{ position: "relative" }}>
