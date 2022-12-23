@@ -74,17 +74,20 @@ export default function ViewRequest() {
         const myId = issueId();
         try {
             const response = await fetch(
-                `${process.env.REACT_APP_API_SERVER}/issue_requests/search_request/${myId}`,
+                `${process.env.REACT_APP_API_SERVER}/issue_requests/search_request`,
                 {
-                    method: "GET",
+                    method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    credantials: 'same-origin',
-                    mode: 'cors'
+                    credentials:'include',
+                    body: JSON.stringify({
+                        issueid : myId,
+                    }),
                 }
             )
             const data = await response.json();
+            console.log({data})
             // console.log(data["remarks"].reverse())
             
 
@@ -111,11 +114,12 @@ export default function ViewRequest() {
             const response = await fetch(
                 `${process.env.REACT_APP_API_SERVER}/issue_requests/getDocument/${myId}/${docName}`,
                 {
-                    method: "GET",
+                    method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    mode: 'cors'
+                    credentials:"include",
+
                 }
             )
             const data = await response.json();

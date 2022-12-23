@@ -47,6 +47,7 @@ export default function CreateIssue() {
                     headers: {
                         "Content-Type": "application/json",
                     },
+                    credentials:"include",
                     body: JSON.stringify({
                         Severity: document.getElementById("formSeverity").value.slice(-1),
                         remarks: document.getElementById("formRemarks").value,

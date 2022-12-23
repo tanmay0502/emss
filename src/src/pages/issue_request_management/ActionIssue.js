@@ -99,14 +99,16 @@ export default function ActionIssue() {
     const myId = issueId();
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_SERVER}/issue_requests/search_request/${myId}`,
+        `${process.env.REACT_APP_API_SERVER}/issue_requests/search_request`,
         {
-          method: "GET",
+          method: "POST" ,
           headers: {
             "Content-Type": "application/json",
           },
-          credantials: 'same-origin',
-          mode: 'cors'
+          credentials:'include',
+          body: JSON.stringify({
+              issueid : myId,
+          }),
         }
       )
       const data = await response.json();
@@ -186,11 +188,11 @@ const getOpenIssues = async () => {
       const response = await fetch(
 				`${process.env.REACT_APP_API_SERVER}/user/listAllUsers`,
 				{
-					method: "GET",
+					method: "POST",
 					headers: {
 						"Content-Type": "application/json",
 					},
-          credantials: 'same-origin',
+          credantials: 'include',
 					mode: "cors"
 				}
 			);
@@ -237,7 +239,7 @@ console.log(issue);
            headers: {
              "Content-Type": "application/json",
            },
-           credantials: 'same-origin',
+           credentials: "include",
            body: JSON.stringify({
              issueID: parseInt(issueId()),
              remarks: remarks,
@@ -590,8 +592,7 @@ else documentName = ['No Documents Found']
                      
                       <option value="">Select</option>
                       <option value="forward">Forward</option>
-                      <option value="reject">Reject</option>
-                      <option value="resolve">Resolve</option>
+                      <option value="close">Close</option>
                       <option value="merge">Merge</option>
                     </select>)
                     }
@@ -607,19 +608,14 @@ else documentName = ['No Documents Found']
                   </label>
                   <br />
                   <div className="flex">
-                    <select
+                    <input
                       type="text"
                       className="w-4/5 h-10 mt-1 p-2 border rounded-md"
                       value={forwardedTo}
                       onChange={(e) => (setForwardedTo(e.target.value))}
                       required
                     >
-                      <option value="">Select</option>
-                      {users.map((userId) => (
-                        <option>{userId}</option>
-                      ))}
-
-                    </select>
+                    </input>
 
                     <TypeIcon className="ml-2" />
                   </div>
@@ -635,19 +631,15 @@ else documentName = ['No Documents Found']
                   <br />
                   <div className="flex">
 
-                    <select
+                    <input
                       type="text"
                       className="w-4/5 h-10 mt-1 p-2 border rounded-md"
                       value={mergeInto}
                       onChange={(e) => (setmergeInto(e.target.value))}
                       required
                     >
-                      <option value="">Select</option>
-                      {issue["data"].map((issueData) => (
-                        <option>{issueData[0] + ": " + issueData[2]}</option>
-                      ))}
 
-                    </select>
+                    </input>
 
                     <TypeIcon className="ml-2" />
                   </div>
