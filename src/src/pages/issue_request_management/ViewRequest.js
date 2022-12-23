@@ -428,7 +428,7 @@ export default function ViewRequest() {
                                         </div>
 
                                         
-                                        <Group LabelText='Remarks' className={`${styles.remarks}`} value={Details['remarks'][index-1][3]} />
+                                        <Group LabelText='Remarks' className={`${styles.remarks}`} value={(Details['remarks'].sort())[index-1][3]} />
                                         
                                     </div>
                                     </div>

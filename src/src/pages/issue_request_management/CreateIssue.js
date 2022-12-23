@@ -72,14 +72,14 @@ export default function CreateIssue() {
 
             // alert(document.getElementById("formTags").value)
 
-            console.log(response);
+            console.log(response.status);
             const data = await response.json();
             console.log("data" + data);
             console.log("Message:" + data["message"])
-            if (data["message"] === "Issue created successfully") {
+            if (response.status === 200) {
                 document.getElementById("form").reset();
                 alert("Created Successfully");
-                window.location.pathname = "/session/issuemanagement/createIssue";
+                window.location.pathname = "/session/issuemanagement";
             } else {
                 alert("Failed!");
             

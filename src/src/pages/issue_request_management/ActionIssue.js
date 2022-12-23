@@ -257,7 +257,7 @@ console.log(issue);
 
       const data = await response.json();
       console.log(data)
-      window.location.replace(`/session/issuemanagement/viewRequest}`);
+      window.location.replace(`/session/issuemanagement/viewRequest/id=${issueId()}`);
     } catch (err) {
       console.log(err);
     }
