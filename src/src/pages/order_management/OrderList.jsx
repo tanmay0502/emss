@@ -13,7 +13,7 @@ export default function OrderList() {
 
     const navigate = useNavigate()
     const [sortOrder, setSortOrder] = useState("asc");
-    const [sortBy, setSortBy] = useState("None");
+    // const [sortBy, setSortBy] = useState("Default");
     const [isDetail, setIsDetail] = useState(0);
     const [tableFilter, setTableFilter] = useState("");
     const [photoFileName, setPhotoFileName] = useState("")
@@ -132,9 +132,10 @@ export default function OrderList() {
         }
         getOrders();
     },[])
-
+    
     const [data, setData] = useState([]);
     const [tableData, setTableData] = useState([]);
+    const [sortedTableData, setSortedTableData] = useState([])
 
     useEffect(() => {
         if (data) {
@@ -191,8 +192,6 @@ export default function OrderList() {
             console.log(mapping)
             setPassingOrder(mapping)
 
-
-            // setTableData(tmp.map(val => JSON.parse(val)));
             let pp=tmp.map(val => JSON.parse(val));
             
             for(let i=0;i<pp.length;i++){
@@ -200,15 +199,61 @@ export default function OrderList() {
                     e.stopPropagation(); 
                     generatePDF(pp[i]["displayID"])}} className="text-white">Show Pdf</button>);
             }
-            console.log(pp);
+            console.log("Print PP", pp);
             setTableData(pp);
-
+            setSortedTableData(pp)
         }
 
         return () => {
 
         }
     }, [data])
+
+
+    const [update, setUpdate] = useState(0);
+    const sortTableData = (sortBy)=>{
+        const sorted = tableData.sort((a,b)=>{
+            if (sortBy === "Type") {
+                return b.type > a.type;
+            }
+            if (sortBy === "OrderID") {
+                return b.displayID > a.displayID;
+            }
+            if (sortBy === "Time") {
+                return b.timestamp > a.timestamp;
+            }
+            return false;
+        })
+        if (sortBy === "Reverse") {
+            sorted.reverse();
+        }
+        if (sortBy === "Default") {
+            setSortedTableData(tableData);
+        } else {
+            setSortedTableData(sorted);
+        }
+        alert("Sort by "+ sortBy)
+        console.log("sorted table data", sortedTableData)
+        setUpdate(prev=>(prev+1)%10)
+    }
+    
+    const filterTableData = (key)=>{
+        const sorted = tableData.filter((e)=>{
+            if (e.Type === key) {
+                return true;
+            }
+        })
+        if (!key) {
+            sorted = setSortedTableData(tableData);
+        }
+        // alert("Sort by "+ key)
+        console.log("sorted table data", sortedTableData)
+        setUpdate(prev=>(prev+1)%10)
+    }
+
+    useEffect(()=>{
+
+    }, [update])
 
 
     // const Table = [
@@ -252,17 +297,18 @@ export default function OrderList() {
                         Generate Order</button>
                     <div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center", background: "#F9FBFF", borderRadius: "10px", padding: "7.5px 15px 7.5px 0", fontSize: "0.8em" }}>
                         <SearchInputElement style={{ margin: "0 7.5px", width: "20px" }} />
-                        <input type={'search'} defaultValue={tableFilter} onChange={(e) => { setTableFilter(e.target.value) }} placeholder='Search' style={{ outline: "none", background: "transparent" }} />
+                        <input type={'search'} defaultValue={tableFilter} onChange={(e) => { setTableFilter(e.target.value); filterTableData(e.target.value) }} placeholder='Search' style={{ outline: "none", background: "transparent" }} />
                     </div>
                     <div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center", marginLeft: "10px", background: "#F9FBFF", borderRadius: "10px", padding: "7.5px 15px 7.5px 0", fontSize: "0.8em" }}>
                         <span style={{ minWidth: "max-content", paddingInlineStart: "7.5px" }}>Sort by : &nbsp;</span>
                         <select
                             style={{ textAlign: "center", outline: "none", background: "transparent", padding: "0px", border: "none" }}
-                            onChange={(e) => setSortBy(e.target.value)}>
-                            <option value={"None"}>Default</option>
-                            {/* <option value={"Order ID"}>Request ID</option>
-                            <option value={"Registration Date"}>Registration Date</option>
-                            <option value={"Logged by"}>Logged by</option> */}
+                            onChange={(e) => sortTableData(e.target.value)}>
+                            <option value={"Default"}>Default</option>
+                            <option value={"OrderID"}>OrderID</option>
+                            <option value={"Time"}>Time</option>
+                            <option value={"Type"}>Type</option>
+                            <option value={"Reverse"}>Reverse</option>
                         </select>
                         <ChevronDown />
                         <button className='sortOrderButton' onClick={() => {
@@ -276,7 +322,7 @@ export default function OrderList() {
             {isDetail == 0 ?
                 <div className={styles.Scroll}>
                     <DynamicDataTable
-                        rows={tableData}
+                        rows={sortedTableData}
                         buttons={[]}
                         fieldMap={
                             {
