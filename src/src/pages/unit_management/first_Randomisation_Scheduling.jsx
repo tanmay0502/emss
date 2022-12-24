@@ -101,7 +101,7 @@ function First_Randomisation_Scheduling() {
                 </div>
 
                 <div class={styles.parent}>
-                    <div class={styles.div1}>
+                    {/* <div class={styles.div1}>
                         <p> CEO User ID</p>
                         <input
                             id="ceouserid"
@@ -111,10 +111,10 @@ function First_Randomisation_Scheduling() {
                             onChange={(e) => { setceouserid(e) }}
                         >
                         </input>
-                    </div>
+                    </div> */}
 
 
-                    <div class={styles.div2}>
+                    <div class={styles.div1}>
                         <p> DEO User ID</p>
                         <input
                             id="deouserid"
@@ -127,20 +127,25 @@ function First_Randomisation_Scheduling() {
                         </input>
                     </div>
 
-                    <div class={styles.div3}>
+                    <div class={styles.div2}>
                         <p> Election Type</p>
-                        <input
+                        <select id="electiontype" onSelect={(e) => { setelectiontype(e)}}>
+                            <option value="" >Select:</option>
+                            <option value="Assembly-A">Assembly-A</option>
+                            <option value="Lok Sabha-L">Lok Sabha-L</option>
+                            <option value="By elections-B">By elections-B</option>
+                        </select>
+                        {/* <input
                             id="electiontype"
                             type="text"
                             required
                             placeholder='Enter Election Type'
                             onChange={(e) => { setelectiontype(e) }}
-
                         >
-                        </input>
+                        </input> */}
                     </div>
 
-                    <div class={styles.div4}>
+                    <div class={styles.div3}>
                         <p> Start date</p>
                         <input
                             id="startdate"
@@ -153,7 +158,7 @@ function First_Randomisation_Scheduling() {
                         ></input>
                     </div>
 
-                    <div class={styles.div5}>
+                    <div class={styles.div4}>
                         <p> End date</p>
                         <input
                             id="enddate"

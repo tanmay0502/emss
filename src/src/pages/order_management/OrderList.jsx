@@ -195,7 +195,7 @@ export default function OrderList() {
             let pp=tmp.map(val => JSON.parse(val));
             
             for(let i=0;i<pp.length;i++){
-                pp[i]["print"]=(<button target='_blank' onClick={(e)=>{
+                pp[i]["print"]=(<button key={i} target='_blank' onClick={(e)=>{
                     e.stopPropagation(); 
                     generatePDF(pp[i]["displayID"])}} className="text-white">Show Pdf</button>);
             }
@@ -230,22 +230,29 @@ export default function OrderList() {
         if (sortBy === "Default") {
             setSortedTableData(tableData);
         } else {
+            for(let i=0;i<sorted.length;i++){
+                sorted[i]["print"]=(<button key={i} target='_blank' onClick={(e)=>{
+                    e.stopPropagation(); 
+                    generatePDF(sortedTableData[i]["displayID"])}} className="text-white">Show Pdf</button>);
+            }
             setSortedTableData(sorted);
         }
-        alert("Sort by "+ sortBy)
-        console.log("sorted table data", sortedTableData)
+        // alert("Sort by "+ sortBy)
+        // console.log("sorted table data", sortedTableData)
         setUpdate(prev=>(prev+1)%10)
     }
     
     const filterTableData = (key)=>{
+        console.log(key)
         const sorted = tableData.filter((e)=>{
-            if (e.Type === key) {
-                return true;
-            }
+            return e.type.includes(key) || e.displayID.includes(key) || e.timestamp.includes(key) || e.creatoruserid.includes(key);
         })
-        if (!key) {
-            sorted = setSortedTableData(tableData);
+        if (key) {
+            setSortedTableData(sorted);
+        }else{
+            setSortedTableData(tableData);
         }
+        console.log("filtered table data", sortedTableData)
         // alert("Sort by "+ key)
         console.log("sorted table data", sortedTableData)
         setUpdate(prev=>(prev+1)%10)
@@ -270,22 +277,22 @@ export default function OrderList() {
     return (
         <>
         <Modal
-                            isOpen={modalIsOpen}
-                            onAfterOpen={afterOpenModal}
-                            onRequestClose={closeModal}
-                            style={customStyles}
-                        >
-                            <div id="root" className=''>
-                                <div className='flex justify-center items-center'>
-                                    {console.log("This Data:")}
-                                    {/* {console.log(photoFileData["data"].slice(0,-1))} */}
-                                    {/* {console.log(fileData)} */}
-                                    {console.log("Fetched Data:- ",photoFileData)}
-                                    {/* {<embed style={{ width: "600px", height: "600px", padding: "10px" }} src={fileData} />} */}
-                                    {photoFileData !== undefined && <embed type="text/html" style={{ width: "1000px", height: "800px", padding: "10px" }} src={photoFileData} />}
-                                </div>
-                                <button style={{ color: "white", }} onClick={()=>{closeModal()}}>Close</button>
-                            </div>
+            isOpen={modalIsOpen}
+            onAfterOpen={afterOpenModal}
+            onRequestClose={closeModal}
+            style={customStyles}
+        >
+            <div id="root" className=''>
+                <div className='flex justify-center items-center'>
+                    {console.log("This Data:")}
+                    {/* {console.log(photoFileData["data"].slice(0,-1))} */}
+                    {/* {console.log(fileData)} */}
+                    {console.log("Fetched Data:- ",photoFileData)}
+                    {/* {<embed style={{ width: "600px", height: "600px", padding: "10px" }} src={fileData} />} */}
+                    {photoFileData !== undefined && <embed type="text/html" style={{ width: "1000px", height: "800px", padding: "10px" }} src={photoFileData} />}
+                </div>
+                <button style={{ color: "white", }} onClick={()=>{closeModal()}}>Close</button>
+            </div>
       </Modal>
          <div className={`${styles.myWrapper1}`} style={{ position: "relative", height: "100%" }}>
             {isDetail == 0 ? <div className='MainHeader pd-5 ' style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between", "alignItems": "center" }}>
@@ -308,11 +315,11 @@ export default function OrderList() {
                             <option value={"OrderID"}>OrderID</option>
                             <option value={"Time"}>Time</option>
                             <option value={"Type"}>Type</option>
-                            <option value={"Reverse"}>Reverse</option>
                         </select>
                         <ChevronDown />
                         <button className='sortOrderButton' onClick={() => {
                             setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
+                            sortTableData("Reverse");
                         }}>
                             {sortOrder === 'asc' ? <AiOutlineSortAscending /> : <AiOutlineSortDescending />}
                         </button>
