@@ -228,7 +228,10 @@ function WarehouseDetail(props) {
                     <p className="text-left">Building Type</p>
                   </label>
                   <div className="bg-stone-100 p-3 mt-0 mb-0 rounded-md" style={{ width: "330px" }}>
-                    <p className="text-left">{Whdetails[1]}</p>
+                    <p className="text-left">
+                    {Whdetails[1] === "P" ? "Private" : Whdetails[1] === "G" ? "Govt. Building" : "Own"}
+                    </p>
+
                   </div>
                 </div>
                 <div style={{ marginRight: "6%" }}>

@@ -53,7 +53,6 @@ function AuditDetail(props) {
                 }
             );
             const data = await response.json();
-            console.log(data)
             if (response.status == 200) {
                 setList(data["data"]);
             }
@@ -107,10 +106,6 @@ function AuditDetail(props) {
         }
     }
 
-
-
-    const List = [1, 2, 2, 2, 2, 2, 2, 2, 2, 2]
-    const imageData = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAFKSURBVHgB3VXtdYMwDLwR2KAegRE8QkZgg7IB3qDZIN2gI3gERmAERmhxIz3OQhSa9lfuPb3AWbZOHzHAM2JYbFrsU357s65r42K3xS74BUbZzDbtBLA+4ejwgZyjcLNwjePfLtZRwFm4Q/WRuCzcT2Uowa8UJOw5arqMJNyVOFWcJQPFO/GnA0Rnk+3BgDUTLWn0AujGF+JaOoj7UJ57WovCJ3m/eQE+UNf7lRTN8BudUGcY4E9e5az1zrQ5wEdDAhReqb8RjXMkNQ32MaFWbN8rqOrOvL/hn9ChVl2arH0YjG+DB2FVd9iOZKDAWXwvOHFdwKjunSATifBsxPaC3IBnvCfV9k9WxETcJzCjHutDJDqolKChbDL2Ve6OqQfOZEJ993iIWMt0GgF1acrzDfemtuZw9Ut4AB38j43X5D+hxdpUm1nC0+ELIayoHUrW/fUAAAAASUVORK5CYII='"
     console.log(UserID, show, showImage)
 
     // let currDoc = ''
@@ -174,7 +169,21 @@ function AuditDetail(props) {
         setShowImage(1);
 
     }
-
+    function formatTime(props){
+        console.log(props)
+        let dd = props.slice(8,10)
+        let mm = props.slice(5,7)
+        let yy = props.slice(0,4)
+        let hrs = props.slice(11,13)
+        let min = props.slice(14,16)
+        let sec = props.slice(17,19)
+        console.log(dd+" "+mm+" "+yy+" "+hrs+" "+min+" "+sec+" ")
+        return(
+            <>
+            {dd+"-"+mm+"-"+yy+", "+hrs+":"+min+":"+sec+"hrs"}
+            </>
+        )
+    }
 
 
     return (
@@ -190,6 +199,7 @@ function AuditDetail(props) {
                     {list.length > 0 &&
                         list.map((value, id) => (
                             <div className={styles.box} >
+                                {console.log(value)}
                                 <div className="form_group">
                                     <div className="form_label">
                                         <label htmlFor="" className={styles.Label}>User ID:</label>
@@ -203,7 +213,7 @@ function AuditDetail(props) {
                                         <label htmlFor="" className={styles.Label}>Audit Time:</label>
                                     </div>
                                     <div className="form_input">
-                                        <span className={styles.Span}>SSPPAAARRR</span>
+                                        <span className={styles.Span}>{formatTime(value[3])}</span>
                                     </div>
                                 </div>
                                 <div className="form_group">
@@ -211,7 +221,7 @@ function AuditDetail(props) {
                                         <label htmlFor="" className={styles.Label}>Description:</label>
                                     </div>
                                     <div className="form_select">
-                                        <span className={styles.Span}>SSPPAAARRR</span>
+                                        <span className={styles.Span}>{value[4]}</span>
                                     </div>
                                 </div>
 

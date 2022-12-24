@@ -8,7 +8,7 @@ import styles from "./styles/createuser.css";
 import 'antd/dist/antd.css'
 import { Switch } from "antd"
 import { getKeyByValue } from '../../assets/helper/ObjectHelpers.js'
-import { getBase64 } from "../../assets/helper/FileHelpers";
+import imageCompression from 'browser-image-compression';
 
 var sha256 = require("js-sha256");
 class Queue {
@@ -510,7 +510,14 @@ function CreateUser() {
     const file = e.target.files[0];
     const fullFileName = file.name;
     console.log(fullFileName)
-    const convertedFile = await convertBase64(file);
+    const options = {
+      maxSizeMB: 0.5,
+      maxWidthOrHeight: 960,
+      useWebWorker: true
+    }
+    const compressedFile = await imageCompression(file, options);
+    console.log(compressedFile.arrayBuffer)
+    const convertedFile = await convertBase64(compressedFile);
     setBaseImage(convertedFile)
     setImageName(fullFileName)
 }
@@ -567,7 +574,7 @@ function CreateUser() {
           </div>
 
           <div className="form_label">
-            <label htmlFor="">Role/s:<span className="text-red-500 text-lg">*</span></label>
+            <label htmlFor="">Role:<span className="text-red-500 text-lg">*</span></label>
           </div>
           <div className="form_group">
             <div className="form_select">
@@ -794,10 +801,18 @@ function CreateUser() {
           </div>
         </div>
 
-        <center>
+        <div className="flex justify-center">
+        <button className="bg-red-500 hover:bg-red-700 text-white px-4 rounded-full mr-8 cursor-pointer"
+              onClick={() => {
+                navigate('/session/usermanagement')
+              }}
+          >
+            Cancel
+          </button>
+
           <input type={"submit"} className="mySubmit">
           </input>
-        </center>
+        </div>
 
 
       </form >

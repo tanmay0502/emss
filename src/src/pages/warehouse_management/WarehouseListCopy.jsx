@@ -86,9 +86,9 @@ function WarehouseList() {
 	const [sortOrder, setSortOrder] = useState("asc")
 
 	const sortMapping = {
-		"None": null,
+		"None": "status",
 		"Warehouse ID": "warehouseid",
-		"Status": "Status",
+		"Status": "status",
 		"Type": "Room Type",
 	}
 
@@ -161,6 +161,7 @@ function WarehouseList() {
 				// 	"inactive": "Temporary"
 				// }
 				// }/>,
+				"status":val["status"],
 				"Status": <ToggleButton warehouseID={val["warehouseid"]} checked={val["status"] == 'A'} onToggle={(e) => {
 					if (val["status"] == "A") {
 						DectivateWarehouse(val["warehouseid"])
@@ -174,6 +175,7 @@ function WarehouseList() {
 		})
 		data.sort(function (a, b) {
 			if (sortMapping[sortBy] !== null) {
+				// console.log(data)
 				return (a[sortMapping[sortBy]].toString()).localeCompare(b[sortMapping[sortBy]].toString())
 			}
 			else return 0;
@@ -260,7 +262,7 @@ function WarehouseList() {
 	// console.log(users);
 	return (
 		<div className="warehouse-list-grid">
-
+			{/* {console.log(tableData["Status"])} */}
 			<div className="myWrapper" style={{ position: "relative", height: "100%", gridArea: "1 / 1 / 6 / 2" }}>
 				<div className='label_list'>
 					<div className='label d-flex d-flex-center'><span><FaCircle className='PermaWarehouse' /></span> Permanent Warehouse</div>
@@ -298,27 +300,11 @@ function WarehouseList() {
 					</div>
 
 				</div> : <></>}
-				{/* {tableData !== undefined &&
-				<DynamicDataTable className="warehouses-table"
-				rows={tableData}
-				fieldsToExclude={["Details", "Edit", "BuildingType", "warehouseid", "Room Type"]}
-				orderByField={sortMapping[sortBy]}
-				orderByDirection={sortOrder}
-				buttons={[]}
-				onClick={(event, row) => {
-					// console.log(row["Details"]["warehouseid"])
-					navigate(`warehousedetails/id=${row["Details"]["warehouseid"]}`)
-					// onClick={() => window.location = `session/warehousemanagement/warehousedetails/id=${value[0]}`}
-				}}
-				
-				allowOrderingBy={[
-					'warehouseid', 'status', "type"
-				]} />
-				} */}
-
+							{/* {console.log(tableData)} */}
 				{isDetail == 0 ? <DynamicDataTable className="warehouses-table"
+				
 					rows={tableData}
-					fieldsToExclude={["Details", "Edit", "BuildingType", "warehouseid", "Room Type"]}
+					fieldsToExclude={["Details", "Edit", "BuildingType", "warehouseid", "Room Type","status"]}
 					orderByField={sortMapping[sortBy]}
 					orderByDirection={sortOrder}
 					onClick={(event, row) => {

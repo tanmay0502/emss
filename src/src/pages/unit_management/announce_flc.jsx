@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { DynamicDataTable } from '@langleyfoxall/react-dynamic-data-table'
 import styles from './styles/announce_flc.module.css'
 
+
 function Announce_Flc() {
 
     var currentdate = new Date();
@@ -169,8 +170,9 @@ function Announce_Flc() {
                             <input
                                 class={styles.dateInput}
                                 type="date"
+                                required pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
                                 id="2"
-                                className=" selectBox"
+                                className="selectBox"
                             ></input>
                         </div>
 

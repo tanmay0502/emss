@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { AiOutlineArrowLeft, AiOutlineEdit } from 'react-icons/ai'
 import UserImageTest from '../assets/UserImageTest.png'
 import { useNavigate } from "react-router-dom";
+import imageCompression from 'browser-image-compression';
 function UserDetail(props) {
   const navigate = useNavigate()
   const [editPic, setEditPic] = useState(0)
@@ -120,13 +121,23 @@ function UserDetail(props) {
     const file = e.target.files[0];
     const fullFileName = file.name;
     console.log(fullFileName)
-    if(file.size >= 5000){
-      alert("File Size Can't exceed 500KB")
-    }else{
-      const convertedFile = await convertBase64(file);
+    // if(file.size >= 500000){
+    //   alert("File Size Can't exceed 500KB")
+    //   alert(file.size)
+    // }else{
+      const options = {
+        maxSizeMB: 0.5,
+        maxWidthOrHeight: 960,
+        useWebWorker: true
+      }
+      // alert(file.size)
+      const compressedFile = await imageCompression(file, options);
+      console.log(compressedFile.arrayBuffer)
+      const convertedFile = await convertBase64(compressedFile);
       setCurrImage(convertedFile)
       setUploadPending(1);
-    }
+      // console.log(currImage)
+    // }
 
 
 }
@@ -169,7 +180,7 @@ useEffect(() => {
         </button>
         <div className=" flex justify-between">
           <div className="right_btn" onClick={() => {props.editPage()}}>
-            Edit User
+            Edit User Profile
           </div>
           <div className="right_btn" onClick={() => ResetPassword()}>
             Reset Password

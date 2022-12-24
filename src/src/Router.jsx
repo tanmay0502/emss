@@ -197,17 +197,6 @@ function Routed(props) {
 		}
 	}, [])
 
-	// const [randomState, setRandomState] = useState(Math.random())
-
-	// useEffect(() => {
-	//   setRandomState(Math.random())
-	//   console.log("Here!!")
-	//   return () => {
-
-	//   }
-	// }, [location])
-
-	//Profile Image Start
 	const [currImage, setCurrImage] = useState(0)
     async function getCurrImage(id) {
         try {
@@ -241,7 +230,10 @@ function Routed(props) {
         }
     }
 	useEffect(() => {
-		getCurrImage(userData["userId"])
+		if(userData["userId"] !== ""){
+			console.log(userData["userId"])
+			getCurrImage(userData["userId"])
+		}
 	}, [userData])
 	//Profile Image End
 

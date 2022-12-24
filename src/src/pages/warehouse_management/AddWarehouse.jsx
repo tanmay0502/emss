@@ -340,8 +340,9 @@ export default function AddWarehouse() {
                     >
                       --Select--
                     </option>
-                    <option value="P">Permanent</option>
-                    <option value="T">Temporary</option>
+                    <option value="O">Own</option>
+                    <option value="G">Govt. Building</option>
+                    <option value="P">Private</option>
                   </select>
                   <div className="input_icon">
                     <FaRegBuilding size="1em" />

@@ -257,9 +257,10 @@ export default function ModifyWarehouse() {
                     id="input_buildingtype"
                     onChange={(e) => setBuildingType(e.target.value)}
                     defaultValue={BuildingType}
-                  >
-                    <option value="P" selected={BuildingType === "P" ? true : false}>Permanent</option>
-                    <option value="T" selected={BuildingType === "T" ? true : false}>Temporary</option>
+                  >                    
+                    <option selected={BuildingType === "O" ? true : false} value="O">Own</option>
+                    <option selected={BuildingType === "G" ? true : false} value="G">Govt. Building</option>
+                    <option selected={BuildingType === "P" ? true : false} value="P">Private</option>
                   </select>
                   </div>
                   </>

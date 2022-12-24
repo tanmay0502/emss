@@ -71,7 +71,7 @@ function Home1() {
 			console.log(ID)
 			let getData = async ()=>{
 				try {
-					console.log("GET "+uri+ID)
+					// console.log("GET "+uri+ID)
 					const response = await fetch(
 						uri,
 						{

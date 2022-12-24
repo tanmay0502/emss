@@ -10,6 +10,7 @@
     "@tippyjs/react": "^4.2.6",
     "antd": "^4.23.4",
     "base-64": "^1.0.0",
+    "browser-image-compression": "^2.0.0",
     "chart.js": "^3.9.1",
     "datatables.net": "^1.12.1",
     "fs": "^0.0.1-security",

@@ -195,7 +195,7 @@ function EditUser(props) {
               <AiOutlineArrowLeft />
             </button>
             <Createuser />
-            <span>Edit User</span>
+            <span>Edit User Profile</span>
           </h4>
         </div>
         {/* <div className="userTemporaryToggle">
@@ -348,10 +348,17 @@ function EditUser(props) {
           </div>
         </div>
 
-        <center>
+        <div className="flex justify-center">
+          <button className="bg-red-500 hover:bg-red-700 text-white px-4 rounded-full mr-8 cursor-pointer"
+              onClick={() => {
+                window.location.reload()
+              }}
+          >
+            Cancel
+          </button>
           <input type={"submit"} className="mySubmit">
           </input>
-        </center>
+        </div>
 
 
       </form >
