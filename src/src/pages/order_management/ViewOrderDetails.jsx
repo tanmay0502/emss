@@ -147,7 +147,7 @@ export default function ViewOrderDetails() {
       {
         flag == 1 &&
         <>
-          {validallOrders && <UnitDescription Order={validallOrders} OrderID={newId=="0"?orderID:newId} />}
+          {validallOrders && <UnitDescription Order={validallOrders} OrderID={newId=="0"?orderID:newId} isSubOrder={newId=="0"?0:1} /> }
           {validallOrders && flow==1 && <OrderActions Order={validallOrders} OrderID={newId=="0"?orderID:newId}/>}
           {validallOrders && flow==2 && <OrderActions2 Order={validallOrders} OrderID={newId=="0"?orderID:newId}/>}
         </>

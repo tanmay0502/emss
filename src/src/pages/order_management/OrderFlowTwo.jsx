@@ -7,8 +7,10 @@ import OrderActions from "./OrderActions";
 import SourceLocationPin from '../../assets/src_location_pin.png'
 import DestLocationPin from '../../assets/dest_location_pin.png'
 import { DynamicDataTable } from '@langleyfoxall/react-dynamic-data-table';
+import { fillAllocateUsers, getVehicleDetails, setVehicleDetails } from "./Utils";
 
-export default function OrderFlowTwo({OrderID}) {
+
+export default function OrderFlowTwo({Order,OrderID}) {
   const id=OrderID
   let orderID="";
   for(let i=0;i<id.length;i++){
@@ -18,6 +20,43 @@ export default function OrderFlowTwo({OrderID}) {
     else
     orderID+=id[i];
   }
+
+   function handleAllocateUser(){
+    console.log(allocateUsers)
+    let body = {
+        "createdby":sessionStorage.getItem("sessionToken"),
+        "details":[
+
+        ]
+    }
+    allocateUsers.map((value,id)=>{
+        body["details"].push({
+            "orderid":value["orderid"],
+            "UserDetails":[]
+        })
+        value["users"].map((user)=>{
+            body["details"][id]["UserDetails"].push({
+                "userid":user["User Id"]
+            })
+        })
+    })
+    console.log(body)
+    console.log({
+        "createdby": "TSKNR000WHM",
+        "details": [
+          {
+            "orderid": "0072",
+            "UserDetails": [
+              {
+                "userid": "SSPPORR2"
+              }
+            ]
+          }
+        ]
+      })
+    fillAllocateUsers(body)
+  }
+  
 
  
 
@@ -138,7 +177,6 @@ export default function OrderFlowTwo({OrderID}) {
   const [Usertable,setUserTable] = useState();
 
 
-  const [Order, setOrder] = useState([]);
   const [allOrders, setAllOrders] = useState([]);
   const [isPageLoaded, setIsPageLoaded] = useState(0);
   const [orderById, setOrderById] = useState({});
@@ -168,28 +206,11 @@ export default function OrderFlowTwo({OrderID}) {
 
   useEffect(() => {
     async function getOrders() {
-      try {
-        const body = {"orderid": orderID}
-        const response = await fetch(
-          `${process.env.REACT_APP_API_SERVER}/order/view_order/`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            credentials: 'include',
-            body: JSON.stringify(body)
-          }
-        );
-        const data2 = await response.json();
-        if(data2['data'])
-            setAllOrders(data2["data"])
-      } catch (err) {
-        console.log(err);
-      }
+      setAllOrders(Order)
     }
+    getVehicleDetails(Order[0]["orderid"]);
     getOrders();
-  },[])
+  },[Order])
 
   useEffect(()=>{
     let p = []
@@ -364,7 +385,7 @@ export default function OrderFlowTwo({OrderID}) {
                 </div>
             ))
              }
-             <button className="text-white">Submit</button>
+             <button className="text-white" onClick={handleAllocateUser}>Submit</button>
         </div>
     )}
 
@@ -374,9 +395,10 @@ export default function OrderFlowTwo({OrderID}) {
             vehicleNumber : "",
             driverName : "",
             escortName : "",
-            senderIncharge : "",
+            warehouseIncharge : "",
             driverContact : "",
-            escortContact : ""
+            escortContact : "",
+            remarks: ""
         };
 
         allOrders.map((order)=>{
@@ -393,25 +415,9 @@ export default function OrderFlowTwo({OrderID}) {
         const [body, setBody] = useState(sampleBody)
         const baseUrl = "http://localhost:8100/unit";
         const handleFormSubmit = async (e) => {
-        // try {
-        //     const response = await fetch(`${baseUrl}/ep_mark`, {
-        //     method: "POST",
-        //     headers: { "Content-Type": "application/json" },
-        //     credentials: "include",
-        //     body: JSON.stringify({ ...inputValues }),
-        //     });
-        //     console.log(response);
-        //     console.log(JSON.stringify({ ...inputValues }));
-        //     const data = await response.json();
-        //     if (data.status === 200) {
-        //     alert(data.message);
-        //     } else {
-        //     alert(data.message);
-        //     }
-        // } catch (err) {
-        //     alert(`Error occured: ${err}`);
-        // }
-        console.log(body);
+            
+             console.log(body);
+             setVehicleDetails(body);
         };
 
         useEffect(()=>{
@@ -443,7 +449,7 @@ export default function OrderFlowTwo({OrderID}) {
                     <div className="">
                         <div className=" w-full flex justify-center">
                             <div style={{margin:"3%",marginTop:"3%"}} className="w-1/2">
-                                <label>Vehicle Number : </label>
+                                <p className="text-left ml-1 text-lg">Vehicle Number : </p>
                                 <input
                                 className=" border-l-purple-400 border-1  h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
                                 name="vehicleNumber"
@@ -458,7 +464,7 @@ export default function OrderFlowTwo({OrderID}) {
                                 />
                                 <br/>
                                 <br/>
-                                <label>Driver Name : </label>
+                                <p className="text-left ml-1 text-lg">Driver Name : </p>
                                 <input
                                 className=" border-l-purple-400 border-1  h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
                                 name="driverName"
@@ -473,7 +479,7 @@ export default function OrderFlowTwo({OrderID}) {
                                 />
                                 <br/>
                                 <br/>
-                                <label>Escort Name : </label>
+                                <p className="text-left ml-1 text-lg">Escort Name : </p>
                                 <input
                                 className=" border-l-purple-400 border-1  h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
                                 name="escortName"
@@ -486,24 +492,39 @@ export default function OrderFlowTwo({OrderID}) {
                                     })
                                 }}
                                 />
-                            </div>
-                            <div style={{margin:"3%",marginTop:"3%"}} className="w-1/2">
-                                <label>Sender Incharge : </label>
+                                <br/>
+                                <br/>
+                                <p className="text-left ml-1 text-lg">Remarks : </p>
                                 <input
                                 className=" border-l-purple-400 border-1  h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-                                name="senderIncharge"
+                                name="remarks"
+                                placeholder="Remarks"
+                                type="text"
+                                onChange={(e) => {
+                                    setBody((prevBody) => {
+                                    prevBody[ind1]["vehicleDetails"][ind].remarks = e.target.value;
+                                    return (prevBody);
+                                    })
+                                }}
+                                />
+                            </div>
+                            <div style={{margin:"3%",marginTop:"3%"}} className="w-1/2">
+                                <p className="text-left ml-1 text-lg">Sender Incharge : </p>
+                                <input
+                                className=" border-l-purple-400 border-1  h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                                name="warehouseIncharge"
                                 placeholder="Sender Incharge"
                                 type="text"
                                 onChange={(e) => {
                                     setBody((prevBody) => {
-                                    prevBody[ind1]["vehicleDetails"][ind].senderIncharge = e.target.value;
+                                    prevBody[ind1]["vehicleDetails"][ind].warehouseIncharge = e.target.value;
                                     return (prevBody);
                                     })
                                 }}
                                 />
                                 <br/>
                                 <br/>
-                                <label>Driver Contact : </label>
+                                <p className="text-left ml-1 text-lg">Driver Contact : </p>
                                 <input
                                 className=" border-l-purple-400 border-1  h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary "
                                 name="driverContact"
@@ -518,7 +539,7 @@ export default function OrderFlowTwo({OrderID}) {
                                 />
                                 <br/>
                                 <br/>
-                                <label>Escort Contact : </label>
+                                <p className="text-left ml-1 text-lg">Escort Contact : </p>
                                 <input
                                 className=" border-l-purple-400 border-1  h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
                                 name="escortContact"
@@ -531,6 +552,7 @@ export default function OrderFlowTwo({OrderID}) {
                                     })
                                 }}
                                 />
+                               
                             </div>
                         </div>
                     </div>
@@ -546,9 +568,10 @@ export default function OrderFlowTwo({OrderID}) {
                             vehicleNumber : "",
                             driverName : "",
                             escortName : "",
-                            senderIncharge : "",
+                            warehouseIncharge : "",
                             driverContact : "",
-                            escortContact : ""
+                            escortContact : "",
+                            remarks: ""
                         };
                         let newBody = [ ...prev ];
                         console.log(newBody)

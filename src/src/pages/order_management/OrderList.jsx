@@ -124,7 +124,7 @@ export default function OrderList() {
                 );
                 const data2 = await response.json();
                 console.log(data2)
-                if (data2["status"] != 404)
+                if (data2["status"] != 404 && data2["data"])
                     setData(data2["data"])
             } catch (err) {
                 console.log(err);

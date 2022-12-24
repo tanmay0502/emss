@@ -34,8 +34,8 @@ function OrderActions2(props) {
     
     return (
         <div className='mt-10'>
-            {isSender==1 && <OrderFlowTwoSender OrderID={props.Order[0]["orderid"]}/> }
-            {isSender==2 && <OrderFlowTwo OrderID={props.Order[0]["orderid"]}/> }
+            {isSender==1 && <OrderFlowTwoSender Order={props.Order} OrderID={props.Order[0]["orderid"]}/> }
+            {isSender==2 && <OrderFlowTwo Order={props.Order} OrderID={props.Order[0]["orderid"]}/> }
            
         </div>
     )

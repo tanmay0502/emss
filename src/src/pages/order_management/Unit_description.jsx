@@ -143,15 +143,15 @@ export default function UnitDescription(props) {
             {
                 units.length > 1 &&
                 <div className={styles.detailsContainer}>
-                    <SubOrder Order={units[Length]} />
-                    <SubOrder Order={units[Length + 1]} />
+                    <SubOrder isSubOrder={props.isSubOrder} Order={units[Length]} />
+                    <SubOrder isSubOrder={props.isSubOrder} Order={units[Length + 1]} />
                 </div>
 
             }
             {
                 units.length == 1 &&
                 <div className={styles.detailsContainer}>
-                    <SubOrder Order={units[0]} />
+                    <SubOrder isSubOrder={props.isSubOrder} Order={units[0]} />
                 </div>
             }
             {units.length == 0 &&
