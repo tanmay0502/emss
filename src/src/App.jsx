@@ -54,6 +54,8 @@ import FillDemand from './pages/order_management/FillDemand';
 import FillAvailability from './pages/order_management/FillAvailability';
 import Usermanual from './components/Usermanual';
 import ViewPermission from './components/ViewPermission';
+import LocationDetails from './pages/order_management/LocationDetails';
+
 function App() {
 
   const [sessionState, setSessionState] = useState({
@@ -265,7 +267,10 @@ function App() {
               path="/session/ordermanagement/orderflowtwo/:orderID"
               element={<OrderFlowTwo />}
             />
-           
+           <Route
+              path="/session/ordermanagement/orderdetails/contact/:no"
+              element={<LocationDetails />}
+            />
             <Route
               path="/session/services"
               element={<>Other Services</>}
