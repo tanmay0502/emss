@@ -104,12 +104,12 @@ export default function WareHouseListUnitTrackerFillDemand(props) {
 
     const [orderCount,setOrderCount] = useState({});
 
-    function increaseOne(index) {
+    function increaseOne(index,type="select",model="select",mnf = "select") {
         let v3={
-            "type":"select",
+            "type":type,
             "quantity":"0",
-            "model":"select",
-            "manufacturer":"select"
+            "model":model,
+            "manufacturer":mnf
         }
         let temp = orderCount;
         if(Object.keys(temp[index]).length==0) {
@@ -288,11 +288,13 @@ export default function WareHouseListUnitTrackerFillDemand(props) {
             data.reverse();
         }
         console.log(data)
+        
         setWareHouse_List(data)
         return () => {
         }
     }, [Details, warehouseMapping])
 
+  
    
 
 
@@ -339,6 +341,17 @@ export default function WareHouseListUnitTrackerFillDemand(props) {
         
         console.log(fillDemand)
         setOrderCount(fillDemand);
+        if(props.Order) {
+            console.log(orderCount)
+        WareHouse_List.map((val,id)=>{
+            props.Order.map((val2,id2)=>{
+                const type= val2["item"]
+                const model= val2["itemmodel"]
+                const mnf= val2["manufacturer"]
+                increaseOne(id,type,model,mnf)
+            })
+        })
+    }
     },[Details])
 
 

@@ -5,6 +5,7 @@ import {ReactComponent as EditAllocation} from '../../assets/EditAllocation.svg'
 import SourceLocationPin from '../../assets/src_location_pin.png'
 import DestLocationPin from '../../assets/dest_location_pin.png'
 import { DynamicDataTable } from '@langleyfoxall/react-dynamic-data-table'
+import { getVehicleDetails } from './Utils'
 
 function SuborderTable(props) {
     const initialVisibilityValues = {
@@ -14,20 +15,13 @@ function SuborderTable(props) {
     const [cardVisibility, setCardVisibility] = useState(initialVisibilityValues);
 
     const [data, setData] = useState(props.val.details)
+    console.log(props)
 
-    const [vehicleData,setVehicleDate] = useState([
-        {
-            "Vehicle Number": "GJ0138B8171",
-            "Driver Name": "Suresh Kumar",
-            "Driver Contact": "7990763895",
-            "Escort Name": "Suraj Dev",
-            "Escort Contact": "9489958352",
-        }
-    ]);
+    
 
     const VehicleDetails = ({isVisible}) => {
         return (isVisible?<div className={styles.allocationDetailsTable}>
-                    <DynamicDataTable rows={vehicleData} buttons={[]} />
+                    <DynamicDataTable rows={props.vehicleData} buttons={[]} />
                 </div>:<></>);
     }
 

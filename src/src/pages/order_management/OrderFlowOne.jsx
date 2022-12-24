@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styles2 from './styles/suborder.module.css'
 import SuborderTable from './SuborderTable';
+import { getVehicleDetails } from "./Utils";
 
 export default function OrderFlowOne({OrderID,isSender}) {
   
@@ -26,6 +27,7 @@ export default function OrderFlowOne({OrderID,isSender}) {
   const [type,setType] = useState(0);
 
   function getSubOrder(val) {
+    console.log(val)
     let suborderid = [];
     val.map(function(order){
       if(order['referenceorderid']===orderID) {
@@ -38,6 +40,7 @@ export default function OrderFlowOne({OrderID,isSender}) {
       val.map(function(order){
         if(order['referenceorderid']===v) {
           suborderdat.push({
+            "orderid":order["orderid"],
             "source" : order['source'],
             "destination" : order['destination'],
             "item" : order["item"],
@@ -56,6 +59,7 @@ export default function OrderFlowOne({OrderID,isSender}) {
     suborderdat.map((val)=>{
       console.log(val)
       let detail={
+        "orderid":val["orderid"],
         "item":val["item"],
         "itemmodel":val["itemmodel"],
         "itemquantity":val["itemquantity"]
@@ -88,7 +92,7 @@ export default function OrderFlowOne({OrderID,isSender}) {
           {
             "source":val,
             "destination":val2,
-            "details":included[val][val2]
+            "details":included[val][val2],
           }
         )
       })
@@ -191,6 +195,58 @@ export default function OrderFlowOne({OrderID,isSender}) {
     setOrderById(orderBy_Id)
   }, [allOrders])
 
+  const [vehicleData,setVehicleData] = useState();
+
+useEffect(()=>{
+  let body = {
+    "listofOrders": [
+
+    ]
+  }
+  subDat.map((dat)=>{
+      body["listofOrders"].push(
+        {
+          "orderid": dat.details[0].orderid
+        }
+      )
+  })
+  let ans = [];
+  console.log(body)
+    let kk = getVehicleDetails(body);
+    kk.then(function(result) {
+        console.log(result)
+       
+        if(result){
+          Object.keys(result).map((key)=>{
+            let kk =[]
+            console.log(result[key])
+            result[key].map((id)=>{
+              console.log(id)
+              kk.push({
+                vehicleNumber : id.vehiclenumber,
+                driverName : id.drivername,
+                escortName : id.escortname,
+                warehouseIncharge : id.warehouseinchargesender,
+                driverContact : <button className='text-white' onClick={()=>{
+                  window.location="/session/ordermanagement/orderDetails/location/contact/"+id.drivercontact
+                }}>{id.drivercontact}</button>,
+                escortContact : id.escortcontact,
+                remarks: id.remarks
+            })
+            })
+            console.log(kk)
+            ans.push(kk)
+        })
+
+      }
+       
+      
+        console.log("returnin",ans)
+        setVehicleData(ans);
+    })
+    
+},[subDat])
+
   return (
     <>
    
@@ -202,8 +258,9 @@ export default function OrderFlowOne({OrderID,isSender}) {
 				<div className={styles2.optimisedAllocationTablesContainer}>
 					<div className={styles2.optimisedAllocationTablesScrollContainer}>
 						<div className={styles2.optimisedAllocationTables}>
-							{subDat.map(function(dat){
-                return <SuborderTable val={dat}/>
+							{vehicleData && subDat.map(function(dat,id){
+                console.log(vehicleData)
+                return <SuborderTable val={dat} vehicleData={vehicleData[id]} />
               })}
               {isSender==1 && <button onClick={fun} disabled={!type}  className={`${type==0 ? 'bg-gray-400 text-white' : 'bg-orange-500 text-white'}`}>Hand Shake</button>}
 						</div>

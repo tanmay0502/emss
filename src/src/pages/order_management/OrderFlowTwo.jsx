@@ -7,10 +7,12 @@ import OrderActions from "./OrderActions";
 import SourceLocationPin from '../../assets/src_location_pin.png'
 import DestLocationPin from '../../assets/dest_location_pin.png'
 import { DynamicDataTable } from '@langleyfoxall/react-dynamic-data-table';
-import { fillAllocateUsers, getVehicleDetails, setVehicleDetails } from "./Utils";
+import { fillAllocateUsers, getAllocateUsers, getVehicleDetails, setVehicleDetails } from "./Utils";
 
 
 export default function OrderFlowTwo({Order,OrderID}) {
+
+    const [loading,setLoading] = useState(true)
   const id=OrderID
   let orderID="";
   for(let i=0;i<id.length;i++){
@@ -21,10 +23,13 @@ export default function OrderFlowTwo({Order,OrderID}) {
     orderID+=id[i];
   }
 
+  const [fetchedVehicle, setFetchedVehicle] = useState(0);
+  const [fetchedUsers, setFetchedUsers] = useState(0);
+
    function handleAllocateUser(){
     console.log(allocateUsers)
     let body = {
-        "createdby":sessionStorage.getItem("sessionToken"),
+        
         "details":[
 
         ]
@@ -36,24 +41,13 @@ export default function OrderFlowTwo({Order,OrderID}) {
         })
         value["users"].map((user)=>{
             body["details"][id]["UserDetails"].push({
-                "userid":user["User Id"]
+                "userid":user["User Id"],
+                "username":user["Name"]
             })
         })
     })
     console.log(body)
-    console.log({
-        "createdby": "TSKNR000WHM",
-        "details": [
-          {
-            "orderid": "0072",
-            "UserDetails": [
-              {
-                "userid": "SSPPORR2"
-              }
-            ]
-          }
-        ]
-      })
+   
     fillAllocateUsers(body)
   }
   
@@ -205,23 +199,96 @@ export default function OrderFlowTwo({Order,OrderID}) {
     const [isVisible2,setIsVisible2] = useState(true);
 
   useEffect(() => {
-    async function getOrders() {
-      setAllOrders(Order)
-    }
-    getVehicleDetails(Order[0]["orderid"]);
-    getOrders();
-  },[Order])
 
-  useEffect(()=>{
-    let p = []
-    allOrders.map((val)=>{
-        p.push({
-            "orderid":val["orderid"],
-            "users":[]
+    if(loading){
+
+    console.log("calling jthe main thing")
+    
+      setAllOrders(Order)
+    
+    
+    let body={
+        "listofOrders": [
+          
+        ]
+      }
+    Order.map((val)=>{
+        body["listofOrders"].push({
+            "orderid":val["orderid"]
         })
     })
+    let kk = getVehicleDetails(body);
+    kk.then(function(result) {
+        
+        if(result!=0){
+            console.log(result,"ffffffffffffffffffffffffffffffffffffffffffffffffffffff")
+            setFetchedVehicle(result); 
+        }
+        
+    })
+    let pp = getAllocateUsers(body);
+    pp.then(function(result) {
+       
+        if(result!=0 ){
+            console.log(result,"uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu")
+        setFetchedUsers(result); 
+    }
+    })
+}
+
+    
+    // return () => {
+    //     setLoading(false);
+    //   };
+    
+  },[cardVisibility])
+
+//   setLoading(true);
+
+  useEffect(()=>{
+    if(fetchedUsers!=0){
+    let p = []
+    console.log(fetchedUsers)
+    console.log(allOrders)
+    allOrders.map((val)=>{
+        let x = {
+            "orderid":val["orderid"],
+            "users":[]
+        }
+        fetchedUsers[val["orderid"]].map((user)=>{
+            x["users"].push({
+                "User Id" : user.userid,
+                "Name" : user.username
+            });
+        })
+
+        p.push(x)
+    })
+    console.log(p)
     setAllocateUsers(p);
-  },[allOrders])
+    }
+    else{
+        let p = []
+        console.log(fetchedUsers)
+        console.log(allOrders)
+        allOrders.map((val)=>{
+            let x = {
+                "orderid":val["orderid"],
+                "users":[]
+            }
+    
+            p.push(x)
+        })
+        console.log(p)
+        setAllocateUsers(p);
+    }
+  },[allOrders,fetchedUsers])
+
+
+  useEffect(()=>{
+    // console.log(fetchedUsers,"userssssssssssss")
+    // console.log(fetchedVehicle,"vehiclesssssssssssss")
+  },[fetchedUsers,fetchedVehicle])
  
     
 
@@ -390,34 +457,83 @@ export default function OrderFlowTwo({Order,OrderID}) {
     )}
 
     const FVDetails = ({isVisible}) =>{
-        const sampleBody = [];
-        const oneVehicle={
-            vehicleNumber : "",
-            driverName : "",
-            escortName : "",
-            warehouseIncharge : "",
-            driverContact : "",
-            escortContact : "",
-            remarks: ""
-        };
+        const [body, setBody] = useState()
 
-        allOrders.map((order)=>{
-            let x={
-                "OrderId":order["orderid"],
-                "vehicleDetails":[oneVehicle]
-
+        useEffect(()=>{
+            // console.log(fetchedVehicle,"iffffffffffffffffffffffffffffifiiiiiiiiiiiiiiiiii")
+            if(fetchedVehicle==0){
+                const sampleBody = [];
+                const oneVehicle={
+                    vehicleNumber : "",
+                    driverName : "",
+                    escortName : "",
+                    warehouseIncharge : "",
+                    driverContact : "",
+                    escortContact : "",
+                    remarks: ""
+                };
+        
+                allOrders.map((order)=>{
+                    let x={
+                        "OrderID":order["orderid"],
+                        "vehicleDetails":[oneVehicle]
+        
+                    }
+                    sampleBody.push(x);
+                })
+                console.log(sampleBody)
+                setBody(sampleBody)
             }
-            sampleBody.push(x);
-        })
+            else{
+                const sampleBody = [];
+              
+        
+                allOrders.map((order)=>{
+                   
+                    let x={
+                        "OrderID":order["orderid"],
+                        "vehicleDetails":[]
+        
+                    }
+                    console.log(fetchedVehicle[order["orderid"]])
+                    if(fetchedVehicle[order["orderid"]].length==0){
+                        x["vehicleDetails"].push({
+                            vehicleNumber :"",
+                            driverName :"",
+                            escortName :"",
+                            warehouseIncharge :"",
+                            driverContact :"",
+                            escortContact :"",
+                            remarks:""
+                        })
+                    }
+                    fetchedVehicle[order["orderid"]].map((vehicle)=>{
+                        x["vehicleDetails"].push({
+                            vehicleNumber : vehicle.vehiclenumber,
+                            driverName : vehicle.drivername,
+                            escortName : vehicle.escortname,
+                            warehouseIncharge : vehicle.warehouseinchargesender,
+                            driverContact : vehicle.drivercontact,
+                            escortContact : vehicle.escortcontact,
+                            remarks: vehicle.remarks
+                        })
+                    })
+                    sampleBody.push(x);
+                })
+                console.log(sampleBody)
+                setBody(sampleBody)
+            }
+        },[fetchedVehicle])
+      
 
         // console.log(sampleBody)
         
-        const [body, setBody] = useState(sampleBody)
         const baseUrl = "http://localhost:8100/unit";
         const handleFormSubmit = async (e) => {
             
-             console.log(body);
-             setVehicleDetails(body);
+             console.log({"Details":body});
+             if(body!=0)
+             setVehicleDetails({"Details":body});
         };
 
         useEffect(()=>{
@@ -432,14 +548,14 @@ export default function OrderFlowTwo({Order,OrderID}) {
                 
                
                
-                {body.map((oneorder,ind1)=>(
+                {body && body.map((oneorder,ind1)=>(
 
                
                 <div className="flex w-full">
                     
                     <div className=" w-full">
 
-                    <h4 style={{margin:"auto", textAlign:"center", marginTop:"4%"}} className="w-full">Order Id : {oneorder["OrderId"]}</h4>
+                    <h4 style={{margin:"auto", textAlign:"center", marginTop:"4%"}} className="w-full">Order Id : {oneorder["OrderID"]}</h4>
                        
                     {oneorder["vehicleDetails"].map((val, ind) => (
                         <div className="bg-white p-1 rounded-lg shadow-lg  w-full">
@@ -455,10 +571,12 @@ export default function OrderFlowTwo({Order,OrderID}) {
                                 name="vehicleNumber"
                                 placeholder="Vehicle Number"
                                 type="text"
+                                value={body[ind1]["vehicleDetails"][ind].vehicleNumber}
                                 onChange={(e) => {
                                     setBody((prevBody) => {
-                                    prevBody[ind1]["vehicleDetails"][ind].vehicleNumber = e.target.value;
-                                    return (prevBody);
+                                    let kk = [...prevBody]
+                                    kk[ind1]["vehicleDetails"][ind].vehicleNumber = e.target.value;
+                                    return (kk);
                                     })
                                 }}
                                 />
@@ -469,11 +587,13 @@ export default function OrderFlowTwo({Order,OrderID}) {
                                 className=" border-l-purple-400 border-1  h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
                                 name="driverName"
                                 placeholder="Driver Name"
+                                value={body[ind1]["vehicleDetails"][ind].driverName}
                                 type="text"
                                 onChange={(e) => {
                                     setBody((prevBody) => {
-                                    prevBody[ind1]["vehicleDetails"][ind].driverName = e.target.value;
-                                    return (prevBody);
+                                    let kk = [...prevBody]
+                                    kk[ind1]["vehicleDetails"][ind].driverName = e.target.value;
+                                    return (kk);
                                     })
                                 }}
                                 />
@@ -483,12 +603,14 @@ export default function OrderFlowTwo({Order,OrderID}) {
                                 <input
                                 className=" border-l-purple-400 border-1  h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
                                 name="escortName"
+                                value={body[ind1]["vehicleDetails"][ind].escortName}
                                 placeholder="Escort Name"
                                 type="text"
                                 onChange={(e) => {
                                     setBody((prevBody) => {
-                                    prevBody[ind1]["vehicleDetails"][ind].escortName = e.target.value;
-                                    return (prevBody);
+                                    let kk = [...prevBody]
+                                    kk[ind1]["vehicleDetails"][ind].escortName = e.target.value;
+                                    return (kk);
                                     })
                                 }}
                                 />
@@ -499,11 +621,13 @@ export default function OrderFlowTwo({Order,OrderID}) {
                                 className=" border-l-purple-400 border-1  h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
                                 name="remarks"
                                 placeholder="Remarks"
+                                value={body[ind1]["vehicleDetails"][ind].remarks}
                                 type="text"
                                 onChange={(e) => {
                                     setBody((prevBody) => {
-                                    prevBody[ind1]["vehicleDetails"][ind].remarks = e.target.value;
-                                    return (prevBody);
+                                    let kk = [...prevBody]
+                                    kk[ind1]["vehicleDetails"][ind].remarks = e.target.value;
+                                    return (kk);
                                     })
                                 }}
                                 />
@@ -514,11 +638,13 @@ export default function OrderFlowTwo({Order,OrderID}) {
                                 className=" border-l-purple-400 border-1  h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
                                 name="warehouseIncharge"
                                 placeholder="Sender Incharge"
+                                value={body[ind1]["vehicleDetails"][ind].warehouseIncharge}
                                 type="text"
                                 onChange={(e) => {
                                     setBody((prevBody) => {
-                                    prevBody[ind1]["vehicleDetails"][ind].warehouseIncharge = e.target.value;
-                                    return (prevBody);
+                                    let kk = [...prevBody]
+                                    kk[ind1]["vehicleDetails"][ind].warehouseIncharge = e.target.value;
+                                    return (kk);
                                     })
                                 }}
                                 />
@@ -528,12 +654,14 @@ export default function OrderFlowTwo({Order,OrderID}) {
                                 <input
                                 className=" border-l-purple-400 border-1  h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary "
                                 name="driverContact"
+                                value={body[ind1]["vehicleDetails"][ind].driverContact}
                                 placeholder="Driver Contact"
                                 type='number'
                                 onChange={(e) => {
                                     setBody((prevBody) => {
-                                    prevBody[ind1]["vehicleDetails"][ind].driverContact = e.target.value;
-                                    return (prevBody);
+                                    let kk = [...prevBody]
+                                    kk[ind1]["vehicleDetails"][ind].driverContact = e.target.value;
+                                    return (kk);
                                     })
                                 }}
                                 />
@@ -543,12 +671,15 @@ export default function OrderFlowTwo({Order,OrderID}) {
                                 <input
                                 className=" border-l-purple-400 border-1  h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
                                 name="escortContact"
+                                value={body[ind1]["vehicleDetails"][ind].escortContact}
                                 placeholder="Escort Contact"
                                 type="number"
                                 onChange={(e) => {
+                                    console.log(e.target.value)
                                     setBody((prevBody) => {
-                                    prevBody[ind1]["vehicleDetails"][ind].escortContact = e.target.value;
-                                    return (prevBody);
+                                    let kk = [...prevBody]
+                                    kk[ind1]["vehicleDetails"][ind].escortContact = e.target.value;
+                                    return (kk);
                                     })
                                 }}
                                 />

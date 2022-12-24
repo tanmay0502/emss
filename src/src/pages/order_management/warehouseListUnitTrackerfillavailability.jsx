@@ -150,12 +150,12 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
 
     const [orderCount,setOrderCount] = useState({});
 
-    function increaseOne(index) {
+    function increaseOne(index,type="select",model="select",mnf = "select") {
         let v3={
-            "type":"select",
-            "quantity":0,
-            "model":"select",
-            "manufacturer":"select"
+            "type":type,
+            "quantity":"0",
+            "model":model,
+            "manufacturer":mnf
         }
         let temp = orderCount;
         if(Object.keys(temp[index]).length==0) {
@@ -431,8 +431,20 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
         Details.map((val,id)=>{
             fillDemand[id.toString()]={};
         })
-        
+        console.log(fillDemand)
         setOrderCount(fillDemand);
+        if(props.Order) {
+            console.log(orderCount)
+        
+        WareHouse_List.map((val,id)=>{
+            props.Order.map((val2,id2)=>{
+                const type= val2["item"]
+                const model= val2["itemmodel"]
+                const mnf= val2["manufacturer"]
+                increaseOne(id,type,model,mnf)
+            })
+        })
+    }
     },[Details])
 
 
