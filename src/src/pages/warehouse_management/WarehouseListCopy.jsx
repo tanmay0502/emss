@@ -129,7 +129,7 @@ function WarehouseList() {
 			return {
 				"Warehouse ID": val["type"] == 'P' ?
 					<Fragment><span style={{ display: 'flex', justifyContent: 'left', alignItems: 'center', marginLeft: "12%" }}>
-						<FaCircle size='0.8em' className='PermaWarehouse' />
+						<FaCircle size='0.8em' className= 'PermaWarehouse' />
 						<span style={{ marginLeft: '25px', marginRight: '25px' }}>
 							{val['warehouseid']}</span>{val['doublelock'] ?
 								<Fragment><FaKey className='keyColor' />
@@ -138,7 +138,7 @@ function WarehouseList() {
 								<FaKey className='keyColor' />}</span></Fragment>
 					:
 					<Fragment><span style={{ display: 'flex', justifyContent: 'left', alignItems: 'center', marginLeft: "12%" }}>
-						<FaCircle size='0.8em' className='TempWarehouse' />
+						<FaCircle size='0.8em' className= {val["type"] === 'T'? 'TempWarehouse':'PrivateWarehouse' } />
 						<span style={{ marginLeft: '25px', marginRight: '25px' }}>{val['warehouseid']}</span>{val['doublelock'] ?
 							<Fragment>
 								<FaKey className='keyColor' />
@@ -265,8 +265,9 @@ function WarehouseList() {
 			{/* {console.log(tableData["Status"])} */}
 			<div className="myWrapper" style={{ position: "relative", height: "100%", gridArea: "1 / 1 / 6 / 2" }}>
 				<div className='label_list'>
-					<div className='label d-flex d-flex-center'><span><FaCircle className='PermaWarehouse' /></span> Permanent Warehouse</div>
-					<div className='label d-flex d-flex-center'><span><FaCircle className='TempWarehouse' /></span> Temporary Warehouse</div>
+					<div className='label d-flex d-flex-center'><span><FaCircle className='PermaWarehouse' /></span> Goverment Warehouse</div>
+					<div className='label d-flex d-flex-center'><span><FaCircle className='PrivateWarehouse' /></span> Private Warehouse</div>
+					<div className='label d-flex d-flex-center'><span><FaCircle className='TempWarehouse' /></span> Own Warehouse</div>
 					<div className='label d-flex d-flex-center'><span><Fragment><span className='d-flex d-flex-center'><FaKey className='keyColor' /><FaKey className='keyColor' /></span></Fragment></span> Double Lock Present</div>
 					<div className='label d-flex d-flex-center'><span><FaKey className='keyColor' /></span> Double Lock Absent</div>
 				</div>

@@ -178,6 +178,9 @@
 .PermaWarehouse{
  color : #008767;
 }
+.PrivateWarehouse{
+	color:yellow;
+}
 .TempWarehouse{
 	color: #DF0404;
 }
