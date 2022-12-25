@@ -65,7 +65,7 @@
 }
 
 .unit_list_container table th {
-  color: #b5b7c0 !important;
+  color: #e4e7f1 !important;
   font-size: 1em !important;
 }
 
@@ -161,6 +161,7 @@
 }
 
 .unit_list_container table tbody td:first-child,
+
 .unit_list_container table tbody td:last-child {
   border-bottom: 1px solid transparent;
 }

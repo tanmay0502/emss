@@ -48,10 +48,10 @@ export default function HomePage() {
                         },
                         credentials: 'include',
                         body: JSON.stringify(
-							{
-								oprnd: ID
-							}
-						)
+                            {
+                                oprnd: ID
+                            }
+                        )
                     }
                 );
                 let data2 = await response.json();
@@ -555,17 +555,12 @@ export default function HomePage() {
             })
         }
         navigate('/session/unitmanagement/unitlist');
-
-
     };
 
 
 
     const Redirect = (e) => {
-            navigate("/session/unitmanagement/flc_list")
-
-
-
+        navigate("/session/unitmanagement/flc_list")
     };
 
     const First_Randomisation_call = (e) => {

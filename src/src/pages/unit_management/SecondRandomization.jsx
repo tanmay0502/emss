@@ -200,6 +200,7 @@ const SecondRandomisationForm = ({ isVisible }) => {
             setIterationIndex(iteration_index);
         } else {
             setIsSubmitted(false);
+            console.log('Coming')
             // fetch request
             try {
                 const response = await fetch(`${baseUrl}/second-randomization`, {
@@ -228,6 +229,7 @@ const SecondRandomisationForm = ({ isVisible }) => {
         if (isVisible) {
             setIsFetching(true);
             (async () => {
+
                 try {
                     const response = await fetch(`${baseUrl}/fetch-polling-stations`, {
                         method: "GET",
@@ -235,15 +237,15 @@ const SecondRandomisationForm = ({ isVisible }) => {
                         credentials: "include"
                     });
                     const data = await response.json();
-                    console.log(data, district_id, "datatatatatatatat")
+
                     if (response.status === 200) {
                         console.log("inside if")
                         if (data.hasOwnProperty(district_id)) {
-                            console.log("inside second if", data[district_id])
                             setAssemblyList(data[district_id]);
                         }
                     }
                 } catch (err) {
+
                     alert(`Error occured: ${err}`);
                 }
             })();
@@ -251,6 +253,8 @@ const SecondRandomisationForm = ({ isVisible }) => {
             setIsFetching(false);
         }
     }, [isVisible]);
+
+
 
     return (
         <>
@@ -555,7 +559,7 @@ const SecondRandomisationOutput = ({
                                 <SecondAssemblyTableRow
                                     key={id}
                                     row={row}
-                                    unitData={randomData[row.cells[0].value]}
+                                    unitData={randomData != undefined ? randomData[row.cells[0].value] : []}
                                 />
                             </>
                         );

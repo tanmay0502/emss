@@ -360,7 +360,6 @@ function EditFlc_Ceo_Manufacturer(props) {
         if (i != -1) {
             setEdit_Assigned_Engineer(i);
         }
-
     };
 
     const handleInputChange_Assigned_Engineer_name = (e, index) => {
