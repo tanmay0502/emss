@@ -25,7 +25,7 @@ function ChatUpdate(props) {
 					{
 						<>
 							{
-								props.docData && props.docData[props.message[0]['remarkid']] && props.docData[props.message[0]['remarkid']].length > 0 ?
+								props.docData && props.docData[props.message[0]['remarkid']] && props.docData[props.message[0]['remarkid']]!==undefined && props.docData[props.message[0]['remarkid']].length > 0 ?
 									<div className={msgStylesObj.documentsMessage}>
 										{msgStylesObj === styleRec ? <b>{props.message[0]['remarkeruserid']}</b> : <></>}
 										Supporting Documents

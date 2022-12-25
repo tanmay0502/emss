@@ -45,13 +45,13 @@ input[type="radio"]:checked + label{
     flex: 1;
 }
 
-.chatListItemInfo > b{
-    font-size: 1.4em;
+.chatListItemInfo > p{
+    font-size: 1;
     user-select: none;
 }
 
 .chatListItemInfo > span{
-    font-size: 1em;
+    font-size: 1.25em;
     max-width: 100%;
 
     white-space: nowrap;

@@ -19,6 +19,7 @@ function RequestList() {
     const navigate = useNavigate()
 
     const chatFormRef = useRef();
+    const [searchFieldVal, setSearchFieldVal] = useState("")
 
     const [selectedissue, setSelectedissue] = useState(null)
     const [selectedSeverity, setSelectedSeverity] = useState('H')
@@ -111,16 +112,29 @@ function RequestList() {
     }
 
     useEffect(() => {
-        setSortedList(issueRequestList.filter((val) => {
+        const tmp = issueRequestList.filter((val) => {
+            if(searchFieldVal !== ""){
+                return val.issueid.toString().toLowerCase().includes(searchFieldVal.toLowerCase()) || val.subject.toLowerCase().includes(searchFieldVal.toLowerCase())
+            }
             return val.severity === selectedSeverity
         }).sort((a,b) => {
             return new Date(a['updatedon_max_time']) - new Date(b['updatedon_max_time'])
-        }))
+        })
+
+        tmp.reverse();
+
+        setSortedList(tmp)
     
       return () => {
         
       }
-    }, [issueRequestList, selectedSeverity])
+    }, [issueRequestList, selectedSeverity, searchFieldVal])
+
+    useEffect(()=>{
+        if(searchFieldVal !== ""){
+            
+        }
+    }, [searchFieldVal])
     
 
     useEffect(()=>{
@@ -315,7 +329,7 @@ function RequestList() {
             <div className={styles.chatList}>
                 <div className={styles.searchIssueInputGroup}>
                     <SearchInputIcon />
-                    <input type={"search"} placeholder={"Search For Issue"} />
+                    <input type={"search"} placeholder={"Search For Issue"} value={searchFieldVal} onChange={(e)=> {setSearchFieldVal(e.target.value)}} />
                 </div>
                 <div className={styles.severityGroup}>
                     <input id='highSeverityButton' type="radio" name='Severity' value='H' defaultChecked />
@@ -355,22 +369,19 @@ function RequestList() {
                                     <img src={defaultImage} />
                                     <div>
                                         <b>
-                                            {selectedissue}
+                                            {selectedIssueData && selectedIssueData['issue'] ? selectedIssueData['issue'][0]['subject'] : "Loading..."}
                                         </b>
                                         <span>
-                                            {selectedIssueData && selectedIssueData['issue'] ? "Lodged By " + selectedIssueData['issue'][0]['lodgeruserid'] : "Loading..."}
+                                            {selectedIssueData && selectedIssueData['issue'] ? "Lodged By " + selectedIssueData['issue'][0]['lodgeruserid'] : <></>}
                                         </span>
                                     </div>
                                 </div>
-                                <div className={styles.chatHeaderRight}>
+                                {/* <div className={styles.chatHeaderRight}>
                                     <div className={styles.searchIssueInputGroup}>
                                         <SearchInputIcon />
                                         <input type={"search"} placeholder={"Search Within Issue"} />
                                     </div>
-                                    {/* <button>
-                                        <SearchIcon />
-                                    </button> */}
-                                </div>
+                                </div> */}
                             </div>
 
                             <div id="chatwindow" className={styles.chatWindow} >

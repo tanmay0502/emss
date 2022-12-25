@@ -21,12 +21,14 @@ function ChatListItem(props) {
         <label htmlFor={"issueItem-" + props.issueID}>
             <img src={defaultImage} alt="" />
             <div className={styles.chatListItemInfo}>
-                <b>
-                    {props.issueID}
-                </b>
                 <span>
-                    {props.subject}
+                    <b>
+                        {props.subject}
+                    </b>
                 </span>
+                <p>
+                    Issue ID: {props.issueID}
+                </p>
             </div>
             <div className={styles.ChatListItemUpdates}>
                 <span>
