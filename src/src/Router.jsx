@@ -311,14 +311,14 @@ function Routed(props) {
 
 						</div>
 
-						<button className={window.location.pathname.startsWith("/session/messages") ? 'nav-button active' : 'nav-button'}>
+						{/* <button className={window.location.pathname.startsWith("/session/messages") ? 'nav-button active' : 'nav-button'}>
 							<div className='filler'><MessagesIcon />Messages</div>
 							<ChevronRight className="chevron" />
-						</button>
-						<button className={window.location.pathname.startsWith("/session/downloads") ? 'nav-button active' : 'nav-button'}>
+						</button> */}
+						{/* <button className={window.location.pathname.startsWith("/session/downloads") ? 'nav-button active' : 'nav-button'}>
 							<div><DownloadsIcon />Downloads</div>
 							<ChevronRight className="chevron" />
-						</button>
+						</button> */}
 
 						<button className={window.location.pathname.startsWith("/session/downloads") ? 'nav-button active' : 'nav-button'}>
 							<div><ReportIcon />Report</div>
