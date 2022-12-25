@@ -321,7 +321,7 @@ function WarehouseList() {
 					<WarehouseDetail detail={user} close={close} warehouseMapping={warehouseMapping} />
 				}
 			</div>
-			<div className='myWrapper bg-blue-200' style={{ "gridArea": "1 / 2 / 3 / 3" }}>
+			<div className='myWrapper' style={{ "gridArea": "1 / 2 / 3 / 3" }}>
 				<ul className='warehouseStats'>
 					{/* <li>
 						<div className="icon">
