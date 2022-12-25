@@ -321,9 +321,9 @@ function WarehouseList() {
 					<WarehouseDetail detail={user} close={close} warehouseMapping={warehouseMapping} />
 				}
 			</div>
-			<div className='myWrapper' style={{ "gridArea": "1 / 2 / 3 / 3" }}>
+			<div className='myWrapper bg-blue-200' style={{ "gridArea": "1 / 2 / 3 / 3" }}>
 				<ul className='warehouseStats'>
-					<li>
+					{/* <li>
 						<div className="icon">
 							<TotalWarehouses />
 						</div>
@@ -331,13 +331,13 @@ function WarehouseList() {
 							<span>Total Warehouses</span>
 							<h3>{tableData.length.toLocaleString()}</h3>
 						</div>
-					</li>
+					</li> */}
 					<li>
 						<div className="icon">
 							<PermanentWarehouses />
 						</div>
 						<div className="warehouseStatsText">
-							<span>Permanent Warehouses</span>
+							<span>Private Warehouses</span>
 							<h3>{tableData.filter((elem) => {
 								return elem["Details"] && elem["Details"]["type"] === 'P'
 							}).length.toLocaleString()}</h3>
@@ -348,9 +348,20 @@ function WarehouseList() {
 							<TemporaryWarehouses />
 						</div>
 						<div className="warehouseStatsText">
-							<span>Temporary Warehouses</span>
+							<span>Govt. Warehouses</span>
 							<h3>{tableData.filter((elem) => {
-								return elem["Details"] && elem["Details"]["type"] !== 'P'
+								return elem["Details"] && elem["Details"]["type"] === 'G'
+							}).length.toLocaleString()}</h3>
+						</div>
+					</li>
+					<li>
+						<div className="icon">
+						<TotalWarehouses />
+						</div>
+						<div className="warehouseStatsText">
+							<span>Own Warehouses</span>
+							<h3>{tableData.filter((elem) => {
+								return elem["Details"] && elem["Details"]["type"] === 'O'
 							}).length.toLocaleString()}</h3>
 						</div>
 					</li>

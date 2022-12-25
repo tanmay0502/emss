@@ -6,10 +6,35 @@ import DeleleBtn from '../assets/delete.jpg'
 function ViewPermission(){
 
 
-    const [permission, setPermission] = useState()
+    const [permission, setPermission] = useState([])
     const [isPageLoaded,setIsPageLoaded] = useState(0)
     const [editPoint,setEditPoint] =useState(-1);
     const [editDetails, setEditDetails] = useState("","","","","","","","","","")
+    const [isLoading,setIsLoading] = useState(0);
+
+    const [show, setShow] = useState(false);
+
+  useEffect(
+    () => {
+    
+        setIsLoading(1);
+
+      let timer1 = setTimeout(() => viewPermission(), 1 * 1000);
+
+      // this will clear Timeout
+      // when component unmount like in willComponentUnmount
+      // and show will not change to true
+      return () => {
+        clearTimeout(timer1);
+      };
+    },
+    // useEffect will run only one time with empty []
+    // if you pass a value to array,
+    // like this - [data]
+    // than clearTimeout will run every time
+    // this value changes (useEffect re-run)
+    []
+  );
 
     function point(id){
         console.log(id)
@@ -43,6 +68,7 @@ function ViewPermission(){
     }
 
     async function viewPermission() {
+        setIsLoading(1);
         try {
             const response = await fetch(
                 `${process.env.REACT_APP_API_SERVER}/user/view_permission`,
@@ -56,22 +82,28 @@ function ViewPermission(){
             );
             const data2 = await response.json();
             console.log(data2);
-            if(data2 && data2.length!=0)
-            setPermission(data2)
+            if((data2 &&data2["data"] && data2["data"].length!=0) ){
+                
+                    console.log("setting.")
+                setPermission(data2["data"])
+                
+            }
+            setIsLoading(0);
             
         } catch (err) {
             console.log(err);
             // setDists({});
+            setIsLoading(0);
+
         }
 	}
 
         useEffect(()=>{
             if(isPageLoaded==0){
-                viewPermission();
-                setIsPageLoaded(1);
+                // viewPermission();
             }
             // viewPermission()
-        },[])
+        },[isPageLoaded])
 
     async  function editPermission(id){
         console.log(id)
@@ -253,7 +285,12 @@ function ViewPermission(){
                     <tr>
                         <td colSpan={10}  className="h-1 bg-black"></td>
                     </tr>
-                {permission && permission.map((val,id)=>(
+                {isLoading==1 && (
+                    <tr className=''>
+                        <td className='text-center text-6xl' colSpan={10}>Loading ......</td>
+                    </tr>
+                )}
+                {permission && permission.length!=0 && permission.map((val,id)=>(
                 <>
                     <tr>
                         <td colSpan={5} className="mb-4"><hr/></td>

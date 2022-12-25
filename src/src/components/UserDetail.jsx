@@ -18,7 +18,7 @@ function UserDetail(props) {
     async function getCurrImage(id) {
         try {
             const response = await fetch(
-                `${process.env.REACT_APP_API_SERVER}/user/profilepicture`,
+                `${process.env.REACT_APP_API_SERVER}/user/getProfilePicture`,
                 {
                     method: "POST",
                     headers: {

@@ -222,11 +222,13 @@ function Home1() {
 		const respJSON = await response.json();
 		var data = respJSON['data'].slice(-10)
 		console.log(data)
-		// data.reverse();
+		
+
 		data = data.sort((a,b) => {
 			return (new Date(a['createdon'])).getTime() - (new Date(b['createdon'])).getTime()
 		})
 		// console.log(data)
+		data.reverse();
 		setIssues(data)
 	}
 

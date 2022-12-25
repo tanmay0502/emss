@@ -112,6 +112,7 @@ function RequestList() {
     }
 
     useEffect(() => {
+        if(issueRequestList && issueRequestList.length!=0 ){
         const tmp = issueRequestList.filter((val) => {
             if(searchFieldVal !== ""){
                 return val.issueid.toString().toLowerCase().includes(searchFieldVal.toLowerCase()) || val.subject.toLowerCase().includes(searchFieldVal.toLowerCase())
@@ -124,6 +125,7 @@ function RequestList() {
         tmp.reverse();
 
         setSortedList(tmp)
+    }
     
       return () => {
         

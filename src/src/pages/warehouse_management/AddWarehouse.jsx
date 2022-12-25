@@ -93,6 +93,11 @@ export default function AddWarehouse() {
 
 
   const onFormSubmit = async (e) => {
+
+
+    console.log("sjdjd")
+
+
     e.preventDefault()
 
     if (validate(document.getElementById("input_personName_1").value, "") == false) {
@@ -123,10 +128,10 @@ export default function AddWarehouse() {
       const lon = document.getElementById("input_lng").value;
 
       const address = document.getElementById("input_address").value;
-      const double_lock = document.getElementById("double_lock_yes").checked;
+      const double_lock = doubleLockSystem?"True":"False";
 
       const person1_ID = document.getElementById("input_personName_1").value;
-      const person2_ID = double_lock ? document.getElementById("input_personName_2").value : "";
+      const person2_ID = doubleLockSystem ? document.getElementById("input_personName_2").value : "";
 
       const sealed = document.getElementById("input_sealed").value;
 
@@ -150,7 +155,7 @@ export default function AddWarehouse() {
       console.log(JSON.stringify(reqBody))
       console.log(dists)
 
-      if (double_lock) {
+      if (doubleLockSystem) {
         reqBody["UIDKey2"] = person2_ID;
       }
 
@@ -167,6 +172,7 @@ export default function AddWarehouse() {
       );
       const status = await response;
       // console.log(status)
+      // alert("hello")
       alert(
         status.status === 200
           ? "Warehouse Created Successfully"
@@ -217,7 +223,7 @@ export default function AddWarehouse() {
       <form
         id="create-warehouse-form"
         className="myForm"
-        onSubmit={onFormSubmit}
+        onSubmit={(e)=>onFormSubmit(e)}
       >
         <div className="">
           <div class="warehouse-type">
@@ -225,6 +231,7 @@ export default function AddWarehouse() {
               <h4>
                 <button
                   className="flex justify-center rounded-full aspect-square "
+                  type="button"
                   onClick={() => {
                     navigate('/session/warehousemanagement')
                   }}
@@ -485,6 +492,8 @@ export default function AddWarehouse() {
           </div>
           <div class="warehouse-personnel">
             {/* <h5>Warehouse Personnel Details</h5> */}
+                  {/* <input type={"radio"}>Hello</input> */}
+
             <div className="input_group three-column-grid">
               <div
                 className="form_group"
@@ -494,9 +503,9 @@ export default function AddWarehouse() {
                   <label htmlFor="double_lock_yes">
                     Double Lock System:{" "}
                   </label>
-                  <label htmlFor="double_lock_yes">Yes </label>
+                  {/* <label htmlFor="double_lock_yes" className={`${doubleLockSystem?'bg-stone-200 text-black p-2 rounded-md':'bg-orange-500 text-white p-2 rounded-md'}`}>Yes </label>
                   <input
-                    type={"radio"}
+                    type="radio"
                     name="double_lock"
                     id="double_lock_yes"
                     defaultChecked={true}
@@ -505,16 +514,25 @@ export default function AddWarehouse() {
                       setDoubleLockSystem(true);
                     }}
                   />
-                  <label htmlFor="double_lock_no">No </label>
+                  <label htmlFor="double_lock_no" className={`${doubleLockSystem==0?'bg-stone-200 text-black p-2 rounded-md':'bg-orange-500 text-white p-2 rounded-md'}`}>No </label>
                   <input
-                    type={"radio"}
+                    type="radio"
                     name="double_lock"
                     id="double_lock_no"
                     value="0"
                     onChange={(e) => {
                       setDoubleLockSystem(false);
                     }}
-                  />
+                  /> */}
+                  <div className="flex justify-around w-1/6">
+                    <div><button type="button"  className={`${!doubleLockSystem?'bg-stone-200 text-black p-2 rounded-md':'bg-orange-500 text-white p-2 rounded-md'}`} onClick={()=>{
+                      setDoubleLockSystem(1);
+                    }}>Yes</button></div>
+                    <div><button type="button"  className={`${doubleLockSystem?'bg-stone-200 text-black p-2 rounded-md':'bg-orange-500 text-white p-2 rounded-md'}`}
+                    onClick={()=>{
+                      setDoubleLockSystem(0);
+                    }}>No</button></div>
+                  </div>
                 </div>
               </div>
               <div className="form_group">
@@ -554,8 +572,9 @@ export default function AddWarehouse() {
           </div>
         </div>
         <center>
-          <input type={"submit"} className="mySubmit">
-          </input>
+          <button type="submit" className="text-white bg-orange-500 rounded-md p-2"  >
+            Submit
+          </button>
         </center>
       </form>
     </div>

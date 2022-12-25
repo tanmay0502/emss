@@ -40,7 +40,7 @@ export default function ModifyWarehouse() {
     const lat = document.getElementById("input_lat").value;
     const lon = document.getElementById("input_lng").value;
     const address = document.getElementById("input_address").value;
-    let double_lock = document.getElementById("double_lock_yes").checked;
+    let double_lock = doubleLockSystem
     console.log(double_lock);
     const person2_ID = double_lock ? document.getElementById("input_personName_2").value : "";
     double_lock = double_lock == true ? "TRUE" : "FALSE";
@@ -202,6 +202,7 @@ export default function ModifyWarehouse() {
         <h4>
           <button
             className="flex justify-center rounded-full aspect-square "
+            type="button"
             onClick={() => {
               navigate('/session/warehousemanagement')
             }}
@@ -221,7 +222,7 @@ export default function ModifyWarehouse() {
       <form
         id="create-warehouse-form"
         className="myForm"
-        onSubmit={onFormSubmit}
+        onSubmit={(e)=>onFormSubmit(e)}
       >
         <div className="">
           <div class="warehouse-type">
@@ -466,7 +467,7 @@ export default function ModifyWarehouse() {
                   <label htmlFor="double_lock_yes">
                     Double Lock System:{" "}
                   </label>
-                  <label htmlFor="double_lock_yes">Yes </label>
+                  {/* <label htmlFor="double_lock_yes">Yes </label>
                   <input
                     type={"radio"}
                     name="double_lock"
@@ -490,7 +491,16 @@ export default function ModifyWarehouse() {
                       setDoubleLockSystem(false);
                     }}
                     checked={!doubleLockSystem}
-                  />
+                  /> */}
+                  <div className="flex justify-around w-1/6">
+                    <div><button type="button"  className={`${!doubleLockSystem?'bg-stone-200 text-black p-2 rounded-md':'bg-orange-500 text-white p-2 rounded-md'}`} onClick={()=>{
+                      setDoubleLockSystem(1);
+                    }}>Yes</button></div>
+                    <div><button type="button"  className={`${doubleLockSystem?'bg-stone-200 text-black p-2 rounded-md':'bg-orange-500 text-white p-2 rounded-md'}`}
+                    onClick={()=>{
+                      setDoubleLockSystem(0);
+                    }}>No</button></div>
+                  </div>
                 </div>
               </div>
               <div className="form_group">
