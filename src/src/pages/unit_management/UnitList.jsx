@@ -349,10 +349,9 @@ export default function UnitList() {
 
   return (
     <>
-      <StatusUpdate activeButtons={cardVisibility} onButtonClick={handleButtonClick} />
+      <StatusUpdate activeButtons={cardVisibility} onButtonClick={handleButtonClick} flag={flag} data2={data2} initialInputValuesReplace={initialInputValuesReplace} setInputValuesReplace={setInputValuesReplace} inputValuesReplace={inputValuesReplace} handleInputChangeReplace={handleInputChangeReplace} isVisible={cardVisibility.replacementForm} Added={Added} handleInputChange_ReplacedUnitID={handleInputChange_ReplacedUnitID} handleInputChange_ReplacingUnitID={handleInputChange_ReplacingUnitID} handleInputChange_typeofdefect={handleInputChange_typeofdefect} handleEdit_Dropdown_rows={handleEdit_Dropdown_rows} Typeofdefect={Typeofdefect} ReplacingUnitID={ReplacingUnitID} ReplacedUnitID={ReplacedUnitID} handleRemoveClick_Dropdown_rows={handleRemoveClick_Dropdown_rows} />
       <EPForm isVisible={cardVisibility.epForm} />
       <EPUnmarkForm isVisible={cardVisibility.epUnmarkForm} />
-      <ReplacementForm flag={flag} data2={data2} initialInputValuesReplace={initialInputValuesReplace} setInputValuesReplace={setInputValuesReplace} inputValuesReplace={inputValuesReplace} handleInputChangeReplace={handleInputChangeReplace} isVisible={cardVisibility.replacementForm} Added={Added} handleInputChange_ReplacedUnitID={handleInputChange_ReplacedUnitID} handleInputChange_ReplacingUnitID={handleInputChange_ReplacingUnitID} handleInputChange_typeofdefect={handleInputChange_typeofdefect} handleEdit_Dropdown_rows={handleEdit_Dropdown_rows} Typeofdefect={Typeofdefect} ReplacingUnitID={ReplacingUnitID} ReplacedUnitID={ReplacedUnitID} handleRemoveClick_Dropdown_rows={handleRemoveClick_Dropdown_rows} />
       {cardVisibility.replacementForm == true ?
         <UnitListCard updateChecked={updateChecked} bgColor={bgColor} ReplacedUnitID={ReplacedUnitID} data={data} />
         :
@@ -376,39 +375,39 @@ const ActionButton = ({ isActive, text, name, onClick }) => {
   );
 };
 
-const StatusUpdate = ({ activeButtons, onButtonClick }) => {
+const StatusUpdate = ({ activeButtons, onButtonClick, flag, data2, initialInputValuesReplace, setInputValuesReplace, inputValuesReplace, handleInputChangeReplace, isVisible, Added, handleInputChange_ReplacedUnitID, handleInputChange_ReplacingUnitID, handleInputChange_typeofdefect, handleEdit_Dropdown_rows, ReplacingUnitID, ReplacedUnitID, Typeofdefect, handleRemoveClick_Dropdown_rows }) => {
   return (
-    <>
-      <div className={styles.unit_list_container}>
-        <div className={styles.unit_list_header}>
-          <h4>Status Update</h4>
-        </div>
-        <div className="mt-2 w-full bg-white p-6">
-          <div className="grid grid-cols-4">
-            <ActionButton
-              isActive={activeButtons.epForm}
-              text="EP Mark"
-              name="epForm"
-              onClick={onButtonClick}
-            />
 
-            <ActionButton
-              isActive={activeButtons.epUnmarkForm}
-              text="EP Unmark"
-              name="epUnmarkForm"
-              onClick={onButtonClick}
-            />
-
-            <ActionButton
-              isActive={activeButtons.replacementForm}
-              text="Unit Replacement"
-              name="replacementForm"
-              onClick={onButtonClick}
-            />
-          </div>
-        </div>
+    <div className={styles.unit_list_container}>
+      <div className={styles.unit_list_header}>
+        <h4>Status Update</h4>
       </div>
-    </>
+      <div className="grid grid-cols-4 mt-4">
+        <ActionButton
+          isActive={activeButtons.epForm}
+          text="EP Mark"
+          name="epForm"
+          onClick={onButtonClick}
+        />
+
+        <ActionButton
+          isActive={activeButtons.epUnmarkForm}
+          text="EP Unmark"
+          name="epUnmarkForm"
+          onClick={onButtonClick}
+        />
+
+        <ActionButton
+          isActive={activeButtons.replacementForm}
+          text="Unit Replacement"
+          name="replacementForm"
+          onClick={onButtonClick}
+        />
+      </div>
+
+      <ReplacementForm flag={flag} data2={data2} initialInputValuesReplace={initialInputValuesReplace} setInputValuesReplace={setInputValuesReplace} inputValuesReplace={inputValuesReplace} handleInputChangeReplace={handleInputChangeReplace} isVisible={isVisible} Added={Added} handleInputChange_ReplacedUnitID={handleInputChange_ReplacedUnitID} handleInputChange_ReplacingUnitID={handleInputChange_ReplacingUnitID} handleInputChange_typeofdefect={handleInputChange_typeofdefect} handleEdit_Dropdown_rows={handleEdit_Dropdown_rows} Typeofdefect={Typeofdefect} ReplacingUnitID={ReplacingUnitID} ReplacedUnitID={ReplacedUnitID} handleRemoveClick_Dropdown_rows={handleRemoveClick_Dropdown_rows} />
+    </div >
+
   );
 };
 
@@ -808,10 +807,9 @@ const EPUnmarkForm = ({ isVisible }) => {
 // Unit Replacement Card
 const ReplacementForm = ({ flag, data2, initialInputValuesReplace, setInputValuesReplace, inputValuesReplace, handleInputChangeReplace, isVisible, Added, handleInputChange_ReplacedUnitID, handleInputChange_ReplacingUnitID, handleInputChange_typeofdefect, handleEdit_Dropdown_rows, ReplacingUnitID, ReplacedUnitID, Typeofdefect, handleRemoveClick_Dropdown_rows }) => {
 
-  const district_id = userID.slice(5, 8);
+
   const [assemblyList, setAssemblyList] = useState([]);
   const [data4, setData4] = useState();
-  const [isPageLoaded, setIsPageLoaded] = useState(0)
   const [isPageLoaded1, setIsPageLoaded1] = useState(0)
 
 
@@ -912,151 +910,79 @@ const ReplacementForm = ({ flag, data2, initialInputValuesReplace, setInputValue
 
   return (
     <>
-      <form onSubmit={onFormSubmit}>
+      <form onSubmit={onFormSubmit} className="w-full rounded-lg " styles={{ marginTop: "20%" }}>
         {isVisible && (
-          <div className={styles.unit_list_container}>
-            <div className={styles.unit_list_header}>
-              <h4>Unit Replacement</h4>
-            </div>
-            <div className="mt-2 w-full bg-white p-6">
-              <div className="grid grid-cols-2">
-                <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
-                  <label className="mb-2 w-full text-base">
-                    Polling Station<span className="text-red-600">*</span>
-                  </label>
-                  <div className="relative text-[#494A59]">
-                    <select
-                      className="relative h-10 w-full rounded-md border p-2"
-                      name="pollingstation"
-                      placeholder="Select"
-                      value={inputValuesReplace.pollingstation}
-                      onChange={handleInputChangeReplace}
-                    >
-                      {" "}
-                      <option hidden>Select</option>
+          <div styles={{ marginTop: "20%" }}>
+            <div className="w-full flex justify-around">
+              <div className="m-2 text-left w-1/3">
+                <label className="mb-2 w-full text-base">
+                  Polling Station<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-[#494A59]">
+                  <select
+                    className="relative h-10 w-full rounded-md border p-2"
+                    name="pollingstation"
+                    placeholder="Select"
+                    value={inputValuesReplace.pollingstation}
+                    onChange={handleInputChangeReplace}
+                  >
+                    {" "}
+                    <option hidden>Select</option>
 
-                      {assemblyList.map((item, _id) => (
-                        <option key={_id}>{item}</option>
-                      ))}
-                    </select>
-                    <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1/2" />
-                  </div>
+                    {assemblyList.map((item, _id) => (
+                      <option key={_id}>{item}</option>
+                    ))}
+                  </select>
+                  <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1/2" />
                 </div>
+              </div>
 
-                <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
-                  <label className="mb-2 w-full text-base">
-                    Replacement Level<span className="text-red-600">*</span>
-                  </label>
-                  <div className="relative text-[#494A59]">
-                    <select
-                      className="relative h-10 w-full rounded-md border p-2"
-                      name="replacementlevel"
-                      placeholder="Select"
-                      value={inputValuesReplace.replacementlevel}
-                      onChange={handleInputChangeReplace}
-                    >
-                      {" "}
-                      <option hidden>Select</option>
-                      <option>Commissioning</option>
-                      <option>Distribution</option>
-                      <option>Mock Polling</option>
-                      <option>Actual Polling</option>
-                    </select>
-                    <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1/2" />
-                  </div>
+              <div className="m-2 w-1/3 text-left">
+                <label className="mb-2 w-full text-base">
+                  Replacement Level<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-[#494A59]">
+                  <select
+                    className="relative h-10 w-full rounded-md border p-2"
+                    name="replacementlevel"
+                    placeholder="Select"
+                    value={inputValuesReplace.replacementlevel}
+                    onChange={handleInputChangeReplace}
+                  >
+                    {" "}
+                    <option hidden>Select</option>
+                    <option>Commissioning</option>
+                    <option>Distribution</option>
+                    <option>Mock Polling</option>
+                    <option>Actual Polling</option>
+                  </select>
+                  <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1/2" />
                 </div>
               </div>
             </div>
 
+            <div className={ReplacementStyles.Replacement_dropdown_table}>
+              <table>
+                <thead>
+                  <tr>
+                    <th style={{ color: "#f56a3f", padding: "20px" }}>Replaced Unit ID   </th>
+                    <th style={{ color: "#f56a3f", padding: "20px" }}>Replacing Unit ID</th>
+                    <th style={{ color: "#f56a3f", padding: "20px" }}>Type Of Defect</th>
+                    <th style={{ color: "#f56a3f", padding: "20px" }}></th>
+                  </tr>
+                </thead>
 
 
-            {/* ========================================================================================================================================= */}
-
-
-
-            <div className={ReplacementStyles.Dropdown}>
-              <div className={ReplacementStyles.Replacement_dropdown_table}>
-                <table>
-                  <thead>
-                    <tr>
-                      <th style={{ color: "#f56a3f", padding: "20px" }}>Replaced Unit ID   </th>
-                      <th style={{ color: "#f56a3f", padding: "20px" }}>Replacing Unit ID</th>
-                      <th style={{ color: "#f56a3f", padding: "20px" }}>Type Of Defect</th>
-                      <th style={{ color: "#f56a3f", padding: "20px" }}></th>
-                    </tr>
-                  </thead>
-
-
-                  {Added.length > 0 ?
-                    Added.map((val, id) => {
-                      return (<>
-                        <tr onDoubleClick={() => { handleEdit_Dropdown_rows(id) }}>
-                          <td className="text-black text-sm">
-                            <input
-                              className="relative h-10 !w-80 rounded-md border p-2"
-                              required
-                              // type="text"
-                              value={ReplacedUnitID[id]}
-                              name="replacedUnitId"
-                              placeholder="Replaced Unit ID"
-                              disabled
-                            />
-                          </td>
-
-                          <td className="text-black text-sm">
-                            <select
-                              required={(inputValuesReplace['replacementlevel'] == 'Actual Polling') ? true : false}
-                              className="relative h-10 !w-80  rounded-md border p-2"
-                              placeholder="Replacing Unit ID"
-                              name="replacingUnitId"
-                              value={ReplacingUnitID[id]}
-                              onChange={(e) => handleInputChange_ReplacingUnitID(e, id)}
-                            >
-                              {" "}
-                              <option hidden>Select</option>
-                              {data2 &&
-                                data2.map((st, index) => (
-                                  val['replacedUnitId'].slice(1, 3) == st['unitid'].slice(1, 3) && (flag[st['unitid']]['id'] == id || flag[st['unitid']]['flag'] == false) &&
-                                  <option value={st['unitid']} className="text-black">
-                                    {st['unitid']}
-                                  </option>
-                                ))}
-                            </select>
-                          </td>
-
-                          <td className="text-black text-sm">
-                            <select
-                              required={true}
-                              className="relative h-10 !w-80  rounded-md border p-2"
-                              placeholder="Type Of Defect"
-                              name="defectType"
-                              value={Typeofdefect[id]}
-                              onChange={(e) => handleInputChange_typeofdefect(e, id)}
-                            >
-                              {" "}
-                              <option hidden>Select</option>
-                              {data4 &&
-                                data4.map((st) => (
-                                  <option value={st['defectId']} className="text-black">
-                                    {st['defectName']}
-                                  </option>
-
-                                ))}
-                            </select>
-                          </td>
-                          <td className="text-black text-sm" onClick={() => handleRemoveClick_Dropdown_rows(id)}>{<Delete />}</td>
-                        </tr>
-                        <tr><td colSpan={4}><hr /></td></tr></>
-                      )
-                    }) :
-                    <>
-
-                      <tr >
+                {Added.length > 0 ?
+                  Added.map((val, id) => {
+                    return (<>
+                      <tr onDoubleClick={() => { handleEdit_Dropdown_rows(id) }}>
                         <td className="text-black text-sm">
                           <input
                             className="relative h-10 !w-80 rounded-md border p-2"
                             required
                             // type="text"
+                            value={ReplacedUnitID[id]}
                             name="replacedUnitId"
                             placeholder="Replaced Unit ID"
                             disabled
@@ -1065,35 +991,93 @@ const ReplacementForm = ({ flag, data2, initialInputValuesReplace, setInputValue
 
                         <td className="text-black text-sm">
                           <select
-                            required
+                            required={(inputValuesReplace['replacementlevel'] == 'Actual Polling') ? true : false}
                             className="relative h-10 !w-80  rounded-md border p-2"
                             placeholder="Replacing Unit ID"
                             name="replacingUnitId"
+                            value={ReplacingUnitID[id]}
+                            onChange={(e) => handleInputChange_ReplacingUnitID(e, id)}
                           >
                             {" "}
                             <option hidden>Select</option>
+                            {data2 &&
+                              data2.map((st, index) => (
+                                val['replacedUnitId'].slice(1, 3) == st['unitid'].slice(1, 3) && (flag[st['unitid']]['id'] == id || flag[st['unitid']]['flag'] == false) &&
+                                <option value={st['unitid']} className="text-black">
+                                  {st['unitid']}
+                                </option>
+                              ))}
                           </select>
                         </td>
 
                         <td className="text-black text-sm">
                           <select
-                            required
+                            required={true}
                             className="relative h-10 !w-80  rounded-md border p-2"
                             placeholder="Type Of Defect"
                             name="defectType"
+                            value={Typeofdefect[id]}
+                            onChange={(e) => handleInputChange_typeofdefect(e, id)}
                           >
                             {" "}
                             <option hidden>Select</option>
+                            {data4 &&
+                              data4.map((st) => (
+                                <option value={st['defectId']} className="text-black">
+                                  {st['defectName']}
+                                </option>
 
+                              ))}
                           </select>
                         </td>
+                        <td className="text-black text-sm" onClick={() => handleRemoveClick_Dropdown_rows(id)}>{<Delete />}</td>
                       </tr>
                       <tr><td colSpan={4}><hr /></td></tr></>
-                  }
-                </table>
-              </div>
+                    )
+                  }) :
+                  <>
+                    <tr >
+                      <td className="text-black text-sm">
+                        <input
+                          className="relative h-10 !w-80 rounded-md border p-2"
+                          required
+                          // type="text"
+                          name="replacedUnitId"
+                          placeholder="Replaced Unit ID"
+                          disabled
+                        />
+                      </td>
+
+                      <td className="text-black text-sm">
+                        <select
+                          required
+                          className="relative h-10 !w-80  rounded-md border p-2"
+                          placeholder="Replacing Unit ID"
+                          name="replacingUnitId"
+                        >
+                          {" "}
+                          <option hidden>Select</option>
+                        </select>
+                      </td>
+
+                      <td className="text-black text-sm">
+                        <select
+                          required
+                          className="relative h-10 !w-80  rounded-md border p-2"
+                          placeholder="Type Of Defect"
+                          name="defectType"
+                        >
+                          {" "}
+                          <option hidden>Select</option>
+
+                        </select>
+                      </td>
+                    </tr>
+                    <tr><td colSpan={4}><hr /></td></tr></>
+                }
+              </table>
             </div>
-            {(inputValuesReplace['replacementlevel'] != '') && (Added.length > 0) && <button class={scheduleStyles.submitBtn} type='submit'> Submit </button>}
+            {(inputValuesReplace['replacementlevel'] != '') && (Added.length > 0) && <button class={scheduleStyles.submitBtn} type='submit' style={{ marginBottom: "1%" }}> Submit </button>}
           </div>
         )
         }

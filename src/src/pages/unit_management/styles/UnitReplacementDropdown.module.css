@@ -56,10 +56,8 @@
   }
 
 
-
-
   .Replacement_dropdown_table{
-    width: 100%;
+    width: 84%;
     padding: .75em 1.5em;
     background-color: #B5B7C01A;
     border-radius: 15px;
@@ -67,6 +65,9 @@
     overflow-y: auto !important;
     overflow-x: hidden !important;
     height: 100%;
+    margin-left:8%;
+    margin-top:2%;
+    margin-bottom: 2%;
   }
 
 

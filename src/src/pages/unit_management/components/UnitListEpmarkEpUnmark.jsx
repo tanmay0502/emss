@@ -78,46 +78,6 @@ const UnitListEpmarkEpUnmark = ({ data }) => {
     const [sortBy, setSortBy] = useState("None");
     const [sortOrder, setSortOrder] = useState("asc");
     const [tableData, setTableData] = useState([]);
-    const tableData2 = [
-        {
-            "unitid": "1",
-            "status": "In Reserve",
-            "remark": "remark",
-            "location": "location"
-        },
-        {
-            "unitid": "2",
-            "status": "In Reserve",
-            "remark": "remark",
-            "location": "location"
-        },
-        {
-            "unitid": "3",
-            "status": "In Reserve",
-            "remark": "remark",
-            "location": "location"
-        },
-        {
-            "unitid": "4",
-            "status": "In Reserve",
-            "remark": "remark",
-            "location": "location"
-        },
-        {
-            "unitid": "5",
-            "status": "In Reserve",
-            "remark": "remark",
-            "location": "location"
-        },
-        {
-            "unitid": "6",
-            "status": "In Reserve",
-            "remark": "remark",
-            "location": "location"
-        },
-
-    ]
-
 
 
     const sortMapping = {
@@ -155,6 +115,19 @@ const UnitListEpmarkEpUnmark = ({ data }) => {
     };
 
 
+
+    const filterTableData = (key) => {
+
+        const sorted = tableData.filter((e) => {
+            // return e.ID.includes(key) || e.Status.includes(key) || e.Remarks.includes(key) || e.Location.includes(key);
+            return e.ID.includes(key);
+        })
+        if (key) {
+            setTableData(sorted);
+        } else {
+            setTableData(tableData);
+        }
+    }
 
     const [mfg, setMFG] = useState('')
     const [unitType, setUnitType] = useState('');
@@ -647,10 +620,8 @@ const UnitListEpmarkEpUnmark = ({ data }) => {
                             />
                             <input
                                 type="search"
-                                value={tableFilter}
-                                onChange={(e) => {
-                                    setTableFilter(e.target.value);
-                                }}
+                                // value={tableFilter}
+                                onChange={(e) => { filterTableData(e.target.value) }}
                                 placeholder="Search"
                                 style={{
                                     outline: "none",

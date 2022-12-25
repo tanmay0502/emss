@@ -106,12 +106,12 @@ const UnitListCard = ({ updateChecked, bgColor, ReplacedUnitID, data }) => {
           if (tableFilter === "") {
             return true;
           } else {
-            const filter = tableFilter.toLowerCase();
-            return (
-              elem["modelID"].toLowerCase().includes(filter) ||
-              elem["status"].toLowerCase().includes(filter) ||
-              elem["remark"].toLowerCase().includes(filter)
-            );
+            // const filter = tableFilter.toLowerCase();
+            // return (
+            //   elem["modelID"].toLowerCase().includes(filter) ||
+            //   elem["status"].toLowerCase().includes(filter) ||
+            //   elem["remark"].toLowerCase().includes(filter)
+            // );
           }
         })
         .map((val) => {
@@ -316,6 +316,19 @@ const UnitListCard = ({ updateChecked, bgColor, ReplacedUnitID, data }) => {
 
 
 
+  const filterTableData = (key) => {
+    const sorted = tableData.filter((e) => {
+      // return e.ID.includes(key) || e.Status.includes(key) || e.Remarks.includes(key) || e.Location.includes(key);
+      return e.ID.includes(key);
+    })
+    if (key) {
+      setTableData(sorted);
+    } else {
+      setTableData(tableData);
+    }
+  }
+
+
   return (
     <>
       <div className={styles.unit_list_container}>
@@ -323,11 +336,11 @@ const UnitListCard = ({ updateChecked, bgColor, ReplacedUnitID, data }) => {
           <h4>Unit List</h4>
           <div className={styles.unit_list_header_right}>
 
-            <button className="text-white"
+            {/* <button className="text-white"
               onClick={() => { openModal(); }}
             >
               {(((mfg) ? 1 : 0) + ((unitType) ? 1 : 0) + ((model) ? 1 : 0)) ? (((mfg) ? 1 : 0) + ((unitType) ? 1 : 0) + ((model) ? 1 : 0)) + " Filter Applied" : "Filter"}
-            </button>
+            </button> */}
             <Modal
               isOpen={modalIsOpen}
               onAfterOpen={afterOpenModal}
@@ -585,10 +598,8 @@ const UnitListCard = ({ updateChecked, bgColor, ReplacedUnitID, data }) => {
               />
               <input
                 type="search"
-                value={tableFilter}
-                onChange={(e) => {
-                  setTableFilter(e.target.value);
-                }}
+                // value={tableFilter}
+                onChange={(e) => { filterTableData(e.target.value) }}
                 placeholder="Search"
                 style={{
                   outline: "none",
