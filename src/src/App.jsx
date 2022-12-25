@@ -270,7 +270,7 @@ function App() {
               element={<OrderFlowTwo />}
             />
            <Route
-              path="/session/ordermanagement/orderdetails/contact/:no"
+              path="/session/ordermanagement/orderDetails/location/contact/:no"
               element={<LocationDetails />}
             />
             <Route

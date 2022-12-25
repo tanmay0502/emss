@@ -46,7 +46,8 @@ export default function LocationDetails(){
                 }
             );
             const data = await response.json();
-            // console.log(data['data'])
+            console.log(data['data'])
+            if(data && data["data"])
                 setLocation(data['data']);       
 
             

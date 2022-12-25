@@ -38,7 +38,7 @@ function UserList() {
 	const [currImage, setCurrImage] = useState("");
 
 	const sortMapping = {
-		"None": null,
+		"None": "status",
 		"User ID": "User ID",
 		"Name": "User Name",
 		"Role": "Role",
@@ -91,6 +91,7 @@ function UserList() {
 						<img className='thimage' style={{ height: "35px", width: "35px" }} src={val["photodata"] !== '' ? val["photodata"]: UserImageTest} alt="Img"/>
 						</div>,
 					"User Name": val["name"],
+					"status" : val["active"],
 					"Phone Number": val["mobilenumber"].substring(0, 3) + " " + val["mobilenumber"].substring(3, 6) + " " + val["mobilenumber"].substring(6),
 					"Role": val["userid"].slice(8),
 					Details: val,
@@ -104,9 +105,22 @@ function UserList() {
 						else {
 							activateUser(e)
 						}
-					}} />
+					}} 
+					
+					/>
+					
 				}
 			})
+			data.sort(function (a, b) {
+				if (sortMapping[sortBy] !== null) {
+					// console.log(data)
+					return (a[sortMapping[sortBy]].toString()).localeCompare(b[sortMapping[sortBy]].toString())
+				}
+				else return 0;
+			});
+			if (sortMapping[sortBy] !== null && sortOrder === 'desc') {
+				data.reverse();
+			}
 
 			setTableData(data)
 
