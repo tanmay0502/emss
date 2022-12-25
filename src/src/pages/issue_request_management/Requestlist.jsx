@@ -385,7 +385,14 @@ function RequestList() {
                             </div>
 
                             <div id="chatwindow" className={styles.chatWindow} >
-                                <ChatGroup data={selectedIssueData} />
+                                {selectedIssueData && selectedIssueData['issue'] ? <ChatGroup data={selectedIssueData} /> :<div style={{
+                                    'flex' : 1,
+                                    'display': 'flex',
+                                    'flexDirection': 'column',
+                                    'alignItems': 'stretch',
+                                    'justifyContent': 'center',
+                                    'textAlign': 'center'
+                                }}><b>Loading...</b></div>}
                                 {
                                     // setScroll value to bottom
                                     setChatScrollToBottom()
