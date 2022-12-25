@@ -19,6 +19,9 @@ import Switch from "react-switch";
 import { useState, useEffect } from 'react';
 import './sidebar.css';
 import './Navbar.css'
+// import Invent from './assets/invent.png'
+import { ReactComponent as Invent} from './assets/invent.svg'
+import { ReactComponent as Manuals} from './assets/manuals.svg'
 
 function Routed(props) {
 
@@ -179,6 +182,12 @@ function Routed(props) {
 				<span>Permissions</span>
 			</>);
 		}
+		if (location.pathname.startsWith('/session/setroles')) {
+			return (<>
+				{/* <UnitManagementIcon /> */}
+				<span>Role Managenet</span>
+			</>);
+		}
 
 		return <></>;
 	}
@@ -291,12 +300,12 @@ function Routed(props) {
 						</button>
 
 
-						<button className={window.location.pathname.startsWith("/session/services") ? 'nav-button active' : 'nav-button'} onClick={() => {
+						{/* <button className={window.location.pathname.startsWith("/session/services") ? 'nav-button active' : 'nav-button'} onClick={() => {
 							navigate("/session/services")
 						}}>
 							<div><ServicesIcon />Other Services</div>
 							<ChevronRight className="chevron" />
-						</button>
+						</button> */}
 
 						<div className="horz_line">
 
@@ -315,35 +324,49 @@ function Routed(props) {
 							<div><ReportIcon />Report</div>
 							<ChevronRight className="chevron" />
 						</button>
+						<button className={'nav-button'} onClick={()=>{
+							window.open("https://ecodehub.in:8000/consumables")
+						}}>
+						<div>
+							<Invent/>
+							Consumables</div>
+							<ChevronRight className="chevron" />
+						</button>
+						<button className={'nav-button'} onClick={() => {navigate("/usermanual")}}>
+							<div>
+							<Manuals/>
+								Users Manuals</div>
+							<ChevronRight className="chevron" />
+						</button>
+
+						<div className="horz_line">
+						
+						</div>
+
+						<div className="mr-20 bold text-sm">
+							Admin Utilies
+						</div>
+
 						<button className={window.location.pathname.startsWith("/session/viewpermissions") ? 'nav-button active' : 'nav-button'}
 							onClick={() => {
 								navigate('/session/viewpermissions')}
 							}>
 								
-								<div><PermissionIcon/> View Permissions</div>
+								<div><PermissionIcon/>Permissions</div>
 								<ChevronRight className="chevron" />
 						</button>
 
-						<button className={window.location.pathname.startsWith("/session/otherservices") ? 'nav-button active' : 'nav-button'}>
-							<div><OtherServicesIcon />Others</div>
-							<ChevronRight className="chevron" />
+						<button className={window.location.pathname.startsWith("/session/setroles") ? 'nav-button active' : 'nav-button'}
+							onClick={() => {
+								navigate('/session/setroles')}
+							}>
+								
+								<div><PermissionIcon/>Roles</div>
+								<ChevronRight className="chevron" />
 						</button>
-
-						<div className="myToggle">
-							<span>Dark Mode</span>
-							<Switch onChange={handleChange} checked={checked} onColor="#F56A3F" uncheckedIcon={false}
-								checkedIcon={false} />
-						</div>
 
 					</div>
-					{/* <div className="nav-panel-bottom">
-						<button className={window.location.pathname.startsWith("/session/home") ? 'nav-button active' : 'nav-button'} onClick={() => {
-							sessionStorage.removeItem('sessionToken')
-							window.location.href = '/'
-						}}>
-							<LogoutIcon />Logout
-						</button>
-					</div> */}
+
 				</div>
 				<div className="content-area ">
 					<div className='divnav'>

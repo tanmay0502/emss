@@ -131,7 +131,7 @@ function UserList() {
 			);
 			const tmp = await response.json();
 
-
+			console.log("/user/getSubordinateUsers", tmp)
 			setNoOfActiveUsers(tmp["data"]["active_users"]);
 			setNoOfInActiveUsers(tmp["data"]["inactive_users"]);
 			setNoOfTotalUsers(tmp["data"]["total_users"]);

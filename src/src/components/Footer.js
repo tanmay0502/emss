@@ -30,19 +30,12 @@ const Footer = (props) => {
       </div>
       <div className="w-full">
         <h2 style={mystyle} className="mt-3 text-center">
-          <a  className='text-white'
-          onClick={() => {
-            navigate("/usermanual")
-          }}>
-            User Manual
+          <a href="" className="text-white">
+            Tech support
           </a>{" "}
           |{" "}
           <a href="" className="text-white">
-            tech support
-          </a>{" "}
-          |{" "}
-          <a href="" className="text-white">
-            About EMS
+          Privacy Policy
           </a>{" "}
           |{" "}
           <a href="http://localhost:8100/static/tnc.pdf" className="text-white">
@@ -50,18 +43,12 @@ const Footer = (props) => {
           </a>
         </h2>
         <br></br>
-        <h2 style={mystyle} className="-mt-4 text-center ">
-          <a href="http://localhost:8100/static/Privacy_Policy.pdf" className="text-white">
-            Privacy Policy
-          </a>{" "}
-          |{" "}
-          <a href="" className="text-white">
-            Usage Agreement
-          </a>
+        <h2 style={mystyle} className="-mt-4 text-center text-white">
+          Version 1.0.4 | Release Date December 25, 2022
         </h2>
         <h2 style={mystyle} className="text-center text-white">
           <p className="text-white">
-            copyright@2022Election Commission of india
+            Copyright@2022 Election Commission of india
           </p>
         </h2>
       </div>

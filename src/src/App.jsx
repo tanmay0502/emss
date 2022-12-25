@@ -54,6 +54,7 @@ import FillDemand from './pages/order_management/FillDemand';
 import FillAvailability from './pages/order_management/FillAvailability';
 import Usermanual from './components/Usermanual';
 import ViewPermission from './components/ViewPermission';
+import SetRoles from './components/SetRoles';
 import LocationDetails from './pages/order_management/LocationDetails';
 
 import FetchFile from './pages/issue_request_management/FetchFile';
@@ -234,6 +235,10 @@ function App() {
             <Route
               path="/session/viewpermissions"
               element={<ViewPermission />}
+            />
+            <Route
+              path="/session/setroles"
+              element={<SetRoles />}
             />
             <Route
               path="/session/ordermanagement"
