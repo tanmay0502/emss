@@ -1,0 +1,19 @@
+.ChatUpdateContainer{
+    width: 100%;
+    margin: 1em 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.ChatUpdateContainer > p {
+    display: block;
+    background: #FFF;
+    padding: 0.75em 1.25em;
+    border-radius: 0.8em;
+    margin: 0;
+    font-size: 0.875em;
+
+    box-shadow: 0px 1px 20px rgba(0,0,0,0.1);
+}

@@ -1,52 +1,61 @@
 import React from 'react'
-import { useState, useEffect } from 'react';
-import "./styles/requestlist.css"
-import { AiOutlineSortAscending, AiOutlineSortDescending } from "react-icons/ai";
-import { ReactComponent as SearchInputElement } from '../../assets/searchInputIcon.svg';
-import { ReactComponent as ChevronDown } from '../../assets/ChevronDown.svg';
-import DynamicDataTable from "@langleyfoxall/react-dynamic-data-table";
-// import UserImageTest from '../../assets/UserImageTest.png'
+import { useState, useEffect, useRef } from 'react';
+import styles from "./styles/issuerequestchat.module.css"
 import { useNavigate } from 'react-router-dom';
-import { FaUserEdit } from "react-icons/fa";
-import SeverityButton from './SeverityButton'
-import UserImageTest from '../../assets/UserImageTest.png'
+import ChatListItem from './components/ChatListItem';
+
+import { ReactComponent as SearchInputIcon } from '../../assets/searchInputIcon.svg';
+import defaultImage from '../../assets/issueUserImage.png'
+import { ReactComponent as SearchIcon } from '../../assets/search.svg'
+import { ReactComponent as AttachDocument } from '../../assets/AttachDocument.svg'
+import { ReactComponent as SendMessage } from '../../assets/SendMessage.svg'
+import { ReactComponent as ChevronDown } from '../../assets/ChevronDown.svg'
+import ChatGroup from './components/ChatGroup';
+import FileBase64 from './components/FileBase64';
+import path from 'path-browserify'
 
 function RequestList() {
 
     const navigate = useNavigate()
 
-    const [sortOrder, setSortOrder] = useState("asc");
-    const [sortBy, setSortBy] = useState("None");
-    const [tableData, setTableData] = useState([])
-    const [isDetail, setIsDetail] = useState(0);
-    const [tableFilter, setTableFilter] = useState("");
-    const [request, setRequest] = useState([]);
-    const [user, setUser] = useState();
+    const chatFormRef = useRef();
 
-    const sortMapping = {
-        "None": null,
-        "Request ID": "Request ID",
-        "Registration Date": "Registration Date",
-        "Last Action Date": "Last Action Date",
-    }
+    const [selectedissue, setSelectedissue] = useState(null)
+    const [selectedSeverity, setSelectedSeverity] = useState('H')
 
-    useEffect(() => {
-        if (user) {
-            setIsDetail(1);
-        }
-    }, [user]);
+    const [selectedIssueData, setSelectedIssueData] = useState(null)
 
-    function details(value) {
-        setUser(value);
-    }
-
-    function close() {
-        setIsDetail(0);
-        setUser(null)
-    }
+    const [issueRequestList, setIssueRequestList] = useState([])
+    const [uploadedSupportingDocuments, setUploadedSupportingDocuments] = useState([])
 
     const UserID = sessionStorage.getItem('sessionToken');
-    async function getrequestlist() {
+
+    let getDetailsController = new AbortController();
+
+    useEffect(() => {
+        getRequestList();
+
+        return () => {
+
+        }
+    }, [])
+
+    useEffect(() => {
+        const elem = document.getElementsByClassName(styles.issuesList)[0]
+        if (elem.children.item(0)) {
+            elem.children.item(0).scrollIntoView({
+                behavior: 'smooth'
+            })
+        }
+
+        // setSelectedissue(null)
+    }, [selectedSeverity])
+
+
+    const [sortedList, setSortedList] = useState([])
+
+    async function getRequestList() {
+        setSortedList([])
         try {
             const response = await fetch(
                 `${process.env.REACT_APP_API_SERVER}/issue_requests/list_request`,
@@ -59,9 +68,9 @@ function RequestList() {
                 }
             );
             const data2 = await response.json();
-            console.log("here",data2)
-            if(data2["status"]!=404){
-                setRequest(data2['data']);
+            // console.log(data2)
+            if (data2["status"] != 404) {
+                setIssueRequestList(data2['data']);
             }
 
         } catch (err) {
@@ -69,129 +78,361 @@ function RequestList() {
         }
     }
 
-    const Tagged = (type) =>  UserID === type ? "Recipient" : "Tagged"; 
-
-    let reverseV = []
-    let reverseK =[]
-    if(request!=[] && request){
-
-        reverseK=Object.keys(request).reverse();
-        reverseV = Object.values(request).reverse();
-    }
-   
-
-    var reverse = []
+    const getDetails = async () => {
+        getDetailsController.abort()
+        getDetailsController = new AbortController();
+        
+        const myId = selectedissue;
+        if(myId !== null){
+            try {
+                const response = await fetch(
+                    `${process.env.REACT_APP_API_SERVER}/issue_requests/search_request`,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                            "issueid": `${myId}`,
+                        }),
+                        credantials: 'same-origin',
+                        mode: 'cors',
+                        signal: getDetailsController.signal
+                    }
+                )
+                const data = await response.json();
+                // console.log(data["remarks"].reverse())
+                setSelectedIssueData(data);
     
-    var i = 0;
-    while(i<reverseV.length){
-        reverse[i] = reverseV[i]
-
-        i = i +1;
-    }
-    // const reverselist = request 
-    console.log(reverse)
-    console.log(request)
-
-
-    
-    async function renderremarkslist() {
-        var data = reverse.filter((elem) => {
-            if (tableFilter === "") {
-                return true;
+            } catch (error) {
+                console.log(error);
             }
-            else {
-                const filter = tableFilter.toLowerCase();
-                return (elem[0].toLowerCase().includes(filter) || elem[2].toLowerCase().includes(filter))
-            }
-        }).map((val) => {
-            console.log(val);
-            return {
-                "Request ID": val['issueid'],
-                "Logged by": <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center", paddingRight: "15px" }}><img src={UserImageTest} /><span style={{'marginLeft' : "15px"}}>{val['lodgeruserid']}</span></div>,
-                "Registration Date": val['createdon'].split('T')[0],
-                "Severity" :  <SeverityButton userID={val['issueid']} severity = {val['severity']} 
-				customLabels={{
-					"active": "Low",
-					"inactive": "Medium"
-				}}/>,
-                "Subject": val['subject'],
-                "Tagged/Recipient" : Tagged(val['recipientuserid']),
-                "Details" : val,
-                "status":(val["status"])=="A"?"Active":"Closed"
-            }
-        })
-        data.sort(function (a, b) {
-            if (sortMapping[sortBy] !== null) {
-                return a[sortMapping[sortBy]].localeCompare(b[sortMapping[sortBy]])
-            }
-            else {
-               
-                return a["status"].localeCompare(b["status"])
-            }
-        });
-        if (sortMapping[sortBy] !== null && sortOrder === 'desc') {
-            data.reverse();
         }
-        setTableData(data)
+    }
+
+    useEffect(() => {
+        setSortedList(issueRequestList.filter((val) => {
+            return val.severity === selectedSeverity
+        }).sort((a,b) => {
+            return new Date(a['updatedon_max_time']) - new Date(b['updatedon_max_time'])
+        }))
+    
+      return () => {
+        
+      }
+    }, [issueRequestList, selectedSeverity])
+    
+
+    useEffect(()=>{
+        if(document.querySelector('.issueSelectorCheckbox:checked')) document.querySelector('.issueSelectorCheckbox:checked').checked = false;
+    }, [sortedList])
+
+    useEffect(() => {
+        setSelectedIssueData(null)
+        getDetails();
         return () => {
+
+        }
+    }, [selectedissue])
+
+    useEffect(()=>{
+        setChatScrollToBottom(document.getElementById('chatwindow'));
+    }, [selectedIssueData])
+
+
+    function setChatScrollToBottom(elem) {
+        if (elem) {
+            elem.scrollTop = elem.scrollHeight;
+        }
+
+        return <></>
+    }
+    
+    const [actiontext, setActionText] = useState("New Recipient");
+    const [showRemarksAndDocuments, setShowRemarksAndDocuments] = useState(true)
+    const [showSecondaryInput, setShowSecondaryInput] = useState(true)
+
+    const actionChanged = (e)=>{
+        var action = e.target.value
+        if(action === 'merge'){
+            //Hide Remarks and Supporting Documents
+            setShowRemarksAndDocuments(false)
+
+            //Show Secondary Input
+            setShowSecondaryInput(true)
+
+            //Change placeholdertext
+            setActionText("New Parent Issue ID")
+        }
+        else if(action === 'forward'){
+            // Show Remarks and SupportingDocuments
+            setShowRemarksAndDocuments(true)
+
+            //Show Secondary Input
+            setShowSecondaryInput(true)
+
+            //Change placeholdertext
+            setActionText("New Recipient")
+        }
+        else if(action === 'reopen' || action === 'close'){
+            // Show Remarks and SupportingDocuments
+            setShowRemarksAndDocuments(true)
+
+            setShowSecondaryInput(false)
         }
     }
 
-    useEffect(() => {
-        getrequestlist();
-    }, []);
+    const handleFileUploadChange = (e) => {
+        setUploadedSupportingDocuments(e)
+    }
 
-    useEffect(() => {
-        renderremarkslist();
-    }, [request, tableFilter, sortBy, sortOrder]);
+    const raiseAPICall = async (e) => {
+        e.preventDefault();
+        e.nativeEvent.preventDefault();
+
+        var selectedAPI = document.getElementById('actionSelector').value;
+
+        var SupportingDocuments = []
+        var MimeTypes = []
+        var SupportingDocumentsBase64 = []
+
+        uploadedSupportingDocuments.forEach(element => {
+            SupportingDocuments.push( path.parse(element.name).name)
+            MimeTypes.push(path.parse(element.name).ext.substring(1))
+            SupportingDocumentsBase64.push(element.base64)
+        });
+
+        switch (selectedAPI) {
+            case 'merge':
+                try {
+                    const response = await fetch(
+                        `${process.env.REACT_APP_API_SERVER}/issue_requests/merge_issue`,
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                                "mergingIssueID": selectedissue,
+                                "mergingIntoIssueID": document.getElementById('secondaryInput').value
+                            }),
+                            credentials: 'include',
+                        }
+                    );
+                    const data2 = await response.json();
+                    // console.log(data2)
+                    if (response.status !== 200) {
+                        alert('Invalid Data!');
+                    }
+                    else{
+                        document.getElementById('remarks').value = ""
+                        document.getElementById('secondaryInput').value = ""
+                        getDetails();
+                    }
+        
+                } catch (err) {
+                    console.log(err);
+                }
+                break;
+            case 'forward':
+                try {
+                    const response = await fetch(
+                        `${process.env.REACT_APP_API_SERVER}/issue_requests/forward_issue`,
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                                "issueID": selectedissue,
+                                "remarks": document.getElementById('remarks').value,
+                                "SupportingDocuments": SupportingDocuments,
+                                "MMType": MimeTypes,
+                                "SupportingDocumentsData": SupportingDocumentsBase64,
+                                "newrecipient": document.getElementById('secondaryInput').value
+                            }),
+                            credentials: 'include',
+                        }
+                    );
+                    const data2 = await response.json();
+                    // console.log(data2)
+                    if (response.status !== 200) {
+                        alert('Invalid Data!');
+                    }
+                    else{
+                        document.getElementById('remarks').value = ""
+                        document.getElementById('secondaryInput').value = ""
+                        getDetails();
+                    }
+        
+                } catch (err) {
+                    console.log(err);
+                }
+                break;
+            case 'reopen':
+            case 'close':
+                try {
+                    const response = await fetch(
+                        `${process.env.REACT_APP_API_SERVER}/issue_requests/${selectedAPI}_issue`,
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                                "issueID": selectedissue,
+                                "remarks": document.getElementById('remarks').value,
+                                "SupportingDocuments": SupportingDocuments,
+                                "MMType": MimeTypes,
+                                "SupportingDocumentsData": SupportingDocumentsBase64,
+                            }),
+                            credentials: 'include',
+                        }
+                    );
+                    const data2 = await response.json();
+                    // console.log(data2)
+                    if (response.status !== 200) {
+                        alert('Invalid Data!');
+                    }
+                    else{
+                        document.getElementById('remarks').value = ""
+                        document.getElementById('secondaryInput').value = ""
+                        getDetails();
+                    }
+        
+                } catch (err) {
+                    console.log(err);
+                }
+                break;
     
-    return (
-        <div style={{height: "100%"}}>
-            <div className="" style={{ background: "white", position: "relative", height: "100%", gridArea: "1 / 1 / 6 / 6", borderRadius: "20px" }}>
-                {isDetail == 0 ? <div className='MainHeader pd-5 ' style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between", "alignItems" : "center"}}>
-                    <h4 className='text-white'>Issue / Request List</h4>
-                    <div  style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center" }}>
-                        <button className='createRequestBtn' onClick={() => {
-                            navigate("/session/issuemanagement/createIssue");
-                        }}>
-                            Add Request</button>
-                        <div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center", background: "#F9FBFF", borderRadius: "10px", padding: "7.5px 15px 7.5px 0", fontSize: "0.8em" }}>
-                            <SearchInputElement style={{ margin: "0 7.5px", width: "20px" }} />
-                            <input type={'search'} defaultValue={tableFilter} onChange={(e) => { setTableFilter(e.target.value) }} placeholder='Search' style={{ outline: "none", background: "transparent" }} />
-                        </div>
-                        <div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center", marginLeft: "10px", background: "#F9FBFF", borderRadius: "10px", padding: "7.5px 15px 7.5px 0", fontSize: "0.8em" }}>
-                            <span style={{ minWidth: "max-content", paddingInlineStart: "7.5px" }}>Sort by : &nbsp;</span>
-                            <select
-                                style={{ textAlign: "center", outline: "none", background: "transparent", padding: "0px", border: "none" }}
-                                onChange={(e) => setSortBy(e.target.value)}>
-                                <option value={"None"}>Default</option>
-                                <option value={"Request ID"}>Request ID</option>
-                                <option value={"Registration Date"}>Registration Date</option>
-                                <option value={"Logged by"}>Logged by</option>
-                            </select>
-                            <ChevronDown />
-                            <button className='sortOrderButton' onClick={() => {
-                                setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
-                            }}>
-                                {sortOrder === 'asc' ? <AiOutlineSortAscending /> : <AiOutlineSortDescending />}
-                            </button>
-                        </div>
-                    </div>
+            default:
+                break;
+        }
+    }
 
-                </div> : <></>}
-                {isDetail == 0 ? <DynamicDataTable className="request-table"
-                    rows={tableData}
-                    fieldsToExclude={["Details", "Edit"]}
-                    orderByField={sortMapping[sortBy]}
-                    orderByDirection={sortOrder}
-                    onClick={(event, row) => {
-                        navigate(`/session/issuemanagement/viewRequest/id=${row.Details.issueid}`);
-                    }}
-                    buttons={[]}
-                    allowOrderingBy={[
-                        'Request ID', 'Registration Date'
-                    ]} />
-                    : ''
+    return (
+        <div className={styles.chatWrapper}>
+            <div className={styles.chatList}>
+                <div className={styles.searchIssueInputGroup}>
+                    <SearchInputIcon />
+                    <input type={"search"} placeholder={"Search For Issue"} />
+                </div>
+                <div className={styles.severityGroup}>
+                    <input id='highSeverityButton' type="radio" name='Severity' value='H' defaultChecked />
+                    <label htmlFor='highSeverityButton' style={{ '--bg-color': '#DF0404CC' }} onClick={() => {
+                        setSelectedSeverity('H')
+                    }} >High</label>
+                    <input id='medSeverityButton' type="radio" name='Severity' value='M' />
+                    <label htmlFor='medSeverityButton' style={{ '--bg-color': '#EEC000' }} onClick={() => {
+                        setSelectedSeverity('M')
+                    }} >Medium</label>
+                    <input id='lowSeverityButton' type="radio" name='Severity' value='L' />
+                    <label htmlFor='lowSeverityButton' style={{ '--bg-color': '#00AA00' }} onClick={() => {
+                        setSelectedSeverity('L')
+                    }} >Low</label>
+                </div>
+                <div className={styles.issuesList}>
+                    {
+                        sortedList.map((val) => {
+                            return (
+                                <ChatListItem issueID={val.issueid} subject={val.subject} setSelectedissue={setSelectedissue} updateTime={val.updatedon_max_time} />
+                            )
+                        })
+                    }
+                </div>
+                <button className={styles.createIssueButton} onClick={() => {
+                    navigate('/session/issuemanagement/createIssue')
+                }}>
+
+                </button>
+            </div>
+            <div className={styles.chatView}>
+                {
+                    selectedissue ?
+                        <>
+                            <div className={styles.chatHeader}>
+                                <div className={styles.chatHeaderLeft}>
+                                    <img src={defaultImage} />
+                                    <div>
+                                        <b>
+                                            {selectedissue}
+                                        </b>
+                                        <span>
+                                            {selectedIssueData && selectedIssueData['issue'] ? "Lodged By " + selectedIssueData['issue'][0]['lodgeruserid'] : "Loading..."}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className={styles.chatHeaderRight}>
+                                    <div className={styles.searchIssueInputGroup}>
+                                        <SearchInputIcon />
+                                        <input type={"search"} placeholder={"Search Within Issue"} />
+                                    </div>
+                                    {/* <button>
+                                        <SearchIcon />
+                                    </button> */}
+                                </div>
+                            </div>
+
+                            <div id="chatwindow" className={styles.chatWindow} >
+                                <ChatGroup data={selectedIssueData} />
+                                {
+                                    // setScroll value to bottom
+                                    setChatScrollToBottom()
+                                }
+                            </div>
+
+                            <form className={styles.chatMessaging} ref={chatFormRef} onSubmit={(e) => {
+                                e.preventDefault();
+                                raiseAPICall(e);
+                            }}>
+                                
+                                <label for="docUpload">
+                                    <button className={styles.uploadDocumentsButton} title='Attach Supporting Documents' style={showRemarksAndDocuments ? {'display': 'block'} : {'display' : "none"}} >
+                                        <AttachDocument />
+                                        <FileBase64 domID="docUpload"
+                                            multiple={ true }
+                                            onDone={ handleFileUploadChange } />
+                                    </button>
+                                </label>
+                                <div className={styles.DropDownGroup} onMouseDown={(e) => {
+                                    const selectContainer = document.getElementById('actionSelector')
+
+                                    try {
+                                        selectContainer.dispatchEvent(e.nativeEvent)
+                                    } catch (error) {
+                                        
+                                    }
+                                }}>
+                                    <span style={{ minWidth: 'max-content' }}>
+                                        Action :&nbsp;
+                                    </span>
+                                    <select name="actionSelector" id="actionSelector" onChange={actionChanged}>
+                                        <option value={"forward"} defaultChecked>Forward Issue</option>
+                                        <option value={"merge"}>Merge Issue</option>
+                                        <option value={"close"}>Close Issue</option>
+                                        <option value={"reopen"}>Reopen Issue</option>
+                                    </select>
+                                    <ChevronDown />
+                                </div>
+                                <div className={styles.msgInputGroup} style={showSecondaryInput ? {'display': 'block'} : {'display' : "none"}} >
+                                    <input id='secondaryInput' autoComplete={"off"} type={"text"} placeholder={actiontext} required={showSecondaryInput} />
+                                </div>
+                                <div className={styles.msgInputGroup} style={{'display': showRemarksAndDocuments ? 'block' : "none"}} >
+                                    <input id='remarks' type={"text"} autoComplete={"off"} placeholder={"Add Remarks"} />
+                                </div>
+                                <button onClick={(e)=>{
+                                    // e.preventDefault();
+                                    // chatFormRef.current.submit();
+                                    raiseAPICall();
+                                }}>
+                                    <SendMessage />
+                                </button>
+                            </form>
+                        </>
+                        :
+                        <h3 style={{ 'textAlign': 'center' }}>
+                            Select An Issue To<br />Take Action
+                        </h3>
                 }
             </div>
         </div>

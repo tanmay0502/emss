@@ -56,6 +56,7 @@ import Usermanual from './components/Usermanual';
 import ViewPermission from './components/ViewPermission';
 import LocationDetails from './pages/order_management/LocationDetails';
 
+import FetchFile from './pages/issue_request_management/FetchFile';
 function App() {
 
   const [sessionState, setSessionState] = useState({
@@ -221,15 +222,11 @@ function App() {
               path="/session/issuemanagement/createIssue"
               element={<CreateIssue />}
             />
-            <Route
-              path="/session/issuemanagement/viewRequest/:id"
-              element={<ViewRequest />}
-            />
 
-            <Route
+            {/* <Route
               path='/session/issuemanagement/actionIssue/:id'
               element={<ActionIssue />}
-            />
+            /> */}
             <Route
               path="/session/user-profile/:id"
               element={<Profile />}
@@ -276,6 +273,11 @@ function App() {
               element={<>Other Services</>}
             />
           </Route>
+          
+          <Route
+              path="/session/issuemanagement/fetchfile/:filename"
+              element={<FetchFile />}
+            />
         </Routes>
       </BrowserRouter>
     </>

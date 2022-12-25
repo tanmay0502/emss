@@ -1,0 +1,94 @@
+.chatListItem > label{
+    border-top: 0.5px solid rgba(130, 156, 153, 0.1);
+    padding: 0.5em 0;
+
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: center;
+    gap: 1em;
+
+    cursor: pointer;
+}
+
+input[type="radio"]{
+    -webkit-appearance: none;
+    appearance: none;
+    display: none;
+}
+
+input[type="radio"]:checked + label{
+    background: #8aa1aa50;
+
+}
+
+.chatListItem:hover > label{
+    background: #829C995F;
+}
+
+.chatListItem:first-child > label{
+    border-top: none;
+}
+
+.chatListItem > label > img {
+    width: 7.5vh;
+    object-fit: contain;
+}
+
+.chatListItemInfo{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-evenly;
+    max-width: 50%;
+
+    flex: 1;
+}
+
+.chatListItemInfo > b{
+    font-size: 1.4em;
+    user-select: none;
+}
+
+.chatListItemInfo > span{
+    font-size: 1em;
+    max-width: 100%;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    user-select: none;
+}
+
+.ChatListItemUpdates{
+    display: flex;
+
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-evenly;
+
+    font-size: 0.9em;
+}
+
+.ChatListItemUpdates > span{
+    width: max-content;
+    color: #829C99;
+}
+
+.ChatListItemUpdates > button{
+    color: #128C7E;
+    height: 1.75em;
+    padding: 0;
+    
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: #DFF6F4;
+    font-weight: 700;
+
+    pointer-events: none;
+
+    /* display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center; */
+}
