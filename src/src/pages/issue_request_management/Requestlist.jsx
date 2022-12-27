@@ -6,7 +6,7 @@ import ChatListItem from './components/ChatListItem';
 
 import { ReactComponent as SearchInputIcon } from '../../assets/searchInputIcon.svg';
 import defaultImage from '../../assets/issueUserImage.png'
-import { ReactComponent as SearchIcon } from '../../assets/search.svg'
+import { ReactComponent as RefreshIcon } from '../../assets/refresh-icon.svg'
 import { ReactComponent as AttachDocument } from '../../assets/AttachDocument.svg'
 import { ReactComponent as SendMessage } from '../../assets/SendMessage.svg'
 import { ReactComponent as ChevronDown } from '../../assets/ChevronDown.svg'
@@ -238,7 +238,7 @@ function RequestList() {
                     const data2 = await response.json();
                     // console.log(data2)
                     if (response.status !== 200) {
-                        alert('Invalid Data!');
+                        alert('Error in adding remarks.');
                     }
                     else{
                         document.getElementById('remarks').value = ""
@@ -273,7 +273,7 @@ function RequestList() {
                     const data2 = await response.json();
                     // console.log(data2)
                     if (response.status !== 200) {
-                        alert('Invalid Data!');
+                        alert('Error in adding remarks.');
                     }
                     else{
                         document.getElementById('remarks').value = ""
@@ -308,7 +308,7 @@ function RequestList() {
                     const data2 = await response.json();
                     // console.log(data2)
                     if (response.status !== 200) {
-                        alert('Invalid Data!');
+                        alert('Error in adding remarks.');
                     }
                     else{
                         document.getElementById('remarks').value = ""
@@ -329,9 +329,15 @@ function RequestList() {
     return (
         <div className={styles.chatWrapper}>
             <div className={styles.chatList}>
-                <div className={styles.searchIssueInputGroup}>
-                    <SearchInputIcon />
-                    <input type={"search"} placeholder={"Search For Issue"} value={searchFieldVal} onChange={(e)=> {setSearchFieldVal(e.target.value)}} />
+                <div className={styles.issuesSearchContainer}>
+                    <div className={styles.searchIssueInputGroup}>
+                        <SearchInputIcon />
+                        <input type={"search"} placeholder={"Search For Issue"} value={searchFieldVal} onChange={(e)=> {setSearchFieldVal(e.target.value)}} />
+                    </div>
+
+                    <button title='Refresh' onClick={getRequestList}>
+                        <RefreshIcon />
+                    </button>
                 </div>
                 <div className={styles.severityGroup}>
                     <input id='highSeverityButton' type="radio" name='Severity' value='H' defaultChecked />
@@ -349,11 +355,12 @@ function RequestList() {
                 </div>
                 <div className={styles.issuesList}>
                     {
-                        sortedList.map((val) => {
+                        sortedList.length > 0 ? sortedList.map((val) => {
                             return (
-                                <ChatListItem issueID={val.issueid} subject={val.subject} setSelectedissue={setSelectedissue} updateTime={val.updatedon_max_time} />
+                                <ChatListItem issueID={val.issueid} defaultChecked={val.issueid === selectedissue} subject={val.subject} setSelectedissue={setSelectedissue} updateTime={val.updatedon_max_time} />
                             )
-                        })
+                        }) :
+                        <div className={styles.chatListLoader}>Loading...</div>
                     }
                 </div>
                 <button className={styles.createIssueButton} onClick={() => {

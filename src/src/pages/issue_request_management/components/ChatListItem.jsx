@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import styles from './styles/ChatListItem.module.css'
 
 import defaultImage from '../../../assets/issueUserImage.png'
 
 function ChatListItem(props) {
-
+    const chatListItemInput = useRef();
     const getDateValue = ()=>{
         var date = new Date(Date.parse(props.updateTime))
         var now = new Date()
@@ -13,9 +13,19 @@ function ChatListItem(props) {
         else return date.toLocaleTimeString('en', { "hour": "2-digit", minute: "2-digit" })
     }
 
+    useEffect(() => {
+      console.log(props.defaultChecked)
+      chatListItemInput.current.checked = props.defaultChecked
+      return () => {
+        
+      }
+    }, [])
+    
+
   return (
     <div className={styles.chatListItem}>
-        <input className='issueSelectorCheckbox' type="radio" name="chatlistItem" id={"issueItem-" + props.issueID} onClick={()=>{
+        <input ref={chatListItemInput} className='issueSelectorCheckbox' type="radio" name="chatlistItem" id={"issueItem-" + props.issueID} onClick={()=>{
+            chatListItemInput.current.checked = props.defaultChecked
             props.setSelectedissue(props.issueID)
         }} />
         <label htmlFor={"issueItem-" + props.issueID}>
@@ -43,6 +53,10 @@ function ChatListItem(props) {
         </label>
     </div>
   )
+}
+
+ChatListItem.defaultProps= {
+    defaultChecked: false
 }
 
 export default ChatListItem
