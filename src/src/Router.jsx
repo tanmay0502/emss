@@ -1,5 +1,5 @@
 import React from 'react'
-import { Outlet, useNavigate, useLocation } from 'react-router-dom'
+import { Outlet, useNavigate, useLocation, useOutlet } from 'react-router-dom'
 import UserImageTest from './assets/UserImageTest.png'
 import ECIIcon from './assets/eci_logo.png';
 import { ReactComponent as DashboardIcon } from './assets/Dashboard.svg';
@@ -27,6 +27,8 @@ function Routed(props) {
 
 	// const [profileView,setProfileView]=useState(0);
 	// const [profileOption,setProfileOption]=useState(0);
+
+	const outlet = useOutlet();
 
 	const [userData, setUserData] = useState({
 		username: null
@@ -192,10 +194,9 @@ function Routed(props) {
 		return <></>;
 	}
 	useEffect(() => {
-		if (!sessionStorage.getItem('sessionToken')) {
-			// console.log(flag)
+		if (outlet.key && !sessionStorage.getItem('sessionToken')) {
+			// console.log(outlet)
 			window.location.href = '/login'
-
 		}
 
 		setUserData({

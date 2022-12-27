@@ -61,243 +61,231 @@ import AdminUtilities from './components/AdminUtilities';
 import FetchFile from './pages/issue_request_management/FetchFile';
 import Orders from './pages/unit_management/Orders';
 import Prepared_Certificate from './pages/unit_management/preparedness_certificate';
+import NotFound404 from './NotFound404';
 function App() {
 
-  const [sessionState, setSessionState] = useState({
-    userID: null,
-    userEmail: null,
-    active: null,
-    userName: null,
-    userImage: null
-  })
+	const [sessionState, setSessionState] = useState({
+		userID: null,
+		userEmail: null,
+		active: null,
+		userName: null,
+		userImage: null
+	})
 
-  return (
-    <>
-      <BrowserRouter>
-        <Routes>
-          <Route exact path="/" element={<Navigate exact to="/login" />} />
-          <Route
-            path="/login"
-            element={
-              <Login Session={sessionState} SetSession={setSessionState} />
-            }
-          />
-          <Route
-            path="/usermanual"
-            element={<Usermanual />}
-          />
+	return (
+		<>
+			<BrowserRouter>
+				<Routes>
+					<Route exact path="/" element={<Navigate exact to="/login" />} />
+					<Route path="/login" element={<Login Session={sessionState} SetSession={setSessionState} />} />
+					<Route path="/usermanual" element={<Usermanual />} />
 
-          <Route path="/session/" element={<Routed Session={sessionState} SetSession={setSessionState} />}>
-            <Route path="/session/home" element={<Home1 />} />{" "}
-            Dashboard Component goes here
-            <Route
-              path="/session/unitmanagement/HomePage"
-              element={<HomePage />}
-            />
-            <Route
-              path="/session/home/editview"
-              element={<EditView />}
-            />
+					<Route path="/session/" element={<Routed Session={sessionState} SetSession={setSessionState} />} >
+						<Route path="/session/home" element={<Home1 />} />{" "}
+						Dashboard Component goes here
+						<Route
+							path="/session/unitmanagement/HomePage"
+							element={<HomePage />}
+						/>
+						<Route
+							path="/session/home/editview"
+							element={<EditView />}
+						/>
 
-            <Route path="/session/usermanagement/" element={<ManageUsers />} />
-            <Route
-              path="/session/usermanagement/createuser"
-              element={<CreateUser />}
-            />
-            <Route
-              path="/session/usermanagement/edituser/:userid"
-              element={<EditUser />}
-            />
-            <Route
-              path="/session/usermanagement/edituser/:userid"
-              element={<EditUser />}
-            />
-            {/* <Route
+						<Route path="/session/usermanagement/" element={<ManageUsers />} />
+						<Route
+							path="/session/usermanagement/createuser"
+							element={<CreateUser />}
+						/>
+						<Route
+							path="/session/usermanagement/edituser/:userid"
+							element={<EditUser />}
+						/>
+						<Route
+							path="/session/usermanagement/edituser/:userid"
+							element={<EditUser />}
+						/>
+						{/* <Route
               path="/session/unitmanagement/"
               element={<UnitList />}
             /> */}
-            <Route
-              path="/session/unitmanagement/"
-              element={<HomePageUnit />}
-            />
-            <Route
-              path="/session/unitmanagement/unitlist"
-              element={<UnitList />}
-            />    
-            {/* <Route
+						<Route
+							path="/session/unitmanagement/"
+							element={<HomePageUnit />}
+						/>
+						<Route
+							path="/session/unitmanagement/unitlist"
+							element={<UnitList />}
+						/>
+						{/* <Route
               path="/session/unitmanagement/statusHistory"
               element={<kljfd />}
             /> */}
-            <Route
-              path="/session/unitmanagement/election_scheduling"
-              element={<ScheduleElection />}
-            />
-            <Route
-              path="/session/unitmanagement/first_randomisation_scheduling"
-              element={<First_Randomisation_Scheduling />}
-            />
-            <Route
-              path="/session/unitmanagement/second_randomisation_scheduling"
-              element={<Second_Randomisation_Scheduling />}
-            />
-            <Route
-              path="/session/unitmanagement/firstrandomization"
-              element={<FirstRandomization />}
-            />
-            <Route
-              path="/session/unitmanagement/secondrandomization"
-              element={<SecondRandomization />}
-            />
-            <Route
-              path="/session/unitmanagement/schedule_list"
-              element={<ScheduleList />}
-            />
-            <Route
-              path="/session/unitmanagement/edit_election/:id"
-              element={<EditElection />}
-            />
-            <Route
-              path="/session/unitmanagement/schedule_tna_list"
-              element={<ScheduleTnaList />}
-            />
-            <Route
-              path="/session/unitmanagement/tna_scheduling"
-              element={<ScheduleTna />}
-            />
-                        <Route
-              path="/session/unitmanagement/edit_tna/:id"
-              element={<EditTna />}
-            />
-            <Route
-              path="/session/unitmanagement/varification_scheduling"
-              element={<PhysicalVarification />}
-            />
-            <Route
-              path="/session/unitmanagement/schedule_varification_list"
-              element={<VarificationList />}
-            />
-            <Route
-              path="/session/unitmanagement/announce_Flc"
-              element={<Announce_Flc />}
-            />
-            <Route
-              path="/session/unitmanagement/schedule_flc"
-              element={<ScheduleFLC />}
-            />
-            <Route
-              path="/session/unitmanagement/flc_list"
-              element={<FLCList />}
-            />
-            <Route
-              path="/session/unitmanagement/editflc/:id"
-              element={<EditFLC />}
-            />
+						<Route
+							path="/session/unitmanagement/election_scheduling"
+							element={<ScheduleElection />}
+						/>
+						<Route
+							path="/session/unitmanagement/first_randomisation_scheduling"
+							element={<First_Randomisation_Scheduling />}
+						/>
+						<Route
+							path="/session/unitmanagement/second_randomisation_scheduling"
+							element={<Second_Randomisation_Scheduling />}
+						/>
+						<Route
+							path="/session/unitmanagement/firstrandomization"
+							element={<FirstRandomization />}
+						/>
+						<Route
+							path="/session/unitmanagement/secondrandomization"
+							element={<SecondRandomization />}
+						/>
+						<Route
+							path="/session/unitmanagement/schedule_list"
+							element={<ScheduleList />}
+						/>
+						<Route
+							path="/session/unitmanagement/edit_election/:id"
+							element={<EditElection />}
+						/>
+						<Route
+							path="/session/unitmanagement/schedule_tna_list"
+							element={<ScheduleTnaList />}
+						/>
+						<Route
+							path="/session/unitmanagement/tna_scheduling"
+							element={<ScheduleTna />}
+						/>
+						<Route
+							path="/session/unitmanagement/edit_tna/:id"
+							element={<EditTna />}
+						/>
+						<Route
+							path="/session/unitmanagement/varification_scheduling"
+							element={<PhysicalVarification />}
+						/>
+						<Route
+							path="/session/unitmanagement/schedule_varification_list"
+							element={<VarificationList />}
+						/>
+						<Route
+							path="/session/unitmanagement/announce_Flc"
+							element={<Announce_Flc />}
+						/>
+						<Route
+							path="/session/unitmanagement/schedule_flc"
+							element={<ScheduleFLC />}
+						/>
+						<Route
+							path="/session/unitmanagement/flc_list"
+							element={<FLCList />}
+						/>
+						<Route
+							path="/session/unitmanagement/editflc/:id"
+							element={<EditFLC />}
+						/>
 
-            <Route
-              path="/session/unitmanagement/ScheduleCDP"
-              element={<ScheduleCDP />}
-            />
-            <Route
-              path="/session/unitmanagement/ScheduleCDP_edit"
-              element={<ScheduleCDP_edit />}
-            />
-            <Route
-              path="/session/unitmanagement/Schedule_List_CDP"
-              element={<Schedule_List_CDP />}
-            />
-            <Route
-              path="/session/unitmanagement/orders"
-              element={<Orders />}
-            />
-            <Route
-              path="/session/unitmanagement/preparednesscertificate"
-              element={<Prepared_Certificate />}
-            />
-            <Route
-              path="/session/warehousemanagement/"
-              element={<WarehouseManagement />}
-            />
-            <Route
-              path="/session/warehousemanagement/addwarehouse"
-              element={<AddWarehouse />}
-            />
-            <Route
-              path="/session/warehousemanagement/warehousedetails/:id"
-              element={<WarehouseDetail />}
-            />
-            <Route
-              path="/session/warehousemanagement/modifywarehouse/:id"
-              element={<ModifyWarehouse />}
-            />
-            <Route path="/session/issuemanagement/" element={<IssueList />} />
-            <Route
-              path="/session/issuemanagement/createIssue"
-              element={<CreateIssue />}
-            />
+						<Route
+							path="/session/unitmanagement/ScheduleCDP"
+							element={<ScheduleCDP />}
+						/>
+						<Route
+							path="/session/unitmanagement/ScheduleCDP_edit"
+							element={<ScheduleCDP_edit />}
+						/>
+						<Route
+							path="/session/unitmanagement/Schedule_List_CDP"
+							element={<Schedule_List_CDP />}
+						/>
+						<Route
+							path="/session/warehousemanagement/"
+							element={<WarehouseManagement />}
+						/>
+						<Route
+							path="/session/warehousemanagement/addwarehouse"
+							element={<AddWarehouse />}
+						/>
+						<Route
+							path="/session/warehousemanagement/warehousedetails/:id"
+							element={<WarehouseDetail />}
+						/>
+						<Route
+							path="/session/warehousemanagement/modifywarehouse/:id"
+							element={<ModifyWarehouse />}
+						/>
+						<Route path="/session/issuemanagement/" element={<IssueList />} />
+						<Route
+							path="/session/issuemanagement/createIssue"
+							element={<CreateIssue />}
+						/>
 
-            {/* <Route
+						{/* <Route
               path='/session/issuemanagement/actionIssue/:id'
               element={<ActionIssue />}
             /> */}
-            <Route
-              path="/session/user-profile/:id"
-              element={<Profile />}
-            />
-            <Route
-              path="/session/viewpermissions"
-              element={<ViewPermission />}
-            />
-            <Route
-              path="/session/setroles"
-              element={<SetRoles />}
-            />
-            <Route
-              path="/session/ordermanagement"
-              element={<OrderManagement />}
-            />
-            <Route
-              path='/session/issuemanagement/actionIssue/:id'
-              element={<ActionIssue />}
-            />
-            <Route
-              path="/session/ordermanagement/ordertypes"
-              element={<OrderTypes />}
-            />
-            
-            <Route
-              path="/session/ordermanagement/orderdetails/:orderID"
-              element={<ViewOrderDetails />}
-            />
-           <Route
-              path="/session/ordermanagement/createorder/generateorder/:orderType"
-              element={<GenerateOrder />}
-            />
-            <Route
-              path="/session/ordermanagement/orderflowone/:orderID"
-              element={<OrderFlowOne />}
-            />
-            <Route
-              path="/session/ordermanagement/orderflowtwo/:orderID"
-              element={<OrderFlowTwo />}
-            />
-           <Route
-              path="/session/ordermanagement/orderDetails/location/contact/:no"
-              element={<LocationDetails />}
-            />
-            <Route
-              path="/session/services"
-              element={<>Other Services</>}
-            />
-          </Route>
-          
-          <Route
-              path="/session/issuemanagement/fetchfile/:filename"
-              element={<FetchFile />}
-            />
-        </Routes>
-      </BrowserRouter>
-    </>
-  );
+						<Route
+							path="/session/user-profile/:id"
+							element={<Profile />}
+						/>
+						<Route
+							path="/session/viewpermissions"
+							element={<ViewPermission />}
+						/>
+						<Route
+							path="/session/setroles"
+							element={<SetRoles />}
+						/>
+						<Route
+							path="/session/ordermanagement"
+							element={<OrderManagement />}
+						/>
+						<Route
+							path='/session/issuemanagement/actionIssue/:id'
+							element={<ActionIssue />}
+						/>
+						<Route
+							path="/session/ordermanagement/ordertypes"
+							element={<OrderTypes />}
+						/>
+
+						<Route
+							path="/session/ordermanagement/orderdetails/:orderID"
+							element={<ViewOrderDetails />}
+						/>
+						<Route
+							path="/session/ordermanagement/createorder/generateorder/:orderType"
+							element={<GenerateOrder />}
+						/>
+						<Route
+							path="/session/ordermanagement/orderflowone/:orderID"
+							element={<OrderFlowOne />}
+						/>
+						<Route
+							path="/session/ordermanagement/orderflowtwo/:orderID"
+							element={<OrderFlowTwo />}
+						/>
+						<Route
+							path="/session/ordermanagement/orderDetails/location/contact/:no"
+							element={<LocationDetails />}
+						/>
+						<Route
+							path="/session/services"
+							element={<>Other Services</>}
+						/>
+
+					</Route>
+
+					<Route
+						path="/session/issuemanagement/fetchfile/:filename"
+						element={<FetchFile />}
+					/>
+					
+					<Route path='/page-not-found' element={<NotFound404 resource={false} />} />
+				</Routes>
+			</BrowserRouter>
+		</>
+	);
 }
 
 export default App;

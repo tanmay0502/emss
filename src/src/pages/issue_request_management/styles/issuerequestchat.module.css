@@ -221,6 +221,27 @@
 	background: #f8f1ef;
 }
 
+.chatView > h3{
+	margin: 0 auto;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5em;
+}
+
+.chatView > h3 > span > small{
+	font-size: 0.3em;
+}
+
+.chatView > h3 > button{
+	margin: 0 auto;
+	font-size: 0.5em;
+	color: white;
+	height: 2.75em;
+	padding: 0 1em;
+}
+
 .chatHeader {
 	height: calc(30px + 3.25em);
 	background-color: #F5F5FC;
@@ -414,6 +435,8 @@
 	justify-content: center;
 }
 
-.msgInputGroup>input[type="text"] {
+.msgInputGroup > input[type="text"] {
 	border: none;
+	margin: 0 !important;
+	height: 100%;
 }

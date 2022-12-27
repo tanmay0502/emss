@@ -29,7 +29,7 @@ function SentMessageGroup(props) {
                         if (val['remarks'] !== "") {
                             return (
                                 <>
-                                    <p>
+                                    <p key={val['madeon']}>
                                         {val['lodgeruserid'] ? val['subject'] : val['remarks']}
                                     </p>
                                 </>

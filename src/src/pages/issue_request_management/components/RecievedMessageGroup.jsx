@@ -26,7 +26,7 @@ function RecievedMessageGroup(props) {
                 {props.data && props.data.map( (val, ind) => {
                     return (
                         val['remarks'] !== "" ?
-                        <p>
+                        <p key={val['madeon']}>
                             {ind === 0 && val['remarks'] ? <b>{val['remarkeruserid']}</b> : ""}
                             {val['lodgeruserid'] ? val['subject'] : val['remarks']}
                         </p>

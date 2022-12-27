@@ -7,6 +7,7 @@ import ChatListItem from './components/ChatListItem';
 import { ReactComponent as SearchInputIcon } from '../../assets/searchInputIcon.svg';
 import defaultImage from '../../assets/issueUserImage.png'
 import { ReactComponent as RefreshIcon } from '../../assets/refresh-icon.svg'
+import { ReactComponent as ChatLoading } from '../../assets/chatLoading.svg'
 import { ReactComponent as AttachDocument } from '../../assets/AttachDocument.svg'
 import { ReactComponent as SendMessage } from '../../assets/SendMessage.svg'
 import { ReactComponent as ChevronDown } from '../../assets/ChevronDown.svg'
@@ -82,9 +83,9 @@ function RequestList() {
     const getDetails = async () => {
         getDetailsController.abort()
         getDetailsController = new AbortController();
-        
+
         const myId = selectedissue;
-        if(myId !== null){
+        if (myId !== null) {
             try {
                 const response = await fetch(
                     `${process.env.REACT_APP_API_SERVER}/issue_requests/search_request`,
@@ -104,7 +105,7 @@ function RequestList() {
                 const data = await response.json();
                 // console.log(data["remarks"].reverse())
                 setSelectedIssueData(data);
-    
+
             } catch (error) {
                 console.log(error);
             }
@@ -112,35 +113,35 @@ function RequestList() {
     }
 
     useEffect(() => {
-        if(issueRequestList && issueRequestList.length!=0 ){
-        const tmp = issueRequestList.filter((val) => {
-            if(searchFieldVal !== ""){
-                return val.issueid.toString().toLowerCase().includes(searchFieldVal.toLowerCase()) || val.subject.toLowerCase().includes(searchFieldVal.toLowerCase())
-            }
-            return val.severity === selectedSeverity
-        }).sort((a,b) => {
-            return new Date(a['updatedon_max_time']) - new Date(b['updatedon_max_time'])
-        })
+        if (issueRequestList && issueRequestList.length != 0) {
+            const tmp = issueRequestList.filter((val) => {
+                if (searchFieldVal !== "") {
+                    return val.issueid.toString().toLowerCase().includes(searchFieldVal.toLowerCase()) || val.subject.toLowerCase().includes(searchFieldVal.toLowerCase())
+                }
+                return val.severity === selectedSeverity
+            }).sort((a, b) => {
+                return new Date(a['updatedon_max_time']) - new Date(b['updatedon_max_time'])
+            })
 
-        tmp.reverse();
+            tmp.reverse();
 
-        setSortedList(tmp)
-    }
-    
-      return () => {
-        
-      }
+            setSortedList(tmp)
+        }
+
+        return () => {
+
+        }
     }, [issueRequestList, selectedSeverity, searchFieldVal])
 
-    useEffect(()=>{
-        if(searchFieldVal !== ""){
-            
+    useEffect(() => {
+        if (searchFieldVal !== "") {
+
         }
     }, [searchFieldVal])
-    
 
-    useEffect(()=>{
-        if(document.querySelector('.issueSelectorCheckbox:checked')) document.querySelector('.issueSelectorCheckbox:checked').checked = false;
+
+    useEffect(() => {
+        if (document.querySelector('.issueSelectorCheckbox:checked')) document.querySelector('.issueSelectorCheckbox:checked').checked = false;
     }, [sortedList])
 
     useEffect(() => {
@@ -151,7 +152,7 @@ function RequestList() {
         }
     }, [selectedissue])
 
-    useEffect(()=>{
+    useEffect(() => {
         setChatScrollToBottom(document.getElementById('chatwindow'));
     }, [selectedIssueData])
 
@@ -163,14 +164,14 @@ function RequestList() {
 
         return <></>
     }
-    
+
     const [actiontext, setActionText] = useState("New Recipient");
     const [showRemarksAndDocuments, setShowRemarksAndDocuments] = useState(true)
     const [showSecondaryInput, setShowSecondaryInput] = useState(true)
 
-    const actionChanged = (e)=>{
+    const actionChanged = (e) => {
         var action = e.target.value
-        if(action === 'merge'){
+        if (action === 'merge') {
             //Hide Remarks and Supporting Documents
             setShowRemarksAndDocuments(false)
 
@@ -180,7 +181,7 @@ function RequestList() {
             //Change placeholdertext
             setActionText("New Parent Issue ID")
         }
-        else if(action === 'forward'){
+        else if (action === 'forward') {
             // Show Remarks and SupportingDocuments
             setShowRemarksAndDocuments(true)
 
@@ -190,7 +191,7 @@ function RequestList() {
             //Change placeholdertext
             setActionText("New Recipient")
         }
-        else if(action === 'reopen' || action === 'close'){
+        else if (action === 'reopen' || action === 'close') {
             // Show Remarks and SupportingDocuments
             setShowRemarksAndDocuments(true)
 
@@ -213,7 +214,7 @@ function RequestList() {
         var SupportingDocumentsBase64 = []
 
         uploadedSupportingDocuments.forEach(element => {
-            SupportingDocuments.push( path.parse(element.name).name)
+            SupportingDocuments.push(path.parse(element.name).name)
             MimeTypes.push(path.parse(element.name).ext.substring(1))
             SupportingDocumentsBase64.push(element.base64)
         });
@@ -240,12 +241,12 @@ function RequestList() {
                     if (response.status !== 200) {
                         alert('Error in adding remarks.');
                     }
-                    else{
+                    else {
                         document.getElementById('remarks').value = ""
                         document.getElementById('secondaryInput').value = ""
                         getDetails();
                     }
-        
+
                 } catch (err) {
                     console.log(err);
                 }
@@ -275,12 +276,12 @@ function RequestList() {
                     if (response.status !== 200) {
                         alert('Error in adding remarks.');
                     }
-                    else{
+                    else {
                         document.getElementById('remarks').value = ""
                         document.getElementById('secondaryInput').value = ""
                         getDetails();
                     }
-        
+
                 } catch (err) {
                     console.log(err);
                 }
@@ -310,17 +311,17 @@ function RequestList() {
                     if (response.status !== 200) {
                         alert('Error in adding remarks.');
                     }
-                    else{
+                    else {
                         document.getElementById('remarks').value = ""
                         document.getElementById('secondaryInput').value = ""
                         getDetails();
                     }
-        
+
                 } catch (err) {
                     console.log(err);
                 }
                 break;
-    
+
             default:
                 break;
         }
@@ -332,7 +333,7 @@ function RequestList() {
                 <div className={styles.issuesSearchContainer}>
                     <div className={styles.searchIssueInputGroup}>
                         <SearchInputIcon />
-                        <input type={"search"} placeholder={"Search For Issue"} value={searchFieldVal} onChange={(e)=> {setSearchFieldVal(e.target.value)}} />
+                        <input type={"search"} placeholder={"Search For Issue"} value={searchFieldVal} onChange={(e) => { setSearchFieldVal(e.target.value) }} />
                     </div>
 
                     <button title='Refresh' onClick={getRequestList}>
@@ -360,7 +361,7 @@ function RequestList() {
                                 <ChatListItem issueID={val.issueid} defaultChecked={val.issueid === selectedissue} subject={val.subject} setSelectedissue={setSelectedissue} updateTime={val.updatedon_max_time} />
                             )
                         }) :
-                        <div className={styles.chatListLoader}>Loading...</div>
+                            <div className={styles.chatListLoader}></div>
                     }
                 </div>
                 <button className={styles.createIssueButton} onClick={() => {
@@ -394,14 +395,17 @@ function RequestList() {
                             </div>
 
                             <div id="chatwindow" className={styles.chatWindow} >
-                                {selectedIssueData && selectedIssueData['issue'] ? <ChatGroup data={selectedIssueData} /> :<div style={{
-                                    'flex' : 1,
-                                    'display': 'flex',
-                                    'flexDirection': 'column',
-                                    'alignItems': 'stretch',
-                                    'justifyContent': 'center',
-                                    'textAlign': 'center'
-                                }}><b>Loading...</b></div>}
+                                {selectedIssueData && selectedIssueData['issue'] ? <ChatGroup data={selectedIssueData} /> :
+                                    <div style={{
+                                        'flex': 1,
+                                        'display': 'flex',
+                                        'flexDirection': 'column',
+                                        'alignItems': 'stretch',
+                                        'justifyContent': 'center',
+                                        'textAlign': 'center'
+                                    }}>
+                                        <ChatLoading />
+                                    </div>}
                                 {
                                     // setScroll value to bottom
                                     setChatScrollToBottom()
@@ -412,13 +416,13 @@ function RequestList() {
                                 e.preventDefault();
                                 raiseAPICall(e);
                             }}>
-                                
+
                                 <label for="docUpload">
-                                    <button className={styles.uploadDocumentsButton} title='Attach Supporting Documents' style={showRemarksAndDocuments ? {'display': 'block'} : {'display' : "none"}} >
+                                    <button className={styles.uploadDocumentsButton} title='Attach Supporting Documents' style={showRemarksAndDocuments ? { 'display': 'block' } : { 'display': "none" }} >
                                         <AttachDocument />
                                         <FileBase64 domID="docUpload"
-                                            multiple={ true }
-                                            onDone={ handleFileUploadChange } />
+                                            multiple={true}
+                                            onDone={handleFileUploadChange} />
                                     </button>
                                 </label>
                                 <div className={styles.DropDownGroup} onMouseDown={(e) => {
@@ -427,7 +431,7 @@ function RequestList() {
                                     try {
                                         selectContainer.dispatchEvent(e.nativeEvent)
                                     } catch (error) {
-                                        
+
                                     }
                                 }}>
                                     <span style={{ minWidth: 'max-content' }}>
@@ -441,13 +445,13 @@ function RequestList() {
                                     </select>
                                     <ChevronDown />
                                 </div>
-                                <div className={styles.msgInputGroup} style={showSecondaryInput ? {'display': 'block'} : {'display' : "none"}} >
+                                <div className={styles.msgInputGroup} style={showSecondaryInput ? { 'display': 'block' } : { 'display': "none" }} >
                                     <input id='secondaryInput' autoComplete={"off"} type={"text"} placeholder={actiontext} required={showSecondaryInput} />
                                 </div>
-                                <div className={styles.msgInputGroup} style={{'display': showRemarksAndDocuments ? 'block' : "none"}} >
+                                <div className={styles.msgInputGroup} style={{ 'display': showRemarksAndDocuments ? 'block' : "none" }} >
                                     <input id='remarks' type={"text"} autoComplete={"off"} placeholder={"Add Remarks"} />
                                 </div>
-                                <button onClick={(e)=>{
+                                <button onClick={(e) => {
                                     // e.preventDefault();
                                     // chatFormRef.current.submit();
                                     raiseAPICall();
@@ -458,7 +462,11 @@ function RequestList() {
                         </>
                         :
                         <h3 style={{ 'textAlign': 'center' }}>
-                            Select An Issue To<br />Take Action
+                            <span>Select An Issue To<br />Take Action</span>
+                            <small>or</small>
+                            <button onClick={() => {
+                                navigate('/session/issuemanagement/createIssue')
+                            }}>Create an Issue</button>
                         </h3>
                 }
             </div>

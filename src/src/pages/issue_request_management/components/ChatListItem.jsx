@@ -25,7 +25,7 @@ function ChatListItem(props) {
   return (
     <div className={styles.chatListItem}>
         <input ref={chatListItemInput} className='issueSelectorCheckbox' type="radio" name="chatlistItem" id={"issueItem-" + props.issueID} onClick={()=>{
-            chatListItemInput.current.checked = props.defaultChecked
+            chatListItemInput.current.checked = true
             props.setSelectedissue(props.issueID)
         }} />
         <label htmlFor={"issueItem-" + props.issueID}>

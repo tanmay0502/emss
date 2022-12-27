@@ -17,11 +17,17 @@ function NotFound404(props) {
                     {
                         props.goBack && window.history.length !== 1 ?
                             <>
-                                <button className={styles.GoBackButton1} >Go Back</button>
-                                <button className={styles.GoBackButton2} >Go To Home Page</button>
+                                <button className={styles.GoBackButton1} onClick={()=>{
+                                    window.history.back();
+                                }} >Go Back</button>
+                                <button className={styles.GoBackButton2} onClick={()=>{
+                                    window.location.href = '/session/home'
+                                }} >Go To Home Page</button>
                             </>
                             :
-                            <button className={styles.GoBackButton1} >Go To Home Page</button>
+                            <button className={styles.GoBackButton1} onClick={()=>{
+                                window.location.href = '/session/home'
+                            }} >Go To Home Page</button>
                     }
                 </div>
             </h1>
