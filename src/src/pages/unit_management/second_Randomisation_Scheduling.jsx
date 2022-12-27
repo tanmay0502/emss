@@ -44,8 +44,6 @@ function Second_Randomisation_Scheduling() {
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
-                        ceouserid: document.getElementById("ceouserid") ? document.getElementById("ceouserid").value : "",
-                        deouserid: document.getElementById("deouserid") ? document.getElementById("deouserid").value : "",
                         ascode: document.getElementById("ascode") ? document.getElementById("ascode").value : "",
                         electiontype: document.getElementById("electiontype") ? document.getElementById("electiontype").value : "",
                         startdate: document.getElementById("startdate") ? document.getElementById("startdate").value + " " + time : "",
@@ -60,9 +58,7 @@ function Second_Randomisation_Scheduling() {
                 alert("Schedule Second Randomization Created Successfully");
                 window.location.pathname = "/session/unitmanagement"
             } else {
-                alert("Unable to Create Schedule Second Randomization.");
-                document.getElementById("ceouserid").value = ""
-                document.getElementById("deouserid").value = ""
+                alert(data3.message);
                 document.getElementById("ascode").value = ""
                 document.getElementById("electiontype").value = ""
                 document.getElementById("startdate").value = ""
@@ -77,8 +73,6 @@ function Second_Randomisation_Scheduling() {
 
 
     console.log(
-        "ceouserid", document.getElementById("ceouserid") ? document.getElementById("ceouserid").value : "",
-        "deouserid:", document.getElementById("deouserid") ? document.getElementById("deouserid").value : "",
         "electiontype:", document.getElementById("electiontype") ? document.getElementById("electiontype").value : "",
         "startdate:", document.getElementById("startdate") ? document.getElementById("startdate").value : "",
         "enddate:", document.getElementById("enddate") ? document.getElementById("enddate").value : "",
@@ -104,32 +98,6 @@ function Second_Randomisation_Scheduling() {
 
 
                     <div class={styles.div1}>
-                        <p> CEO User ID</p>
-                        <input
-                            id="ceouserid"
-                            type="text"
-                            required
-                            placeholder='Enter CEO User ID'
-                            onChange={(e) => { setceouserid(e) }}
-                        >
-                        </input>
-                    </div>
-
-
-                    <div class={styles.div2}>
-                        <p> DEO User ID</p>
-                        <input
-                            id="deouserid"
-                            type="text"
-                            required
-                            placeholder='Enter DEO User ID'
-                            onChange={(e) => { setdeouserid(e) }}
-
-                        >
-                        </input>
-                    </div>
-
-                    <div class={styles.div3}>
                         <p> AC Code</p>
                         <input
                             id="ascode"
@@ -141,19 +109,17 @@ function Second_Randomisation_Scheduling() {
                         </input>
                     </div>
 
-                    <div class={styles.div4}>
+                    <div class={styles.div2}>
                         <p> Election Type</p>
-                        <input
-                            id="electiontype"
-                            type="text"
-                            required
-                            placeholder='Enter Election Type'
-                            onChange={(e) => { setelectiontype(e) }}
-                        >
-                        </input>
+                        <select id="electiontype" onSelect={(e) => { setelectiontype(e)}}>
+                            <option value="" >Select:</option>
+                            <option value="A">Assembly-A</option>
+                            <option value="L">Lok Sabha-L</option>
+                            <option value="B">By elections-B</option>
+                        </select>
                     </div>
 
-                    <div class={styles.div5}>
+                    <div class={styles.div3}>
                         <p> Start date</p>
                         <input
                             id="startdate"
@@ -165,7 +131,7 @@ function Second_Randomisation_Scheduling() {
                         ></input>
                     </div>
 
-                    <div class={styles.div6}>
+                    <div class={styles.div4}>
                         <p> End date</p>
                         <input
                             id="enddate"

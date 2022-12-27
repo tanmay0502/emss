@@ -36,7 +36,7 @@ export default function HomePage() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const getData = async () => {
+        const getDataTotal = async () => {
             try {
                 const ID = window.sessionStorage.getItem('sessionToken');
                 const response = await fetch(
@@ -64,7 +64,7 @@ export default function HomePage() {
                 console.log(err)
             }
         }
-        getData()
+        getDataTotal()
     }, [])
 
     useEffect(() => {

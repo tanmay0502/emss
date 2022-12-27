@@ -67,7 +67,9 @@ const SecondRandomisationForm = ({ isVisible }) => {
 
 
     console.log(userID, "userID")
-    const district_id = userID.slice(5, 8); // calc from userId
+    const state_code = userID.slice(0,2);
+    const district_code = userID.slice(2,5);
+    const ac_id = userID.slice(5, 8); // calc from userId
 
     const [assemblyData, setAssemblyData] = useState([
         {
@@ -119,7 +121,7 @@ const SecondRandomisationForm = ({ isVisible }) => {
         if (confirmation === true) {
             setIsSubmitted(false);
             const units_requirement = assemblyData
-                .filter((d) => d.ps_name)
+                .filter((d) => d.ps_no)
                 .map((d) => {
                     d.cu_count = d.cu_count ? parseInt(d.cu_count) : 0;
                     d.bu_count = d.bu_count ? parseInt(d.bu_count) : 0;
@@ -156,71 +158,71 @@ const SecondRandomisationForm = ({ isVisible }) => {
             }
         }
         else { }
-        setIsSubmitted(false);
-        const units_requirement = assemblyData
-            .filter((d) => d.ps_name)
-            .map((d) => {
-                d.cu_count = d.cu_count ? parseInt(d.cu_count) : 0;
-                d.bu_count = d.bu_count ? parseInt(d.bu_count) : 0;
-                d.vt_count = d.vt_count ? parseInt(d.vt_count) : 0;
-                return d;
-            });
+        // setIsSubmitted(false);
+        // const units_requirement = assemblyData
+        //     .filter((d) => d.ps_no)
+        //     .map((d) => {
+        //         d.cu_count = d.cu_count ? parseInt(d.cu_count) : 0;
+        //         d.bu_count = d.bu_count ? parseInt(d.bu_count) : 0;
+        //         d.vt_count = d.vt_count ? parseInt(d.vt_count) : 0;
+        //         return d;
+        //     });
 
-        // fetch request
-        try {
-            const response = await fetch(`${baseUrl}/second-randomization`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                credentials: 'include',
-                body: JSON.stringify({
-                    units_requirement,
-                }),
-            });
-            const data = await response.json();
-            console.log("Randomisation results: ", data);
+        // // fetch request
+        // try {
+        //     const response = await fetch(`${baseUrl}/second-randomization`, {
+        //         method: "POST",
+        //         headers: { "Content-Type": "application/json" },
+        //         credentials: 'include',
+        //         body: JSON.stringify({
+        //             units_requirement,
+        //         }),
+        //     });
+        //     const data = await response.json();
+        //     console.log("Randomisation results: ", data);
 
-            if (response.status === 200) {
+        //     if (response.status === 200) {
 
-                setRandomisedData(data);
-                setIterationIndex(3);
-                setAssemblyData(units_requirement);
-                setIsSubmitted(true);
-                // pass the data to child component & re-render
-            } else {
-                console.log("Could not fetch randomisation results");
-                alert(data.message);
-            }
-        } catch (err) {
-            alert(`Error occured: ${err}`);
-        }
+        //         setRandomisedData(data);
+        //         setIterationIndex(data.length);
+        //         setAssemblyData(units_requirement);
+        //         setIsSubmitted(true);
+        //         // pass the data to child component & re-render
+        //     } else {
+        //         console.log("Could not fetch randomisation results");
+        //         alert(data.message);
+        //     }
+        // } catch (err) {
+        //     alert(`Error occured: ${err}`);
+        // }
     };
 
     const handleFetchingNewIterations = async (iteration_index) => {
         if (randomisedData[iteration_index - 1]) {
             setIterationIndex(iteration_index);
         } else {
-            setIsSubmitted(false);
-            console.log('Coming')
-            // fetch request
-            try {
-                const response = await fetch(`${baseUrl}/second-randomization`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    credentials: 'include'
-                });
-                const data = await response.json();
+            // setIsSubmitted(false);
+            // console.log('Coming')
+            // // fetch request
+            // try {
+            //     const response = await fetch(`${baseUrl}/second-randomization`, {
+            //         method: "POST",
+            //         headers: { "Content-Type": "application/json" },
+            //         credentials: 'include'
+            //     });
+            //     const data = await response.json();
 
-                if (response.status === 200) {
-                    setRandomisedData(data);
-                    setIterationIndex(3);
-                    setIsSubmitted(true);
-                } else {
-                    console.log("Could not fetch randomisation results");
-                    alert(data.message);
-                }
-            } catch (err) {
-                alert(`Error occured: ${err}`);
-            }
+            //     if (response.status === 200) {
+            //         setRandomisedData(data);
+            //         setIterationIndex(3);
+            //         setIsSubmitted(true);
+            //     } else {
+            //         console.log("Could not fetch randomisation results");
+            //         alert(data.message);
+            //     }
+            // } catch (err) {
+            //     alert(`Error occured: ${err}`);
+            // }
         }
     };
 
@@ -232,16 +234,34 @@ const SecondRandomisationForm = ({ isVisible }) => {
 
                 try {
                     const response = await fetch(`${baseUrl}/fetch-polling-stations`, {
-                        method: "GET",
+                        method: "POST",
                         headers: { "Content-Type": "application/json" },
                         credentials: "include"
                     });
                     const data = await response.json();
-
+                    console.log(data, district_code, "datatatatatatatat")
                     if (response.status === 200) {
                         console.log("inside if")
-                        if (data.hasOwnProperty(district_id)) {
-                            setAssemblyList(data[district_id]);
+                        if (data.hasOwnProperty('data')) {
+                            console.log("inside second if",state_code,ac_id, data['data'][state_code][ac_id])
+                            setAssemblyList(data['data'][state_code][ac_id]);
+                            let tempdata = []
+
+                            for(let i=0;i<data['data'][state_code][ac_id].length;i++){
+                                // console.log(data['data']['ac'][i])
+                                    tempdata.push(
+                                        {
+                                            ps_no: data['data'][state_code][ac_id][i]['ps_no'],
+                                            cu_count: "1",
+                                            bu_count: "1",
+                                            vt_count: "1",
+                                        }
+                                    )
+
+                                
+                            }
+                            console.log(tempdata)
+                            setAssemblyData(tempdata);
                         }
                     }
                 } catch (err) {
@@ -269,13 +289,13 @@ const SecondRandomisationForm = ({ isVisible }) => {
                                 <div className="mb-5 flex w-full flex-row justify-evenly">
                                     <div className="flex w-3/8 flex-col text-left">
                                         <label className="mb-2 w-full text-base">
-                                            District ID<span className="text-red-600">*</span>
+                                            Assembly Contituency ID<span className="text-red-600">*</span>
                                         </label>
                                         <div className="relative text-gray-600">
                                             <input
                                                 className="h-10 w-full cursor-not-allowed rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
                                                 name="districtId"
-                                                value={district_id}
+                                                value={ac_id}
                                                 readOnly
                                                 disabled
                                             />
@@ -333,7 +353,7 @@ const SecondRandomisationForm = ({ isVisible }) => {
                                         <div className="-mr-16 w-10 group-hover:hidden"></div>
                                         <div className="mr-8 flex w-3/8 flex-col text-left">
                                             <label className="mb-2 w-full text-base">
-                                                Assembly ID {id + 1}
+                                                Polling Station ID {id + 1}
                                                 <span className="text-red-600"> *</span>
                                             </label>
                                             <div className="relative text-gray-800">
@@ -341,15 +361,15 @@ const SecondRandomisationForm = ({ isVisible }) => {
                                                     className="h-10 w-full rounded-md p-2 px-5 placeholder:text-gray-400 focus-within:border-primary focus:border-primary"
                                                     name="ps_name"
                                                     placeholder="Select"
-                                                    value={data.ps_name}
+                                                    value={data.ps_no}
                                                     onChange={handleInputChange}
                                                     data-id={id}
                                                 >
                                                     {" "}
                                                     <option hidden>Select</option>
 
-                                                    {assemblyList.map((item, _id) => (
-                                                        <option key={_id}>{item}</option>
+                                                    {assemblyList.map(item => (
+                                                        <option value={item.ps_no}>{item.ps_name}</option>
                                                     ))}
                                                 </select>
                                                 <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1/2" />
@@ -430,8 +450,8 @@ const SecondRandomisationOutput = ({
     const columns = useMemo(
         () => [
             {
-                Header: "Assembly Segment",
-                accessor: "ps_name", // accessor is the "key" in the data
+                Header: "Polling Station",
+                accessor: "ps_no", // accessor is the "key" in the data
             },
             {
                 Header: "CU Count",
@@ -492,8 +512,9 @@ const SecondRandomisationOutput = ({
     const handleGenerateReport = async () => {
         try {
             const response = await fetch(
-                `${baseUrl}/generate-second-randomization-report/`,
+                `${baseUrl}/generate-second-randomization-report`,
                 {
+		    method:"POST",
                     credentials: "include",
                 }
             );
@@ -601,7 +622,7 @@ const SecondAssemblyTableRow = ({ row, unitData }) => {
                             {...cell.getCellProps()}
                             className="relative border-b border-solid border-gray-200 bg-white p-2 text-lg text-gray-600"
                         >
-                            {cell.column.Header === "Assembly Segment" && (
+                            {cell.column.Header === "Polling Station" && (
                                 <ChevronDown
                                     className={`absolute left-0 top-1/2 ml-7 h-5 w-5 -translate-y-1/2 translate-x-1/2 transition-transform ease-in-out ${!isExpanded && "-rotate-90"
                                         }`}

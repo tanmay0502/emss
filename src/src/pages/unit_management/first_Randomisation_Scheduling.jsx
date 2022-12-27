@@ -61,7 +61,7 @@ function First_Randomisation_Scheduling() {
                 alert("Schedule First Randomization Created Successfully");
                 window.location.pathname = "/session/unitmanagement"
             } else {
-                alert("Unable to Create Schedule First Randomization.");
+                alert(data3.message);
                 document.getElementById("ceouserid").value = ""
                 document.getElementById("deouserid").value = ""
                 document.getElementById("electiontype").value = ""
@@ -131,9 +131,9 @@ function First_Randomisation_Scheduling() {
                         <p> Election Type</p>
                         <select id="electiontype" onSelect={(e) => { setelectiontype(e)}}>
                             <option value="" >Select:</option>
-                            <option value="Assembly-A">Assembly-A</option>
-                            <option value="Lok Sabha-L">Lok Sabha-L</option>
-                            <option value="By elections-B">By elections-B</option>
+                            <option value="A">Assembly-A</option>
+                            <option value="L">Lok Sabha-L</option>
+                            <option value="B">By elections-B</option>
                         </select>
                         {/* <input
                             id="electiontype"

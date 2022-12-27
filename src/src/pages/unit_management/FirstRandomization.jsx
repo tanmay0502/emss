@@ -66,14 +66,7 @@ const FirstRandomisationForm = ({ isVisible = true }) => {
 
     const district_id = userID.slice(2, 5); // calc from userId
     console.log(userID.slice(2, 5))
-    const [assemblyData, setAssemblyData] = useState([
-        {
-            ac_name: "",
-            cu_count: "",
-            bu_count: "",
-            vt_count: "",
-        },
-    ]);
+    const [assemblyData, setAssemblyData] = useState([]);
 
     const [iterationIndex, setIterationIndex] = useState(0);
     const [isFetching, setIsFetching] = useState(true);
@@ -143,10 +136,8 @@ const FirstRandomisationForm = ({ isVisible = true }) => {
 
                 if (response.status === 200) {
 
-                    const update = [...randomisedData];
-                    update[data.iteration_index - 1] = data.allotted_units;
-                    setRandomisedData(update);
-                    setIterationIndex(data.iteration_index);
+                    setRandomisedData(data);
+                    setIterationIndex(data.length);
                     setAssemblyData(units_requirement);
                     setIsSubmitted(true);
                     // pass the data to child component & re-render
@@ -158,73 +149,73 @@ const FirstRandomisationForm = ({ isVisible = true }) => {
                 alert(`Error occured: ${err}`);
             }
         }
-        else { }
-        setIsSubmitted(false);
+	else { }
+        // setIsSubmitted(false);
 
-        const units_requirement = assemblyData
-            .filter((d) => d.ac_name)
-            .map((d) => {
-                d.cu_count = d.cu_count ? parseInt(d.cu_count) : 0;
-                d.bu_count = d.bu_count ? parseInt(d.bu_count) : 0;
-                d.vt_count = d.vt_count ? parseInt(d.vt_count) : 0;
-                return d;
-            });
-        // console.log(JSON.stringify({ units_requirement }));
-        // fetch request
-        try {
-            const response = await fetch(`${baseUrl}/first_randomization`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                credentials: 'include',
-                body: JSON.stringify({
-                    units_requirement,
-                }),
-            });
-            const data = await response.json();
-            console.log("Randomisation results: ", data);
+        // const units_requirement = assemblyData
+        //     .filter((d) => d.ac_name)
+        //     .map((d) => {
+        //         d.cu_count = d.cu_count ? parseInt(d.cu_count) : 0;
+        //         d.bu_count = d.bu_count ? parseInt(d.bu_count) : 0;
+        //         d.vt_count = d.vt_count ? parseInt(d.vt_count) : 0;
+        //         return d;
+        //     });
+        // // console.log(JSON.stringify({ units_requirement }));
+        // // fetch request
+        // try {
+        //     const response = await fetch(`${baseUrl}/first_randomization`, {
+        //         method: "POST",
+        //         headers: { "Content-Type": "application/json" },
+        //         credentials: 'include',
+        //         body: JSON.stringify({
+        //             units_requirement,
+        //         }),
+        //     });
+        //     const data = await response.json();
+        //     console.log("Randomisation results: ", data);
 
-            if (response.status === 200) {
-                setRandomisedData(data);
-                setIterationIndex(3);
-                setAssemblyData(units_requirement);
-                setIsSubmitted(true);
-                // pass the data to child component & re-render
-            } else {
-                console.log("Could not fetch randomisation results");
-                alert(data.message);
-            }
-        } catch (err) {
-            alert(`Error occured: ${err}`);
-        }
+        //     if (response.status === 200) {
+        //         setRandomisedData(data);
+        //         setIterationIndex(3);
+        //         setAssemblyData(units_requirement);
+        //         setIsSubmitted(true);
+        //         // pass the data to child component & re-render
+        //     } else {
+        //         console.log("Could not fetch randomisation results");
+        //         alert(data.message);
+        //     }
+        // } catch (err) {
+        //     alert(`Error occured: ${err}`);
+        // }
     };
 
     const handleFetchingNewIterations = async (iteration_index) => {
         if (randomisedData[iteration_index - 1]) {
             setIterationIndex(iteration_index);
         } else {
-            setIsSubmitted(false);
-            // fetch request
-            try {
-                const response = await fetch(`${baseUrl}/first_randomization`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    credentials: 'include'
-                });
-                const data = await response.json();
-                if (response.status === 200 && data.hasOwnProperty("allotted_units")) {
-                    const update = [...randomisedData];
-                    update[data.iteration_index - 1] = data.allotted_units;
+            // setIsSubmitted(false);
+            // // fetch request
+            // try {
+            //     const response = await fetch(`${baseUrl}/first_randomization`, {
+            //         method: "POST",
+            //         headers: { "Content-Type": "application/json" },
+            //         credentials: 'include'
+            //     });
+            //     const data = await response.json();
+            //     if (response.status === 200 && data.hasOwnProperty("allotted_units")) {
+            //         const update = [...randomisedData];
+            //         update[data.iteration_index - 1] = data.allotted_units;
 
-                    setRandomisedData(update);
-                    setIterationIndex(data.iteration_index);
-                    setIsSubmitted(true);
-                } else {
-                    console.log("Could not fetch randomisation results");
-                    alert(data.message);
-                }
-            } catch (err) {
-                alert(`Error occured: ${err}`);
-            }
+            //         setRandomisedData(update);
+            //         setIterationIndex(data.iteration_index);
+            //         setIsSubmitted(true);
+            //     } else {
+            //         console.log("Could not fetch randomisation results");
+            //         alert(data.message);
+            //     }
+            // } catch (err) {
+            //     alert(`Error occured: ${err}`);
+            // }
         }
     };
 
@@ -234,8 +225,8 @@ const FirstRandomisationForm = ({ isVisible = true }) => {
             setIsFetching(true);
             (async () => {
                 try {
-                    const response = await fetch(`${baseUrl}/fetch-ac-name-list`, {
-                        method: "GET",
+                    const response = await fetch(`${process.env.REACT_APP_API_SERVER}/user/getRealm`, {
+                        method: "POST",
                         headers: { "Content-Type": "application/json" },
                         credentials: "include"
                     });
@@ -243,9 +234,26 @@ const FirstRandomisationForm = ({ isVisible = true }) => {
                     console.log(data, "datatatatatatatat")
                     if (response.status === 200) {
                         console.log("inside if")
-                        if (data.hasOwnProperty(district_id)) {
-                            console.log("inside second if", data[district_id])
-                            setAssemblyList(data[district_id]);
+                        if (data.hasOwnProperty('data')) {
+                            console.log("inside second if", data['data']['ac'])
+                            setAssemblyList(data['data']['ac']);
+                            let tempdata = []
+
+                            for(let i=1;i<data['data']['ac'].length;i++){
+                                // console.log(data['data']['ac'][i])
+                                    tempdata.push(
+                                        {
+                                            ac_name: data['data']['ac'][i],
+                                            cu_count: "",
+                                            bu_count: "",
+                                            vt_count: "",
+                                        }
+                                    )
+
+                                
+                            }
+                            console.log(tempdata)
+                            setAssemblyData(tempdata);
                         }
                     }
                 } catch (err) {
