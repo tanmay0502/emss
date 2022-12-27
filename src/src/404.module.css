@@ -1,0 +1,85 @@
+.Issue_Resource_Not_Found{
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding: 7.5vh;
+    padding-bottom: 12.5vh;
+
+    /* gap: 7.5vw; */
+
+    user-select: none;
+}
+
+.Issue_Resource_Not_Found > b{
+    flex: 1;
+
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+
+    font-size: 25em;
+    font-weight: 300;
+}
+
+.Issue_Resource_Not_Found > h1{
+    flex: 1;
+
+    width: 40vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3vh;
+    line-height: 1.5em;
+
+    text-align: center;
+}
+
+.GoBackButtonContainer{
+    font-size: 0.3em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 75%;
+    gap: 1em;
+    
+    line-height: 3em;
+}
+
+.GoBackButtonContainer > button{
+    border-radius: 0.25em;
+    padding: 0 !important;
+    padding: 0.1em 0.25em !important;
+    max-width: 50%;
+    flex: 1;
+    box-sizing: border-box;
+}
+
+.GoBackButton1{
+    background: none;
+    border: 2.5px solid var(--purple);
+    color: var(--purple);
+    transition: all linear 0.2s ;
+}
+
+.GoBackButton1:hover{
+    background: var(--purple);
+    color: white;
+}
+
+.GoBackButton2{
+    flex: 1;
+    background: var(--purple);
+    border: 2.5px solid var(--purple);
+    color: white;
+}
