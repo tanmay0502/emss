@@ -126,7 +126,7 @@ useEffect(()=>{
   }
 
   const man = {"ECIL":"ME", "BEL":"MB"}
-  const manr = {"ME":"ECIL", "MB":"BEL"}
+  const manr = {"ME":"ECIL", "MB":"BEL","string":"pending"}
   const [body, setBody] = useState(sampleBody)
 
   const submmit = async () => {
@@ -306,7 +306,7 @@ useEffect(()=>{
                       }}
                     >
                       <option>Select</option>
-                      {["ECIL", "BEL"].map((val) => (
+                      {["ME", "MB"].map((val) => (
                           <option value={val} className="text-black">
                             {val}
                           </option>
@@ -405,13 +405,13 @@ useEffect(()=>{
                             required
                             onChange={(e) => {
                               setBody((prev)=>{
-                                prev.details[ind].unitDetails[ind2].manufacturer = e.target.value;
+                                prev.details[ind].unitDetails[ind2].manufacturer = manr[e.target.value];
                                 return prev;
                               })
                               setUpdate((prev)=>{return (prev+1)%10});
                             }}
                           >
-                            <option>{body.details[ind].source}</option>
+                            <option>{manr[body.details[ind].source]}</option>
                           </select>
                         </td>
                         <td>
@@ -419,7 +419,7 @@ useEffect(()=>{
                             onChange={(e) => {
                               setBody((prev)=>{
                                 prev.details[ind].unitDetails[ind2].itemquantity = e.target.value;
-                                prev.details[ind].unitDetails[ind2].manufacturer = prev.details[ind].source;
+                                prev.details[ind].unitDetails[ind2].manufacturer = manr[prev.details[ind].source];
                                 return prev;
                               })
                               setUpdate((prev)=>{return (prev+1)%10});

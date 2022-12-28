@@ -198,50 +198,59 @@ export default function OrderFlowTwo({Order,OrderID}) {
     ])
     const [isVisible2,setIsVisible2] = useState(true);
 
-  useEffect(() => {
 
-    if(loading){
+    function getData(){
+        if(loading){
 
-    console.log("calling jthe main thing")
-    
-      setAllOrders(Order)
-    
-    
-    let body={
-        "listofOrders": [
-          
-        ]
-      }
-    Order.map((val)=>{
-        body["listofOrders"].push({
-            "orderid":val["orderid"]
-        })
-    })
-    let kk = getVehicleDetails(body);
-    kk.then(function(result) {
-        
-        if(result!=0){
-            console.log(result,"ffffffffffffffffffffffffffffffffffffffffffffffffffffff")
-            setFetchedVehicle(result); 
+            console.log("calling jthe main thing")
+            
+              setAllOrders(Order)
+            
+            
+            let body={
+                "listofOrders": [
+                  
+                ]
+              }
+            Order.map((val)=>{
+                body["listofOrders"].push({
+                    "orderid":val["orderid"]
+                })
+            })
+            let kk = getVehicleDetails(body);
+            kk.then(function(result) {
+                
+                if(result!=0){
+                    console.log(result,"ffffffffffffffffffffffffffffffffffffffffffffffffffffff")
+                    setFetchedVehicle(result); 
+                }
+                
+            })
+            let pp = getAllocateUsers(body);
+            pp.then(function(result) {
+               
+                if(result!=0 ){
+                    console.log(result,"uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu")
+                setFetchedUsers(result); 
+            }
+            })
         }
         
-    })
-    let pp = getAllocateUsers(body);
-    pp.then(function(result) {
-       
-        if(result!=0 ){
-            console.log(result,"uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu")
-        setFetchedUsers(result); 
     }
-    })
-}
 
+  useEffect(() => {
+
+    let timer1 = setTimeout(() => getData(), 0.1 * 1000);
+
+    return () => {
+      clearTimeout(timer1);
+    };
     
     // return () => {
     //     setLoading(false);
     //   };
     
-  },[cardVisibility])
+  },[loading])
 
 //   setLoading(true);
 

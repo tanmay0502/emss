@@ -96,11 +96,21 @@ export default function FLCList() {
                 <h4 className='text-white'>Scheduled FLC List</h4>
 
                 <div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center" }}>
+                    
+                   {sessionStorage.getItem("sessionToken").substring(8)=="CEO" &&  
                     <button className='createRequestBtn' onClick={() => {
                         window.location.pathname = "/session/unitmanagement/announce_flc";
                     }}>
                         Schedule FLC
                     </button>
+                    }
+                   {sessionStorage.getItem("sessionToken").substring(8)=="DEO" &&  
+                    <button className='createRequestBtn' onClick={() => {
+                        window.location.pathname = "/session/unitmanagement/preparednesscertificate";
+                    }}>
+                        Upload Preparedness Certitificate
+                    </button>
+                    }
 
                     <div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center", background: "#F9FBFF", borderRadius: "10px", padding: "7.5px 15px 7.5px 0", fontSize: "0.8em" }}>
                         <SearchInputElement style={{ margin: "0 7.5px", width: "20px" }} />

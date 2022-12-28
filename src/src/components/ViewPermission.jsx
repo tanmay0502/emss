@@ -21,9 +21,6 @@ function ViewPermission(){
 
       let timer1 = setTimeout(() => viewPermission(), 1 * 1000);
 
-      // this will clear Timeout
-      // when component unmount like in willComponentUnmount
-      // and show will not change to true
       return () => {
         clearTimeout(timer1);
       };

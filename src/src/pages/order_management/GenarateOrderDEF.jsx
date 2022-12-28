@@ -341,7 +341,7 @@ useEffect(()=>{
                         >
                         {" "}
                         <option>Select</option>
-                        {["ECIL", "BEL"].map((val) => (
+                        {["ME", "MB"].map((val) => (
                             <option value={val} className="text-black">
                               {val}
                             </option>

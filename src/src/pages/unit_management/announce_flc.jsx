@@ -52,9 +52,32 @@ function Announce_Flc() {
             }
     
         }
+        async function getDistrictsList() {
+    
+            try {
+                const response = await fetch(
+                    `${process.env.REACT_APP_API_SERVER}/user/getRealm`,
+                    {
+                        method: "POST",
+                        credentials: "include",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    })
+    
+                const data = await response.json();
+                // console.log(data);
+                setDistrict(data["data"]["dist"])
+                // console.log(data["data"], "data")
+            } catch (error) {
+                console.log(error)
+            }
+    
+        }
 
     useEffect(() => {
         getList();
+        getDistrictsList();
     }, []);
     console.log(details)
 
@@ -105,11 +128,12 @@ function Announce_Flc() {
         AnnounceFLC();
     };
 
+    const [selectedDistricts, setSelectedDistricts] = useState(["900","001","900","001","900","001","900","001"])
 
 
     return (
-        <>
-            <form onSubmit={onFormSubmit} id="form">
+        <div className='flex justify-between'>
+            <form onSubmit={onFormSubmit} id="form" className='w-2/3 m-5'>
                 <div className={styles.Schedule_container}>
                     <div className={styles.Schedule_header}>
                         <h4>
@@ -117,10 +141,10 @@ function Announce_Flc() {
                         </h4>
                     </div>
 
-                    <div class={styles.parent}>
-
-                        <div class={styles.div1}>
-                            <p>Warehouse ID</p>
+                    <div className='w-full text-left p-4'>
+                    <div className='w-1/2 m-2' >
+                            <p>Districts</p>
+                           
                             <select
                                 required
                                 name=""
@@ -128,19 +152,49 @@ function Announce_Flc() {
                                 className=" selectBox"
                             >
                                 <option value="" disabled selected>
-                                    Select Warehouse
+                                    Select Districts
                                 </option>
-                                {details.length > 0 && details.map((val) => (
-                                    <option value={val['warehouseid']} >
-                                        {val['warehouseid']}
+                                {District.length > 0 && District.map((val) => (
+                                    <option value={val} >
+                                        {val}
                                     </option>
                                 ))
                                 }
 
                             </select>
+                           
+                       
                         </div>
+                        <div className='flex w-full'>
+                            {selectedDistricts && selectedDistricts.map((val)=>(
+                                <div className='rounded-lg m-1 p-2 shadow-md shadow-black'>{val}
+                                <a className='p-2 rounded-sm'>close</a></div>
+                            ))}
+                        </div>
+                        <div className='flex justify-between'>
+                                <div  className='w-1/2 m-2'>
+                                <p>Start date</p>
+                                    <input
+                                        class={styles.dateInput}
+                                        type="date"
+                                        required pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
+                                        id="2"
+                                        className="selectBox"
+                                    ></input>
+                                </div>
 
-                        <div class={styles.div6}>
+                                <div  className='w-1/2 m-2' >
+                                <p>End date</p>
+                                    <input
+                                        class={styles.dateInput}
+                                        type="date"
+                                        id="9"
+                                        className=" selectBox"
+                                    ></input>
+                                </div>
+                        </div>
+                        <div className='flex justify-between'>
+                        <div  className='w-1/2 m-2'>
                             <p>Tentative Year Of Election</p>
                             <input
                                 class={styles.input}
@@ -153,7 +207,7 @@ function Announce_Flc() {
                         </div>
 
 
-                        <div class={styles.div7}>
+                        <div className='w-1/2 m-2'>
                             <p> Manufacturer </p>
                             <input
                                 class={styles.input}
@@ -164,134 +218,127 @@ function Announce_Flc() {
                             ></input>
 
                         </div>
-
-                        <div class={styles.div2}>
-                        <p>Start date</p>
-                            <input
-                                class={styles.dateInput}
-                                type="date"
-                                required pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
-                                id="2"
-                                className="selectBox"
-                            ></input>
                         </div>
 
-                        <div class={styles.div3}>
-                        <p>End date</p>
-                            <input
-                                class={styles.dateInput}
-                                type="date"
-                                id="9"
-                                className=" selectBox"
-                            ></input>
+                        <div className='flex justify-between'>
+                                <div className='w-1/2 m-2' >
+                                    <p> Type of election</p>
+                                    <select
+                                        //   required={!isTemporary}
+                                        required
+                                        name=""
+                                        id="5"
+                                        className=" selectBox"
+                                    //   onChange={(e) => setRoleFunc(e.target.value)}
+                                    >
+                                        <option value="" disabled selected>
+                                            Select
+                                        </option>
+                                        <option value="A">
+                                            Assembly-A
+                                        </option>
+                                        <option value="L">
+                                            Lok Sabha-L
+                                        </option>
+                                        <option value="B">
+                                            By elections-B
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div className='w-1/2 m-2'>
+                                    <p>Tentative month of election</p>
+                                    <select
+                                        required
+                                        name=""
+                                        id="6"
+                                        className=" selectBox"
+                                    //   onChange={(e) => setRoleFunc(e.target.value)}
+                                    >
+                                        <option value="" disabled selected>
+                                            Select
+                                        </option>
+                                        <option value="January">
+                                            January
+                                        </option>
+                                        <option value="February">
+                                            February
+                                        </option>
+                                        <option value="March">
+                                            March
+                                        </option>
+                                        <option value="April">
+                                            April
+                                        </option>
+                                        <option value="May">
+                                            May
+                                        </option>
+                                        <option value="June">
+                                            June
+                                        </option>
+                                        <option value="July">
+                                            July
+                                        </option>
+                                        <option value="August">
+                                            August
+                                        </option>
+                                        <option value="September">
+                                            September
+                                        </option>
+                                        <option value="October">
+                                            October
+                                        </option>
+                                        <option value="November">
+                                            November
+                                        </option>
+                                        <option value="December">
+                                            December
+                                        </option>
+
+                                    </select>
+                                </div>
+
                         </div>
+                        <div className='flex justify-between'>
+                            <div className='w-1/2 m-2'>
+                                <p>Manufacturer Email ID</p>
+                                <input
+                                    class={styles.input}
+                                    type="email"
+                                    id="7"
+                                    className="selectBox"
+                                    placeholder='xyz@example.com'
+                                ></input>
+                            </div>
 
-                        <div class={styles.div4}>
-                            <p> Type of election</p>
-                            <select
-                                //   required={!isTemporary}
-                                required
-                                name=""
-                                id="5"
-                                className=" selectBox"
-                            //   onChange={(e) => setRoleFunc(e.target.value)}
-                            >
-                                <option value="" disabled selected>
-                                    Select
-                                </option>
-                                <option value="A">
-                                    Assembly-A
-                                </option>
-                                <option value="L">
-                                    Lok Sabha-L
-                                </option>
-                                <option value="B">
-                                    By elections-B
-                                </option>
-                            </select>
+                            <div className='w-1/2 m-2'>
+                                <p>Manufacturer Mobile No.</p>
+                                <input
+                                    class={styles.input}
+                                    type="number"
+                                    id="8"
+                                    className="selectBox"
+                                    placeholder='Enter Number'
+                                ></input>
+                            </div>
                         </div>
-
-                        <div class={styles.div5}>
-                            <p>Tentative month of election</p>
-                            <select
-                                required
-                                name=""
-                                id="6"
-                                className=" selectBox"
-                            //   onChange={(e) => setRoleFunc(e.target.value)}
-                            >
-                                <option value="" disabled selected>
-                                    Select
-                                </option>
-                                <option value="January">
-                                    January
-                                </option>
-                                <option value="February">
-                                    February
-                                </option>
-                                <option value="March">
-                                    March
-                                </option>
-                                <option value="April">
-                                    April
-                                </option>
-                                <option value="May">
-                                    May
-                                </option>
-                                <option value="June">
-                                    June
-                                </option>
-                                <option value="July">
-                                    July
-                                </option>
-                                <option value="August">
-                                    August
-                                </option>
-                                <option value="September">
-                                    September
-                                </option>
-                                <option value="October">
-                                    October
-                                </option>
-                                <option value="November">
-                                    November
-                                </option>
-                                <option value="December">
-                                    December
-                                </option>
-
-                            </select>
-                        </div>
-
-
-                        <div class={styles.div9}>
-                            <p>Manufacturer Email ID</p>
-                            <input
-                                class={styles.input}
-                                type="email"
-                                id="7"
-                                className="selectBox"
-                                placeholder='xyz@example.com'
-                            ></input>
-                        </div>
-
-                        <div class={styles.div8}>
-                            <p>Manufacturer Mobile No.</p>
-                            <input
-                                class={styles.input}
-                                type="number"
-                                id="8"
-                                className="selectBox"
-                                placeholder='Enter Number'
-                            ></input>
-                        </div>
-
                     </div>
+
+                    
 
                 </div>
                 <button class={styles.submitBtn} type={"submit"} > Submit </button>
             </form>
-        </>
+            <div className='w-1/3 m-5'>
+                <div className={styles.Schedule_container}>
+                        <div className={styles.Schedule_header}>
+                            <h4>
+                                Announce FLC
+                            </h4>
+                        </div>
+                </div> 
+            </div>
+        </div>
     )
 }
 

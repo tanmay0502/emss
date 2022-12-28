@@ -1065,6 +1065,67 @@ export default function HomePage() {
                         </li>
                     </div>
                 </div>
+                <div className={styles.myCardSampleHover} onClick={() => { navigate(`/session/unitmanagement/orders`) }}>
+                    <div className={styles.card_title}>
+                        {/* /session/unitmanagement/schedule_list */}
+                        <span>Orders</span>
+                    </div>
+                    <div className={styles.Box123}>
+                        <div className="flex" >
+                            <div style={{ marginLeft: "3%", fontSize: "15px" }}> <span style={{ marginLeft: "25%", fontSize: "15px" }}>  State</span>  <div style={{ fontSize: "15px" }}> Madhya Pradesh </div> </div>
+                            <div className={styles.Line} style={{ marginLeft: "3%" }}></div>
+                            <div style={{ marginLeft: "5%", fontSize: "15px" }}>  <span style={{ marginLeft: "25%", fontSize: "15px" }}>  PC</span>  <div style={{ fontSize: "15px" }}> Bhopal </div></div>
+                            <div className={styles.Line} style={{ marginLeft: "3%" }}></div>
+                            <div style={{ marginLeft: "5%", fontSize: "15px" }}>  <span style={{ marginLeft: "25%", fontSize: "15px" }}>  AC</span>  <div style={{ fontSize: "15px" }}> Govindpura </div></div>
+                        </div>
+                    </div>
+
+                    <div className={styles.LI_TAG}>
+                        <li className="mb-4">
+                            <span>
+                                <span>
+                                    <span></span>
+                                    Election Type
+                                    <span className="ml-4"></span>
+                                    <span className="ml-4"></span>
+                                    <span className="ml-4"></span>
+                                    <span className="ml-8">Assembly</span>
+
+                                </span>
+                            </span>
+                        </li>
+                        <li className="mb-4">
+                            <span>
+                                <span>
+                                    <span></span>
+                                    Start Date
+                                    <span className="ml-4"></span>
+                                    <span className="ml-4"></span>
+                                    <span className="ml-4"></span>
+                                    <span className="ml-4"></span>
+                                    <span className="ml-4"></span>
+                                    <span className="ml-6">25-03-12</span>
+
+                                </span>
+                            </span>
+                        </li>
+                        <li className="mb-4">
+                            <span>
+                                <span>
+                                    <span></span>
+                                    End Date
+                                    <span className="ml-4"></span>
+                                    <span className="ml-4"></span>
+                                    <span className="ml-4"></span>
+                                    <span className="ml-4"></span>
+                                    <span className="ml-4"></span>
+                                    <span className="ml-8">25-03-12</span>
+
+                                </span>
+                            </span>
+                        </li>
+                    </div>
+                </div>
             </div>
 
             <div className={styles.parent2} >

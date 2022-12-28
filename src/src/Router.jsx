@@ -343,9 +343,7 @@ function Routed(props) {
 						
 						</div>
 
-						<div className="mr-20 bold text-sm">
-							Admin Utilies
-						</div>
+						
 
 						<button className={window.location.pathname.startsWith("/session/viewpermissions") ? 'nav-button active' : 'nav-button'}
 							onClick={() => {

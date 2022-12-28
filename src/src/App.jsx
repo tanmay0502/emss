@@ -56,8 +56,11 @@ import Usermanual from './components/Usermanual';
 import ViewPermission from './components/ViewPermission';
 import SetRoles from './components/SetRoles';
 import LocationDetails from './pages/order_management/LocationDetails';
+import AdminUtilities from './components/AdminUtilities';
 
 import FetchFile from './pages/issue_request_management/FetchFile';
+import Orders from './pages/unit_management/Orders';
+import Prepared_Certificate from './pages/unit_management/preparedness_certificate';
 function App() {
 
   const [sessionState, setSessionState] = useState({
@@ -201,6 +204,14 @@ function App() {
             <Route
               path="/session/unitmanagement/Schedule_List_CDP"
               element={<Schedule_List_CDP />}
+            />
+            <Route
+              path="/session/unitmanagement/orders"
+              element={<Orders />}
+            />
+            <Route
+              path="/session/unitmanagement/preparednesscertificate"
+              element={<Prepared_Certificate />}
             />
             <Route
               path="/session/warehousemanagement/"
