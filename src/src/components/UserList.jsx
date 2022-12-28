@@ -15,7 +15,8 @@ import { ReactComponent as InActiveUsers } from '../assets/InActiveUsers.svg';
 
 import DynamicDataTable from "@langleyfoxall/react-dynamic-data-table";
 import ToggleButton from './ToggleButton';
-
+import {CSVLink, CSVDownload} from 'react-csv';
+import {AiOutlineDownload} from 'react-icons/ai'
 import UserImageTest from '../assets/UserImageTest.png'
 import EditUser from '../pages/user_management/EditUser';
 
@@ -256,6 +257,8 @@ function UserList() {
 							}}>
 								{sortOrder === 'asc' ? <AiOutlineSortAscending /> : <AiOutlineSortDescending />}
 							</button>
+					<CSVLink filename={"UserList.csv"} data={users}><div className="text-gray-400 text-lg m-2 py-1 px-2" title='Export To CSV'><AiOutlineDownload/></div></CSVLink>
+
 						</div>
 					</div>
 
@@ -271,6 +274,12 @@ function UserList() {
 					onClick={(event, row) => {
 						details(row["Details"])
 						// console.log(row)
+					}}
+					fieldMap={{
+						"User ID": (<div className="cursor-pointer" onClick={()=>{setSortBy("User ID")}}>User ID</div>),
+						"User Name": (<div className="cursor-pointer" onClick={()=>{setSortBy("Name")}}>User Name</div>),
+						"Role": (<div className="cursor-pointer" onClick={()=>{setSortBy("Role")}}>Role</div>),
+						"Status": (<div className="cursor-pointer" onClick={()=>{setSortBy("None")}}>Status</div>)
 					}}
 					buttons={[]}
 					allowOrderingBy={[

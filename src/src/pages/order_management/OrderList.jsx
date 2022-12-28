@@ -8,6 +8,8 @@ import { AiOutlineSortAscending, AiOutlineSortDescending } from "react-icons/ai"
 import { ReactComponent as SearchInputElement } from '../../assets/searchInputIcon.svg';
 import { ReactComponent as ChevronDown } from '../../assets/ChevronDown.svg';
 import Modal from 'react-modal';
+import {AiOutlineDownload} from 'react-icons/ai'
+import {CSVLink, CSVDownload} from 'react-csv';
 
 export default function OrderList() {
 
@@ -211,7 +213,7 @@ export default function OrderList() {
 
 
     const [update, setUpdate] = useState(0);
-    const sortTableData = (sortBy)=>{
+    const sortTableData = (sortBy, reverse=false)=>{
         const sorted = tableData.sort((a,b)=>{
             if (sortBy === "Type") {
                 return b.type > a.type;
@@ -221,6 +223,12 @@ export default function OrderList() {
             }
             if (sortBy === "Time") {
                 return b.timestamp > a.timestamp;
+            }
+            if (sortBy === "CreatorID") {
+                return b.creatoruserid > a.creatoruserid;
+            }
+            if (sortBy === "Status") {
+                return b.status > a.status;
             }
             return false;
         })
@@ -241,7 +249,7 @@ export default function OrderList() {
         // console.log("sorted table data", sortedTableData)
         setUpdate(prev=>(prev+1)%10)
     }
-    
+
     const filterTableData = (key)=>{
         console.log(key)
         const sorted = tableData.filter((e)=>{
@@ -262,17 +270,6 @@ export default function OrderList() {
 
     }, [update])
 
-
-    // const Table = [
-    //     <Collapse orderId='XYZ/20' data={data} time='22-09-2021' />,
-    //     <Collapse orderId='XYZ/12' data={data} time='12-12-2021' />,
-    //     <Collapse orderId='XYZ/14' data={data1} time='2-05-2021' bottom={true} />
-    // ]
-    // const Table = [
-    //     <Collapse orderId='XYZ/20' data={data} time='22-09-2021' />,
-    //     <Collapse orderId='XYZ/12' data={data} time='12-12-2021' />,
-    //     <Collapse orderId='XYZ/14' data={data1} time='2-05-2021' bottom={true} />
-    // ]
 
     return (
         <>
@@ -324,21 +321,26 @@ export default function OrderList() {
                             {sortOrder === 'asc' ? <AiOutlineSortAscending /> : <AiOutlineSortDescending />}
                         </button>
                     </div>
+                        <CSVLink filename="OrderList.csv" data={data}><div className="text-white text-lg m-2 py-1 px-2" title="Export To CSV"><AiOutlineDownload/></div></CSVLink>
                 </div>
             </div> : <></>}
             {isDetail == 0 ?
                 <div className={styles.Scroll}>
+                    
                     <DynamicDataTable
                         rows={sortedTableData}
                         buttons={[]}
                         fieldMap={
                             {
-                                'displayID': 'Order ID',
-                                'creatoruserid': 'Creator User ID',
+                                'displayID': (<div onClick={()=>{sortTableData("OrderID")}} className="flex cursor-pointer justify-center">Order ID</div>),
+                                'creatoruserid': (<div onClick={()=>{sortTableData("CreatorID")}} className="flex cursor-pointer justify-center">Creator User ID</div>),
                                 'itemquantity': 'Quantity',
-                                orderstatus: 'Status',
+                                'timestamp' : (<div onClick={()=>{sortTableData("Time")}} className="flex cursor-pointer justify-center">Time</div>),
+                                'type' : ((<div onClick={()=>{sortTableData("Type")}} className="flex cursor-pointer justify-center">Type</div>)),
+                                orderstatus: (<div onClick={()=>{sortTableData("Status")}} className="flex cursor-pointer justify-center">Status</div>),
                             }
                         }
+                        headers={false}
                         fieldsToExclude={['orderID', 'manufacturer', 'item', 'itemmodel', 'referenceorderid', 'itemquantity', 'source', 'destination']}
                         fieldOrder={[
                             'displayID', 'creatoruserid', 'timestamp', 'type', 'status'

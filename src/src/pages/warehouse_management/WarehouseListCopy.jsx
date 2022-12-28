@@ -12,10 +12,13 @@ import { ReactComponent as TotalWarehouses } from '../../assets/TotalWarehouses.
 import { ReactComponent as PermanentWarehouses } from '../../assets/PermanentWarehouses.svg';
 import { ReactComponent as TemporaryWarehouses } from '../../assets/TemporaryWarehouses.svg';
 import { Fragment } from 'react';
+import {AiOutlineDownload} from 'react-icons/ai'
 import DynamicDataTable from "@langleyfoxall/react-dynamic-data-table";
 import ToggleButton from '../../components/ToggleButton';
 
 import UserImageTest from '../../assets/UserImageTest.png'
+import {CSVLink, CSVDownload} from 'react-csv';
+
 
 // React Icons
 import { FaCircle } from 'react-icons/fa'
@@ -279,7 +282,7 @@ function WarehouseList() {
 						}}>Create New</button>
 						<div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center", background: "var(--lightGrayBG )", borderRadius: "10px", padding: "7.5px 15px 7.5px 0", fontSize: "0.8em" }}>
 							<SearchInputElement style={{ margin: "0 7.5px", width: "20px" }} />
-							<input type={'search'} defaultValue={tableFilter} onChange={(e) => { setTableFilter(e.target.value) }} placeholder='Search' style={{ outline: "none", background: "transparent" }} />
+							<input className="w-24" type={'search'} defaultValue={tableFilter} onChange={(e) => { setTableFilter(e.target.value) }} placeholder='Search' style={{ outline: "none", background: "transparent" }} />
 						</div>
 						<div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center", marginLeft: "10px", background: "var(--lightGrayBG )", borderRadius: "10px", padding: "7.5px 15px 7.5px 0", fontSize: "0.8em" }}>
 							<span style={{ minWidth: "max-content", paddingInlineStart: "7.5px" }}>Sort by : &nbsp;</span>
@@ -297,6 +300,8 @@ function WarehouseList() {
 							}}>
 								{sortOrder === 'asc' ? <AiOutlineSortAscending /> : <AiOutlineSortDescending />}
 							</button>
+					<CSVLink filename={"wareHouseList.csv"} data={Details}><div className="text-gray-400 text-lg m-2 py-1 px-2" title="Export To CSV"><AiOutlineDownload/></div></CSVLink>
+
 						</div>
 					</div>
 
@@ -310,8 +315,10 @@ function WarehouseList() {
 					orderByDirection={sortOrder}
 					onClick={(event, row) => {
 						details(row)
-						// navigate(`warehousedetails/id=${row['warehouseid']}`)
-						// onClick={() => window.location = `session/warehousemanagement/warehousedetails/id=${value[0]}`}
+					}}
+					fieldMap={{
+						"Warehouse ID": (<div className="cursor-pointer" onClick={()=>{setSortBy("Warehouse ID")}}>Warehouse ID</div>),
+						"Status": (<div className="cursor-pointer" onClick={()=>{setSortBy("Status")}}>Status</div>)
 					}}
 					buttons={[]}
 					allowOrderingBy={[
