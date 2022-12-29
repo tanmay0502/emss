@@ -1,16 +1,41 @@
 import { DynamicDataTable } from '@langleyfoxall/react-dynamic-data-table'
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import styles from './styles/first_Randomisation_Scheduling.module.css'
 import { TagsInput } from "react-tag-input-component";
 
 function First_Randomisation_Scheduling() {
 
 
-    const [ceouserid, setceouserid] = useState('')
-    const [deouserid, setdeouserid] = useState('')
-    const [electiontype, setelectiontype] = useState('')
-    const [startdate, setstartdate] = useState('')
-    const [enddate, setenddate] = useState('')
+    const [districtList, setDistrictList] = useState([]);
+    const [district, setdistrict] = useState('');
+    const [electiontype, setelectiontype] = useState('');
+    const [startdate, setstartdate] = useState('');
+    const [enddate, setenddate] = useState('');
+
+    useEffect(() => {
+	async function fetch_district_list() {
+	    try {
+		const response = await fetch(`${process.env.REACT_APP_API_SERVER}/user/getRealm`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "include"
+		});
+		const data = await response.json();
+		console.log(data, "datatatatatatatat")
+		if (response.status === 200) {
+                    console.log("inside if")
+                    if (data.hasOwnProperty('data')) {
+			console.log("inside second if", data['data']['dist'])
+			setDistrictList(data['data']['dist']);
+		    }
+		}
+	    } catch (err) {
+		alert('Error occured during scheduling');
+	    }
+	}
+
+	fetch_district_list();
+    },[]);
 
     async function Submit_First_randomization() {
 
@@ -46,8 +71,7 @@ function First_Randomisation_Scheduling() {
                     },
                     credentials: 'include',
                     body: JSON.stringify({
-                        ceouserid: document.getElementById("ceouserid") ? document.getElementById("ceouserid").value : "",
-                        deouserid: document.getElementById("deouserid") ? document.getElementById("deouserid").value : "",
+                        district: document.getElementById("district") ? document.getElementById("district").value : "",
                         electiontype: document.getElementById("electiontype") ? document.getElementById("electiontype").value : "",
                         startdate: document.getElementById("startdate") ? document.getElementById("startdate").value + " " + time : "",
                         enddate: document.getElementById("enddate") ? document.getElementById("enddate").value + " " + time : "",
@@ -62,8 +86,6 @@ function First_Randomisation_Scheduling() {
                 window.location.pathname = "/session/unitmanagement"
             } else {
                 alert(data3.message);
-                document.getElementById("ceouserid").value = ""
-                document.getElementById("deouserid").value = ""
                 document.getElementById("electiontype").value = ""
                 document.getElementById("startdate").value = ""
                 document.getElementById("enddate").value = ""
@@ -74,15 +96,6 @@ function First_Randomisation_Scheduling() {
         }
 
     }
-
-
-    console.log(
-        "ceouserid", document.getElementById("ceouserid") ? document.getElementById("ceouserid").value : "",
-        "deouserid:", document.getElementById("deouserid") ? document.getElementById("deouserid").value : "",
-        "electiontype:", document.getElementById("electiontype") ? document.getElementById("electiontype").value : "",
-        "startdate:", document.getElementById("startdate") ? document.getElementById("startdate").value : "",
-        "enddate:", document.getElementById("enddate") ? document.getElementById("enddate").value : "",
-    )
 
 
     const onFormSubmit = async (e) => {
@@ -115,16 +128,20 @@ function First_Randomisation_Scheduling() {
 
 
                     <div class={styles.div1}>
-                        <p> DEO User ID</p>
-                        <input
-                            id="deouserid"
-                            type="text"
-                            required
-                            placeholder='Enter DEO User ID'
-                            onChange={(e) => { setdeouserid(e) }}
+                        <p> District</p>
+                        <select id="district"
+				name="district"
+			>
+                            <option hidden>Select:</option>
+			    {//districtList.map(item => (
+                            //    <option value={item.distId}>{item.distName}</option>
+				//))
+			    }
+			    {districtList.map((item, _id) => (
+                                <option key={_id}>{item}</option>
+                            ))}
 
-                        >
-                        </input>
+                        </select>
                     </div>
 
                     <div class={styles.div2}>

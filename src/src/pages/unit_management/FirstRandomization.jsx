@@ -67,7 +67,7 @@ const FirstRandomisationForm = ({ isVisible = true }) => {
     const district_id = userID.slice(2, 5); // calc from userId
     console.log(userID.slice(2, 5))
     const [assemblyData, setAssemblyData] = useState([]);
-
+    const [assemblyPSData, setAssemblyPSData] = useState([]);
     const [iterationIndex, setIterationIndex] = useState(0);
     const [isFetching, setIsFetching] = useState(true);
     const [isSubmitted, setIsSubmitted] = useState(false);
@@ -88,10 +88,13 @@ const FirstRandomisationForm = ({ isVisible = true }) => {
         setAssemblyData([
             ...assemblyData.slice(0, id + 1),
             {
-                ac_name: "",
-                cu_count: "",
-                bu_count: "",
-                vt_count: "",
+                ac_no: "",
+		ac_name:"",
+		ps_no:"",
+		unit_no:"",
+                cu_count: "120",
+                bu_count: "120",
+                vt_count: "120",
             },
             ...assemblyData.slice(id + 1),
         ]);
@@ -109,18 +112,18 @@ const FirstRandomisationForm = ({ isVisible = true }) => {
         let confirmation = window.confirm("Are you sure you have selected all the Unit")
         if (confirmation === true) {
             setIsSubmitted(false);
-            const units_requirement = assemblyData
-                .filter((d) => d.ac_name)
-                .map((d) => {
-                    d.cu_count = d.cu_count ? parseInt(d.cu_count) : 0;
-                    d.bu_count = d.bu_count ? parseInt(d.bu_count) : 0;
-                    d.vt_count = d.vt_count ? parseInt(d.vt_count) : 0;
-                    return d;
-                });
-            // console.log(JSON.stringify({ units_requirement }));
-            // fetch request
-
-
+            const units_requirement = [];
+	    for (let i=0;i<assemblyData.length;i++){
+		units_requirement.push(
+		    {
+			ac_no:assemblyData[i].ac_no,
+			cu_count: assemblyData[i].cu_count?Math.ceil(parseInt(assemblyData[i].cu_count)*parseInt(assemblyData[i].ps_no)/100) : 0,
+			bu_count: assemblyData[i].bu_count ? Math.ceil(parseInt(assemblyData[i].bu_count)*parseInt(assemblyData[i].ps_no)*parseInt(assemblyData[i].unit_no)/100) : 0,
+			vt_count: assemblyData[i].vt_count ? Math.ceil(parseInt(assemblyData[i].vt_count)*parseInt(assemblyData[i].ps_no)/100) : 0,
+		    }
+		);
+                    
+            }
             try {
                 const response = await fetch(`${baseUrl}/first_randomization`, {
                     method: "POST",
@@ -225,38 +228,42 @@ const FirstRandomisationForm = ({ isVisible = true }) => {
             setIsFetching(true);
             (async () => {
                 try {
-                    const response = await fetch(`${process.env.REACT_APP_API_SERVER}/user/getRealm`, {
+                    const response = await fetch(`${process.env.REACT_APP_API_SERVER}/unit/getDistrictACDetails`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         credentials: "include"
                     });
                     const data = await response.json();
-                    console.log(data, "datatatatatatatat")
                     if (response.status === 200) {
-                        console.log("inside if")
-                        if (data.hasOwnProperty('data')) {
-                            console.log("inside second if", data['data']['ac'])
-                            setAssemblyList(data['data']['ac']);
+                        setAssemblyList(data['data']);
                             let tempdata = []
-
-                            for(let i=1;i<data['data']['ac'].length;i++){
+			    let templist = []
+                            for(let i=0;i<data['data'].length;i++){
                                 // console.log(data['data']['ac'][i])
-                                    tempdata.push(
-                                        {
-                                            ac_name: data['data']['ac'][i],
-                                            cu_count: "",
-                                            bu_count: "",
-                                            vt_count: "",
-                                        }
-                                    )
-
+                                tempdata.push(
+                                    {
+                                        ac_name: data['data'][i]['ac_name'],
+					ac_no: data['data'][i]['ac_no'],
+					ps_no: data['data'][i]['ps_no'],
+					unit_no: data['data'][i]['bu_no'],
+                                        cu_count: "120",
+                                        bu_count: "120",
+                                        vt_count: "120"
+                                    }
+                                );
+				templist.push(
+				    {
+                                        ac_name: data['data'][i]['ac_name'],
+					ac_no: data['data'][i]['ac_no']
+				    }
+				);
                                 
                             }
-                            console.log(tempdata)
-                            setAssemblyData(tempdata);
-                        }
+			setAssemblyList(templist);
+                        setAssemblyData(tempdata);
+                        setAssemblyPSData(tempdata);
                     }
-                } catch (err) {
+		} catch (err) {
                     alert(`Error occured: ${err}`);
                 }
             })();
@@ -338,7 +345,7 @@ const FirstRandomisationForm = ({ isVisible = true }) => {
                                             </button>
                                         </div>
                                         <div className="-mr-16 w-10 group-hover:hidden"></div>
-                                        <div className="mr-8 flex w-3/8 flex-col text-left">
+                                        <div className="mr-8 flex w-1/6 flex-col text-left">
                                             <label className="mb-2 w-full text-base">
                                                 Assembly ID {id + 1}
                                                 <span className="text-red-600"> *</span>
@@ -346,42 +353,64 @@ const FirstRandomisationForm = ({ isVisible = true }) => {
                                             <div className="relative text-gray-800">
                                                 <select
                                                     className="h-10 w-full rounded-md p-2 px-5 placeholder:text-gray-400 focus-within:border-primary focus:border-primary"
-                                                    name="ac_name"
+                                                    name="ac_no"
                                                     placeholder="Select"
-                                                    value={data.ac_name}
+                                                    value={data.ac_no}
                                                     onChange={handleInputChange}
                                                     data-id={id}
                                                 >
                                                     {" "}
                                                     <option hidden>Select</option>
-                                                    {assemblyList.map((item, _id) => (
-                                                        <option key={_id}>{item}</option>
+                                                    {assemblyList.map((item) => (
+                                                        <option value={item.ac_no}>{item.ac_name}</option>
                                                     ))}
                                                 </select>
                                                 <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1/2" />
                                             </div>
                                         </div>
+                                        <div className="flex w-3/12 flex-col text-left">
+                                            <label className="mb-2 w-full text-base">
+                                                Polling Stations and BU Requirement
+                                            </label>
+                                            <div className="flex w-full justify-between gap-2 text-gray-800">
+                                                <input
+                                                    className="h-10 w-1/2 rounded-md border-0 bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                                                    name="ps_no"
+                                                    value={data.ps_no}
+                                                    onChange={handleInputChange}
+                                                    data-id={id}
+                                                />
+                                                <input
+                                                    className="h-10 w-1/2 rounded-md border-0 bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                                                    name="unit_no"
+                                                    value={data.ps_no*data.unit_no}
+                                                    onChange={handleInputChange}
+                                                    data-id={id}
+                                                />
+                                            </div>
+                                        </div>
+
                                         <div className="flex w-3/8 flex-col text-left">
                                             <label className="mb-2 w-full text-base">
-                                                Unit Count {id + 1} {"(CU  BU  VT)"}
+                                                Unit Percentage {"(BU  CU  VT)"}
                                                 <span className="text-red-600"> *</span>
                                             </label>
                                             <div className="flex w-full justify-between gap-2 text-gray-800">
                                                 <input
                                                     className="h-10 w-1/3 rounded-md border-0 bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
                                                     type="number"
-                                                    name="cu_count"
-                                                    placeholder="CU"
-                                                    value={data.cu_count}
+                                                    name="bu_count"
+                                                    placeholder="BU"
+                                                    value={data.bu_count}
                                                     onChange={handleInputChange}
                                                     data-id={id}
                                                 />
                                                 <input
                                                     className="h-10 w-1/3 rounded-md border-0 bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
                                                     type="number"
-                                                    name="bu_count"
-                                                    placeholder="BU"
-                                                    value={data.bu_count}
+                                                    name="cu_count"
+                                                    placeholder="CU"
+                                                    value={data.cu_count}
                                                     onChange={handleInputChange}
                                                     data-id={id}
                                                 />
@@ -499,6 +528,7 @@ const RandomisationOutput = ({
             const response = await fetch(
                 `${baseUrl}/generate-first-randomization-report/`,
                 {
+		    method: "POST",
                     credentials: "include",
                 }
             );
