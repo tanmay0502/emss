@@ -24,6 +24,9 @@ export default function AddWarehouse() {
   const [ACs, setACs] = useState([]);
   const [distcodes, setdistcodes] = useState([]);
 
+  const [doubleLockUser1, setdoubleLockUser1] = useState("")
+  const [doubleLockUser2, setdoubleLockUser2] = useState("")
+
   //Form filed states....
   const [myState, setmyState] = useState("");
   const [mydistcode, setmydistcode] = useState("");
@@ -33,7 +36,7 @@ export default function AddWarehouse() {
   //Form filed states end....
 
   // Get realm Start
-  const [realm, setRealm] = useState();
+  const [realm, setRealm] = useState([]);
   
   async function getRealm() {
     try {
@@ -44,6 +47,10 @@ export default function AddWarehouse() {
           headers: {
             "Content-Type": "application/json",
           },
+          body:JSON.stringify({
+            "module_name": "Warehouse",
+            "operation": "CreateWarehouse"
+          }),
           credentials: 'include',
         }
       );
@@ -61,6 +68,39 @@ export default function AddWarehouse() {
 
 
   }
+
+  // Get Subordinate Users
+  const [subUsers, setSubUsers] = useState([]);
+  
+  async function getSubUsers() {
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_SERVER}/user/getSubordinateUsers`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: 'include',
+        }
+      );
+      const data = await response.json();
+
+
+      console.log(data);
+
+      if(response.status === 200){
+        setSubUsers(data["data"])
+      }
+      else{
+        alert("Unable to fetch Sub-ordinate Users.")
+      }
+    } catch (err) {
+      console.log(err);
+    }
+
+
+  }
  
  
 
@@ -70,7 +110,8 @@ export default function AddWarehouse() {
     }
     // getState();
     // getRoleList();
-    getRealm();
+    // getRealm();
+    getSubUsers();
   }, []);
 
   console.log({realm})
@@ -144,7 +185,7 @@ export default function AddWarehouse() {
         warehouseDist: dist,
         warehouseLatLong: [lat, lon],
         warehouseAddress: address,
-        doubleLock: double_lock.toString().toUpperCase(),
+        doubleLock: "TRUE", //double_lock.toString().toUpperCase(),
         UIDKey1: person1_ID,
         // UIDKey2: person2_ID,
         updateTime: new Date().toISOString(),
@@ -409,7 +450,7 @@ export default function AddWarehouse() {
                     onChange={(e) => setdistFunc(e.target.value)}
                   >
                     <option value="">--Select--</option>
-                    {currDist.map((dist) => (
+                    {currDist && currDist.map((dist) => (
                       <option value={dist} className="text-black">
                         {dist}
                       </option>
@@ -432,7 +473,7 @@ export default function AddWarehouse() {
                     onChange={(e) => setAcFunc(e.target.value)}
                   >
                     <option value="">--Select--</option>
-                    {currAC.map((ac) => (
+                    {currAC && currAC.map((ac) => (
                       <option value={ac} className="text-black">
                         {ac}
                       </option>
@@ -525,13 +566,13 @@ export default function AddWarehouse() {
                     }}
                   /> */}
                   <div className="flex justify-around w-1/6">
-                    <div><button type="button"  className={`${!doubleLockSystem?'bg-stone-200 text-black p-2 rounded-md':'bg-orange-500 text-white p-2 rounded-md'}`} onClick={()=>{
+                    <div><button disabled={true} type="button"  className={`${!doubleLockSystem?'bg-stone-200 text-black p-2 rounded-md':'bg-orange-500 text-white p-2 rounded-md'}`} onClick={()=>{
                       setDoubleLockSystem(1);
                     }}>Yes</button></div>
-                    <div><button type="button"  className={`${doubleLockSystem?'bg-stone-200 text-black p-2 rounded-md':'bg-orange-500 text-white p-2 rounded-md'}`}
+                    {/* <div><button type="button"  className={`${doubleLockSystem?'bg-stone-200 text-black p-2 rounded-md':'bg-orange-500 text-white p-2 rounded-md'}`}
                     onClick={()=>{
                       setDoubleLockSystem(0);
-                    }}>No</button></div>
+                    }}>No</button></div> */}
                   </div>
                 </div>
               </div>
@@ -542,10 +583,24 @@ export default function AddWarehouse() {
                 <div className="form_input">
                   <input
                     required
-                    placeholder="AA000000RRRRR"
+                    placeholder="SSDDDAAARRR"
                     id="input_personName_1"
-                    name=""
+                    list="userList1"
+                    name="doubleLockUser1"
+                    value={doubleLockUser1}
+                    autoComplete="off"
+                    onChange={(e)=>{setdoubleLockUser1(e.target.value)}}
                   />
+                  <datalist id="userList1">
+                    {
+                      subUsers && subUsers['users'] && subUsers['users'].map((val) => {
+                        if(val['userid'] !== doubleLockUser2)
+                        return <option value={val['userid']}>
+                          {val['name']}
+                        </option>
+                      })
+                    }
+                  </datalist>
                   <div className="input_icon">
                     <BsFillPersonFill size="1em" />
                   </div>
@@ -559,10 +614,24 @@ export default function AddWarehouse() {
                 <div className="form_input">
                   <input
                     required={doubleLockSystem}
-                    placeholder="AA000000RRRRR"
+                    placeholder="SSDDDAAARRR"
                     id="input_personName_2"
                     name=""
+                    list="userList2"
+                    value={doubleLockUser2}
+                    autoComplete="off"
+                    onChange={(e)=>{setdoubleLockUser2(e.target.value)}}
                   />
+                  <datalist id="userList2">
+                    {
+                      subUsers && subUsers['users'] && subUsers['users'].map((val) => {
+                        if(val['userid'] !== doubleLockUser1)
+                        return <option value={val['userid']}>
+                          {val['name']}
+                        </option>
+                      })
+                    }
+                  </datalist>
                   <div className="input_icon">
                     <BsFillPersonFill size="1em" />
                   </div>

@@ -329,48 +329,79 @@ function WarehouseList() {
 				}
 			</div>
 			<div className='myWrapper' style={{ "gridArea": "1 / 2 / 3 / 3" }}>
+				<h4>Warehouse Count</h4>
 				<ul className='warehouseStats'>
-					{/* <li>
-						<div className="icon">
-							<TotalWarehouses />
-						</div>
-						<div className="warehouseStatsText">
-							<span>Total Warehouses</span>
-							<h3>{tableData.length.toLocaleString()}</h3>
-						</div>
-					</li> */}
+					<li className='tableHeader'></li>
+					<li className='tableHeader'>Active</li>
+					<li className='tableHeader'>Inactive</li>
+					<li className='tableHeader'>Total</li>
+					{/* Private Count */}
+					<li className='tableHeader'>Private</li>
 					<li>
-						<div className="icon">
-							<PermanentWarehouses />
-						</div>
-						<div className="warehouseStatsText">
-							<span>Private Warehouses</span>
-							<h3>{tableData.filter((elem) => {
-								return elem["Details"] && elem["Details"]["type"] === 'P'
-							}).length.toLocaleString()}</h3>
-						</div>
+						{tableData.filter((elem) => {
+							return elem["Details"] && elem["Details"]["type"] === 'P' && elem["Details"]["status"] === "A"
+						}).length.toLocaleString()}
 					</li>
 					<li>
-						<div className="icon">
-							<TemporaryWarehouses />
-						</div>
-						<div className="warehouseStatsText">
-							<span>Govt. Warehouses</span>
-							<h3>{tableData.filter((elem) => {
-								return elem["Details"] && elem["Details"]["type"] === 'G'
-							}).length.toLocaleString()}</h3>
-						</div>
+						{tableData.filter((elem) => {
+							return elem["Details"] && elem["Details"]["type"] === 'P' && elem["Details"]["status"] === "I"
+						}).length.toLocaleString()}
 					</li>
 					<li>
-						<div className="icon">
-						<TotalWarehouses />
-						</div>
-						<div className="warehouseStatsText">
-							<span>Own Warehouses</span>
-							<h3>{tableData.filter((elem) => {
-								return elem["Details"] && elem["Details"]["type"] === 'O'
-							}).length.toLocaleString()}</h3>
-						</div>
+						{tableData.filter((elem) => {
+							return elem["Details"] && elem["Details"]["type"] === 'P'
+						}).length.toLocaleString()}
+					</li>
+					{/* Govt. Count */}
+					<li className='tableHeader'>Govt.</li>
+					<li>
+						{tableData.filter((elem) => {
+							return elem["Details"] && elem["Details"]["type"] === 'G' && elem["Details"]["status"] === "A"
+						}).length.toLocaleString()}
+					</li>
+					<li>
+						{tableData.filter((elem) => {
+							return elem["Details"] && elem["Details"]["type"] === 'G' && elem["Details"]["status"] === "I"
+						}).length.toLocaleString()}
+					</li>
+					<li>
+						{tableData.filter((elem) => {
+							return elem["Details"] && elem["Details"]["type"] === 'G'
+						}).length.toLocaleString()}
+					</li>
+					{/* Own Count */}
+					<li className='tableHeader'>Own</li>
+					<li>
+						{tableData.filter((elem) => {
+							return elem["Details"] && elem["Details"]["type"] === 'O' && elem["Details"]["status"] === "A"
+						}).length.toLocaleString()}
+					</li>
+					<li>
+						{tableData.filter((elem) => {
+							return elem["Details"] && elem["Details"]["type"] === 'O' && elem["Details"]["status"] === "I"
+						}).length.toLocaleString()}
+					</li>
+					<li>
+						{tableData.filter((elem) => {
+							return elem["Details"] && elem["Details"]["type"] === 'O'
+						}).length.toLocaleString()}
+					</li>
+					{/* All Count */}
+					<li className='tableHeader'>All</li>
+					<li>
+						{tableData.filter((elem) => {
+							return elem["Details"] && elem["Details"]["status"] === "A"
+						}).length.toLocaleString()}
+					</li>
+					<li>
+						{tableData.filter((elem) => {
+							return elem["Details"] && elem["Details"]["status"] === "I"
+						}).length.toLocaleString()}
+					</li>
+					<li>
+						{tableData.filter((elem) => {
+							return elem["Details"]
+						}).length.toLocaleString()}
 					</li>
 				</ul>
 			</div>

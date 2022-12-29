@@ -281,6 +281,7 @@ function App() {
 						element={<FetchFile />}
 					/>
 					
+					<Route path='*' element={<Navigate exact to={'/page-not-found'} />} />
 					<Route path='/page-not-found' element={<NotFound404 resource={false} />} />
 				</Routes>
 			</BrowserRouter>

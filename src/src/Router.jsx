@@ -194,10 +194,16 @@ function Routed(props) {
 		return <></>;
 	}
 	useEffect(() => {
-		if (outlet.key && !sessionStorage.getItem('sessionToken')) {
-			// console.log(outlet)
+		if (!sessionStorage.getItem('sessionToken')) {
+			console.log(outlet)
 			window.location.href = '/login'
 		}
+
+		console.log(outlet)
+
+		// if(outlet.key){
+		// 	window.location.href = '/page-not-found'
+		// }
 
 		setUserData({
 			userId: sessionStorage.getItem('sessionToken')

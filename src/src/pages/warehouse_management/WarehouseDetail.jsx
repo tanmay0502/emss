@@ -51,7 +51,7 @@ function WarehouseDetail(props) {
 		const response = fetch(
 			`${process.env.REACT_APP_API_SERVER}/user/UserLogout`,
 			{
-			  method: "GET",
+			  method: "POST",
 			  credentials: 'include',
 			  headers: {
 				"Content-Type": "application/json",
@@ -89,9 +89,9 @@ function WarehouseDetail(props) {
       const status = await response;
       console.log(status.status);
 			// console.log(data["data"], "data")
-      if(status.status === 401){
+      if(status.status === 401 || status.status === 403){
         logOut();
-        alert("Your session expired please login again")
+        alert("Your Session has Expired, Please Login Again.")
         
       }
 		} catch (error) {
