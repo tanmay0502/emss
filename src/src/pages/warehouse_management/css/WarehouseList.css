@@ -42,7 +42,7 @@
 	max-height: calc(100% - 1.25em) !important;
 	/* max-height: 100%; */
 	overflow: auto;
-	padding-bottom: 50px;
+	padding-bottom: 10vh !important;
 	box-sizing: border-box !important;
 }
 
@@ -68,15 +68,21 @@
 	z-index: 999;
 }
 
-.warehouses-table th:first-child{
+.warehouses-table th:first-child > *{
 	/* padding-left: 10px;
 	display: flex;
 	margin-left: 15%; */
-	padding-right: 43%;
+	/* padding-right: 43%; */
+	text-align: left !important;
+	margin-left: 12%;
+}
+
+.warehouses-table td:first-child *{
+	font-variant-numeric: tabular-nums !important;
 }
 
 .warehouses-table td:first-child{
-	padding-left: 10px;
+	/* padding-left: 10px; */
 }
 
 .warehouses-table td{
@@ -89,7 +95,12 @@
 	/* line-height: 24px; */
 	letter-spacing: -0.01em;
 	color: var(--foreground-primary) !important;
-	margin-left: 10%;
+	/* margin-left: 10%; */
+}
+
+
+.warehouses-table td > span{
+	justify-content: left !important;
 }
 
 .user-details button{

@@ -1,5 +1,3 @@
-
-
 export const formatRealm = (data, role, stCode, dtCode, ac )=>{
     if (!role && !stCode && !dtCode && !ac) {
       let roles = [];

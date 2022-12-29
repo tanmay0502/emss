@@ -8,9 +8,6 @@ import { AiOutlineSortAscending, AiOutlineSortDescending } from "react-icons/ai"
 import { useNavigate } from 'react-router-dom'
 import { ReactComponent as SearchInputElement } from '../../assets/searchInputIcon.svg';
 import { ReactComponent as ChevronDown } from '../../assets/ChevronDown.svg';
-import { ReactComponent as TotalWarehouses } from '../../assets/TotalWarehouses.svg';
-import { ReactComponent as PermanentWarehouses } from '../../assets/PermanentWarehouses.svg';
-import { ReactComponent as TemporaryWarehouses } from '../../assets/TemporaryWarehouses.svg';
 import { Fragment } from 'react';
 import {AiOutlineDownload} from 'react-icons/ai'
 import DynamicDataTable from "@langleyfoxall/react-dynamic-data-table";
@@ -89,7 +86,7 @@ function WarehouseList() {
 	const [sortOrder, setSortOrder] = useState("asc")
 
 	const sortMapping = {
-		"None": "status",
+		"None": null,
 		"Warehouse ID": "warehouseid",
 		"Status": "status",
 		"Type": "Room Type",
@@ -152,18 +149,11 @@ function WarehouseList() {
 					</Fragment>,
 				"warehouseid": val['warehouseid'],
 				"Room Type": warehouseMapping ? warehouseMapping["data"][val["type"]] : "",
-				// "Double Locked": val["doublelock"] ? "Yes" : "No",
+				"room_type": warehouseMapping ? warehouseMapping["data"][val["type"]] : "",
 				Details: val,
 				Edit: <button className="modifyBtn p-2 text-white" disabled={true}>
 					<FaUserEdit style={{ transform: "translateX(1px)" }} />
 				</button>,
-				// "Building Type": <ToggleButton userID={val["warehouseid"]} checked={val["warehousebuildingtype"] === 'P'} onToggle={(e) => {
-				// }} 
-				// customLabels={{
-				// 	"active": "Permanent",
-				// 	"inactive": "Temporary"
-				// }
-				// }/>,
 				"status":val["status"],
 				"Status": <ToggleButton warehouseID={val["warehouseid"]} checked={val["status"] == 'A'} onToggle={(e) => {
 					if (val["status"] == "A") {
@@ -176,15 +166,37 @@ function WarehouseList() {
 				}}/>
 			}
 		})
-		data.sort(function (a, b) {
-			if (sortMapping[sortBy] !== null) {
-				// console.log(data)
-				return (a[sortMapping[sortBy]].toString()).localeCompare(b[sortMapping[sortBy]].toString())
+
+		let finalData = []
+		let tmpWare = [], tmpStrong = []
+
+		tmpWare = data.filter((val) => {
+			return val['Room Type'] && val['Room Type'].startsWith('W')
+		}).sort((a, b) => {
+			return a['room_type'] && (a['room_type'].localeCompare(b['room_type']))
+		})
+
+		tmpStrong = data.filter((val) => {
+			return val['Room Type'] && val['Room Type'].startsWith('S')
+		}).sort((a, b) => {
+			return a['room_type'] && (a['room_type'].localeCompare(b['room_type']))
+		})
+
+		data = tmpWare.concat(...tmpStrong)
+
+
+		if (sortMapping[sortBy] !== null) {
+			data.sort(function (a, b) {
+				if (sortMapping[sortBy] !== null) {
+					// console.log(data)
+					
+					return (a[sortMapping[sortBy]].toString()).localeCompare(b[sortMapping[sortBy]].toString())
+				}
+				else return 0;
+			});
+			if (sortOrder === 'desc') {
+				data.reverse();
 			}
-			else return 0;
-		});
-		if (sortMapping[sortBy] !== null && sortOrder === 'desc') {
-			data.reverse();
 		}
 		// console.log(data)
 
@@ -310,7 +322,7 @@ function WarehouseList() {
 				{isDetail == 0 ? <DynamicDataTable className="warehouses-table"
 				
 					rows={tableData}
-					fieldsToExclude={["Details", "Edit", "BuildingType", "warehouseid", "Room Type","status"]}
+					fieldsToExclude={["Details", "Edit", "BuildingType", "room_type", "warehouseid","status"]}
 					orderByField={sortMapping[sortBy]}
 					orderByDirection={sortOrder}
 					onClick={(event, row) => {
