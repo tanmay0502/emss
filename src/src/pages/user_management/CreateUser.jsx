@@ -9,6 +9,7 @@ import 'antd/dist/antd.css'
 import { Switch } from "antd"
 import { getKeyByValue } from '../../assets/helper/ObjectHelpers.js'
 import imageCompression from 'browser-image-compression';
+import { formatRealm, getRealm } from "../../components/utils";
 
 var sha256 = require("js-sha256");
 class Queue {
@@ -37,6 +38,7 @@ class Queue {
     return this.length === 0;
   }
 }
+// var SortedMap = require("collections/sorted-map");
 function CreateUser() {
 
   const navigate = useNavigate()
@@ -72,31 +74,9 @@ function CreateUser() {
   const [DistDisable, setDistDisable] = useState(false);
   const [acDisable, setAcDisable] = useState(false);
   const [realm, setRealm] = useState();
+  const [realmData, setRealmData] = useState();
   const [imageName, setImageName] = useState();
-  
 
-  async function getRealm() {
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_SERVER}/user/getRealm`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: 'include',
-        }
-      );
-      const data2 = await response.json();
-      // console.log(response);
-      // console.log(data2);
-      setRealm(data2['data'])
-    } catch (err) {
-      console.log(err);
-    }
-
-
-  }
 
   function filterRoleList(
     data2,
@@ -168,7 +148,15 @@ function CreateUser() {
     if (window.sessionStorage.getItem("sessionToken") === null) {
       window.location.pathname = "/session/home";
     }
-    getRealm();
+    // console.log("pring")
+    async function getData() {
+      const data = await getRealm( "User", "CreateUser");
+      setRealmData(data)
+      setRealm({
+        roles: formatRealm(data, "", "", "", "")
+      })
+    }
+    getData();
   }, []);
 
   useEffect(() => {
@@ -522,8 +510,10 @@ function CreateUser() {
     setImageName(fullFileName)
 }
 // console.log(baseImage)
-
-
+const [ update, setUpdate] = useState(0);
+useEffect(()=>{
+  console.log(realm)
+},[update])
 
 
   return (
@@ -583,20 +573,23 @@ function CreateUser() {
                 required={!isTemporary}
                 name=""
                 id="input_Roles"
-                onChange={(e) => setRoleFunc(e.target.value)}
+                onChange={(e) => {
+                  setRoleFunc(e.target.value);
+                  setRealm((prev)=>{
+                    prev.role = e.target.value;
+                    prev.states = formatRealm(realmData, e.target.value, "", "", "")
+                    return prev;
+                  });
+                  setUpdate(prev=>(prev+1)%10)
+                }}
               >
                 <option value="" disabled selected>
                   --Select--
                 </option>
-                {/* {roles && roles.map((st) => (
-                  <option value={st} className="text-black">
-                    {st}
-                  </option>
-                ))} */}
                 {
                   realm && realm["roles"] && realm["roles"].map((val) => (
-                    <option value={val} className="text-black">
-                      {val}
+                    <option value={val.roleCode} className="text-black">
+                      {`${val.roleCode} (${val.roleName})`}
                     </option>
                   ))
                 }
@@ -632,21 +625,23 @@ function CreateUser() {
                 required
                 name=""
                 id="input_state"
-                onChange={(e) => setStateFunc(e.target.value)}
+                onChange={(e) => {
+                  setStateFunc(e.target.value);
+                  setRealm((prev)=>{
+                    prev.state = e.target.value;
+                    prev.districts = formatRealm(realmData, prev.role, e.target.value, "", "")
+                    return prev;
+                  });
+                  setUpdate(prev=>(prev+1)%10)
+                }}
               >
                 <option value="0" selected>
                   --Select--
                 </option>
-                {/* {states && states != {} && Object.keys(states).map((st) => (
-                  <option value={st} className="text-black">
-                    {st}
-                  </option>
-                ))} */}
-                {/* {realm && realm["state"] && realm["state"].length} */}
                 {
-                  realm && realm["state"] && realm["state"].map((val) => (
-                    <option value={val} className="text-black">
-                      {val}
+                  realm && realm["states"] && realm["states"].map((val) => (
+                    <option value={val.stCode} className="text-black">
+                      {`${val.stCode} (${val.stName})`}
                     </option>
                   ))
                 }
@@ -680,20 +675,26 @@ function CreateUser() {
                 disabled={false}
                 name=""
                 id="input_Dist"
-                onChange={(e) => setDistFunc(e.target.value)}
+                onChange={(e) => {
+                  setDistFunc(e.target.value)
+                  setRealm((prev)=>{
+                    prev.distirct = e.target.value;
+                    console.log(e.target.value)
+                    prev.acs = formatRealm(realmData, prev.role, prev.state, e.target.value, "")
+                    console.log(realmData, prev.role, prev.state, e.target.value, "")
+                    console.log(formatRealm(realmData, "CEO", "TS", "ALL", ""))
+                    return prev;
+                  });
+                  setUpdate(prev=>(prev+1)%10)
+                }}
               >
                 <option value="" disabled selected>
                   --Select--
                 </option>
-                {/* {Dists && Dists != {} && Object.keys(Dists).map((st) => (
-                  <option value={st} className="text-black">
-                    {st}
-                  </option>
-                ))} */}
                 {
-                  realm && realm["dist"] && realm["dist"].map((val) => (
-                    <option value={val} className="text-black">
-                      {val}
+                  realm && realm["districts"] && realm["districts"].map((val) => (
+                    <option value={val.dtCode} className="text-black">
+                      {`${val.dtCode} (${val.dtName})`}
                     </option>
                   ))
                 }
@@ -726,20 +727,17 @@ function CreateUser() {
                 disabled={false}
                 name=""
                 id="input_AC"
-                onChange={(e) => setACFunc(e.target.value)}
+                onChange={(e) => {
+                  setACFunc(e.target.value)
+                }}
               >
                 <option value="" disabled selected>
                   --Select--
                 </option>
-                {/* {ACs && ACs != {} && Object.keys(ACs).map((st) => (
-                  <option value={st} className="text-black">
-                    {st}
-                  </option>
-                ))} */}
                 {
-                  realm && realm["ac"] && realm["ac"].map((val) => (
-                    <option value={val} className="text-black">
-                      {val}
+                  realm && realm["acs"] && realm["acs"].map((val) => (
+                    <option value={val.acCode} className="text-black">
+                      {`${val.acCode} (${val.acName})`}
                     </option>
                   ))
                 }
