@@ -241,7 +241,7 @@
 
 
 }
-input[type="number"],input[type="email"],input[type="text"]{
+.scheduleFLCForm input[type="number"], .scheduleFLCForm input[type="email"], .scheduleFLCForm input[type="text"]{
   box-sizing: border-box;
   width: 100%;
   padding: 12.5px 10px;
@@ -250,7 +250,7 @@ input[type="number"],input[type="email"],input[type="text"]{
   font-family: 'Nunito Sans';
   outline: none;
 }
-input[type="date"]{
+.scheduleFLCForm input[type="date"]{
   box-sizing: border-box;
   width: 100%;
   /* padding: 12.5px 10px; */

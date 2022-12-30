@@ -145,7 +145,7 @@ function ScheduleFLC() {
 
     return (
         <>
-            <form onSubmit={onFormSubmit} id="form">
+            <form onSubmit={onFormSubmit} id="form" className={styles.scheduleFLCForm}>
                 {flag == 1 && <button
                     class={styles.backbutton}
                     onClick={() => {

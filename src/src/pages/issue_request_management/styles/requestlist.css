@@ -1,0 +1,193 @@
+.request-list-grid{
+	display: grid;
+	grid-template-columns: 3.5fr 1.5fr;
+	grid-template-rows: repeat(5, 1fr);
+	grid-column-gap: 20px;
+	grid-row-gap: 20px;
+	height: 100%;
+	max-height: 100%;
+	/* padding: 0 100px; */
+}
+
+.myWrapper1{
+	padding-left: 40px;
+    width: 100%;
+	/* box-shadow: 0 0 10px rgba(0,0,0,0.6); */
+}
+
+.myWrapper > div:last-child{
+	height: 100%;
+	max-height: 100%;
+	overflow: hidden;
+}
+
+.createRequestBtn{
+	padding: 5px 10px;
+	background: #F56A3F;
+	border-radius: 10px;
+	margin-right: 10px;
+	font-weight: 600;
+	font-size: small;
+	color: white;
+}
+
+.sortOrderButton{
+	padding: 5px;
+	border-radius: 2.5px;
+	font-size: 1.2em;
+	margin-left: 5px;
+	background-color: transparent;
+	color: inherit;
+}
+
+.table-responsive{
+	height: 100%;
+	max-height: 100%;
+	overflow: auto;
+	padding-bottom: 50px;
+}
+
+.request-table{
+	width:100%;
+	position: relative;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 20px;
+}
+
+.request-table th{
+	font-family: 'Poppins';
+	font-weight: 400;
+	font-size: 14px !important;
+	line-height: 21px !important;
+	letter-spacing: -0.01em;
+	color: #B5B7C0 !important;
+	padding: 15px 0;
+	border-bottom: 1px solid #EEEEEE;
+	position: sticky;
+  	top: 0;
+	background-color: white;
+	z-index: 999;
+}
+
+.request-table th:first-child, .request-table th:nth-child(3){
+	text-align: center;
+}
+
+.request-table th:first-child{
+	padding-left: 10px;
+}
+
+.request-table td:first-child{
+	padding-left: 10px;
+}
+
+.request-table td{
+	padding: 20px 0;
+	border-bottom: 1px solid #EEEEEE;
+	font-family: 'Poppins';
+	font-style: normal;
+	font-weight: 400;
+	font-size: 14px;
+	line-height: 24px;
+	letter-spacing: -0.01em;
+	color: #292D32;
+	text-align: center !important;
+}
+
+.request-table td:first-child, .request-table td:nth-child(3){
+	text-align: left;
+	width: max-content;
+}
+
+.request-details button{
+	flex-direction: column;
+	width: 40px;
+	height: 40px;
+	aspect-ratio: 1;
+	padding: 10px;
+	font-size: 1.2em;
+}
+
+.request-table tr:hover{
+	background-color: rgba(0, 0, 0, 0.15);
+	cursor: pointer;
+}
+
+.requestStats{
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: center;
+	gap: 10px;
+}
+
+.requestStats li{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: flex-start;
+	gap: 30px;
+}
+
+.requestStats li .icon{
+	width: 60px;
+	box-sizing: border-box;
+	padding: 15px;
+	aspect-ratio: 1;
+	background-color: #FDE1D9;
+	border-radius: 50%;
+}
+
+.requestStats li .icon svg{
+	width: 30px;
+	height: 30px;
+}
+
+.requestStats li .requestStatsText{
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: center;
+}
+
+.requestStats li .requestStatsText span{
+	font-size: 0.8em;
+	color: #ACACAC;
+}
+
+.requestStats li .requestStatsText h3{
+	color: #333333;
+}
+
+/* User Detail CSS from here */
+
+.request-details-grid{
+	display: grid;
+	grid-template-columns: auto 1fr auto 1fr;
+	width: 100%; 
+	height: 100%; 
+	grid-gap: 30px 10px;
+	grid-template-rows: max-content;
+	text-align: left;
+}
+
+
+.request-details-grid b{
+	text-align: right;
+}
+
+.MainHeader{
+background: linear-gradient(180deg, #84587C 0%, #BA8BB1 100%);
+border-radius: 20px 20px 0px 0px;
+height: 108px;
+}
+.MainHeader h4{
+	margin-bottom:0 !important ;
+}
+.text-white{
+	color : #fff !important;
+}
+.pd-5{
+	padding : 0px 50px;
+}

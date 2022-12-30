@@ -143,7 +143,7 @@
   }
 
 
-  input[type="number"],input[type="email"],input[type="text"]{
+  .UnlitList input[type="number"],.UnlitList input[type="email"],.UnlitList input[type="text"]{
     box-sizing: border-box;
     width: 50%;
     margin:1%;
@@ -155,7 +155,7 @@
   }
 
 
-  input[type="date"]{
+  .UnlitList input[type="date"]{
     box-sizing: border-box;
     width: 50%;
     /* padding: 12.5px 10px; */

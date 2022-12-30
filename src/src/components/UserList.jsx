@@ -20,6 +20,8 @@ import {AiOutlineDownload} from 'react-icons/ai'
 import UserImageTest from '../assets/UserImageTest.png'
 import EditUser from '../pages/user_management/EditUser';
 
+import { Switch } from "antd"
+
 function UserList() {
 	const navigate = useNavigate();
 
@@ -37,6 +39,8 @@ function UserList() {
 	const [noOfInActiveUsers, setNoOfInActiveUsers] = useState(0);
 	const [noOfTotalUsers, setNoOfTotalUsers] = useState(0);
 	const [currImage, setCurrImage] = useState("");
+	
+	const [isTemporary, setIsTemporary] = useState(false);
 
 	const sortMapping = {
 		"None": "status",
@@ -77,6 +81,14 @@ function UserList() {
 
 			var data = users.filter((elem) => {
 				
+				if (isTemporary){
+					const filter = "tmp";
+					return (elem["userid"].slice(8,11).toLowerCase().includes(filter));
+				}
+				else{
+					return true;
+				}
+			}).filter((elem)=>{
 				if (tableFilter === "") {
 					return true;
 				}
@@ -85,7 +97,6 @@ function UserList() {
 					return (elem["userid"].toLowerCase().includes(filter) || elem["name"].toLowerCase().includes(filter))
 				}
 			}).map((val) => {
-				// console.log(val["photodata"])
 				return {
 					"User ID": val["userid"],
 					"": <div  style={{borderRadius: "50%", display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", paddingRight: "15px" }}>
@@ -94,7 +105,7 @@ function UserList() {
 					"User Name": val["name"],
 					"status" : val["active"],
 					"Phone Number": val["mobilenumber"].substring(0, 3) + " " + val["mobilenumber"].substring(3, 6) + " " + val["mobilenumber"].substring(6),
-					"Role": val["userid"].slice(8),
+					"Role": val["userid"].slice(8,11),
 					Details: val,
 					Edit: <button className="modifyBtn p-2 text-white" disabled={true}>
 						<FaUserEdit style={{ transform: "translateX(1px)" }} />
@@ -114,7 +125,6 @@ function UserList() {
 			})
 			data.sort(function (a, b) {
 				if (sortMapping[sortBy] !== null) {
-					// console.log(data)
 					return (a[sortMapping[sortBy]].toString()).localeCompare(b[sortMapping[sortBy]].toString())
 				}
 				else return 0;
@@ -129,7 +139,7 @@ function UserList() {
 		return () => {
 
 		}
-	}, [users, tableFilter, sortBy, sortOrder])
+	}, [users, tableFilter, sortBy, sortOrder,isTemporary])
 
 	async function getUser() {
 
@@ -194,6 +204,11 @@ function UserList() {
 		}
 	}
 
+	const toggler = () => {
+
+		isTemporary ? setIsTemporary(false) : setIsTemporary(true);
+	}
+
 	const deactivateUser = async (myId) => {
 		if (window.confirm(`Are you sure you want to Deactivate User: ${myId} ?`)) {
 			try {
@@ -234,6 +249,11 @@ function UserList() {
 				{isDetail == 0 && isEdit == 0 ? <div style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between" }}>
 					<h4>Dependent Users</h4>
 					<div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center" }}>
+					<div className="userTemporaryToggle mr-7">
+          <span >Permanent </span>
+          <Switch onClick={toggler} />
+          <span >Temporary </span>
+        </div>
 						<button className='createUserBtn' onClick={() => {
 							navigate("/session/usermanagement/createUser")
 						}}>Create User</button>
@@ -241,8 +261,8 @@ function UserList() {
 							<SearchInputElement style={{ margin: "0 7.5px", width: "20px" }} />
 							<input type={'search'} defaultValue={tableFilter} onChange={(e) => { setTableFilter(e.target.value) }} placeholder='Search' style={{ outline: "none", background: "transparent" }} />
 						</div>
-						<div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center", marginLeft: "10px", background: "var(--lightGrayBG )", borderRadius: "10px", padding: "7.5px 15px 7.5px 0", fontSize: "0.8em" }}>
-							<span className='SampleText' style={{ minWidth: "max-content", paddingInlineStart: "7.5px" }}>Sort by : &nbsp;</span>
+						<div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center", marginLeft: "10px", background: "var(--lightGrayBG )", borderRadius: "10px", padding: "7.5px 15px 7.5px 0", fontSize: "0.8em",height:"40px" }}>
+							<span className='SampleText' style={{ minWidth: "max-content", paddingInlineStart: "0 7.5px" }}>Sort by : &nbsp;</span>
 							<select
 								style={{ textAlign: "center", outline: "none", background: "transparent", padding: "0px", border: "none" }}
 								onChange={(e) => setSortBy(e.target.value)}>
@@ -265,7 +285,7 @@ function UserList() {
 				</div> : <></>}
 				{isDetail == 0 && isEdit == 0 ? <DynamicDataTable className="users-table"
 					rows={tableData}
-					fieldsToExclude={["Details", "Edit"]}
+					fieldsToExclude={["Details", "Edit","status"]}
 					orderByField={sortMapping[sortBy]}
 					orderByDirection={sortOrder}
 					columnWidths={{

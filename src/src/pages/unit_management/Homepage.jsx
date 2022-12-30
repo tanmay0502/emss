@@ -1211,7 +1211,7 @@ export default function HomePage() {
                         </li>
                     </div>
                 </div>
-                }
+
             </div>
 
             <div className={styles.parent2} >
