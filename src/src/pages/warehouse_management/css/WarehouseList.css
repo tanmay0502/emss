@@ -71,8 +71,8 @@
 .warehouses-table th:first-child > *{
 	/* padding-left: 10px;
 	display: flex;
-	margin-left: 15%; */
-	/* padding-right: 43%; */
+	margin-left: 15%;
+	padding-right: 43%; */
 	text-align: left !important;
 	margin-left: 12%;
 }

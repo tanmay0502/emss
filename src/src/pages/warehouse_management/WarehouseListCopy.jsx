@@ -280,9 +280,9 @@ function WarehouseList() {
 			{/* {console.log(tableData["Status"])} */}
 			<div className="myWrapper" style={{ position: "relative", height: "100%", gridArea: "1 / 1 / 6 / 2" }}>
 				<div className='label_list'>
-					<div className='label d-flex d-flex-center'><span><FaCircle className='PermaWarehouse' /></span> Goverment Warehouse</div>
-					<div className='label d-flex d-flex-center'><span><FaCircle className='PrivateWarehouse' /></span> Private Warehouse</div>
-					<div className='label d-flex d-flex-center'><span><FaCircle className='TempWarehouse' /></span> Own Warehouse</div>
+					<div className='label d-flex d-flex-center'><span><FaCircle className='PermaWarehouse' /></span> Goverment Building</div>
+					<div className='label d-flex d-flex-center'><span><FaCircle className='PrivateWarehouse' /></span> Private Building</div>
+					<div className='label d-flex d-flex-center'><span><FaCircle className='TempWarehouse' /></span> Dedicated Building</div>
 					<div className='label d-flex d-flex-center'><span><Fragment><span className='d-flex d-flex-center'><FaKey className='keyColor' /><FaKey className='keyColor' /></span></Fragment></span> Double Lock Present</div>
 					<div className='label d-flex d-flex-center'><span><FaKey className='keyColor' /></span> Double Lock Absent</div>
 				</div>
@@ -382,7 +382,7 @@ function WarehouseList() {
 						}).length.toLocaleString()}
 					</li>
 					{/* Own Count */}
-					<li className='tableHeader'>Own</li>
+					<li className='tableHeader'>Dedicated</li>
 					<li>
 						{tableData.filter((elem) => {
 							return elem["Details"] && elem["Details"]["type"] === 'O' && elem["Details"]["status"] === "A"
