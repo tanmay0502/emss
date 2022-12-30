@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import styles from "./styles/UnitList.module.css";
 import { useTable } from "react-table";
 import { DynamicDataTable } from "@langleyfoxall/react-dynamic-data-table";
+import { getRealm, formatRealm, formatRealm2 } from '../../components/utils'
 import {
     AiOutlineSortAscending,
     AiOutlineSortDescending,
@@ -13,6 +14,7 @@ import { ReactComponent as OptionsIndicator } from "../../assets/Options_Indicat
 import { ReactComponent as SearchInputElement } from "../../assets/searchInputIcon.svg";
 import { ReactComponent as ChevronDown } from "../../assets/ChevronDown.svg";
 import { expD } from "./Homepage";
+import { getAllocateUsers } from "../order_management/Utils";
 
 const userID = sessionStorage.getItem("sessionToken");
 const baseUrl = `${process.env.REACT_APP_API_SERVER}/unit`;
@@ -44,88 +46,60 @@ export default function SecondRandomization() {
     );
 }
 
-
-// Status Update Card
-const ActionButton = ({ isActive, text, name, onClick }) => {
-    return (
-        <button
-            className={`font-mediumisActive mx-auto mb-8 w-4/5 border-[1px] border-solid border-secondary hover:bg-secondary hover:text-white ${isActive ? "bg-secondary text-white" : "bg-white  text-secondary"
-                }`}
-            name={name ? name : text}
-            onClick={onClick}
-        >
-            {text}
-        </button>
-    );
-};
-
-
-
 // 2nd Randomisation Card
 const SecondRandomisationForm = ({ isVisible }) => {
+    const [ACList, setACList] = useState({});
+    const [ACCode, setACCode] = useState('');
 
+    useEffect(() => {
+        getACs();
+    }, [])
 
+    const getACs = async ()=>{
+        try {
+            const response = await fetch(`${baseUrl}/fetch-ac-pc`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: 'include',
+            });
+            const data = await response.json();
+            console.log("ACs List", data);
+            if (response.status === 200) {
+                setACList(data['data'])
+                // pass the data to child component & re-render
+            } else {
+                console.log("Could not fetch ACs");
+                alert(data.message);
+            }
+        } catch (err) {
+            alert(`Error occured: ${err}`);
+        }
+    }
 
-    console.log(userID, "userID")
-    const state_code = userID.slice(0,2);
-    const district_code = userID.slice(2,5);
-    const ac_id = userID.slice(5, 8); // calc from userId
+    useEffect(() => {
+        // console.log(ACList)
+        if (Object.keys(ACList).length > 0) {
+            setACCode(Object.keys(ACList)[0])
+        }
+    }, [ACList])
 
-    const [assemblyData, setAssemblyData] = useState([
-        {
-            ps_name: "",
-            cu_count: "",
-            bu_count: "",
-            vt_count: "",
-        },
-    ]);
+    const [assemblyData, setAssemblyData] = useState({});
     const [iterationIndex, setIterationIndex] = useState(0);
     const [isFetching, setIsFetching] = useState(true);
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [randomisedData, setRandomisedData] = useState([]);
     const [assemblyList, setAssemblyList] = useState([]);
 
-    const handleInputChange = (e) => {
-        const { name, value, dataset } = e.currentTarget;
-        const update = [...assemblyData];
-        update[dataset.id][name] = value;
-        setIsSubmitted(false);
-        setAssemblyData(update);
-    };
-
-    const handleAddButtonClick = (e) => {
-        const id = parseInt(e.currentTarget.dataset.id);
-        setIsSubmitted(false);
-        setAssemblyData([
-            ...assemblyData.slice(0, id + 1),
-            {
-                ps_name: "",
-                cu_count: "",
-                bu_count: "",
-                vt_count: "",
-            },
-            ...assemblyData.slice(id + 1),
-        ]);
-    };
-
-    const handleSubtractButtonClick = (e) => {
-        const id = parseInt(e.currentTarget.dataset.id);
-        if (assemblyData.length > 1) {
-            setIsSubmitted(false);
-            setAssemblyData(assemblyData.filter((a, i) => i !== id));
-        }
-    };
-
     const handleFormSubmit = async (e) => {
         let confirmation = window.confirm("Are you sure you have selected all the Unit")
         if (confirmation === true) {
             setIsSubmitted(false);
-            const units_requirement = assemblyData
+            const units_requirement = assemblyList
                 .filter((d) => d.ps_no)
                 .map((d) => {
-                    d.cu_count = d.cu_count ? parseInt(d.cu_count) : 0;
-                    d.bu_count = d.bu_count ? parseInt(d.bu_count) : 0;
-                    d.vt_count = d.vt_count ? parseInt(d.vt_count) : 0;
+                    d['cu_count'] = assemblyData['cu_no'] ? assemblyData['cu_no'] : 0;
+                    d['bu_count'] = assemblyData['bu_no'] ? assemblyData['bu_no'] : 0;
+                    d['vt_count'] = assemblyData['vt_no'] ? assemblyData['vt_no'] : 0;
                     return d;
                 });
 
@@ -136,7 +110,8 @@ const SecondRandomisationForm = ({ isVisible }) => {
                     headers: { "Content-Type": "application/json" },
                     credentials: 'include',
                     body: JSON.stringify({
-                        units_requirement,
+                        "units_requirement": units_requirement,
+                        "ac_no": ACCode
                     }),
                 });
                 const data = await response.json();
@@ -158,111 +133,37 @@ const SecondRandomisationForm = ({ isVisible }) => {
             }
         }
         else { }
-        // setIsSubmitted(false);
-        // const units_requirement = assemblyData
-        //     .filter((d) => d.ps_no)
-        //     .map((d) => {
-        //         d.cu_count = d.cu_count ? parseInt(d.cu_count) : 0;
-        //         d.bu_count = d.bu_count ? parseInt(d.bu_count) : 0;
-        //         d.vt_count = d.vt_count ? parseInt(d.vt_count) : 0;
-        //         return d;
-        //     });
-
-        // // fetch request
-        // try {
-        //     const response = await fetch(`${baseUrl}/second-randomization`, {
-        //         method: "POST",
-        //         headers: { "Content-Type": "application/json" },
-        //         credentials: 'include',
-        //         body: JSON.stringify({
-        //             units_requirement,
-        //         }),
-        //     });
-        //     const data = await response.json();
-        //     console.log("Randomisation results: ", data);
-
-        //     if (response.status === 200) {
-
-        //         setRandomisedData(data);
-        //         setIterationIndex(data.length);
-        //         setAssemblyData(units_requirement);
-        //         setIsSubmitted(true);
-        //         // pass the data to child component & re-render
-        //     } else {
-        //         console.log("Could not fetch randomisation results");
-        //         alert(data.message);
-        //     }
-        // } catch (err) {
-        //     alert(`Error occured: ${err}`);
-        // }
     };
 
-    const handleFetchingNewIterations = async (iteration_index) => {
-        if (randomisedData[iteration_index - 1]) {
-            setIterationIndex(iteration_index);
-        } else {
-            // setIsSubmitted(false);
-            // console.log('Coming')
-            // // fetch request
-            // try {
-            //     const response = await fetch(`${baseUrl}/second-randomization`, {
-            //         method: "POST",
-            //         headers: { "Content-Type": "application/json" },
-            //         credentials: 'include'
-            //     });
-            //     const data = await response.json();
-
-            //     if (response.status === 200) {
-            //         setRandomisedData(data);
-            //         setIterationIndex(3);
-            //         setIsSubmitted(true);
-            //     } else {
-            //         console.log("Could not fetch randomisation results");
-            //         alert(data.message);
-            //     }
-            // } catch (err) {
-            //     alert(`Error occured: ${err}`);
-            // }
-        }
-    };
+    
+    const [pollingStationDataMessage, setPollingStationDataMessage] = useState("Fetching Polling Station Data...")
 
     useEffect(() => {
-        // Initial fetching of any previous available user inputs
-        if (isVisible) {
+        // Initial fetching of any previous available user inputsc
+        console.log(ACCode)
+        if (isVisible && ACCode && ACCode !== '') {
             setIsFetching(true);
             (async () => {
 
                 try {
-                    const response = await fetch(`${baseUrl}/fetch-polling-stations`, {
+                    const response = await fetch(`${baseUrl}/fetch-polling-stations?ac_no='${ACCode}'`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
-                        credentials: "include"
+                        credentials: "include",
+                        // body: JSON.stringify({
+                        //     'ac_no': ACCode
+                        // })
                     });
                     const data = await response.json();
-                    console.log(data, district_code, "datatatatatatatat")
                     if (response.status === 200) {
-                        console.log("inside if")
+                        console.log(data['data'][ACCode])
                         if (data.hasOwnProperty('data')) {
-                            console.log("inside second if",state_code,ac_id, data['data'][state_code][ac_id])
-                            setAssemblyList(data['data'][state_code][ac_id]);
-                            let tempdata = []
-
-                            for(let i=0;i<data['data'][state_code][ac_id].length;i++){
-                                // console.log(data['data']['ac'][i])
-                                    tempdata.push(
-                                        {
-                                            ps_no: data['data'][state_code][ac_id][i]['ps_no'],
-                                            cu_count: "1",
-                                            bu_count: "1",
-                                            vt_count: "1",
-                                        }
-                                    )
-
-                                
-                            }
-                            console.log(tempdata)
-                            setAssemblyData(tempdata);
+                            setAssemblyData(data['data'][ACCode]);
+                            setAssemblyList(data['data'][ACCode]['ps']);
                         }
+                    }
+                    else{
+                        setPollingStationDataMessage(data.message)
                     }
                 } catch (err) {
 
@@ -272,7 +173,7 @@ const SecondRandomisationForm = ({ isVisible }) => {
 
             setIsFetching(false);
         }
-    }, [isVisible]);
+    }, [isVisible, ACCode]);
 
 
 
@@ -283,102 +184,46 @@ const SecondRandomisationForm = ({ isVisible }) => {
                     <div className={styles.unit_list_header}>
                         <h4>Second Randomisation</h4>
                     </div>
-                    {!isFetching && (
                         <div className="mt-2 w-full bg-white p-6">
                             <div className="flex flex-col">
                                 <div className="mb-5 flex w-full flex-row justify-evenly">
                                     <div className="flex w-3/8 flex-col text-left">
                                         <label className="mb-2 w-full text-base">
-                                            Assembly Contituency ID<span className="text-red-600">*</span>
+                                            Assembly Segment ID<span className="text-red-600">*</span>
                                         </label>
-                                        <div className="relative text-gray-600">
-                                            <input
-                                                className="h-10 w-full cursor-not-allowed rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-                                                name="districtId"
-                                                value={ac_id}
-                                                readOnly
-                                                disabled
-                                            />
-                                        </div>
+                                        <select value={ACCode} onChange={(e) => setACCode(e.target.value)}>
+                                            {
+                                                ACList && Object.keys(ACList).map((val) => {
+                                                    console.log(val)
+                                                    return <option value={val}>
+                                                        {val}&nbsp;({ACList[val]['ac_name']})
+                                                    </option>
+                                                })
+                                            }
+                                        </select>
                                     </div>
 
                                 </div>
-                                {assemblyData.map((data, id) => (
-                                    <div
-                                        className="group mb-5 flex w-full justify-evenly"
-                                        key={id}
-                                    >
-                                        <div className="-mr-16 hidden w-10 flex-col items-center justify-end group-hover:flex">
-                                            <button
-                                                className="mb-0.5 inline-flex h-[22px] w-[22px] items-center justify-center !rounded-full border-[1px] border-rose-600 bg-white p-0.5 text-red-600 hover:border-dashed hover:bg-rose-50"
-                                                onClick={handleSubtractButtonClick}
-                                                data-id={id}
-                                            >
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    fill="none"
-                                                    viewBox="0 0 24 24"
-                                                    strokeWidth={1.5}
-                                                    stroke="currentColor"
-                                                    className="h-6 w-6"
-                                                >
-                                                    <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        d="M19.5 12h-15"
-                                                    />
-                                                </svg>
-                                            </button>
-                                            <button
-                                                className="inline-flex h-[22px] w-[22px] items-center justify-center !rounded-full border-[1px]  border-lime-600 bg-white p-0.5 text-lime-600 hover:border-dashed hover:bg-lime-50"
-                                                onClick={handleAddButtonClick}
-                                                data-id={id}
-                                            >
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    fill="none"
-                                                    viewBox="0 0 24 24"
-                                                    strokeWidth={1.5}
-                                                    stroke="currentColor"
-                                                    className="h-6 w-6"
-                                                >
-                                                    <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        d="M12 4.5v15m7.5-7.5h-15"
-                                                    />
-                                                </svg>
-                                            </button>
-                                        </div>
-                                        <div className="-mr-16 w-10 group-hover:hidden"></div>
+                            {!isFetching && assemblyList && assemblyList.length > 0 ? (
+                                    <div className="group mb-5 flex w-full justify-evenly items-center">
                                         <div className="mr-8 flex w-3/8 flex-col text-left">
-                                            <label className="mb-2 w-full text-base">
-                                                Polling Station ID {id + 1}
-                                                <span className="text-red-600"> *</span>
+                                            <label className=" w-full text-base">
+                                                Polling Station Count
                                             </label>
-                                            <div className="relative text-gray-800">
-                                                <select
-                                                    className="h-10 w-full rounded-md p-2 px-5 placeholder:text-gray-400 focus-within:border-primary focus:border-primary"
-                                                    name="ps_name"
-                                                    placeholder="Select"
-                                                    value={data.ps_no}
-                                                    onChange={handleInputChange}
-                                                    data-id={id}
-                                                >
-                                                    {" "}
-                                                    <option hidden>Select</option>
-
-                                                    {assemblyList.map(item => (
-                                                        <option value={item.ps_no}>{item.ps_name}</option>
-                                                    ))}
-                                                </select>
-                                                <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1/2" />
-
+                                            <div className="flex w-full justify-between gap-2 text-gray-800">
+                                                <input
+                                                    className="h-10 w-1/3 rounded-md border-0 bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                                                    type="number"
+                                                    name="cu_count"
+                                                    placeholder="CU"
+                                                    value={assemblyList.length}
+                                                    disabled
+                                                />
                                             </div>
                                         </div>
                                         <div className="flex w-3/8 flex-col text-left">
                                             <label className="mb-2 w-full text-base">
-                                                Unit Count {id + 1} {"(CU  BU  VT)"}
+                                                Total Units Count {"(CU  BU  VT)"}
                                                 <span className="text-red-600"> *</span>
                                             </label>
                                             <div className="flex w-full justify-between gap-2 text-gray-800">
@@ -387,35 +232,39 @@ const SecondRandomisationForm = ({ isVisible }) => {
                                                     type="number"
                                                     name="cu_count"
                                                     placeholder="CU"
-                                                    value={data.cu_count}
-                                                    onChange={handleInputChange}
-                                                    data-id={id}
+                                                    title="Total CUs"
+                                                    value={assemblyData['cu_no'] ? assemblyList.length * assemblyData['cu_no'] : 0}
+                                                    disabled
                                                 />
                                                 <input
                                                     className="h-10 w-1/3 rounded-md border-0 bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
                                                     type="number"
                                                     name="bu_count"
                                                     placeholder="BU"
-                                                    value={data.bu_count}
-                                                    onChange={handleInputChange}
-                                                    data-id={id}
+                                                    title="Total BUs"
+                                                    value={assemblyData['bu_no'] ? assemblyList.length * assemblyData['bu_no'] : 0}
+                                                    disabled
                                                 />
                                                 <input
                                                     className="h-10 w-1/3 rounded-md border-0 bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
                                                     type="number"
                                                     name="vt_count"
                                                     placeholder="VT"
-                                                    value={data.vt_count}
-                                                    onChange={handleInputChange}
-                                                    data-id={id}
+                                                    title="Total VTs"
+                                                    value={assemblyData['vt_no'] ? assemblyList.length * assemblyData['vt_no'] : 0}
+                                                    disabled
                                                 />
                                             </div>
                                         </div>
                                     </div>
-                                ))}
+                                )
+                                :
+                                <h4 style={{
+                                    'textAlign': 'center'
+                                }}>{pollingStationDataMessage}</h4>
+                            }
                             </div>
                         </div>
-                    )}
                     <button
                         className="mb-8 font-semibold text-white"
                         onClick={handleFormSubmit}
@@ -427,7 +276,7 @@ const SecondRandomisationForm = ({ isVisible }) => {
                             assemblyData={assemblyData}
                             randomData={randomisedData[iterationIndex - 1]}
                             iterationIndex={iterationIndex}
-                            fetchNewIterations={handleFetchingNewIterations}
+                            fetchNewIterations={null}
                         />
                     )}
                 </div>
@@ -514,7 +363,7 @@ const SecondRandomisationOutput = ({
             const response = await fetch(
                 `${baseUrl}/generate-second-randomization-report`,
                 {
-		    method:"POST",
+                    method: "POST",
                     credentials: "include",
                 }
             );
