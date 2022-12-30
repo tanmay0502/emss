@@ -37,7 +37,7 @@
 	color: inherit;
 }
 
-.table-responsive{
+.warehouse-list-grid .table-responsive{
 	height: calc(100% - 1.25em) !important;
 	max-height: calc(100% - 1.25em) !important;
 	/* max-height: 100%; */

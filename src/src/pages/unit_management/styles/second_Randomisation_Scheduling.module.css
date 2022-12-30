@@ -70,16 +70,19 @@
   flex-direction: row;
   align-content: center;
   justify-content: center;
+  overflow-x: hidden !important;
 }
 
 .div5 .table-responsive{
   padding-bottom: 0 !important;
+  overflow-x: hidden !important;
 }
 
 .div5 table{
   /* width: 100%; */
   min-width: 750px;
   max-width: 50vw;
+  overflow-x: hidden !important;
 }
 
 .submitBtn {

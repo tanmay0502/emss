@@ -13,7 +13,7 @@ function Second_Randomisation_Scheduling() {
     const [enddate, setenddate] = useState('')
     const [stateCode, setStateCode] = useState('')
     const [districtCode, setDistrictCode] = useState('')
-    const [accode, setaccode] = useState([])
+    const [ACCodes, setACCodes] = useState(new Set());
 
     const [districtList, setDistrictList] = useState([]);
     const [ACList, setACList] = useState([]);
@@ -48,7 +48,7 @@ function Second_Randomisation_Scheduling() {
     }, [districtCode])
 
     useEffect(() => {
-        console.log(ACList)
+        // console.log(ACList)
     }, [ACList])
 
     async function Submit_Second_randomization() {
@@ -82,7 +82,8 @@ function Second_Randomisation_Scheduling() {
                         "Content-Type": "application/json",
                     },
                     body: JSON.stringify({
-                        ascode: document.getElementById("ascode") ? document.getElementById("ascode").value : "",
+                        district: districtCode,
+                        acs: [...ACCodes],
                         electiontype: document.getElementById("electiontype") ? document.getElementById("electiontype").value : "",
                         startdate: document.getElementById("startdate") ? document.getElementById("startdate").value + " " + time : "",
                         enddate: document.getElementById("enddate") ? document.getElementById("enddate").value + " " + time : "",
@@ -110,16 +111,22 @@ function Second_Randomisation_Scheduling() {
     }
 
 
-    console.log(
-        "electiontype:", document.getElementById("electiontype") ? document.getElementById("electiontype").value : "",
-        "startdate:", document.getElementById("startdate") ? document.getElementById("startdate").value : "",
-        "enddate:", document.getElementById("enddate") ? document.getElementById("enddate").value : "",
-    )
+    // console.log(
+    //     "electiontype:", document.getElementById("electiontype") ? document.getElementById("electiontype").value : "",
+    //     "startdate:", document.getElementById("startdate") ? document.getElementById("startdate").value : "",
+    //     "enddate:", document.getElementById("enddate") ? document.getElementById("enddate").value : "",
+    // )
 
 
     const onFormSubmit = async (e) => {
         e.preventDefault();
-        Submit_Second_randomization();
+        // console.log(ACCodes)
+        if(ACCodes.size > 0){
+            Submit_Second_randomization();
+        }
+        else{
+            alert('Please select atleast One Assembly Segment!')
+        }
     };
 
 
@@ -158,15 +165,16 @@ function Second_Randomisation_Scheduling() {
                     <div class={styles.div2}>
                         <p> Election Type</p>
                         <select id="electiontype" onSelect={(e) => { setelectiontype(e) }}>
-                            <option value="" >Select:</option>
-                            <option value="A">Assembly</option>
-                            <option value="L">Lok Sabha</option>
-                            <option value="B">By Elections</option>
+                            <option value="" defaultChecked={true} disabled >Select:</option>
+                            <option value="GP">General Election - Parlimentary</option>
+                            <option value="GA">General Election - Assembly</option>
+                            <option value="BP">By Election - Parlimentary</option>
+                            <option value="BA">By Election - Assembly</option>
                         </select>
                     </div>
 
                     <div class={styles.div3}>
-                        <p> Start date</p>
+                        <p>Start date</p>
                         <input
                             id="startdate"
                             required
@@ -178,7 +186,7 @@ function Second_Randomisation_Scheduling() {
                     </div>
 
                     <div class={styles.div4}>
-                        <p> End date</p>
+                        <p>End date</p>
                         <input
                             id="enddate"
                             required
@@ -195,6 +203,40 @@ function Second_Randomisation_Scheduling() {
                             :
                             <DynamicDataTable
                                 renderCheckboxes={true}
+                                renderMasterCheckbox={false}
+                                isCheckboxChecked={({acCode}) => ACCodes.has(acCode)}
+                                onMasterCheckboxChange={(_, rows) => {
+                                    let all = true
+                            
+                                    rows.forEach(({ id }) => {
+                                        if(!all){
+                                            return;
+                                        }
+                                        if(!ACCodes.has(id)) {
+                                            all = false
+                                        }
+                                    })
+                            
+                                    rows.forEach(({ id }) => {
+                                        var tmp = new Set(ACCodes)
+                                        if (all) {
+                                            tmp.delete(id)
+                                        } else if (!tmp.has(id)) {
+                                            tmp.add(id)
+                                        }
+                                        setACCodes(tmp)
+                                    })
+                                }}
+                                onCheckboxChange={(_, { acCode }) => {
+                                    var tmp = new Set(ACCodes)
+                                    if (ACCodes.has(acCode)) {
+                                        tmp.delete(acCode)
+                                    } else {
+                                        tmp.add(acCode)
+                                    }
+                                    setACCodes(tmp)
+                                }}
+
                                 rows={ACList}
                                 buttons={[]}
                                 fieldMap={
