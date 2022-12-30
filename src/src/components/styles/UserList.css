@@ -63,7 +63,7 @@
 }
 
 .users-table th:first-child, .users-table th:nth-child(3){
-	text-align: left;
+	text-align: center;
 }
 
 .users-table th:first-child{

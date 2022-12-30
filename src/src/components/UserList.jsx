@@ -46,7 +46,7 @@ function UserList() {
 		"None": "status",
 		"User ID": "User ID",
 		"Name": "User Name",
-		"Role": "Role",
+		"Role": "newUserId",
 	}
 
 
@@ -86,8 +86,9 @@ function UserList() {
 					return (elem["userid"].slice(8,11).toLowerCase().includes(filter));
 				}
 				else{
-					return true;
-				}
+					const filter = "tmp";
+					return !(elem["userid"].slice(8,11).toLowerCase().includes(filter));
+			}
 			}).filter((elem)=>{
 				if (tableFilter === "") {
 					return true;
@@ -104,8 +105,9 @@ function UserList() {
 						</div>,
 					"User Name": val["name"],
 					"status" : val["active"],
-					"Phone Number": val["mobilenumber"].substring(0, 3) + " " + val["mobilenumber"].substring(3, 6) + " " + val["mobilenumber"].substring(6),
-					"Role": val["userid"].slice(8,11),
+					"newUserId": (val["userid"].slice(0,2)).concat(val["userid"].slice(8),val["userid"].slice(2,6),val["userid"].slice(6,8)),
+					"Phone Number": val["mobilenumber"].substring(0, 5) + " " + val["mobilenumber"].substring(5) ,
+					"Role": val["userid"].slice(8),
 					Details: val,
 					Edit: <button className="modifyBtn p-2 text-white" disabled={true}>
 						<FaUserEdit style={{ transform: "translateX(1px)" }} />
@@ -134,7 +136,7 @@ function UserList() {
 			}
 
 			setTableData(data)
-
+			console.log("===",data)
 		}
 		return () => {
 
@@ -285,7 +287,7 @@ function UserList() {
 				</div> : <></>}
 				{isDetail == 0 && isEdit == 0 ? <DynamicDataTable className="users-table"
 					rows={tableData}
-					fieldsToExclude={["Details", "Edit","status"]}
+					fieldsToExclude={["Details", "Edit","status","newUserId"]}
 					orderByField={sortMapping[sortBy]}
 					orderByDirection={sortOrder}
 					columnWidths={{
