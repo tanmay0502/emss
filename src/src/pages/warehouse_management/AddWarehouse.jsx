@@ -11,6 +11,7 @@ import { useState } from "react";
 import './css/AddWarehouse.css'
 import { useNavigate } from "react-router-dom";
 import { getKeyByValue } from '../../assets/helper/ObjectHelpers.js'
+import { formatRealm2 } from "../../components/utils";
 
 export default function AddWarehouse() {
 
@@ -66,9 +67,44 @@ export default function AddWarehouse() {
       console.log(err);
     }
 
-
   }
+  const [state2, setState2] = useState([])
+  const [dist, setDist] = useState([])
+  const [AC, setAC] = useState([])
 
+  useEffect(() => {
+    if(realm && realm !== []){
+      setState2(formatRealm2(realm))
+      setCurrState(state2);
+    }
+   
+  }, [realm]);
+  
+  useEffect(() => {
+    if(myState && myState !== []){
+      // console.log(myState)
+      setDist(formatRealm2(realm, myState))
+      // setCurrDist(dist)
+    }
+
+  }, [myState,realm]);
+  useEffect(() => {
+    setCurrDist(dist)
+  }, [dist]);
+
+
+  useEffect(() => {
+    if(mydistcode && mydistcode !== []){
+      console.log(mydistcode)
+      setAC(formatRealm2(realm, myState, mydistcode))
+      // setCurrAC(AC);
+    }
+
+  }, [mydistcode,realm,myState]);
+
+  useEffect(() => {
+    setCurrAC(AC);
+  }, [AC]);
   // Get Subordinate Users
   const [subUsers, setSubUsers] = useState([]);
   
@@ -110,19 +146,18 @@ export default function AddWarehouse() {
     }
     // getState();
     // getRoleList();
-    // getRealm();
+    getRealm();
     getSubUsers();
   }, []);
 
-  console.log({realm})
   const [currAC, setCurrAC] = useState([])
   const [currDist, setCurrDist] = useState([])
   const [currState, setCurrState] = useState([])
   useEffect(() => {
     try{
-      setCurrAC(realm["ac"])
-      setCurrDist(realm["dist"])
-      setCurrState(realm["state"])
+      // setCurrAC(realm["ac"])
+      // setCurrDist(realm["dist"])
+      // setCurrState(realm["state"])
 
     }catch(err){
       console.log("Error in setting Current vars"+err)
@@ -169,8 +204,6 @@ export default function AddWarehouse() {
       const lon = document.getElementById("input_lng").value;
 
       const address = document.getElementById("input_address").value;
-      const double_lock = doubleLockSystem?"True":"False";
-
       const person1_ID = document.getElementById("input_personName_1").value;
       const person2_ID = doubleLockSystem ? document.getElementById("input_personName_2").value : "";
 
@@ -185,13 +218,14 @@ export default function AddWarehouse() {
         warehouseDist: dist,
         warehouseLatLong: [lat, lon],
         warehouseAddress: address,
-        doubleLock: "TRUE", //double_lock.toString().toUpperCase(),
+        // doubleLock: "TRUE", //double_lock.toString().toUpperCase(),
         UIDKey1: person1_ID,
-        // UIDKey2: person2_ID,
+        UIDKey2: person2_ID,
         updateTime: new Date().toISOString(),
         updatedByUID: window.sessionStorage.getItem("sessionToken"),
-        warehouseStatus: sealed,
+        // warehouseStatus: "A",
         warehouseAC: AC,
+        incharge: sealed
       };
       console.log(JSON.stringify(reqBody))
       console.log(dists)
@@ -346,21 +380,26 @@ export default function AddWarehouse() {
                   <label htmlFor="">State<span className="text-red-500 text-lg">*</span></label>
                 </div>
                 <div className="form_select">
+
                   <select
                     required
                     name=""
                     id="input_state"
                     onChange={(e) => {
-                      setStateFunc(e.target.value)
+                      setmyState(e.target.value)
                     }}
-                    // disabled={true}
                   >
-                    {/* <option value="" disabled selected>
+                    <option
+                      value=""
+                      className="FirstOption"
+                      disabled
+                      selected
+                    >
                       --Select--
-                    </option> */}
+                    </option>
                     {currState && currState.map((st) => (
-                      <option value={st} className="text-black">
-                        {st}
+                      <option value={st["stCode"]} className="text-black">
+                        {st["stCode"]+ " ("+st["stName"]+")"}
                       </option>
                     ))}
                   </select>
@@ -388,9 +427,9 @@ export default function AddWarehouse() {
                     >
                       --Select--
                     </option>
-                    <option value="O">Own</option>
-                    <option value="G">Govt. Building</option>
-                    <option value="P">Private</option>
+                    <option value="O">Own Building</option>
+                    <option value="G">Government Building</option>
+                    <option value="P">Private Building</option>
                   </select>
                   <div className="input_icon">
                     <FaRegBuilding size="1em" />
@@ -457,12 +496,12 @@ export default function AddWarehouse() {
                     required
                     name=""
                     id="input_dist"
-                    onChange={(e) => setdistFunc(e.target.value)}
+                    onChange={(e) => setmydistcode(e.target.value)}
                   >
                     <option value="">--Select--</option>
                     {currDist && currDist.map((dist) => (
-                      <option value={dist} className="text-black">
-                        {dist}
+                      <option value={dist['dtCode']} className="text-black">
+                        {dist['dtName']}
                       </option>
                     ))}
                   </select>
@@ -480,12 +519,12 @@ export default function AddWarehouse() {
                     required
                     name=""
                     id="input_AC"
-                    onChange={(e) => setAcFunc(e.target.value)}
+                    onChange={(e) => setmyACcode(e.target.value)}
                   >
                     <option value="">--Select--</option>
                     {currAC && currAC.map((ac) => (
-                      <option value={ac} className="text-black">
-                        {ac}
+                      <option value={ac["acCode"]} className="text-black">
+                        {ac["acName"]}
                       </option>
                     ))}
                   </select>
