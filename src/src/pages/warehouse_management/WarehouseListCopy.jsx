@@ -12,7 +12,8 @@ import { Fragment } from 'react';
 import {AiOutlineDownload} from 'react-icons/ai'
 import DynamicDataTable from "@langleyfoxall/react-dynamic-data-table";
 import ToggleButton from '../../components/ToggleButton';
-
+import Tippy from '@tippyjs/react';
+import 'tippy.js/dist/tippy.css';
 import UserImageTest from '../../assets/UserImageTest.png'
 import {CSVLink, CSVDownload} from 'react-csv';
 
@@ -89,7 +90,7 @@ function WarehouseList() {
 		"None": null,
 		"Warehouse ID": "warehouseid",
 		"Status": "status",
-		"Type": "Room Type",
+		"Type": "Warehouse Type",
 	}
 
 	const [id, setID] = useState("")
@@ -130,33 +131,29 @@ function WarehouseList() {
 				"Warehouse ID": val["type"] == 'P' ?
 					<Fragment><span style={{ display: 'flex', justifyContent: 'left', alignItems: 'center', marginLeft: "12%" }}>
 						<FaCircle size='0.8em' className= 'PermaWarehouse' />
+						{/* <Tippy content={ val['incharge'] === null ? "Incharge: Not Available" :"Incharge: " +  val['incharge'] }> */}
 						<span style={{ marginLeft: '25px', marginRight: '25px' }}>
-							{val['warehouseid']}</span>{val['doublelock'] ?
-								<Fragment><FaKey className='keyColor' />
-									<FaKey className='keyColor' /></Fragment>
-								:
-								<FaKey className='keyColor' />}</span></Fragment>
+							{val['warehouseid']}</span>
+									</span>
+
+						</Fragment>
 					:
 					<Fragment><span style={{ display: 'flex', justifyContent: 'left', alignItems: 'center', marginLeft: "12%" }}>
 						<FaCircle size='0.8em' className= {val["type"] === 'T'? 'TempWarehouse':'PrivateWarehouse' } />
-						<span style={{ marginLeft: '25px', marginRight: '25px' }}>{val['warehouseid']}</span>{val['doublelock'] ?
-							<Fragment>
-								<FaKey className='keyColor' />
-								<FaKey className='keyColor' />
-							</Fragment> :
-							<FaKey className='keyColor' />}
+						<span style={{ marginLeft: '25px', marginRight: '25px' }}>{val['warehouseid']}</span>
 					</span>
 					</Fragment>,
 				"warehouseid": val['warehouseid'],
-				"Room Type": warehouseMapping ? warehouseMapping["data"][val["type"]] : "",
+				"Warehouse Type":warehouseMapping ? warehouseMapping["data"][val["type"]] : "",
 				"room_type": warehouseMapping ? warehouseMapping["data"][val["type"]] : "",
 				Details: val,
 				Edit: <button className="modifyBtn p-2 text-white" disabled={true}>
 					<FaUserEdit style={{ transform: "translateX(1px)" }} />
 				</button>,
+				"Address": <Tippy content={ val['incharge'] === null ? "Incharge: Not Available" :"Incharge: " +  val['incharge'] }><div>{val["address"]}</div></Tippy>, 
 				"status":val["status"],
-				"Status": <ToggleButton warehouseID={val["warehouseid"]} checked={val["status"] == 'A'} onToggle={(e) => {
-					if (val["status"] == "A") {
+				"Status": <ToggleButton warehouseID={val["warehouseid"]} checked={val["status"] === 'A'} onToggle={(e) => {
+					if (val["status"] === "A") {
 						DectivateWarehouse(val["warehouseid"])
 					}
 					else {
@@ -171,13 +168,13 @@ function WarehouseList() {
 		let tmpWare = [], tmpStrong = []
 
 		tmpWare = data.filter((val) => {
-			return val['Room Type'] && val['Room Type'].startsWith('W')
+			return val['Warehouse Type'] && val['Warehouse Type'].startsWith('W')
 		}).sort((a, b) => {
 			return a['room_type'] && (a['room_type'].localeCompare(b['room_type']))
 		})
 
 		tmpStrong = data.filter((val) => {
-			return val['Room Type'] && val['Room Type'].startsWith('S')
+			return val['Warehouse Type'] && val['Warehouse Type'].startsWith('S')
 		}).sort((a, b) => {
 			return a['room_type'] && (a['room_type'].localeCompare(b['room_type']))
 		})
@@ -283,8 +280,7 @@ function WarehouseList() {
 					<div className='label d-flex d-flex-center'><span><FaCircle className='PermaWarehouse' /></span> Goverment Building</div>
 					<div className='label d-flex d-flex-center'><span><FaCircle className='PrivateWarehouse' /></span> Private Building</div>
 					<div className='label d-flex d-flex-center'><span><FaCircle className='TempWarehouse' /></span> Dedicated Building</div>
-					<div className='label d-flex d-flex-center'><span><Fragment><span className='d-flex d-flex-center'><FaKey className='keyColor' /><FaKey className='keyColor' /></span></Fragment></span> Double Lock Present</div>
-					<div className='label d-flex d-flex-center'><span><FaKey className='keyColor' /></span> Double Lock Absent</div>
+
 				</div>
 				{isDetail == 0 ? <div style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between" }}>
 					<h4>Associated Warehouses</h4>
@@ -399,18 +395,18 @@ function WarehouseList() {
 						}).length.toLocaleString()}
 					</li>
 					{/* All Count */}
-					<li className='tableHeader'>All</li>
-					<li>
+					<li className='tableHeader text-red-500'>All</li>
+					<li className='text-red-500'>
 						{tableData.filter((elem) => {
 							return elem["Details"] && elem["Details"]["status"] === "A"
 						}).length.toLocaleString()}
 					</li>
-					<li>
+					<li className='text-red-500'>
 						{tableData.filter((elem) => {
 							return elem["Details"] && elem["Details"]["status"] === "I"
 						}).length.toLocaleString()}
 					</li>
-					<li>
+					<li className='text-red-500'>
 						{tableData.filter((elem) => {
 							return elem["Details"]
 						}).length.toLocaleString()}
@@ -467,7 +463,7 @@ function WarehouseList() {
 							<span>
 								First Randomisation completed in districts- Bhind, Gwalior, Indore, Bhopal
 							</span>
-							<span>3hrs ago</span>
+							<span>4hrs ago</span>
 						</span>
 					</li>
 				</ul>

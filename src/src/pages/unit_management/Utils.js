@@ -14,12 +14,11 @@ export const DispatchUnits = async (body) => {
          );
          const data2 = await response.json();
          console.log(data2)
-         if(response.status==200){
+         if(response.status===200){
              alert("Units Dispatched Successfully")
              window.location.reload();
- 
          }
- 
+
     }catch(err){
      console.log(err)
     }
@@ -42,7 +41,7 @@ export const RecieveUnits = async (body) => {
          );
          const data2 = await response.json();
          console.log(data2)
-         if(response.status==200){
+         if(response.status===200){
              alert("Units Recieved Successfully")
              window.location.reload();
  
@@ -71,10 +70,7 @@ export const RecieveUnits = async (body) => {
         const data2 = await response.json();
         console.log("fetcjed", data2)
         return data2["data"]
-        
-         
-
-       
+               
       } catch (err) {
         console.log(err);
       }

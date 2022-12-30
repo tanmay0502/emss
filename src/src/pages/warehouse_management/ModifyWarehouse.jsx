@@ -141,8 +141,8 @@ export default function ModifyWarehouse() {
       console.log(status.status);
 			// console.log(data["data"], "data")
       if(status.status === 401){
-        logOut();
-        alert("Your session expired please login again")
+        // logOut();
+        // alert("Your session expired please login again")
         
       }
 		} catch (error) {

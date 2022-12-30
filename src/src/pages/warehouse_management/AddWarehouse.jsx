@@ -294,7 +294,7 @@ export default function AddWarehouse() {
             >
               <div className="form_group">
                 <div className="form_label" >
-                  <label htmlFor="">Warehouse Type</label>
+                  <label htmlFor="">Warehouse Type<span className="text-red-500 text-lg">*</span></label>
                 </div>
                 <div className="form_select">
                   <select
@@ -343,7 +343,7 @@ export default function AddWarehouse() {
 
               <div className="form_group">
                 <div className="form_label">
-                  <label htmlFor="">State</label>
+                  <label htmlFor="">State<span className="text-red-500 text-lg">*</span></label>
                 </div>
                 <div className="form_select">
                   <select
@@ -372,7 +372,7 @@ export default function AddWarehouse() {
 
               <div className="form_group">
                 <div className="form_label">
-                  <label htmlFor="">Building Type</label>
+                  <label htmlFor="">Building Type<span className="text-red-500 text-lg">*</span></label>
                 </div>
                 <div className="form_select">
                   <select
@@ -401,7 +401,7 @@ export default function AddWarehouse() {
               // style={{gridArea:"2 / 1 / 3 / 3"}}
               >
                 <div className="form_label">
-                  <label htmlFor="">Address</label>
+                  <label htmlFor="">Address<span className="text-red-500 text-lg">*</span></label>
                 </div>
                 <div className="form_input">
                   <input
@@ -418,29 +418,39 @@ export default function AddWarehouse() {
               </div>
               <div className="form_group">
                 <div className="form_label">
-                  <label htmlFor="">Sealed</label>
+                  <label htmlFor="">Warehouse Incharge<span className="text-red-500 text-lg">*</span></label>
                 </div>
-                <div className="form_select">
-                  <select
+                <div className="form_input">
+                  <input
                     required
-                    name=""
+                    placeholder="SSDDDAAARRR"
                     id="input_sealed"
-                  >
-                    <option value="" className="FirstOption">
-                      --Select--
-                    </option>
-                    <option value="I">Yes</option>
-                    <option value="A">No</option>
-                  </select>
+                    list="userList1"
+                    name="doubleLockUser1"
+                    value={doubleLockUser1}
+                    autoComplete="off"
+                    onChange={(e)=>{setdoubleLockUser1(e.target.value)}}
+                  />
+                  <datalist id="userList1">
+                    {
+                      subUsers && subUsers['users'] && subUsers['users'].map((val) => {
+                        if(val['userid'] !== doubleLockUser2)
+                        return <option value={val['userid']}>
+                          {val['name']}
+                        </option>
+                      })
+                    }
+                  </datalist>
                   <div className="input_icon">
-                    <BsShieldLockFill size="1em" />
+                    <BsFillPersonFill size="1em" />
                   </div>
                 </div>
+                
               </div>
 
               <div className="form_group">
                 <div className="form_label">
-                  <label htmlFor="">District</label>
+                  <label htmlFor="">District<span className="text-red-500 text-lg">*</span></label>
                 </div>
                 <div className="form_select">
                   <select
@@ -463,7 +473,7 @@ export default function AddWarehouse() {
               </div>
               <div className="form_group">
                 <div className="form_label">
-                  <label htmlFor="">AC</label>
+                  <label htmlFor="">AC<span className="text-red-500 text-lg">*</span></label>
                 </div>
                 <div className="form_select">
                   <select
@@ -490,7 +500,7 @@ export default function AddWarehouse() {
 
               <div className="form_group">
                 <div className="form_label">
-                  <label htmlFor="">Latitude</label>
+                  <label htmlFor="">Latitude<span className="text-red-500 text-lg">*</span></label>
                 </div>
                 <div className="form_input">
                   <input
@@ -510,7 +520,7 @@ export default function AddWarehouse() {
 
               <div className="form_group">
                 <div className="form_label">
-                  <label htmlFor="">Longitude</label>
+                  <label htmlFor="">Longitude<span className="text-red-500 text-lg">*</span></label>
                 </div>
                 <div className="form_input">
                   <input
@@ -542,43 +552,29 @@ export default function AddWarehouse() {
               >
                 <div className="form_radio">
                   <label htmlFor="double_lock_yes">
-                    Double Lock System:{" "}
+                    The warehouse has a Double Lock <span className="text-red-500 text-lg">*</span> 
                   </label>
-                  {/* <label htmlFor="double_lock_yes" className={`${doubleLockSystem?'bg-stone-200 text-black p-2 rounded-md':'bg-orange-500 text-white p-2 rounded-md'}`}>Yes </label>
+                  
+                  {/* <label htmlFor="double_lock_yes" className={`${doubleLockSystem?'bg-stone-200 text-black p-2 rounded-md':'bg-orange-500 text-white p-2 rounded-md'}`}>Yes </label> */}
                   <input
-                    type="radio"
-                    name="double_lock"
-                    id="double_lock_yes"
-                    defaultChecked={true}
+                    type="checkbox"
+                    // name="double_lock"
+                    // id="double_lock_yes"
+                    // defaultChecked={true}
+                    required="true"
                     value="1"
                     onChange={(e) => {
                       setDoubleLockSystem(true);
                     }}
                   />
-                  <label htmlFor="double_lock_no" className={`${doubleLockSystem==0?'bg-stone-200 text-black p-2 rounded-md':'bg-orange-500 text-white p-2 rounded-md'}`}>No </label>
-                  <input
-                    type="radio"
-                    name="double_lock"
-                    id="double_lock_no"
-                    value="0"
-                    onChange={(e) => {
-                      setDoubleLockSystem(false);
-                    }}
-                  /> */}
-                  <div className="flex justify-around w-1/6">
-                    <div><button disabled={true} type="button"  className={`${!doubleLockSystem?'bg-stone-200 text-black p-2 rounded-md':'bg-orange-500 text-white p-2 rounded-md'}`} onClick={()=>{
-                      setDoubleLockSystem(1);
-                    }}>Yes</button></div>
-                    {/* <div><button type="button"  className={`${doubleLockSystem?'bg-stone-200 text-black p-2 rounded-md':'bg-orange-500 text-white p-2 rounded-md'}`}
-                    onClick={()=>{
-                      setDoubleLockSystem(0);
-                    }}>No</button></div> */}
-                  </div>
+
+                  
+                  
                 </div>
               </div>
               <div className="form_group">
                 <div className="form_label">
-                  <label htmlFor="">User ID of First Key Holder</label>
+                  <label htmlFor="">User ID of First Key Holder<span className="text-red-500 text-lg">*</span></label>
                 </div>
                 <div className="form_input">
                   <input
@@ -609,7 +605,7 @@ export default function AddWarehouse() {
 
               <div className="form_group" hidden={!doubleLockSystem}>
                 <div className="form_label">
-                  <label htmlFor="">User ID of Second Key Holder</label>
+                  <label htmlFor="">User ID of Second Key Holder<span className="text-red-500 text-lg">*</span></label>
                 </div>
                 <div className="form_input">
                   <input
