@@ -6,7 +6,6 @@ import { getVehicleDetails, setVehicleDetails } from '../order_management/Utils'
 import styles from '../order_management/styles/order.module.css'
 import ReadCsv from './ReadCsv';
 import Papa from "papaparse";
-import { DispatchUnits, RecieveUnits, ViewOrder } from './Utils';
 
 
 
@@ -25,10 +24,6 @@ function Orders(){
   const [unitDetails,setUnitDetails] = useState([]);
   const [iscollapsed,setIsCollapsed] = useState(0);
   const [dataInput, setDataInput] = useState([""]);
-  const [model,setModel] = useState("");
-  const [version,setVersion] = useState("");
-  const [manufacturingDate,setManufacturingDate] = useState("");
-  const [orderType,setOrderType] = useState("");
 
 
 
@@ -84,26 +79,6 @@ function Orders(){
 	};
 
    
-  useEffect(()=>{
-    let timer1 = setTimeout(() => {
-      let order = ViewOrder({"orderid":allOrders["referenceorderid"].split(":__")[0]});
-      order.then(function(result){
-        console.log(result);
-
-        if(result){
-          setOrderType(result[0]["type"])
-          
-          setIsvalidated(1);
-          setOrderID("");
-          setIsValidating(0);
-        }
-      })
-    }, 0.6 * 1000);
-
-    return () => {
-      clearTimeout(timer1);
-    };
-  },[allOrders])
       
     
 
@@ -129,12 +104,10 @@ function Orders(){
           console.log("fetcjed", data2)
           if (data2["data"] && data2["data"].length==1) {
             setAllOrders(data2["data"][0])
-            
-            
-            
            
-           
-
+            setIsvalidated(1);
+            setOrderID("");
+            setIsValidating(0);
            
   
           }
@@ -201,14 +174,13 @@ useEffect(()=>{
                   warehouseIncharge : "",
                   driverContact : "",
                   escortContact : "",
-                  remarks: "",
-                  alreadyDispatched: "F"
+                  remarks: ""
               };
       
               allOrders.map((order)=>{
                   let x={
-                      "orderID":order["orderid"],
-                      "vehicleList":[oneVehicle]
+                      "OrderID":order["orderid"],
+                      "vehicleDetails":[oneVehicle]
       
                   }
                   sampleBody.push(x);
@@ -223,33 +195,31 @@ useEffect(()=>{
               [allOrders].map((order)=>{
                  
                   let x={
-                      "orderID":order["orderid"],
-                      "vehicleList":[]
+                      "OrderID":order["orderid"],
+                      "vehicleDetails":[]
       
                   }
                   console.log(fetchedVehicle[order["orderid"]])
                   if(fetchedVehicle[order["orderid"]].length==0){
-                      x["vehicleList"].push({
+                      x["vehicleDetails"].push({
                           vehicleNumber :"",
                           driverName :"",
                           escortName :"",
                           warehouseIncharge :"",
                           driverContact :"",
                           escortContact :"",
-                          remarks:"",
-                          alreadyDispatched:"F"
+                          remarks:""
                       })
                   }
                   fetchedVehicle[order["orderid"]].map((vehicle)=>{
-                      x["vehicleList"].push({
+                      x["vehicleDetails"].push({
                           vehicleNumber : vehicle.vehiclenumber,
                           driverName : vehicle.drivername,
                           escortName : vehicle.escortname,
                           warehouseIncharge : vehicle.warehouseinchargesender,
                           driverContact : vehicle.drivercontact,
                           escortContact : vehicle.escortcontact,
-                          remarks: vehicle.remarks,
-                          alreadyDispatched:"T"
+                          remarks: vehicle.remarks
                       })
                   })
                   sampleBody.push(x);
@@ -266,29 +236,10 @@ useEffect(()=>{
       
       const baseUrl = "http://localhost:8100/unit";
       const handleFormSubmit = async (e) => {
-
-        // body[0]["vehicleList"]
-        console.log(body)
-        // body[0]["manufacturingYear"]=manufacturingDate;
-        // console.log(dataInput)
-        for(let i=0;i<body[0]["vehicleList"].length;i++){
-          let kk=[];
-          if(dataInput[i]){
-            kk = dataInput[i].replace(/^\s+|\s+$/g, '').split(/[ ]?\n/);
-          }
-          body[0]["vehicleList"][i]["unitList"]=kk;
-        }
-        let newBody = {
-          "orderType":orderType,
-          "orderList":body
-        }
-
           
-          
-           console.log(newBody);
-          //  if(body!=0)
-          //  setVehicleDetails({"Details":body});
-          DispatchUnits(newBody)
+           console.log({"Details":body});
+           if(body!=0)
+           setVehicleDetails({"Details":body});
       };
 
       useEffect(()=>{
@@ -298,23 +249,9 @@ useEffect(()=>{
 
      
       function handleUnits(id){
-        let kk = dataInput[id].replace(/^\s+|\s+$/g, '').split(/[ ]?\n/);
-        return kk;
-      }
-
-      function Recieve(){
         console.log(dataInput)
-        let kk = dataInput[0].replace(/^\s+|\s+$/g, '').split(/[ ]?\n/);
-        let body = {
-          "orderList": [
-            {
-              "orderID": allOrders["orderid"],
-              "unitList":kk
-            }
-          ]
-        }
-        console.log(body)
-        RecieveUnits(body)
+        let kk = dataInput[id].replace(/^\s+|\s+$/g, '').split(/[ ]?\n/);
+        console.log(kk)
       }
        
     
@@ -384,7 +321,7 @@ useEffect(()=>{
                 <p className='text-lg '>Manufacturer</p>
               </div>
               <div className='w-1/6 p-1 shadow-md m-2 text-7xl'>
-                <div >{allOrders["pendingforrecieve"]}</div>
+                <div >{allOrders["pendingtorecieve"]}</div>
                 <p className='text-lg '>Pending for Recieve</p>
               </div>
               <div className='w-1/6 p-1 shadow-md m-2 text-7xl'>
@@ -423,22 +360,8 @@ useEffect(()=>{
                     
                     <div className=" w-full">
 
-                    {orderType=="NEW"  && <div  className='w-1/2 m-5'>
-                                <p className="text-left ml-1 text-lg">Manufacturing Year : </p>
-                                <input
-                                className="border-l-purple-400 border-1  h-10  rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-                                name="mandate"
-                                value={manufacturingDate}
-                                placeholder="Manufacuring year"
-                                type="number"
-                                onChange={(e) => {
-                                    setManufacturingDate(e.target.value)
-                                }}
-                                />
-                                </div>}
-
                        
-                    {oneorder["vehicleList"].map((val, ind) => (
+                    {oneorder["vehicleDetails"].map((val, ind) => (
                         <div className="bg-white p-1 rounded-lg shadow-lg  w-full">
 
                         <div className="" style={{border: "solid 1px", borderRadius: "10px", width:"94%", margin:"3%"}} >
@@ -452,11 +375,11 @@ useEffect(()=>{
                                 name="vehicleNumber"
                                 placeholder="Vehicle Number"
                                 type="text"
-                                value={body[ind1]["vehicleList"][ind].vehicleNumber}
+                                value={body[ind1]["vehicleDetails"][ind].vehicleNumber}
                                 onChange={(e) => {
                                     setBody((prevBody) => {
                                     let kk = [...prevBody]
-                                    kk[ind1]["vehicleList"][ind].vehicleNumber = e.target.value;
+                                    kk[ind1]["vehicleDetails"][ind].vehicleNumber = e.target.value;
                                     return (kk);
                                     })
                                 }}
@@ -468,12 +391,12 @@ useEffect(()=>{
                                 className=" border-l-purple-400 border-1  h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
                                 name="driverName"
                                 placeholder="Driver Name"
-                                value={body[ind1]["vehicleList"][ind].driverName}
+                                value={body[ind1]["vehicleDetails"][ind].driverName}
                                 type="text"
                                 onChange={(e) => {
                                     setBody((prevBody) => {
                                     let kk = [...prevBody]
-                                    kk[ind1]["vehicleList"][ind].driverName = e.target.value;
+                                    kk[ind1]["vehicleDetails"][ind].driverName = e.target.value;
                                     return (kk);
                                     })
                                 }}
@@ -484,13 +407,13 @@ useEffect(()=>{
                                 <input
                                 className=" border-l-purple-400 border-1  h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
                                 name="escortName"
-                                value={body[ind1]["vehicleList"][ind].escortName}
+                                value={body[ind1]["vehicleDetails"][ind].escortName}
                                 placeholder="Escort Name"
                                 type="text"
                                 onChange={(e) => {
                                     setBody((prevBody) => {
                                     let kk = [...prevBody]
-                                    kk[ind1]["vehicleList"][ind].escortName = e.target.value;
+                                    kk[ind1]["vehicleDetails"][ind].escortName = e.target.value;
                                     return (kk);
                                     })
                                 }}
@@ -502,29 +425,16 @@ useEffect(()=>{
                                 className=" border-l-purple-400 border-1  h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
                                 name="remarks"
                                 placeholder="Remarks"
-                                value={body[ind1]["vehicleList"][ind].remarks}
+                                value={body[ind1]["vehicleDetails"][ind].remarks}
                                 type="text"
                                 onChange={(e) => {
                                     setBody((prevBody) => {
                                     let kk = [...prevBody]
-                                    kk[ind1]["vehicleList"][ind].remarks = e.target.value;
+                                    kk[ind1]["vehicleDetails"][ind].remarks = e.target.value;
                                     return (kk);
                                     })
                                 }}
                                 />
-                                 {/* <br/>
-                                <br/>
-                                <p className="text-left ml-1 text-lg">Version : </p>
-                                <input
-                                className=" border-l-purple-400 border-1  h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-                                name="escortContact"
-                                value={version}
-                                placeholder="Escort Contact"
-                                type="text"
-                                onChange={(e) => {
-                                   setVersion(e.target.value)
-                                }}
-                                /> */}
                             </div>
                             <div style={{margin:"3%",marginTop:"3%"}} className="w-1/2">
                                 <p className="text-left ml-1 text-lg">Sender Incharge : </p>
@@ -532,12 +442,12 @@ useEffect(()=>{
                                 className=" border-l-purple-400 border-1  h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
                                 name="warehouseIncharge"
                                 placeholder="Sender Incharge"
-                                value={body[ind1]["vehicleList"][ind].warehouseIncharge}
+                                value={body[ind1]["vehicleDetails"][ind].warehouseIncharge}
                                 type="text"
                                 onChange={(e) => {
                                     setBody((prevBody) => {
                                     let kk = [...prevBody]
-                                    kk[ind1]["vehicleList"][ind].warehouseIncharge = e.target.value;
+                                    kk[ind1]["vehicleDetails"][ind].warehouseIncharge = e.target.value;
                                     return (kk);
                                     })
                                 }}
@@ -548,13 +458,13 @@ useEffect(()=>{
                                 <input
                                 className=" border-l-purple-400 border-1  h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary "
                                 name="driverContact"
-                                value={body[ind1]["vehicleList"][ind].driverContact}
+                                value={body[ind1]["vehicleDetails"][ind].driverContact}
                                 placeholder="Driver Contact"
                                 type='number'
                                 onChange={(e) => {
                                     setBody((prevBody) => {
                                     let kk = [...prevBody]
-                                    kk[ind1]["vehicleList"][ind].driverContact = e.target.value;
+                                    kk[ind1]["vehicleDetails"][ind].driverContact = e.target.value;
                                     return (kk);
                                     })
                                 }}
@@ -565,38 +475,22 @@ useEffect(()=>{
                                 <input
                                 className=" border-l-purple-400 border-1  h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
                                 name="escortContact"
-                                value={body[ind1]["vehicleList"][ind].escortContact}
+                                value={body[ind1]["vehicleDetails"][ind].escortContact}
                                 placeholder="Escort Contact"
                                 type="number"
                                 onChange={(e) => {
                                     console.log(e.target.value)
                                     setBody((prevBody) => {
                                     let kk = [...prevBody]
-                                    kk[ind1]["vehicleList"][ind].escortContact = e.target.value;
+                                    kk[ind1]["vehicleDetails"][ind].escortContact = e.target.value;
                                     return (kk);
                                     })
                                 }}
                                 />
-                                {/* <br/>
-                                <br/>
-                                <p className="text-left ml-1 text-lg">Model : </p>
-                                <input
-                                className=" border-l-purple-400 border-1  h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-                                name="escortContact"
-                                value={model}
-                                placeholder="Escort Contact"
-                                type="text"
-                                onChange={(e) => {
-                                   setModel(e.target.value)
-                                }}
-                                /> */}
-                               
                                
                             </div>
-                            
                         </div>
                     </div>
-                    {body[ind1]["vehicleList"][ind].alreadyDispatched=="F" && <>
                     <h4 className='text-center' >Units Details (IDs)</h4>
                     <div className=' w-full mb-6'> 
                         
@@ -637,7 +531,7 @@ useEffect(()=>{
                           </div>} 
                         
                         </div>
-                      </>}
+                      
                     
                 </div>
 
@@ -655,13 +549,12 @@ useEffect(()=>{
                             warehouseIncharge : "",
                             driverContact : "",
                             escortContact : "",
-                            remarks: "",
-                            alreadyDispatched:"F"
+                            remarks: ""
                         };
                         let newBody = [ ...prev ];
                         console.log(newBody)
-                        if(newBody[ind1]["vehicleList"][newBody[ind1]["vehicleList"].length-1].vehicleNumber!="" && newBody[ind1]["vehicleList"][newBody[ind1]["vehicleList"].length-1].driverName!="" && newBody[ind1]["vehicleList"][newBody[ind1]["vehicleList"].length-1].driverContact!=""){
-                             newBody[ind1]["vehicleList"].push(temp);
+                        if(newBody[ind1]["vehicleDetails"][newBody[ind1]["vehicleDetails"].length-1].vehicleNumber!="" && newBody[ind1]["vehicleDetails"][newBody[ind1]["vehicleDetails"].length-1].driverName!="" && newBody[ind1]["vehicleDetails"][newBody[ind1]["vehicleDetails"].length-1].driverContact!=""){
+                             newBody[ind1]["vehicleDetails"].push(temp);
                         }
                         console.log(newBody)
                         return newBody;
@@ -676,51 +569,6 @@ useEffect(()=>{
         </>
           </>
         }
-
-        {role==1 && <>
-          <h4 className='text-center' >Units Details (IDs)</h4>
-                    <div className=' w-full mb-6'> 
-                        
-                        {iscollapsed==0 &&<div className="w-full">
-                        <textarea name="" id="" cols="60" className='p-2' rows={10}
-                        onChange={(e)=>{
-                          
-                          setDataInput((prev)=>{
-                            let hh = [...prev]
-                            hh[0] = e.target.value;
-                            return hh;
-                          })
-                        }}
-                        value={dataInput[0]}
-                        
-                        ></textarea>
-
-                        
-                        
-                      </div>
-                      }
-
-                      <div className='flex justify-around mb-4'>   <button className='text-white mt-2' onClick={()=>setIsFile(1)}>Enter units details via csv file</button>
-                        </div>
-                        {isFile==1 && <div className='bg-white shadow-sm shadow-black w-1/3  m-auto p-5 rounded-md'>
-                          <div className='text-right'><button className='text-white' onClick={()=>setIsFile(0)}>Close</button></div>
-                        <div className=''>
-                        <input
-                            className='w-full '
-                            onChange={handleFileChange}
-                            id="csvInput"
-                            name="file"
-                            type="File"
-                          />
-                          </div>
-                          <button onClick={()=>handleParse(0)} className="text-white">Fetch data from file</button>
-                          <br/>
-                          </div>} 
-                        
-                        </div>
-
-                      <button onClick={Recieve} className="text-white">Submit</button>
-        </>}
 
        
         {/* <ReadCsv/> */}

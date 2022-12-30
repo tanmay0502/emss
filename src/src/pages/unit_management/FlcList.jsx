@@ -17,6 +17,7 @@ export default function FLCList() {
     const [tableData, setTableData] = useState([])
     const [flc, setFlc] = useState([])
     const [flcValue, setFlcValue] = useState([])
+    const [isLoading, setIsLoading] = useState(0);
 
     async function getElectionList() {
         try {
@@ -31,7 +32,6 @@ export default function FLCList() {
                 }
             );
             const data = await response.json();
-            console.log("Flc data",data)
 
             if (data.length) {
                 setFlc(data)
@@ -55,23 +55,20 @@ export default function FLCList() {
                 let st = ""
                 let ed = ""
                 try {
-                    st = st + val['startdate'].slice(0,10)
-                    ed = ed + val["enddate"].slice(0,10)
-                }catch(err){
+                    st = st + val['startdate'].slice(0, 10)
+                    ed = ed + val["enddate"].slice(0, 10)
+                } catch (err) {
                     // st = ""
                     console.log(err)
                 }
 
                 return {
-                    'Flcid': val['flcid'],
-                    'Warehouse ID': val['warehouseid'],
-                    'Manufacturer Name': val['manufacturername'],
-                    "Status": val['status'],
-                    "ECI Supervisor's Name": val['ecisupervisor'],
-                    "No. Of Engineers": val['numengineers'],
-                    'Tentative year':val["tentativeyear"],
-                    "Start Date Of FLC":st,
-                    "End Date Of FLC": ed,
+                    'FLC ID': val['flcid'],
+                    'Manufacturer': val['manufacturer'],
+                    'District': val['district'],
+                    'Election Type': ((val['electiontype'] == 'GA') ? "General Assembly" : (val['electiontype'] == 'GP') ? 'General Parliment' : (val['electiontype'] == 'BA') ? 'ByePoll Assembly' : 'ByePoll Parliment'),
+                    "FLC Period": (val['startdate'] && val['enddate']) ? val['startdate'].split('T')[0] + " - " + val['enddate'].split('T')[0] : ""
+
                 }
             })
             setTableData(data)
@@ -83,10 +80,21 @@ export default function FLCList() {
     }, [flc])
 
 
+    useEffect(
+        () => {
 
-    useEffect(() => {
-        getElectionList();
-    }, []);
+            setIsLoading(1);
+
+            let timer1 = setTimeout(() => getElectionList(), 1 * 1000);
+
+            return () => {
+                clearTimeout(timer1);
+            };
+        },
+        []
+    );
+
+
 
 
 
@@ -96,20 +104,20 @@ export default function FLCList() {
                 <h4 className='text-white'>Scheduled FLC List</h4>
 
                 <div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center" }}>
-                    
-                   {sessionStorage.getItem("sessionToken").substring(8)=="CEO" &&  
-                    <button className='createRequestBtn' onClick={() => {
-                        window.location.pathname = "/session/unitmanagement/announce_flc";
-                    }}>
-                        Schedule FLC
-                    </button>
+
+                    {sessionStorage.getItem("sessionToken").substring(8) == "CEO" &&
+                        <button className='createRequestBtn' onClick={() => {
+                            window.location.pathname = "/session/unitmanagement/announce_flc";
+                        }}>
+                            Schedule FLC
+                        </button>
                     }
-                   {sessionStorage.getItem("sessionToken").substring(8)=="DEO" &&  
-                    <button className='createRequestBtn' onClick={() => {
-                        window.location.pathname = "/session/unitmanagement/preparednesscertificate";
-                    }}>
-                        Upload Preparedness Certitificate
-                    </button>
+                    {sessionStorage.getItem("sessionToken").substring(8) == "DEO" &&
+                        <button className='createRequestBtn' onClick={() => {
+                            window.location.pathname = "/session/unitmanagement/preparednesscertificate";
+                        }}>
+                            Upload Preparedness Certitificate
+                        </button>
                     }
 
                     <div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center", background: "#F9FBFF", borderRadius: "10px", padding: "7.5px 15px 7.5px 0", fontSize: "0.8em" }}>
@@ -142,10 +150,10 @@ export default function FLCList() {
                 <div class={styles.table}>
                     <DynamicDataTable
                         rows={flcValue !== undefined ? tableData : "No Data"}
-                        fieldsToExclude={["Flcid", "Status", "ECI Supervisor's Name", "No. Of Engineers"]}
+                        fieldsToExclude={["FLC ID"]}
                         buttons={[]}
                         onClick={(event, row) => {
-                            navigate('/session/unitmanagement/editFlc/' + row["Flcid"])
+                            navigate('/session/unitmanagement/editFlc/' + row["FLC ID"])
                         }}
                     />
                 </div>

@@ -1,17 +1,55 @@
-import { DynamicDataTable } from '@langleyfoxall/react-dynamic-data-table'
-import React, { useState } from 'react'
+import dist, { DynamicDataTable } from '@langleyfoxall/react-dynamic-data-table'
+import React, { useEffect, useState } from 'react'
 import styles from './styles/second_Randomisation_Scheduling.module.css'
 import { TagsInput } from "react-tag-input-component";
+import { Select } from 'antd';
+import { getRealm, formatRealm, formatRealm2 } from '../../components/utils'
 
 function Second_Randomisation_Scheduling() {
-
-
     const [ceouserid, setceouserid] = useState('')
     const [deouserid, setdeouserid] = useState('')
     const [electiontype, setelectiontype] = useState('')
     const [startdate, setstartdate] = useState('')
     const [enddate, setenddate] = useState('')
-    const [accode, setaccode] = useState('')
+    const [stateCode, setStateCode] = useState('')
+    const [districtCode, setDistrictCode] = useState('')
+    const [accode, setaccode] = useState([])
+
+    const [districtList, setDistrictList] = useState([]);
+    const [ACList, setACList] = useState([]);
+
+    const [realm, setRealm] = useState([])
+
+    useEffect(() => {
+        getRealmData();
+    }, [])
+
+    const getRealmData = async () => {
+        setRealm(await getRealm('Unit', 'ScheduleSecondRandomization'));
+    }
+
+    useEffect(() => {
+        if (realm && realm !== []) {
+            // console.log(formatRealm2(realm)[0])
+            let stateVal = formatRealm2(realm)[0]
+            if (stateVal) {
+                let districts = formatRealm2(realm, stateVal['stCode'])
+                setStateCode(stateVal['stCode'])
+                setDistrictCode(districts[0]['dtCode'])
+                setDistrictList(districts)
+            }
+        }
+    }, [realm])
+
+    useEffect(() => {
+        if (stateCode !== '' && districtCode !== '') {
+            setACList(formatRealm2(realm, stateCode, districtCode))
+        }
+    }, [districtCode])
+
+    useEffect(() => {
+        console.log(ACList)
+    }, [ACList])
 
     async function Submit_Second_randomization() {
         var currentdate = new Date();
@@ -95,27 +133,35 @@ function Second_Randomisation_Scheduling() {
                 </div>
 
                 <div class={styles.parent}>
-
-
                     <div class={styles.div1}>
-                        <p> AC Code</p>
-                        <input
-                            id="ascode"
+                        <p>District Code</p>
+                        <select
+                            id="districtCode"
                             type="text"
                             required
-                            placeholder='Enter AC Code'
-                            onChange={(e) => { setaccode(e) }}
+                            placeholder='Enter District Code'
+                            value={districtCode}
+                            onChange={(e) => { setDistrictCode(e.target.value) }}
                         >
-                        </input>
+                            {
+                                districtList.map((val) => {
+                                    return (
+                                        <option value={val['dtCode']}>
+                                            {val['dtCode']}&nbsp;({val['dtName']})
+                                        </option>
+                                    )
+                                })
+                            }
+                        </select>
                     </div>
 
                     <div class={styles.div2}>
                         <p> Election Type</p>
-                        <select id="electiontype" onSelect={(e) => { setelectiontype(e)}}>
+                        <select id="electiontype" onSelect={(e) => { setelectiontype(e) }}>
                             <option value="" >Select:</option>
-                            <option value="A">Assembly-A</option>
-                            <option value="L">Lok Sabha-L</option>
-                            <option value="B">By elections-B</option>
+                            <option value="A">Assembly</option>
+                            <option value="L">Lok Sabha</option>
+                            <option value="B">By Elections</option>
                         </select>
                     </div>
 
@@ -141,6 +187,24 @@ function Second_Randomisation_Scheduling() {
                             className="selectBox"
                             onChange={(e) => { setenddate(e) }}
                         ></input>
+                    </div>
+
+                    <div className={styles.div5}>
+                        {districtCode && districtCode === '' ?
+                            <h3>Select a District to display ACs.</h3>
+                            :
+                            <DynamicDataTable
+                                renderCheckboxes={true}
+                                rows={ACList}
+                                buttons={[]}
+                                fieldMap={
+                                    {
+                                        'acCode': 'AC Code',
+                                        'acName': 'AC Name'
+                                    }
+                                }
+                            />
+                        }
                     </div>
 
                 </div>

@@ -563,105 +563,21 @@ export default function HomePage() {
         navigate("/session/unitmanagement/flc_list")
     };
 
-    const First_Randomisation_call = async(e) => {
-	const response = await fetch(
-            `${process.env.REACT_APP_API_SERVER}/user/validate_permissionAPI`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                credentials: 'include',
-                body: JSON.stringify({
-		    "moduleName": "Unit",
-		    "operation": "ScheduleFirstRandomization",
-		    "operandState": User_ID.substring(0,2),
-		    "operandDist": User_ID.substring(2,5),
-		    "operandAC": User_ID.substring(5,8),
-		    "operandRole": ""
-                }),
-            }
-        );
-
-        const data = await response.json();
-
-        if (response.status === 200) {
+    const First_Randomisation_call = (e) => {
+        if (Role == "CEO") {
             navigate(`/session/unitmanagement/first_randomisation_scheduling`)
         }
-	const response1 = await fetch(
-            `${process.env.REACT_APP_API_SERVER}/user/validate_permissionAPI`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                credentials: 'include',
-                body: JSON.stringify({
-		    "moduleName": "Unit",
-		    "operation": "FirstRandomization",
-		    "operandState": User_ID.substring(0,2),
-		    "operandDist": User_ID.substring(2,5),
-		    "operandAC": User_ID.substring(5,8),
-		    "operandRole": ""
-                }),
-            }
-        );
-
-        const data3 = await response1.json();
-	console.log(response1.status,"rando");
-	if (response1.status === 200) {
+        else if (Role == "DEO") {
             navigate(`/session/unitmanagement/firstrandomization`)
 
         }
     };
 
-    const Second_Randomisation_call = async (e) => {
-	const response = await fetch(
-            `${process.env.REACT_APP_API_SERVER}/user/validate_permissionAPI`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                credentials: 'include',
-                body: JSON.stringify({
-		    "moduleName": "Unit",
-		    "operation": "ScheduleSecondRandomization",
-		    "operandState": User_ID.substring(0,2),
-		    "operandDist": User_ID.substring(2,5),
-		    "operandAC": User_ID.substring(5,8),
-		    "operandRole": ""
-                }),
-            }
-        );
-
-        const data = await response.json();
-
-        if (response.status === 200) {
+    const Second_Randomisation_call = (e) => {
+        if (Role == "DEO") {
             navigate(`/session/unitmanagement/second_randomisation_scheduling`)
         }
-	const response1 = await fetch(
-            `${process.env.REACT_APP_API_SERVER}/user/validate_permissionAPI`,
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                credentials: 'include',
-                body: JSON.stringify({
-		    "moduleName": "Unit",
-		    "operation": "SecondRandomization",
-		    "operandState": User_ID.substring(0,2),
-		    "operandDist": User_ID.substring(2,5),
-		    "operandAC": User_ID.substring(5,8),
-		    "operandRole": ""
-                }),
-            }
-        );
-
-        const data3 = await response1.json();
-	
-	if (response1.status === 200) {
+        else if (Role == "RO") {
             navigate(`/session/unitmanagement/secondrandomization`)
 
         }
@@ -1149,7 +1065,6 @@ export default function HomePage() {
                         </li>
                     </div>
                 </div>
-                {sessionStorage.getItem("sessionToken").substring(8)=="WHM"}
                 <div className={styles.myCardSampleHover} onClick={() => { navigate(`/session/unitmanagement/orders`) }}>
                     <div className={styles.card_title}>
                         {/* /session/unitmanagement/schedule_list */}
@@ -1211,7 +1126,6 @@ export default function HomePage() {
                         </li>
                     </div>
                 </div>
-
             </div>
 
             <div className={styles.parent2} >
