@@ -578,7 +578,7 @@ export default function HomePage() {
 		    "operandState": User_ID.substring(0,2),
 		    "operandDist": User_ID.substring(2,5),
 		    "operandAC": User_ID.substring(5,8),
-		    "operandRole": ""
+		    "operandRole": "-"
                 }),
             }
         );
@@ -1211,7 +1211,7 @@ export default function HomePage() {
                         </li>
                     </div>
                 </div>
-                }
+                
             </div>
 
             <div className={styles.parent2} >

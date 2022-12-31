@@ -2,7 +2,7 @@ import { DynamicDataTable } from '@langleyfoxall/react-dynamic-data-table'
 import React, { useState,useEffect } from 'react'
 import styles from './styles/first_Randomisation_Scheduling.module.css'
 import { TagsInput } from "react-tag-input-component";
-
+import { getRealm, formatRealm, formatRealm2 } from '../../components/utils'
 function First_Randomisation_Scheduling() {
 
 
@@ -11,6 +11,25 @@ function First_Randomisation_Scheduling() {
     const [electiontype, setelectiontype] = useState('');
     const [startdate, setstartdate] = useState('');
     const [enddate, setenddate] = useState('');
+    const [realm, setRealm] = useState([])
+    const [state2, setState2] = useState([])
+    const [dist, setDist] = useState([])
+    const [AC, setAC] = useState([])
+    const [states, setStates] = useState([]);
+    const [myState, setmyState] = useState("");
+    const [mydistcode, setmydistcode] = useState("");
+    const [currState, setCurrState] = useState([]);
+    const [currDist, setCurrDist] = useState([])
+
+    useEffect(() => {
+        getRealmData();
+    }, [])
+
+    const getRealmData = async () => {
+        setRealm(await getRealm('Unit', 'ScheduleFirstRandomization'));
+    }
+
+
 
     useEffect(() => {
 	async function fetch_district_list() {
@@ -18,24 +37,57 @@ function First_Randomisation_Scheduling() {
 		const response = await fetch(`${process.env.REACT_APP_API_SERVER}/user/getRealm`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
+                    body:JSON.stringify({
+                        "module_name": "Warehouse",
+                        "operation": "CreateWarehouse"
+                      }),
                     credentials: "include"
 		});
 		const data = await response.json();
 		console.log(data, "datatatatatatatat")
+        setRealm(data);
+        console.log(data)
 		if (response.status === 200) {
                     console.log("inside if")
-                    if (data.hasOwnProperty('data')) {
-			console.log("inside second if", data['data']['dist'])
-			setDistrictList(data['data']['dist']);
-		    }
+                    // if (data.hasOwnProperty('data')) {
+			// console.log("inside second if", data['data']['dist'])
+			// setRealm(data);
+            console.log(data)
+		    
 		}
 	    } catch (err) {
 		alert('Error occured during scheduling');
 	    }
 	}
+    
 
-	fetch_district_list();
+	// fetch_district_list();
     },[]);
+    useEffect(() => {
+        if(realm && realm !== []){
+          setState2(formatRealm2(realm))
+          console.log(realm)
+            console.log(state2)
+
+          try{
+            setCurrState(state2[0]["stCode"]);
+          }catch(err){
+
+          }
+          
+        }
+       
+      }, [realm]);
+  
+      useEffect(() => {
+        if(currState && currState !== ""){
+          setDist(formatRealm2(realm, currState))
+          console.log(dist)
+        }
+    
+      }, [currState,realm]);
+
+
 
     async function Submit_First_randomization() {
 
@@ -78,14 +130,13 @@ function First_Randomisation_Scheduling() {
                     }),
                 }
             );
-
             const data3 = await response.json();
             console.log(data3, "data3")
             if (response.status === 200) {
                 alert("Schedule First Randomization Created Successfully");
                 window.location.pathname = "/session/unitmanagement"
             } else {
-                alert(data3.message);
+                alert(data3.data);
                 document.getElementById("electiontype").value = ""
                 document.getElementById("startdate").value = ""
                 document.getElementById("enddate").value = ""
@@ -137,8 +188,10 @@ function First_Randomisation_Scheduling() {
                             //    <option value={item.distId}>{item.distName}</option>
 				//))
 			    }
-			    {districtList.map((item, _id) => (
-                                <option key={_id}>{item}</option>
+                
+			    {dist.map((item) => (
+
+                                <option value={item["dtCode"]}>{item["dtName"]}</option>
                             ))}
 
                         </select>

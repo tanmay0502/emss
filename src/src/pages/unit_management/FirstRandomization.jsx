@@ -64,8 +64,10 @@ const ActionButton = ({ isActive, text, name, onClick }) => {
 // 1st Randomisation Card
 const FirstRandomisationForm = ({ isVisible = true }) => {
 
-    const district_id = userID.slice(2, 5); // calc from userId
+    // const district_id = userID.slice(2, 5); // calc from userId
     console.log(userID.slice(2, 5))
+    const [districtName, setDistrictName] = useState([])
+    const [districtID, setDistrictID] = useState([])
     const [assemblyData, setAssemblyData] = useState([]);
     const [assemblyPSData, setAssemblyPSData] = useState([]);
     const [iterationIndex, setIterationIndex] = useState(0);
@@ -235,33 +237,43 @@ const FirstRandomisationForm = ({ isVisible = true }) => {
                     });
                     const data = await response.json();
                     if (response.status === 200) {
-                        setAssemblyList(data['data']);
+                        setAssemblyList(data["data"]);
+                        console.log(data["data"])
+                        setDistrictName(data["data"]["dist_name"])
+                        setDistrictID(data["data"]["dist_code"])
                             let tempdata = []
-			    let templist = []
-                            for(let i=0;i<data['data'].length;i++){
-                                // console.log(data['data']['ac'][i])
+			                let templist = []
+                        console.log(data['data']['acs'])
+                        console.log(Object.keys(data['data']['acs']));
+                        const keys = Object.keys(data['data']['acs'])
+                            for(let i=0;i<Object.keys(data['data']['acs']).length;i++){
+                                console.log(data['data']['acs'][keys[i]])
+                                // if(data['data']['acs'][keys[i]] === "110" || data['data']['acs'][keys[i]] === "119"){
+
+                                
                                 tempdata.push(
                                     {
-                                        ac_name: data['data'][i]['ac_name'],
-					ac_no: data['data'][i]['ac_no'],
-					ps_no: data['data'][i]['ps_no'],
-					unit_no: data['data'][i]['bu_no'],
+                                        ac_name: data['data']['acs'][keys[i]]['ac_name'],
+                                        ac_no: data['data']['acs'][keys[i]]['ac_no'],
+                                        ps_no: data['data']['acs'][keys[i]]['ps_no'],
+                                        unit_no: data['data']['acs'][keys[i]]['bu_no'],
                                         cu_count: "120",
                                         bu_count: "120",
                                         vt_count: "120"
                                     }
                                 );
-				templist.push(
-				    {
-                                        ac_name: data['data'][i]['ac_name'],
-					ac_no: data['data'][i]['ac_no']
-				    }
-				);
-                                
+                                templist.push(
+                                    {
+                                        ac_name: data['data']['acs'][keys[i]]['ac_name'],
+                                        ac_no: data['data']['acs'][keys[i]]['ac_no']
+                                    }
+                                );
+                            // }
                             }
 			setAssemblyList(templist);
                         setAssemblyData(tempdata);
                         setAssemblyPSData(tempdata);
+                        console.log(tempdata)
                     }
 		} catch (err) {
                     alert(`Error occured: ${err}`);
@@ -284,13 +296,13 @@ const FirstRandomisationForm = ({ isVisible = true }) => {
                                 <div className="mb-5 flex w-full flex-row justify-evenly">
                                     <div className="flex w-3/8 flex-col text-left">
                                         <label className="mb-2 w-full text-base">
-                                            District ID<span className="text-red-600">*</span>
+                                            District Name<span className="text-red-600">*</span>
                                         </label>
                                         <div className="relative text-gray-600">
                                             <input
                                                 className="h-10 w-full cursor-not-allowed rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
                                                 name="districtId"
-                                                value={district_id}
+                                                value={districtName}
                                                 readOnly
                                                 disabled
                                             />
@@ -362,7 +374,7 @@ const FirstRandomisationForm = ({ isVisible = true }) => {
                                                     {" "}
                                                     <option hidden>Select</option>
                                                     {assemblyList.map((item) => (
-                                                        <option value={item.ac_no}>{item.ac_name}</option>
+                                                        <option value={item.ac_no}>{item.ac_name}  ({item.ac_no})</option>
                                                     ))}
                                                 </select>
                                                 <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1/2" />
