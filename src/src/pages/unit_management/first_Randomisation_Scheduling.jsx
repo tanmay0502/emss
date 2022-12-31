@@ -20,6 +20,7 @@ function First_Randomisation_Scheduling() {
     const [mydistcode, setmydistcode] = useState("");
     const [currState, setCurrState] = useState([]);
     const [currDist, setCurrDist] = useState([])
+    const [distCodes, setDistCodes] = useState(new Set());
 
     useEffect(() => {
         getRealmData();
@@ -123,13 +124,14 @@ function First_Randomisation_Scheduling() {
                     },
                     credentials: 'include',
                     body: JSON.stringify({
-                        district: document.getElementById("district") ? document.getElementById("district").value : "",
+                        district: [...distCodes],
                         electiontype: document.getElementById("electiontype") ? document.getElementById("electiontype").value : "",
                         startdate: document.getElementById("startdate") ? document.getElementById("startdate").value + " " + time : "",
                         enddate: document.getElementById("enddate") ? document.getElementById("enddate").value + " " + time : "",
                     }),
                 }
             );
+            console.log(distCodes)
             const data3 = await response.json();
             console.log(data3, "data3")
             if (response.status === 200) {
@@ -178,32 +180,33 @@ function First_Randomisation_Scheduling() {
                     </div> */}
 
 
-                    <div class={styles.div1}>
+                    {/* <div class={styles.div1}>
                         <p> District</p>
                         <select id="district"
-				name="district"
-			>
+                            name="district"
+                        >
                             <option hidden>Select:</option>
 			    {//districtList.map(item => (
                             //    <option value={item.distId}>{item.distName}</option>
 				//))
 			    }
                 
-			    {dist.map((item) => (
+			    {dist && dist.map((item) => (
 
                                 <option value={item["dtCode"]}>{item["dtName"]}</option>
                             ))}
 
                         </select>
-                    </div>
+                    </div> */}
 
-                    <div class={styles.div2}>
+                    <div class={styles.div1}>
                         <p> Election Type</p>
                         <select id="electiontype" onSelect={(e) => { setelectiontype(e)}}>
                             <option value="" >Select:</option>
-                            <option value="A">Assembly-A</option>
-                            <option value="L">Lok Sabha-L</option>
-                            <option value="B">By elections-B</option>
+                            <option value="GP">General Election - Parlimentary</option>
+                            <option value="GA">General Election - Assembly</option>
+                            <option value="BP">By Election - Parlimentary</option>
+                            <option value="BA">By Election - Assembly</option>
                         </select>
                         {/* <input
                             id="electiontype"
@@ -215,7 +218,7 @@ function First_Randomisation_Scheduling() {
                         </input> */}
                     </div>
 
-                    <div class={styles.div3}>
+                    <div class={styles.div2}>
                         <p> Start date</p>
                         <input
                             id="startdate"
@@ -228,7 +231,7 @@ function First_Randomisation_Scheduling() {
                         ></input>
                     </div>
 
-                    <div class={styles.div4}>
+                    <div class={styles.div3}>
                         <p> End date</p>
                         <input
                             id="enddate"
@@ -239,8 +242,65 @@ function First_Randomisation_Scheduling() {
                             onChange={(e) => { setenddate(e) }}
                         ></input>
                     </div>
+                    </div>
+                    <div className='text-lg'>
+                        Select Districts
+                    </div>
 
-                </div>
+                    <div className={styles.div5}>
+                        
+                            <DynamicDataTable
+                                renderCheckboxes={true}
+                                renderMasterCheckbox={false}
+                                isCheckboxChecked={({dtCode}) => {
+                                    console.log(dtCode)    
+                                    distCodes.has(dtCode)
+                                }}
+                                // onMasterCheckboxChange={(_, rows) => {
+                                //     let all = true
+                            
+                                //     rows.forEach(({ id }) => {
+                                //         if(!all){
+                                //             return;
+                                //         }
+                                //         if(!distCodes.has(id)) {
+                                //             all = false
+                                //         }
+                                //     })
+                            
+                                //     rows.forEach(({ id }) => {
+                                //         var tmp = new Set(distCodes)
+                                //         if (all) {
+                                //             tmp.delete(id)
+                                //         } else if (!tmp.has(id)) {
+                                //             tmp.add(id)
+                                //         }
+                                //         setDistCodes(tmp)
+                                //     })
+                                // }}
+                                onCheckboxChange={(_, { dtCode }) => {
+                                    var tmp = new Set(distCodes)
+                                    if (distCodes.has(dtCode)) {
+                                        tmp.delete(dtCode)
+                                    } else {
+                                        tmp.add(dtCode)
+                                    }
+                                    setDistCodes(tmp)
+                                }}
+
+                                rows={dist}
+                                buttons={[]}
+                                fieldMap={
+                                    {
+                                        // 'acCode': 'AC Code',
+                                        // 'acName': 'AC Name'
+                                    }
+                                }
+                            />
+                        
+                    </div>
+                    
+                
 
             </div>
             <center><input type={"submit"} className={styles.mySubmit} ></input></center>

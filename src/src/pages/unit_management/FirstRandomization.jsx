@@ -446,7 +446,7 @@ const FirstRandomisationForm = ({ isVisible = true }) => {
                         className="mb-8 font-semibold text-white"
                         onClick={handleFormSubmit}
                     >
-                        Randomise
+                        Randomize
                     </button>
                     {isSubmitted && (
                         <RandomisationOutput
@@ -477,7 +477,7 @@ const RandomisationOutput = ({
         () => [
             {
                 Header: "Assembly Segment",
-                accessor: "ac_name", // accessor is the "key" in the data
+                accessor: "ac_no", // accessor is the "key" in the data
             },
             {
                 Header: "CU Count",
@@ -603,6 +603,7 @@ const RandomisationOutput = ({
                         return (
                             <>
                                 {console.log(randomData, "randomData")}
+                                {console.log(row)}
                                 <AssemblyTableRow
                                     key={id}
                                     row={row}
@@ -633,6 +634,7 @@ const RandomisationOutput = ({
 };
 
 const AssemblyTableRow = ({ row, unitData }) => {
+    // console.log(AssemblyTableRow)
     const [isExpanded, setIsExpanded] = useState(false);
 
     const toggleExpander = (e) => {

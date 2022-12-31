@@ -328,7 +328,7 @@ function UserList() {
 				}
 			</div>
 			<div className='myWrapper' style={{ "gridArea": "1 / 2 / 3 / 3", display: "flex", flexDirection: "column", "alignItems": "center", "justifyContent": "center" }}>
-				<ul className='userStats'>
+				<ul className='userStats p-2'>
 					<li>
 						<div className="icon">
 							<TotalUsers />

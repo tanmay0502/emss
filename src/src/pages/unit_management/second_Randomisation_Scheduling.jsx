@@ -110,14 +110,6 @@ function Second_Randomisation_Scheduling() {
 
     }
 
-
-    // console.log(
-    //     "electiontype:", document.getElementById("electiontype") ? document.getElementById("electiontype").value : "",
-    //     "startdate:", document.getElementById("startdate") ? document.getElementById("startdate").value : "",
-    //     "enddate:", document.getElementById("enddate") ? document.getElementById("enddate").value : "",
-    // )
-
-
     const onFormSubmit = async (e) => {
         e.preventDefault();
         // console.log(ACCodes)
