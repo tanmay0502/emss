@@ -124,7 +124,7 @@ function First_Randomisation_Scheduling() {
                     },
                     credentials: 'include',
                     body: JSON.stringify({
-                        district: [...distCodes],
+                        districts: [...distCodes],
                         electiontype: document.getElementById("electiontype") ? document.getElementById("electiontype").value : "",
                         startdate: document.getElementById("startdate") ? document.getElementById("startdate").value + " " + time : "",
                         enddate: document.getElementById("enddate") ? document.getElementById("enddate").value + " " + time : "",
