@@ -97,9 +97,9 @@ const SecondRandomisationForm = ({ isVisible }) => {
             const units_requirement = assemblyList
                 .filter((d) => d.ps_no)
                 .map((d) => {
-                    d['cu_count'] = assemblyData['cu_no'] ? assemblyData['cu_no'] : 0;
-                    d['bu_count'] = assemblyData['bu_no'] ? assemblyData['bu_no'] : 0;
-                    d['vt_count'] = assemblyData['vt_no'] ? assemblyData['vt_no'] : 0;
+                    d['cu_count'] = assemblyData['cu_no'] ? assemblyData['cu_no'] : 1;
+                    d['bu_count'] = assemblyData['bu_no'] ? assemblyData['bu_no'] : 1;
+                    d['vt_count'] = assemblyData['vt_no'] ? assemblyData['vt_no'] : 1;
                     return d;
                 });
 
@@ -192,6 +192,7 @@ const SecondRandomisationForm = ({ isVisible }) => {
                         // })
                     });
                     const data = await response.json();
+                    console.log("----",data)
                     if (response.status === 200) {
                         console.log(data['data'][ACCode])
                         if (data.hasOwnProperty('data')) {
@@ -270,7 +271,7 @@ const SecondRandomisationForm = ({ isVisible }) => {
                                                     name="cu_count"
                                                     placeholder="CU"
                                                     title="Total CUs"
-                                                    value={assemblyData['cu_no'] ? assemblyList.length * assemblyData['cu_no'] : 0}
+                                                    value={assemblyList.length}
                                                     disabled
                                                 />
                                                 <input
@@ -288,7 +289,7 @@ const SecondRandomisationForm = ({ isVisible }) => {
                                                     name="vt_count"
                                                     placeholder="VT"
                                                     title="Total VTs"
-                                                    value={assemblyData['vt_no'] ? assemblyList.length * assemblyData['vt_no'] : 0}
+                                                    value={assemblyList.length}
                                                     disabled
                                                 />
                                             </div>
@@ -314,6 +315,8 @@ const SecondRandomisationForm = ({ isVisible }) => {
                             randomData={randomisedData[iterationIndex - 1]}
                             iterationIndex={iterationIndex}
                             fetchNewIterations={null}
+                            ACCode={ACCode}
+
                         />
                     )}
                 </div>
@@ -327,6 +330,7 @@ const SecondRandomisationOutput = ({
     assemblyData,
     randomData,
     fetchNewIterations,
+    ACCode
 }) => {
     const iterationText = ["Third Last", "Second Last", "Latest"];
     const [isRandomisationSaved, setIsRandomisationSaved] = useState(false);
@@ -370,18 +374,23 @@ const SecondRandomisationOutput = ({
         }
         fetchNewIterations(newIndex);
     };
-
+    
+    
     const handleRadomisationSave = async () => {
         try {
             const response = await fetch(
-                `${baseUrl}/save-second-randomization?` +
-                new URLSearchParams({
-                    iteration_index: iterationIndex,
-                }),
+                `${baseUrl}/save-second-randomization?`,
+                // new URLSearchParams({
+                //     iteration_index: iterationIndex,
+                // }),
                 {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     credentials: "include",
+                    body: JSON.stringify({
+                        iteration_index: iterationIndex,
+                        ac_no:ACCode
+                    }),
                 }
             );
             const data = await response.json();
