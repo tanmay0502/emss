@@ -784,6 +784,7 @@ useEffect(()=>{
               {isTemporary ? <span className="text-red-500 text-lg">*</span> : <span></span>}
             </label>
           </div>
+          
           <div className="form_group">
 
             <input
@@ -796,11 +797,13 @@ useEffect(()=>{
                 uploadImage(e);
             }}
             />
+            
+            <p style={{color:"red"}}>Only .png file is supported due to security reasons</p>
           </div>
         </div>
 
         <div className="flex justify-center">
-        <button className="bg-red-500 hover:bg-red-700 text-white px-4 rounded-full mr-8 cursor-pointer"
+        <button className="bg-red-500 hover:bg-red-700 text-white px-8 rounded-full mr-8 cursor-pointer"
               onClick={() => {
                 navigate('/session/usermanagement')
               }}

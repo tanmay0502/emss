@@ -107,7 +107,7 @@ function UserList() {
 						<img className='thimage' style={{ height: "35px", width: "35px" }} src={val["photodata"] !== '' ? val["photodata"]: UserImageTest} alt="Img"/>
 						</div>,
 					"User Name": val["name"],
-					"status" : val["active"],
+					"status" : val["active"]+val["userid"],
 					"newUserId": (val["userid"].slice(0,2)).concat(val["userid"].slice(8),val["userid"].slice(2,6),val["userid"].slice(6,8)),
 					"Phone Number": val["mobilenumber"].substring(0, 5) + " " + val["mobilenumber"].substring(5) ,
 					"Role": val["userid"].slice(8),
@@ -143,7 +143,7 @@ function UserList() {
 	return () => {
 	    
 	}
-    }, [users, tableFilter, sortBy, sortOrder])
+    }, [users, tableFilter, sortBy, sortOrder,isTemporary])
     
     async function getUser() {
 	

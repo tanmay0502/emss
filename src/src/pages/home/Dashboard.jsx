@@ -141,8 +141,13 @@ function Home1() {
 		// count the number of unit type in use
 		for (let i = 0; i < data.length; i++) {
 			const ele = data[i];
-			ele.unit_type==="BU"?countBU+=ele.count:ele.unit_type=="VT"?countVT+=ele.count:countCU+=ele.count;
+			console.log(ele)
+			countBU+=ele.BU
+			countCU+=ele.CU
+			countVT+=ele.VT
+			console.log(countBU,countCU,countVT)
 		}
+		console.log(countBU,countCU,countVT)
 		setTotalBU(countBU)
 		setTotalCU(countCU)
 		setTotalVT(countVT)
