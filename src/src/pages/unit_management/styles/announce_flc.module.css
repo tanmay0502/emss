@@ -117,9 +117,12 @@
     padding-right: 20px;
     /* width: 100%; */
   }
+
+
   .parent input[type="number"],
   .parent input[type="email"],
   .parent input[type="text"] {
+    
     box-sizing: border-box;
     width: 100%;
     padding: 12.5px 10px;
@@ -128,6 +131,17 @@
     font-family: "Nunito Sans";
     outline: none;
   }
+
+  .numberfield{
+    box-sizing: border-box;
+    width: 100%;
+    padding: 12.5px 10px;
+    border-radius: var(--border-radius);
+    border: 2px solid #84587c;
+    font-family: "Nunito Sans";
+    outline: none;
+  }
+
   .parent input[type="date"] {
     box-sizing: border-box;
     width: 100%;

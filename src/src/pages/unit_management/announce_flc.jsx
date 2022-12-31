@@ -190,9 +190,9 @@ function Announce_Flc() {
     );
 
 
-    async function getpreparednessStatistics(id) {
+    async function getpreparednessStatistics(id_election) {
 
-        if (id != -1) {
+        if (id_election != -1) {
             try {
                 const response = await fetch(
                     `${process.env.REACT_APP_API_SERVER}/unit/preparednessStatistics`,
@@ -204,7 +204,7 @@ function Announce_Flc() {
                         credentials: 'include',
                         body: JSON.stringify(
                             {
-                                "electionID": Number(id)
+                                "electionID": Number(id_election)
                             }
                         )
                     }
@@ -285,8 +285,7 @@ function Announce_Flc() {
 
         if (!selectedDistricts.includes(District[e.target.value][1][1])) {
             setSelectedDistricts([...selectedDistricts, District[e.target.value][1][1]])
-            setSelectedDistrictssf([...selectedDistricts, District[e.target.value][1][0]])
-
+            setSelectedDistrictssf([...selectedDistrictssf, District[e.target.value][1][0]])
         }
     }
 
@@ -405,6 +404,17 @@ function Announce_Flc() {
         }
     }
 
+    const handleRemoveClick = (i) => {
+
+        const listSelectedDistricts = [...selectedDistricts];
+        listSelectedDistricts.splice(i, 1);
+        const listSelectedDistrictssf = [...selectedDistrictssf];
+        listSelectedDistrictssf.splice(i, 1);
+        setSelectedDistricts(listSelectedDistricts);
+        setSelectedDistrictssf(listSelectedDistrictssf)
+    };
+
+
     const onFormSubmit = async (e) => {
         e.preventDefault();
         AnnounceFLC();
@@ -467,19 +477,13 @@ function Announce_Flc() {
                             </select>
                         </div>
                         <div className='flex flex-wrap w-full h-10 items-center'>
-                            {selectedDistricts && selectedDistricts.map((val) => (
+                            {selectedDistricts && selectedDistricts.map((val, index) => (
                                 <div className='rounded-lg gap-1 m-1 p-2 flex align-middle shadow-md shadow-black'>{val}
                                     <AiOutlineClose className='cursor-pointer text-red-400' onClick={() => {
-                                        setSelectedDistricts((prev) => {
-                                            return prev.filter((e) => {
-                                                return e != val;
-                                            })
-                                        })
+                                        handleRemoveClick(index)
                                     }} /></div>
                             ))}
                         </div>
-
-                        {/* </div> */}
                         <div className='grid grid-cols-2 gap-6'>
 
                             <div className=''>
@@ -542,7 +546,7 @@ function Announce_Flc() {
                                     class={styles.input}
                                     type="number"
                                     id="4"
-                                    className="selectBox"
+                                    className={styles.numberfield}
                                     placeholder='Enter Number'
                                     value={Manufacturer_State_Coordinator_Mobile_No}
                                     onChange={(e) => {
@@ -607,60 +611,6 @@ function Announce_Flc() {
                                     value={Tentative_month_of_election}
                                 ></input>
                             </div>
-                            {/* <div className=''>
-                                <p>Tentative month of election</p>
-                                <select
-                                    // disabled
-                                    required
-                                    name=""
-                                    id="8"
-                                    className=" selectBox"
-                                    onChange={(e) => {
-
-                                    }}
-                                >
-                                    <option value="" disabled selected>
-                                        Select
-                                    </option>
-                                    <option value="January">
-                                        January
-                                    </option>
-                                    <option value="February">
-                                        February
-                                    </option>
-                                    <option value="March">
-                                        March
-                                    </option>
-                                    <option value="April">
-                                        April
-                                    </option>
-                                    <option value="May">
-                                        May
-                                    </option>
-                                    <option value="June">
-                                        June
-                                    </option>
-                                    <option value="July">
-                                        July
-                                    </option>
-                                    <option value="August">
-                                        August
-                                    </option>
-                                    <option value="September">
-                                        September
-                                    </option>
-                                    <option value="October">
-                                        October
-                                    </option>
-                                    <option value="November">
-                                        November
-                                    </option>
-                                    <option value="December">
-                                        December
-                                    </option>
-                                </select>
-                            </div> */}
-
                             <div className='' >
                                 <p> Type of election</p>
                                 <input
@@ -673,28 +623,6 @@ function Announce_Flc() {
                                     value={Type_of_election}
                                     disabled
                                 ></input>
-                                {/* <select
-                                    required
-                                    name=""
-                                    id="5"
-                                    className=" selectBox"
-                                > */}
-                                {/* <option value="" disabled selected>
-                                        {body.electionType}
-                                    </option> */}
-                                {/* <option value="A">
-                                        Byepoll Assembly
-                                    </option>
-                                    <option value="L">
-                                        Byepoll Parliamentary
-                                    </option>
-                                    <option value="B">
-                                        General Assembly
-                                    </option>
-                                    <option value="B">
-                                        General Parliamentary
-                                    </option> */}
-                                {/* </select> */}
                             </div>
                         </div>
                     </div>
@@ -723,14 +651,14 @@ function Announce_Flc() {
                             {Object.keys(preparednessStatistics).length != 0 && Object.keys(preparednessStatistics['readyDistricts']).length != 0 && Object.keys(preparednessStatistics['readyDistricts']).map((val) => {
                                 return <div className='grid grid-cols-2 text-center'>
                                     <div>{val}</div>
-                                    <button className='cursor-pointer text-white' onClick={() => { getpreparednesscertificate(preparednessStatistics['readyDistricts'][val]) }} >View</button>
+                                    <div className='cursor-pointer text-black' style={{ fontSize: '19px' }} onClick={() => { getpreparednesscertificate(preparednessStatistics['readyDistricts'][val]) }} > <u> View</u></div>
                                 </div>
                             })}
 
                             {Object.keys(preparednessStatistics).length != 0 && preparednessStatistics['notReadyDistricts'].length != 0 && preparednessStatistics['notReadyDistricts'].map((val) => {
                                 return <div className='grid grid-cols-2 text-center'>
                                     <div>{val}</div>
-                                    <button className='cursor-pointer text-white' >Not Uploaded</button>
+                                    <div className='cursor-pointer text-black' > Not Uploaded</div>
                                 </div>
                             })}
 

@@ -126,6 +126,10 @@ function App() {
 							element={<ScheduleElection />}
 						/>
 						<Route
+							path="/session/unitmanagement/preparednesscertificate"
+							element={<Prepared_Certificate />}
+						/>
+						<Route
 							path="/session/unitmanagement/first_randomisation_scheduling"
 							element={<First_Randomisation_Scheduling />}
 						/>
@@ -280,7 +284,7 @@ function App() {
 						path="/session/issuemanagement/fetchfile/:filename"
 						element={<FetchFile />}
 					/>
-					
+
 					<Route path='*' element={<Navigate exact to={'/page-not-found'} />} />
 					<Route path='/page-not-found' element={<NotFound404 resource={false} />} />
 				</Routes>

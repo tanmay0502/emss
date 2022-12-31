@@ -1216,7 +1216,7 @@ export default function HomePage() {
 
             <div className={styles.parent2} >
                 {dataByStatus.map(createCard)}
-                {/* {console.log(dataByStatus)} */}
+
             </div>
         </div >
     );

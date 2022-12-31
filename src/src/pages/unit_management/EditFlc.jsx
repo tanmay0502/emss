@@ -108,7 +108,7 @@ function FlcEdit() {
     const [Tentative_Year_Of_Election, setTentative_Year_Of_Election] = useState('')
     const [Tentative_month_of_election, setTentative_month_of_election] = useState('')
     const [Type_of_election, setType_of_election] = useState('');
-    const [numengineers, setnumengineers] = useState(0);
+    const [numengineers, setnumengineers] = useState('');
     const [Type_of_election_sf, setType_of_election_sf] = useState('');
     const [selectedDistricts, setSelectedDistricts] = useState([])
     const [selectedDistrictssf, setSelectedDistrictssf] = useState([]);
@@ -122,8 +122,6 @@ function FlcEdit() {
     const [Acknowledgmentname, setAcknowledgmentname] = useState("")
     const [InputAcknowledgment, setInputAcknowledgment] = useState(-1)
     const [Intimation_Letter, setIntimation_Letter] = useState("")
-
-
     const Role = User_ID.substring(8)
 
     async function getFLC() {
@@ -147,35 +145,36 @@ function FlcEdit() {
 
 
             const data = await response.json();
+            console.log(data['data'], "flcccccccccccc")
             if (response.status == 200) {
                 if (data['data'].length) {
-                    setFlc(data['data'])
-                    setdistrict(data['data'][0]['district'])
-                    setmanufacture(data['data'][0]['manufacturer'])
-                    setTentative_month_of_election(data['data'][0]['tentativemonth'])
-                    setTentative_Year_Of_Election(data['data'][0]['tentativeyear'])
-                    setManufacturer_State_Coordinator_Name(data['data'][0]['manufacturerstatecoordinatorname'])
-                    setManufacturer_State_Coordinator_Email_ID(data['data'][0]['manufacturerstatecoordinatoremailid'])
-                    setManufacturer_State_Coordinator_Mobile_No(data['data'][0]['manufacturerstatecoordinatormobno'])
-                    setflcsupervisoremailid(data['data'][0]['flcsupervisoremailid'])
-                    setflcsupervisormobno(data['data'][0]['flcsupervisormobno'])
-                    setflcsupervisorname(data['data'][0]['flcsupervisorname'])
-                    setflcvenue(data['data'][0]['flcvenue'])
-                    setmanufacturerdistrictcoordinatoremailid(data['data'][0]['manufacturerdistrictcoordinatoremailid'])
-                    setmanufacturerdistrictcoordinatormobno(data['data'][0]['manufacturerdistrictcoordinatormobno'])
-                    setmanufacturerdistrictcoordinatorname(data['data'][0]['manufacturerdistrictcoordinatorname'])
-                    setnumengineers(data['data'][0]['numengineers'])
+                    setFlc((data['data'] != null) ? data['data'] : [])
+                    setdistrict((data['data'][0]['district'] != null) ? data['data'][0]['district'] : '')
+                    setmanufacture((data['data'][0]['manufacturer'] != null) ? data['data'][0]['manufacturer'] : '')
+                    setTentative_month_of_election((data['data'][0]['tentativemonth'] != null) ? data['data'][0]['tentativemonth'] : '')
+                    setTentative_Year_Of_Election((data['data'][0]['tentativeyear'] != null) ? data['data'][0]['tentativeyear'] : '')
+                    setManufacturer_State_Coordinator_Name((data['data'][0]['manufacturerstatecoordinatorname'] != null) ? data['data'][0]['manufacturerstatecoordinatorname'] : '')
+                    setManufacturer_State_Coordinator_Email_ID((data['data'][0]['manufacturerstatecoordinatoremailid'] != null) ? data['data'][0]['manufacturerstatecoordinatoremailid'] : '')
+                    setManufacturer_State_Coordinator_Mobile_No((data['data'][0]['manufacturerstatecoordinatormobno'] != null) ? data['data'][0]['manufacturerstatecoordinatormobno'] : '')
+                    setflcsupervisoremailid((data['data'][0]['flcsupervisoremailid'] != null) ? data['data'][0]['flcsupervisoremailid'] : '')
+                    setflcsupervisorname((data['data'][0]['flcsupervisorname'] != null) ? data['data'][0]['flcsupervisorname'] : '')
+                    setflcsupervisormobno((data['data'][0]['flcsupervisormobno'] != null) ? data['data'][0]['flcsupervisormobno'] : '')
+                    setflcvenue((data['data'][0]['flcvenue'] != null) ? data['data'][0]['flcvenue'] : '')
+                    setmanufacturerdistrictcoordinatoremailid((data['data'][0]['manufacturerdistrictcoordinatoremailid'] != null) ? data['data'][0]['manufacturerdistrictcoordinatoremailid'] : '')
+                    setmanufacturerdistrictcoordinatormobno((data['data'][0]['manufacturerdistrictcoordinatormobno'] != null) ? data['data'][0]['manufacturerdistrictcoordinatormobno'] : '')
+                    setmanufacturerdistrictcoordinatorname((data['data'][0]['manufacturerdistrictcoordinatorname'] != null) ? data['data'][0]['manufacturerdistrictcoordinatorname'] : '')
+                    setnumengineers((data['data'][0]['numengineers'] != null) ? data['data'][0]['numengineers'] : 0)
 
 
                     if (data['data'][0]['startdate']) {
                         let StartDate = data['data'][0]['startdate'].split('T')[0];
-                        setstartdate(StartDate)
-                        setstartdateshow(StartDate.slice(8) + '-' + StartDate.slice(5, 7) + "-" + StartDate.slice(0, 4))
+                        setstartdate(StartDate.slice(6) + '-' + StartDate.slice(3, 5) + "-" + StartDate.slice(0, 2))
+                        setstartdateshow(data['data'][0]['startdate'])
                     }
                     if (data['data'][0]['enddate']) {
                         let EndDate = data['data'][0]['enddate'].split('T')[0];
-                        setenddate(EndDate)
-                        setenddateshow(EndDate.slice(8) + '-' + EndDate.slice(5, 7) + "-" + EndDate.slice(0, 4))
+                        setenddate(EndDate.slice(6) + '-' + EndDate.slice(3, 5) + "-" + EndDate.slice(0, 2))
+                        setenddateshow(data['data'][0]['enddate'])
                     }
 
                     if (data['data'][0]['electiontype'] == 'GA') {
@@ -244,7 +243,7 @@ function FlcEdit() {
 
 
             const data = await response.json();
-
+            console.log(data, "datatatatat")
             if (response.status == 200) {
                 setPhotoFileData(data['data'])
             }
@@ -264,6 +263,7 @@ function FlcEdit() {
         },
         []
     );
+
 
     async function getflcreport() {
         let id = issueId();
@@ -289,7 +289,8 @@ function FlcEdit() {
             const data = await response.json();
 
             if (response.status == 200) {
-                flcreport(data['data'])
+                setflcreport(data['data'])
+                setinputflcreport(1)
             }
 
         } catch (err) {
@@ -334,6 +335,7 @@ function FlcEdit() {
 
             if (response.status == 200) {
                 setAcknowledgment(data['data'])
+                setInputAcknowledgment(1);
             }
 
         } catch (err) {
@@ -378,6 +380,8 @@ function FlcEdit() {
     var time = hrs + ":"
         + mins + ":"
         + secs;
+
+    const flcid = issueId();
 
     async function postFlc() {
 
@@ -424,10 +428,11 @@ function FlcEdit() {
         }
     }
 
-    async function postFlcdistrict() {
 
+    async function postFlcdistrict() {
         try {
             let id = issueId();
+
             const response = await fetch(
                 `${process.env.REACT_APP_API_SERVER}/unit/flcDistrictDetails`,
                 {
@@ -437,7 +442,7 @@ function FlcEdit() {
                     },
                     credentials: 'include',
                     body: JSON.stringify({
-                        "flcId": Number(id),
+                        "flcId": String(id),
                         "manufacturerDistrictCoordinatorName": manufacturerdistrictcoordinatorname,
                         "manufacturerDistrictCoordinatorMobNo": manufacturerdistrictcoordinatormobno,
                         "manufacturerDistrictCoordinatorEmailId": manufacturerdistrictcoordinatoremailid,
@@ -503,7 +508,8 @@ function FlcEdit() {
     const SetEndDate = async (e) => {
         e.preventDefault();
         setenddate(e.target.value)
-        FinalSetEndDate(e.target.value);
+        if (edit == 'DEO')
+            FinalSetEndDate(e.target.value);
     };
 
 
@@ -588,7 +594,6 @@ function FlcEdit() {
     }
 
 
-
     const UploadFlcReport = async (e) => {
         e.preventDefault();
         SubmitFlcReport();
@@ -654,12 +659,11 @@ function FlcEdit() {
                         <div class={scheduleStyles.div3}>
                             <p> Tentative year of election</p>
                             <input
-                                class={scheduleStyles.input}
+                                class={scheduleStyles.numberfield}
                                 type="number"
                                 value={Tentative_Year_Of_Election}
                                 onChange={(e) => { setTentative_Year_Of_Election(e) }}
                                 id="3"
-                                className="selectBox"
                                 disabled={true}
                                 placeholder='Enter Year'
                             ></input>
@@ -711,7 +715,7 @@ function FlcEdit() {
 
                         <div class={scheduleStyles.div6}>
                             <p>End date</p>
-                            {(edit === 'CEO' || edit == 'DEO') ?
+                            {(edit == 'DEO' || edit == 'CEO') ?
                                 <input
                                     class={scheduleStyles.dateInput}
                                     type="date"
@@ -736,7 +740,6 @@ function FlcEdit() {
                                 ></input>
                             }
                         </div>
-
 
                         <div class={scheduleStyles.div7}>
                             <p> Manufacturer State Coordinator Name</p>
@@ -769,14 +772,13 @@ function FlcEdit() {
                         <div class={scheduleStyles.div9}>
                             <p> Manufacturer State Coordinator Mobile No.</p>
                             <input
-                                class={scheduleStyles.input}
+                                class={scheduleStyles.numberfield}
                                 type="number"
-                                id="8"
-                                className="selectBox"
+                                id="7"
+                                disabled={edit === 'CEO' ? false : true}
+                                placeholder='Enter Mobile No.'
                                 value={Manufacturer_State_Coordinator_Mobile_No}
                                 onChange={(e) => { setManufacturer_State_Coordinator_Mobile_No(e.target.value) }}
-                                disabled={edit === 'CEO' ? false : true}
-                                placeholder='Enter Number'
                             ></input>
                         </div>
 
@@ -799,12 +801,10 @@ function FlcEdit() {
                         <div class={scheduleStyles.div13}>
                             <p>Number Of Engineer</p>
                             <input
-                                required
-                                class={scheduleStyles.input}
+                                class={scheduleStyles.numberfield}
                                 type="number"
                                 id="7"
                                 disabled={edit === 'CEO' || edit == 'DEO' ? false : true}
-                                className="selectBox"
                                 placeholder='Number Of Engineer'
                                 value={numengineers}
                                 onChange={(e) => { setnumengineers(e.target.value) }}
@@ -849,7 +849,6 @@ function FlcEdit() {
                                 type="email"
                                 id="7"
                                 disabled={edit === 'CEO' || edit == 'DEO' ? false : true}
-                                className="selectBox"
                                 placeholder='Flc Supervisor Email ID'
                                 value={flcsupervisoremailid}
                                 onChange={(e) => { setflcsupervisoremailid(e.target.value) }}
@@ -860,11 +859,10 @@ function FlcEdit() {
                             <p>Flc Supervisor Mobile No.</p>
                             <input
 
-                                class={scheduleStyles.input}
+                                class={scheduleStyles.numberfield}
                                 type="number"
                                 id="7"
                                 disabled={edit === 'CEO' || edit == 'DEO' ? false : true}
-                                className="selectBox"
                                 placeholder='Flc Supervisor Mobile No.'
                                 value={flcsupervisormobno}
                                 onChange={(e) => { setflcsupervisormobno(e.target.value) }}
@@ -905,12 +903,10 @@ function FlcEdit() {
                         <div class={scheduleStyles.div21}>
                             <p> Manufacturer district coordinator Mobile No.</p>
                             <input
-
-                                class={scheduleStyles.input}
+                                class={scheduleStyles.numberfield}
                                 type="number"
                                 id="7"
                                 disabled={edit === 'CEO' || edit == 'DEO' ? false : true}
-                                className="selectBox"
                                 placeholder='Enter Mobile Number'
                                 value={manufacturerdistrictcoordinatormobno}
                                 onChange={(e) => { setmanufacturerdistrictcoordinatormobno(e.target.value) }}

@@ -32,7 +32,7 @@ export default function FLCList() {
                 }
             );
             const data = await response.json();
-
+            console.log(data, "datat")
             if (data.length) {
                 setFlc(data)
             }
@@ -157,7 +157,7 @@ export default function FLCList() {
                         }}
                     />
                 </div>
-                : ''
+                : <div className={styles.ListLoader}></div>
             }
         </div>
     )
