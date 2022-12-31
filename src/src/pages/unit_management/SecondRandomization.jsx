@@ -133,6 +133,43 @@ const SecondRandomisationForm = ({ isVisible }) => {
             }
         }
         else { }
+        // setIsSubmitted(false);
+        // const units_requirement = assemblyData
+        //     .filter((d) => d.ps_no)
+        //     .map((d) => {
+        //         d.cu_count = d.cu_count ? parseInt(d.cu_count) : 0;
+        //         d.bu_count = d.bu_count ? parseInt(d.bu_count) : 0;
+        //         d.vt_count = d.vt_count ? parseInt(d.vt_count) : 0;
+        //         return d;
+        //     });
+
+        // // fetch request
+        // try {
+        //     const response = await fetch(`${baseUrl}/second-randomization`, {
+        //         method: "POST",
+        //         headers: { "Content-Type": "application/json" },
+        //         credentials: 'include',
+        //         body: JSON.stringify({
+        //             units_requirement,
+        //         }),
+        //     });
+        //     const data = await response.json();
+        //     console.log("Randomisation results: ", data);
+
+        //     if (response.status === 200) {
+
+        //         setRandomisedData(data);
+        //         setIterationIndex(data.length);
+        //         setAssemblyData(units_requirement);
+        //         setIsSubmitted(true);
+        //         // pass the data to child component & re-render
+        //     } else {
+        //         console.log("Could not fetch randomisation results");
+        //         alert(data.message);
+        //     }
+        // } catch (err) {
+        //     alert(`Error occured: ${err}`);
+        // }
     };
 
     
