@@ -164,6 +164,8 @@ const SecondRandomisationForm = ({ isVisible }) => {
                         }
                     }
                     else {
+                        setAssemblyData({});
+                        setAssemblyList([]);
                         setPollingStationDataMessage(data.message)
                     }
                 } catch (err) {
