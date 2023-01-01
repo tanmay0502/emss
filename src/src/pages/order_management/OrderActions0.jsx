@@ -4,15 +4,13 @@ import AllocateOrder from './AllocateOrder'
 import FillDemand from './FillDemand'
 import styles from './styles/orderactions.module.css'
 import { useNavigate } from 'react-router-dom'
-import WareHouseListUnitTrackerFillDemand from './warehouseListUnitTrackerfilldemand'
 import VehicleDetails from './vehicledetails'
-import WareHouseListUnitTrackerFillAvailability from './warehouseListUnitTrackerfillavailability'
 import { useEffect } from 'react'
 import OrderFlowOne from './OrderFlowOne'
 import DistrictFillDemand from './DistrictFillDemand'
 import DistrictFillAvailability from './DistrictFillAvailability'
 
-function OrderActions(props) {
+function OrderActions0(props) {
 
     console.log("Order acetion:", props.Order)
     const order=props.Order[0]
@@ -51,11 +49,11 @@ function OrderActions(props) {
         
         
             console.log(userid.substring(8))
-            if(order["source"]==userid.substring(0,2) && "DEO"==userid.substring(8)){
+            if(order["source"]==userid.substring(0,2) && "CEO"==userid.substring(8)){
                     console.log("Inside if")
                     sender_order.push(order);
                
-                    if(order["orderstatus"]=="SD"){
+                    if(order["orderstatus"]=="RC"){
                         setf1(1);
                     }
                     else {
@@ -71,11 +69,11 @@ function OrderActions(props) {
                 
                 
             }
-            else if(order["destination"]==userid.substring(0,2) && "DEO"==userid.substring(8)){
+            else if(order["destination"]==userid.substring(0,2) && "CEO"==userid.substring(8)){
                
                 recipient_order.push(order)
                 
-                if(order["orderstatus"]=="RD"){
+                if(order["orderstatus"]=="OG"){
                     setf2(1);
                 }
                 else {
@@ -179,7 +177,7 @@ function OrderActions(props) {
         if (roles[ind] == 'sender') {
             switch (actions(roles[ind])[actionIndex]) {
                 case 'Fill Availability':
-                    return <WareHouseListUnitTrackerFillAvailability Order={senderOrder} OrderID={props.OrderID} />
+                    return <DistrictFillAvailability Order={senderOrder} OrderID={props.OrderID} />
                 case 'Issue Order':
                     return <OrderFlowOne Order={senderOrder} OrderID={props.OrderID} isSender={1}/>
             }
@@ -187,7 +185,7 @@ function OrderActions(props) {
         else if (roles[ind] == 'recipient') {
             switch (actions(roles[ind])[actionIndex]) {
                 case 'Fill Demand':
-                    return <WareHouseListUnitTrackerFillDemand Order={recipientOrder} OrderID={props.OrderID}/>
+                    return <DistrictFillDemand Order={recipientOrder} OrderID={props.OrderID}/>
                 case 'Optimal Allocation':
                     return <AllocateOrder OrderID={props.OrderID} type={order.type}/>
                 case 'Vehicle Details':
@@ -197,9 +195,9 @@ function OrderActions(props) {
         else if (roles[ind] == 'both') {
             switch (actions(roles[ind])[actionIndex]) {
                 case 'Fill Demand':
-                    return <WareHouseListUnitTrackerFillDemand Order={recipientOrder} OrderID={props.OrderID}/>
+                    return <DistrictFillDemand Order={recipientOrder} OrderID={props.OrderID}/>
                 case 'Fill Availability':
-                    return <WareHouseListUnitTrackerFillAvailability Order={senderOrder} OrderID={props.OrderID}/>
+                    return <DistrictFillAvailability Order={senderOrder} OrderID={props.OrderID}/>
                 case 'Optimal Allocation':
                     return <AllocateOrder />
                 case 'Vehicle Details':
@@ -242,11 +240,11 @@ function OrderActions(props) {
                                 }}>
                                     Fill Demand
                                 </button>
-                                {/* <button disabled={!f3}  className={`${f3==0 ? 'bg-gray-400' : 'bg-orange-500'}`}  onClick={() => {
+                                <button disabled={!f3}  className={`${f3==0 ? 'bg-gray-400' : 'bg-orange-500'}`}  onClick={() => {
                                     setAction(renderAction(1))
                                 }} >
                                     Optimal Allocation
-                                </button> */}
+                                </button>
                                 <button disabled={!f4}  className={`${f4==0 ? 'bg-gray-400' : 'bg-orange-500'}`}  onClick={() => {
                                     setAction(renderAction(2))
                                 }} >
@@ -266,11 +264,11 @@ function OrderActions(props) {
                                 }}>
                                     Fill Availability
                                 </button>
-                                {/* <button disabled={!f3}  className={`${f3==0 ? 'bg-gray-400' : 'bg-orange-500'}`} onClick={() => {
+                                <button disabled={!f3}  className={`${f3==0 ? 'bg-gray-400' : 'bg-orange-500'}`} onClick={() => {
                                     setAction(renderAction(2))
                                 }} >
                                     Optimal Allocation
-                                </button> */}
+                                </button>
                                 <button disabled={!f4}  className={`${f4==0 ? 'bg-gray-400' : 'bg-orange-500'}`}  onClick={() => {
                                     setAction(renderAction(3))
                                 }} >
@@ -302,4 +300,4 @@ function OrderActions(props) {
     )
 }
 
-export default OrderActions
+export default OrderActions0

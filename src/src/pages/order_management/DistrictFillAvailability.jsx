@@ -12,9 +12,10 @@ import {
 import ToggleButton from '../../components/ToggleButton';
 import { ReactComponent as ChevronDown } from "../../assets/ChevronDown.svg";
 import { ReactComponent as SearchIcon } from "../../assets/search.svg";
+import { formatRealm, getRealm } from "../../components/utils";
 
 
-export default function WareHouseListUnitTrackerFillAvailability(props) {
+export default function DistrictFillAvailability(props) {
     console.log(props.Order)
     const [tableFilter, setTableFilter] = useState("");
     const [sortBy, setSortBy] = useState("None");
@@ -23,6 +24,21 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
     const [warehouseMapping, setWarehouseMapping] = useState({})
     const [Details, setDetails] = React.useState([]);
     const [pageLoaded,setPageLoaded] =  useState(0);
+    const [Districts, setDistricts] = useState([]);
+
+    async function getDistricts() {
+        let data = await getRealm("Order", "FillCapacity")
+        let districts = formatRealm(data,"CEO",sessionStorage.getItem("sessionToken").substring(0,2),"","");
+        console.log(districts)
+        setDistricts(districts);
+    }
+    
+    useEffect(()=>{
+        let time = setTimeout(()=>getDistricts(),0.3*1000);
+        return (()=>{
+            clearTimeout(time);
+        })
+    },[])
 
 
     const units = [['CU', 50, 'M3'], ['CU', 50, 'M3'], ['CU', 50, 'M3'], ['CU', 50, 'M3'], ['CU', 50, 'M3'], ['CU', 50, 'M3']]
@@ -151,6 +167,7 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
     const [orderCount,setOrderCount] = useState({});
 
     function increaseOne(index,type="select",model="select",mnf = "select") {
+        console.log(index)
         let v3={
             "type":type,
             "quantity":"0",
@@ -158,15 +175,17 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
             "manufacturer":mnf
         }
         let temp = orderCount;
-        if(Object.keys(temp[index]).length==0) {
+        console.log(orderCount)
+        if(temp[index] && Object.keys(temp[index]).length==0) {
            
             temp[index]["0"]=v3;
         }
-        else{
+        else if(temp[index]){
             console.log((Object.keys(temp[index]).length - 1).toString())
+            if(temp[index][(parseInt(Object.keys(temp[index])[(Object.keys(temp[index]).length - 1).toString()])).toString()]!=v3)
             temp[index][(parseInt(Object.keys(temp[index])[(Object.keys(temp[index]).length - 1).toString()]) + 1).toString()]=v3
         }
-        
+        console.log(temp)
         setOrderCount({ ...temp });
     
       }
@@ -380,10 +399,10 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
         if (sortMapping[sortBy] !== null && sortOrder === 'desc') {
             data.reverse();
         }
-        setWareHouse_List(data)
+        setWareHouse_List(Districts)
         return () => {
         }
-    }, [Details, warehouseMapping])
+    }, [Details, warehouseMapping,Districts])
 
    
 
@@ -426,17 +445,11 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
         getList();
     }, [])
 
-    useEffect(()=>{
-        let fillDemand = {}
-        Details.map((val,id)=>{
-            fillDemand[id.toString()]={};
-        })
-        console.log(fillDemand)
-        setOrderCount(fillDemand);
-        if(props.Order) {
+    function run(){
+        if(props.Order && Object.keys(orderCount).length!=0) {
             console.log(orderCount)
         
-        WareHouse_List.map((val,id)=>{
+        Districts.map((val,id)=>{
             props.Order.map((val2,id2)=>{
                 const type= val2["item"]
                 const model= val2["itemmodel"]
@@ -445,7 +458,31 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
             })
         })
     }
-    },[Details])
+    }
+
+    const [fl, setFl] = useState(0);
+
+    useEffect(()=>{
+        if(Object.keys(orderCount).length==0){
+        let fillDemand = {}
+        Districts.map((val,id)=>{
+            fillDemand[id.toString()]={};
+        })
+        console.log(fillDemand)
+        if(Object.keys(orderCount).length==0)
+        setOrderCount(fillDemand);
+    }
+        if(Object.keys(orderCount).length!=0 && fl==0){
+            setFl(1);
+            run();
+        }
+       
+    },[Details,Districts,orderCount])
+
+    useEffect(() => {
+        console.log(orderCount)
+       
+    }, [orderCount]);
 
 
     const [boxId, setBoxId] = useState([]);
@@ -499,7 +536,7 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
 
         Object.keys(orderCount).map((order)=>{
             let detail = {
-                "warehouseid":Details[order]["warehouseid"] ,
+                "district":Districts[order]["dtCode"] ,
                 "unitDetails": [
                   
                 ]
@@ -520,7 +557,7 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
 
         try {
             const response = await fetch(
-              `${process.env.REACT_APP_API_SERVER}/order/fillCapacity/`,
+              `${process.env.REACT_APP_API_SERVER}/order/fillCapacityDistrict/`,
               {
                 method: "POST",
                 headers: {
@@ -558,7 +595,7 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
                             className="rounded-t-lg p-2 text-left flex "
                             style={{ backgroundColor: "#84587C" }}
                         >
-                            <span className="text-white text-lg ml-5">WareHouses List</span>
+                            <span className="text-white text-lg ml-5">Districts List</span>
                             <div className="w-1/5 d-flex serach_1" style={{ marginLeft: "10%" }} >
                                 <SearchIcon />
                                 <input
@@ -592,7 +629,7 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
                                     <tr className="flex justify-start">
 
                                         <th style={{ color: "#f56a3f", padding: "20px" }}>Sl. No.</th>
-                                        <th style={{ color: "#f56a3f", padding: "20px" }}>WareHouse ID</th>
+                                        <th style={{ color: "#f56a3f", padding: "20px" }}>District Name</th>
                                         {/* <th style={{ color: "#f56a3f", padding: "20px" }}>WareHouse Type</th> */}
                                         {/* <th style={{ color: "#f56a3f", padding: "20px" }}>Usage Status</th> */}
                                     </tr>
@@ -601,17 +638,17 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
                                 </thead>
                                 <tbody>
 
-                                    {WareHouse_List.length > 0 &&
-                                        WareHouse_List.map((val, id) => (<>
+                                    {Districts.length > 0 &&
+                                        Districts.map((val, id) => (<>
                                              <tr onClick={(e) => setBox(id)} className="flex justify-start ml-10 ">
                                                 <td className="text-black text-sm ">{id+1}</td>
-                                                <td className="text-black text-sm">{val["Warehouse ID"]}</td>
+                                                <td className="text-black text-sm- ml-10">{val["dtName"]}</td>
                                                 {/* <td className="text-black text-sm">{val["Warehouse Type"]}</td> */}
                                                 {/* <td className="text-black text-sm">{val['Status']}</td> */}
                                                 </tr>
                                                 {orderCount && <tr className="pb-10 ">
                                             <td colSpan="20" className="">
-                                                {Object.keys(orderCount[id]).map((key)=>(
+                                                {orderCount && orderCount[id] && Object.keys(orderCount[id]).map((key)=>(
                                                     <div className="">
                                                         
                                                         {orderCount[id][key]["type"]!="select" && orderCount[id][key]["model"]!="select" && orderCount[id][key]["manufacturer"]!="select" && <div className="flex justify-between text-black p-3 h-6 text-sm pb-2 ">
@@ -628,8 +665,8 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
 
                                             </td>
                                         </tr>}
-{/*                                        
-                                              { boxId.length==1 && boxId[0]==id && (
+                                       
+                                              {/* { boxId.length==1 && boxId[0]==id && (
                                                 <tr >
                                                     <td colSpan="10">
                                                     <div className="border rounded-md p-3">

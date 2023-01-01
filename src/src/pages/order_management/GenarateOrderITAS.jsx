@@ -3,6 +3,7 @@ import { ReactComponent as CreateIssueIcon } from "../../assets/create_issue_req
 import { useParams } from "react-router-dom";
 import "./styles/generateOrder.css";
 import Modal from 'react-modal';
+import {formatRealm2,  getRealm } from "../../components/utils";
 
 export default function GenarateOrderITAS() {
 
@@ -185,25 +186,9 @@ useEffect(()=>{
   
 
   async function getDistricts() {
-    try {
-      let uri = `${process.env.REACT_APP_API_SERVER}/user/getRealm`
-      const response = await fetch(
-        uri,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: 'include',
-          body:{}
-        }
-      );
-      const data2 = await response.json();
-      console.log("/user/getRealm", data2)
-      setDistricts(data2.data["dist"]);
-    } catch (err) {
-      console.log(err);
-    }
+    const stID = window.sessionStorage.getItem("sessionToken").slice(0,2)
+    const data = await getRealm( "User", "CreateUser")
+    setDistricts(formatRealm2(data, stID, "", "", ""));
   }
 
   useEffect(() => {
@@ -296,13 +281,9 @@ useEffect(()=>{
                     >
                       <option>Select</option>
                       {districts &&
-                        districts.map((st) => (
-                          <option value={st} className="text-black" onClick={() => {
-                            let prevBody = body;
-                            prevBody.details[ind].source = st;
-                            setBody(prevBody);
-                          }}>
-                            {st}
+                        districts.map((val) => (
+                          <option value={val.dtCode} className="text-black">
+                            {`${val.dtCode} (${val.dtName})`}
                           </option>
                         ))}
                       {districts == [] && (<option value="0" className="text-black">
@@ -330,10 +311,10 @@ useEffect(()=>{
                         {" "}
                         <option>Select</option>
                         {districts &&
-                          districts.map((st) => (
-                            <option value={st} className="text-black">
-                              {st}
-                            </option>
+                          districts.map((val) => (
+                            <option value={val.dtCode} className="text-black">
+                            {`${val.dtCode} (${val.dtName})`}
+                          </option>
                           ))}
                         {districts === [] && (<option value="0" className="text-black">
                           Select:

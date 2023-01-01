@@ -57,7 +57,7 @@ function SubOrder(props) {
           <div className={styles.orderUnitDataContainer}>
             <DynamicDataTable rows={myrow} buttons={[]} />
           </div>
-          {Order && <p>Status: {mapOrderStatus[Order[0].orderstatus]}</p>}
+          {Order && <p>Status: {[Order[0].orderstatus]}</p>}
         </div>
       </div>
     </>

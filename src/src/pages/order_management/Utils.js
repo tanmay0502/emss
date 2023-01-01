@@ -110,4 +110,32 @@ export const  getAllocateUsers = async (body) => {
     console.log(err)
    }
 };
+export const  UnitCount = async (body) => {
+    console.log(body)
+    
+   try{
+        const response = await fetch(
+        `${process.env.REACT_APP_API_SERVER}/unit/unitcountbystatus/`,
+        {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        credentials: 'include',
+        body: JSON.stringify(body)
+        }
+        );
+        const data2 = await response.json();
+        console.log(response,data2)
+        if(response.status==200){
+            return data2["data"];
+        }
+        else{
+            return 0;
+        }
+
+   }catch(err){
+    console.log(err)
+   }
+};
 

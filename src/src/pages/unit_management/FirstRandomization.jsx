@@ -13,6 +13,7 @@ import { ReactComponent as OptionsIndicator } from "../../assets/Options_Indicat
 import { ReactComponent as SearchInputElement } from "../../assets/searchInputIcon.svg";
 import { ReactComponent as ChevronDown } from "../../assets/ChevronDown.svg";
 import { expD } from "./Homepage";
+import {formatRealm2, getRealm } from "../../components/utils"
 
 const userID = sessionStorage.getItem("sessionToken");
 const baseUrl = `${process.env.REACT_APP_API_SERVER}/unit`;

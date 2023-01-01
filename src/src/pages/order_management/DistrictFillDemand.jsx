@@ -12,17 +12,32 @@ import {
 import ToggleButton from '../../components/ToggleButton';
 import { ReactComponent as ChevronDown } from "../../assets/ChevronDown.svg";
 import { ReactComponent as SearchIcon } from "../../assets/search.svg";
+import { formatRealm, getRealm } from "../../components/utils";
 
 
-export default function WareHouseListUnitTrackerFillAvailability(props) {
+export default function DistrictFillDemand(props) {
     console.log(props.Order)
     const [tableFilter, setTableFilter] = useState("");
     const [sortBy, setSortBy] = useState("None");
     const [sortOrder, setSortOrder] = useState("asc");
-    const [WareHouse_List, setWareHouse_List] = React.useState([]);
-    const [warehouseMapping, setWarehouseMapping] = useState({})
+    const [Districts, setDistricts] = React.useState([]);
+    const [warehouseMapping, setWarehouseMapping] = useState(null)
     const [Details, setDetails] = React.useState([]);
     const [pageLoaded,setPageLoaded] =  useState(0);
+
+    async function getDistricts() {
+        let data = await getRealm("Order", "FillCapacity")
+        let districts = formatRealm(data,"CEO",sessionStorage.getItem("sessionToken").substring(0,2),"","");
+        console.log(districts)
+        setDistricts(districts);
+    }
+    
+    useEffect(()=>{
+        let time = setTimeout(()=>getDistricts(),0.3*1000);
+        return (()=>{
+            clearTimeout(time);
+        })
+    },[])
 
 
     const units = [['CU', 50, 'M3'], ['CU', 50, 'M3'], ['CU', 50, 'M3'], ['CU', 50, 'M3'], ['CU', 50, 'M3'], ['CU', 50, 'M3']]
@@ -35,6 +50,8 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
         "Building Type": "BuildingType",
         "Room Type": "Room Type",
     }
+
+    
 
 
     const  [total_BU_M2, settotal_BU_M2] = useState(0)
@@ -58,62 +75,15 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
     const  [total_VVPAT_M3, settotal_VVPAT_M3] = useState(0)
     const  [filled_VVPAT_M3, setfilled_VVPAT_M3] = useState(0)
     const  [leftout_VVPAT_M3, setleftout_VVPAT_M3] = useState(0)
-    const  [availableUnits, setAvailableUnits] = useState([])
-
-    useEffect(()=>{
-        const getUnits = async ()=>{
-            try {
-              const ID = window.sessionStorage.getItem('sessionToken');
-              console.log("available_units ID = ", ID)
-              const response = await fetch(
-                `${process.env.REACT_APP_API_SERVER}/unit/available_units/`,
-                {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  credentials: 'include',
-                  body:JSON.stringify({
-                    "oprnd": ID
-                  })
-                }
-              );
-              const data = await response.json();
-              console.log("/unit/available_units/",data);
-              if (data.data.length) {
-                setAvailableUnits(data.data);
-              }
-            } catch (err) {
-              console.log({ err });
-            }
-        }
-        getUnits()
-    },[])
-
-    const countAvlUnits = (item, manufacturer, itemmodel)=>{
-        let sum = 0;
-        const dict = {
-            "B": "BEL",
-            "E": "ECIL",
-            "BU": "BU",
-            "CU": "CU",
-            "VT": "VVPAT",
-          }
-        for (let i = 0; i < availableUnits.length; i++) {
-            const e = availableUnits[i];
-            if (dict[e.unit_type] === item && dict[e.manufacturer] === manufacturer && e.model === itemmodel) {
-              sum+=e.count;
-            }
-        }
-          return sum;
-    }
 
     function setUnits(){
         const stateCode = sessionStorage.getItem("sessionToken").substring(0,2);
+        console.log(stateCode)
         if(pageLoaded==0){
+        console.log(props.Order)
         props.Order.map((order)=>{
             setPageLoaded(1);
-            if(order["source"]==stateCode){
+            if(order["destination"]==stateCode){
                 if(order["item"]=="CU" && order["itemmodel"]=="M2"){
                     settotal_CU_M2(total_CU_M2+ Number(order["itemquantity"]));
                     setleftout_CU_M2(total_CU_M2+ Number(order["itemquantity"]));
@@ -141,11 +111,17 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
             }
         })
         }
+        console.log(total_BU_M2,total_BU_M3,total_CU_M3,total_CU_M2,total_VVPAT_M2,total_VVPAT_M3);
     }
 
     useEffect(()=>{
         setUnits()
     },[pageLoaded])
+
+    useEffect(()=>{
+
+        console.log(Districts)
+    },[Districts])
 
 
     const [orderCount,setOrderCount] = useState({});
@@ -158,15 +134,17 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
             "manufacturer":mnf
         }
         let temp = orderCount;
-        if(Object.keys(temp[index]).length==0) {
+        if(temp[index] && Object.keys(temp[index]).length==0) {
            
             temp[index]["0"]=v3;
         }
-        else{
+        else if(temp[index]){
             console.log((Object.keys(temp[index]).length - 1).toString())
+            if(temp[index][(parseInt(Object.keys(temp[index])[(Object.keys(temp[index]).length - 1).toString()])).toString()]!=v3)
             temp[index][(parseInt(Object.keys(temp[index])[(Object.keys(temp[index]).length - 1).toString()]) + 1).toString()]=v3
         }
         
+        console.log(temp)
         setOrderCount({ ...temp });
     
       }
@@ -180,41 +158,18 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
         let _total_CU_M3 =0
         let _total_VVPAT_M2 =0
         let _total_VVPAT_M3 =0
-
-        let new_wdetails=WareHouse_List;
         
+        console.log(orderCount)
         console.log("calculate",id1,id2,key, value)
+        // console.log((filled_CU_M2),filled_BU_M3)
         let dummy2 =orderCount;
         if(key=="quantity")
         dummy2[id1][id2][key]=Number(value).toString();
         else
         dummy2[id1][id2][key]=value
+        console.log(dummy2)
 
         Object.keys(dummy2).map((key1)=>{
-            new_wdetails[key1]["maxCUM2ECIL"]=countAvlUnits("CU", "ECIL", "M2")
-                new_wdetails[key1]["maxCUM2BEL"]=countAvlUnits("CU", "BEL", "M2")
-                new_wdetails[key1]["maxCUM3ECIL"]=countAvlUnits("CU", "ECI", "M3")
-                new_wdetails[key1]["maxCUM3BEL"]=countAvlUnits("CU", "BEL", "M3")
-                new_wdetails[key1]["maxBUM2ECIL"]=countAvlUnits("BU", "ECIL", "M2")
-                new_wdetails[key1]["maxBUM2BEL"]=countAvlUnits("BU", "BEL", "M2")
-                new_wdetails[key1]["maxBUM3ECIL"]=countAvlUnits("BU", "ECIL", "M3")
-                new_wdetails[key1]["maxBUM3BEL"]=countAvlUnits("BU", "BEL", "M3")
-                new_wdetails[key1]["maxVVPATM2ECIL"]=countAvlUnits("VVPAT", "ECIL", "M2")
-                new_wdetails[key1]["maxVVPATM2BEL"]=countAvlUnits("VVPAT", "BEL", "M2")
-                new_wdetails[key1]["maxVVPATM3ECIL"]=countAvlUnits("VVPAT", "ECIL", "M3")
-                new_wdetails[key1]["maxVVPATM3BEL"]=countAvlUnits("VVPAT", "BEL", "M3")
-                new_wdetails[key1]["fillCUM2ECIL"]=0
-                new_wdetails[key1]["fillCUM2BEL"]=0
-                new_wdetails[key1]["fillCUM3ECIL"]=0
-                new_wdetails[key1]["fillCUM3BEL"]=0
-                new_wdetails[key1]["fillBUM2ECIL"]=0
-                new_wdetails[key1]["fillBUM2BEL"]=0
-                new_wdetails[key1]["fillBUM3ECIL"]=0
-                new_wdetails[key1]["fillBUM3BEL"]=0
-                new_wdetails[key1]["fillVVPATM2ECIL"]=0
-                new_wdetails[key1]["fillVVPATM2BEL"]=0
-                new_wdetails[key1]["fillVVPATM3ECIL"]=0
-                new_wdetails[key1]["fillVVPATM3BEL"]=0
             Object.keys(dummy2[key1]).map((key2)=>{
                 if(dummy2[key1][key2]["type"]!="select" && dummy2[key1][key2]["model"]!="select" && dummy2[key1][key2]["manufacturer"]!="select"){
                     
@@ -222,7 +177,6 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
                     temp += "_total_" + dummy2[key1][key2]["type"] + "_" + dummy2[key1][key2]["model"];
                     let temp2=eval(temp)
                     temp2+=parseInt(dummy2[key1][key2]["quantity"])
-                    new_wdetails[key1]["fill"+dummy2[key1][key2]["type"]+dummy2[key1][key2]["model"]+dummy2[key1][key2]["manufacturer"]]+=parseInt(dummy2[key1][key2]["quantity"])
                     eval(temp + " = " + temp2.toString());
                 }
             })
@@ -232,6 +186,7 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
       
         
     
+        console.log(_total_CU_M2, _total_CU_M3, _total_BU_M2, _total_BU_M3, _total_VVPAT_M2, _total_VVPAT_M3)
         setfilled_BU_M2(_total_BU_M2)
         setfilled_BU_M3(_total_BU_M3)
         setfilled_CU_M2(_total_CU_M2)
@@ -247,9 +202,8 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
         
         
     
-        
+        console.log(dummy2)
         setOrderCount({...dummy2})
-        setWareHouse_List(new_wdetails);
       }
 
     const rightArrow = ">";
@@ -318,6 +272,7 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
     }
 
     useEffect(() => {
+        console.log(Details)
         var data = Details.filter((elem) => {
             if (tableFilter === "") {
                 return true;
@@ -329,7 +284,7 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
         }).map((val) => {
             return {
                 "Warehouse ID": val["type"] == 'P' ? <Fragment><span style={{ display: 'flex', justifyContent: 'left', alignItems: 'left', marginLeft: "35%" }}><FaCircle size='0.8em' className='PermaWarehouse' /><span style={{ marginLeft: '10px', marginRight: '10px' }}>{val["warehouseid"]}</span>{val['doublelock'] ? <Fragment><FaKey className='keyColor' /><FaKey className='keyColor' /></Fragment> : <FaKey className='keyColor' />}</span></Fragment> : <Fragment><span style={{ display: 'flex', justifyContent: 'left', alignItems: 'left', marginLeft: "35%" }}><FaCircle size='0.8em' className='TempWarehouse' /><span style={{ marginLeft: '10px', marginRight: '10px' }}>{val["warehouseid"]}</span>{val['doublelock'] ? <Fragment><FaKey className='keyColor' /><FaKey className='keyColor' /></Fragment> : <FaKey className='keyColor' />}</span></Fragment>,
-                "Room Type": warehouseMapping.data ? warehouseMapping["data"][val[2]] : "",
+                "Room Type": warehouseMapping ? warehouseMapping["data"][val[2]] : "",
                 "Warehouse Type": val["type"]=="P" ?"Parmanent" : "Temporary",
                 "Status": <ToggleButton userID={val["warehouseid"]} checked={val[3] === 'A'} onToggle={(e) => {
                     if (val["status"] !== "A") {
@@ -343,32 +298,7 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
                         "active": "Active",
                         "inactive": "Inactive"
                     }}
-                />,
-                "maxCUM2ECIL":1000,
-                "maxCUM2BEL":1000,
-                "maxCUM3ECIL":1000,
-                "maxCUM3BEL":1000,
-                "maxBUM2ECIL":1000,
-                "maxBUM2BEL":1000,
-                "maxBUM3ECIL":1000,
-                "maxBUM3BEL":1000,
-                "maxVVPATM2ECIL":1000,
-                "maxVVPATM2BEL":1000,
-                "maxVVPATM3ECIL":1000,
-                "maxVVPATM3BEL":1000,
-                "fillCUM2ECIL":0,
-                "fillCUM2BEL":0,
-                "fillCUM3ECIL":0,
-                "fillCUM3BEL":0,
-                "fillBUM2ECIL":0,
-                "fillBUM2BEL":0,
-                "fillBUM3ECIL":0,
-                "fillBUM3BEL":0,
-                "fillVVPATM2ECIL":0,
-                "fillVVPATM2BEL":0,
-                "fillVVPATM3ECIL":0,
-                "fillVVPATM3BEL":0,
-
+                />
             }
         })
         data.sort(function (a, b) {
@@ -380,11 +310,14 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
         if (sortMapping[sortBy] !== null && sortOrder === 'desc') {
             data.reverse();
         }
-        setWareHouse_List(data)
+        console.log(data)
+        
+        // setDistricts(data)
         return () => {
         }
     }, [Details, warehouseMapping])
 
+  
    
 
 
@@ -399,21 +332,18 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({
-                        "stateCode": code
-                    }),
-                    credentials:'include'
+                    credentials: 'include',
+                    
                 })
 
             const data = await response.json();
+            console.log("warehouse list",data)
             let activedata=[]
            
             data["data"].map((warehouse)=>{
-                
                     activedata.push(warehouse)
-                
             })
-
+            console.log("Active data",activedata)
             setDetails(activedata);
 
         } catch (error) {
@@ -426,17 +356,11 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
         getList();
     }, [])
 
-    useEffect(()=>{
-        let fillDemand = {}
-        Details.map((val,id)=>{
-            fillDemand[id.toString()]={};
-        })
-        console.log(fillDemand)
-        setOrderCount(fillDemand);
-        if(props.Order) {
+    function run(){
+        if(props.Order && Object.keys(orderCount).length!=0) {
             console.log(orderCount)
         
-        WareHouse_List.map((val,id)=>{
+        Districts.map((val,id)=>{
             props.Order.map((val2,id2)=>{
                 const type= val2["item"]
                 const model= val2["itemmodel"]
@@ -445,7 +369,26 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
             })
         })
     }
-    },[Details])
+    }
+
+    const [fl, setFl] = useState(0);
+
+    useEffect(()=>{
+        if(Object.keys(orderCount).length==0){
+        let fillDemand = {}
+        Districts.map((val,id)=>{
+            fillDemand[id.toString()]={};
+        })
+        console.log(fillDemand)
+        if(Object.keys(orderCount).length==0)
+        setOrderCount(fillDemand);
+    }
+        if(Object.keys(orderCount).length!=0 && fl==0){
+            setFl(1);
+            run();
+        }
+       
+    },[Details,Districts,orderCount])
 
 
     const [boxId, setBoxId] = useState([]);
@@ -472,6 +415,10 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
                 }
             )
             const types = await response.json();
+            // data.map(arr => {
+            // 	arr = {...arr, "warehousebuildingtype": }
+            // })
+            // console.log(data);
             setWarehouseMapping(types);
         } catch (error) {
             console.log(error);
@@ -479,6 +426,7 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
     }
     const FillCapacity = async (id) => {
         if (showFill.includes(id) == true) {
+            console.log(showFill.includes(id))
             setShowFill(showFill.filter(item => item !== id));
         }
         else {
@@ -490,16 +438,19 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
     const  handleSubmit= async (e)=>{
         let data={
             "orderid": props.OrderID,
-            "flag": "A",
+            "flag": "D",
             "details": [
               
                 ]
           
         }
 
+        console.log(Details)
+
         Object.keys(orderCount).map((order)=>{
+            // console.log(Details[order])
             let detail = {
-                "warehouseid":Details[order]["warehouseid"] ,
+                "district":Districts[order]["dtCode"] ,
                 "unitDetails": [
                   
                 ]
@@ -514,13 +465,14 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
                 if(temp["item"]!="select" && temp["itemmodel"]!="select" && temp["manufacturer"]!="select" && temp["itemquantity"]!=0)
                 detail["unitDetails"].push(temp);
               })
-              if(detail["unitDetails"].length!=0)
+              if(detail["unitDetails"].length)
               data["details"].push(detail);
         })
+        console.log(data)
 
         try {
             const response = await fetch(
-              `${process.env.REACT_APP_API_SERVER}/order/fillCapacity/`,
+              `${process.env.REACT_APP_API_SERVER}/order/fillCapacityDistrict/`,
               {
                 method: "POST",
                 headers: {
@@ -529,13 +481,13 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
                 credentials: 'include',
                 body: JSON.stringify(data),
       
-                mode: "cors",
       
               }
             );
             const data2 = await response.json();
+              console.log(response)
               if (response["status"] == 200) {
-                alert("Fill availability done sucessfully");
+                alert("Fill demand done sucessfully");
               }
               if (response["status"] == 200) {
                 window.location = '/session/ordermanagement'
@@ -549,6 +501,7 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
 
 
 
+
     return (
         <div>
             <div className="flex w-full">
@@ -558,7 +511,7 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
                             className="rounded-t-lg p-2 text-left flex "
                             style={{ backgroundColor: "#84587C" }}
                         >
-                            <span className="text-white text-lg ml-5">WareHouses List</span>
+                            <span className="text-white text-lg ml-5">District List</span>
                             <div className="w-1/5 d-flex serach_1" style={{ marginLeft: "10%" }} >
                                 <SearchIcon />
                                 <input
@@ -587,12 +540,12 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
                             </div>
                         </div>
                         <div className="p-2">
-                        <table className="w-full mt-4 ">
+                            <table className="w-full mt-4 ">
                                 <thead className="HeadRow border-b-2">
-                                    <tr className="flex justify-start">
+                                    <tr  className="flex justify-start">
 
                                         <th style={{ color: "#f56a3f", padding: "20px" }}>Sl. No.</th>
-                                        <th style={{ color: "#f56a3f", padding: "20px" }}>WareHouse ID</th>
+                                        <th style={{ color: "#f56a3f", padding: "20px" }}>District Name</th>
                                         {/* <th style={{ color: "#f56a3f", padding: "20px" }}>WareHouse Type</th> */}
                                         {/* <th style={{ color: "#f56a3f", padding: "20px" }}>Usage Status</th> */}
                                     </tr>
@@ -601,26 +554,27 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
                                 </thead>
                                 <tbody>
 
-                                    {WareHouse_List.length > 0 &&
-                                        WareHouse_List.map((val, id) => (<>
-                                             <tr onClick={(e) => setBox(id)} className="flex justify-start ml-10 ">
+                                    {Districts.length > 0 &&
+                                        Districts.map((val, id) => (<>
+                                             <tr onClick={(e) => setBox(id) } className="flex justify-start ml-10 ">
                                                 <td className="text-black text-sm ">{id+1}</td>
-                                                <td className="text-black text-sm">{val["Warehouse ID"]}</td>
+                                                <td className="text-black text-sm ml-10">{val["dtName"]}</td>
                                                 {/* <td className="text-black text-sm">{val["Warehouse Type"]}</td> */}
                                                 {/* <td className="text-black text-sm">{val['Status']}</td> */}
                                                 </tr>
                                                 {orderCount && <tr className="pb-10 ">
-                                            <td colSpan="20" className="">
-                                                {Object.keys(orderCount[id]).map((key)=>(
+                                            <td colSpan="2" className="">
+                                                {orderCount && orderCount[id] && Object.keys(orderCount[id]).map((key)=>(
                                                     <div className="">
                                                         
-                                                        {orderCount[id][key]["type"]!="select" && orderCount[id][key]["model"]!="select" && orderCount[id][key]["manufacturer"]!="select" && <div className="flex justify-between text-black p-3 h-6 text-sm pb-2 ">
+                                                        {orderCount[id][key]["type"]!="select" && orderCount[id][key]["model"]!="select" && orderCount[id][key]["manufacturer"]!="select" && <div className="flex justify-between p-3 h-6 text-sm pb-2 text-black">
                                                             {/* <p>{orderCount[id][key]["type"]}</p><p>{"-->"}</p><p>{orderCount[id][key]["model"]}</p><p>{"-->"}</p><p>{orderCount[id][key]["manufacturer"]}</p><p>{"-->"}</p><p>{orderCount[id][key]["quantity"]}</p> */}
                                                             <div className="w-full flex">
                                                                 <div className="w-1/4">{orderCount[id][key]["type"]}</div>
                                                                 <div className="w-1/4">{orderCount[id][key]["model"]}</div>
                                                                 <div className="w-1/4">{orderCount[id][key]["manufacturer"]}</div>
-                                                                <div className="w-1/4"><input type="number" placeholder="No of Unit" className="border " id={id.toString() + "_" + key.toString() + "_quantity"} onChange={(e)=>calculate(id,key,"quantity",e.target.value)} value={orderCount[id][key]["quantity"]} required></input></div>
+                                                                <div className="w-1/4"><input type="number" placeholder="No of Unit" className="border " id={id.toString() + "_" + key.toString() + "_quantity"} onChange={(e)=>calculate(id,key,"quantity",e.target.value)} value={orderCount[id][key]["quantity"]} required></input>
+</div>
                                                             </div>
                                                         </div> }
                                                     </div>
@@ -628,19 +582,17 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
 
                                             </td>
                                         </tr>}
-{/*                                        
-                                              { boxId.length==1 && boxId[0]==id && (
-                                                <tr >
-                                                    <td colSpan="10">
+                                       
+                                              {/* { boxId.length==1 && boxId[0]==id && (
+                                                <tr>
+                                                    <td colSpan="5">
                                                     <div className="border rounded-md p-3">
                                                         <table className="w-full">
                                                         <tr className="border-b-2 ">
                                                             <th className="font-normal">Type</th>
-                                                            <th className="font-normal">Model</th>
-                                                            <th className="font-normal">Manufacturer</th>                                                            
                                                             <th className="font-normal">Quantity</th>
-                                                            <th className="font-normal">Avialable units</th>
-                                                        
+                                                            <th className="font-normal">Model</th>
+                                                            <th className="font-normal">Manufacturer</th>
                                                         </tr>
                                                         <br />
 
@@ -660,7 +612,9 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
                                                                 <option value="CU">CU</option>
                                                                 <option value="VVPAT">VVPAT</option>
                                                                 </select></td>
-                                                               
+                                                                <td>
+                                                                <input type="number" placeholder="No of Unit" className="Input border mb-2 text-black" id={id.toString() + "_" + v2.toString() + "_quantity"} onChange={(e)=>calculate(id,v2,"quantity",e.target.value)} value={orderCount[id][v2]["quantity"]} required></input>
+                                                                </td>
                                                                 <td>
                                                                 <select className="border p-2 mb-2 text-black"
                                                                     id={id.toString() + "_" + v2.toString() + "_Model"}
@@ -689,17 +643,6 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
                                                                     <option value="BEL">BEL</option>
                                                                 </select>
                                                                 </td>
-                                                                <td>
-                                                                <input disabled={!(orderCount[id][v2]["type"]!="select" && orderCount[id][v2]["model"]!="select" && orderCount[id][v2]["manufacturer"]!="select")} type="number" placeholder="No of Unit" className="Input border mb-2 text-black" id={id.toString() + "_" + v2.toString() + "_quantity"} onChange={(e)=>calculate(id,v2,"quantity",e.target.value)} value={orderCount[id][v2]["quantity"]} required></input>
-                                                                </td>
-                                                               <td>
-                                                                {(orderCount[id][v2]["type"]!="select" && orderCount[id][v2]["model"]!="select" && orderCount[id][v2]["manufacturer"]!="select")?(<>
-                                                                {WareHouse_List[id]["max"+orderCount[id][v2]["type"]+orderCount[id][v2]["model"]+orderCount[id][v2]["manufacturer"]]-WareHouse_List[id]["fill"+orderCount[id][v2]["type"]+orderCount[id][v2]["model"]+orderCount[id][v2]["manufacturer"]]}
-                                                                </>):(
-                                                                    <>Pending</>
-                                                                ) }
-                                                                </td>
-                                                               
                                                             </tr>
                                                             ))
                                                         }
@@ -709,8 +652,8 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
                                                     </td>
                                                 </tr>
                                               )} */}
-                                              <tr className="">
-                                                <td colSpan="20">
+                                              <tr>
+                                                <td colSpan="2">
                                                     <hr className="border-1 border-black"/>
                                                 </td>
                                               </tr>
@@ -832,7 +775,7 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
                 </div>
             </div >
            <center>
-            <button className="text-white" onClick={handleSubmit}>
+            <button className="text-white mt-2" onClick={handleSubmit}>
                 Submit
             </button>
            </center>

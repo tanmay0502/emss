@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ReactComponent as CreateIssueIcon } from "../../assets/create_issue_request.svg";
 import { useParams } from "react-router-dom";
 import Modal from 'react-modal';
+import { formatRealm, formatRealm2, getRealm } from "../../components/utils";
 
 export default function GenarateOrderREP() {
 
@@ -185,25 +186,9 @@ useEffect(()=>{
 
 
   async function getState() {
-    try {
-      let uri = `${process.env.REACT_APP_API_SERVER}/user/getRealm`
-      const response = await fetch(
-        uri,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: 'include',
-          body:{}
-        }
-      );
-      const data2 = await response.json();
-      console.log("/user/getRealm", data2)
-      setStates(data2.data["state"]);
-    } catch (err) {
-      console.log(err);
-    }
+    const id = window.sessionStorage.getItem("sessionToken")
+    const data = await getRealm( "User", "CreateUser")
+    setStates(formatRealm2(data, "", "", "", ""));
   }
 
   useEffect(() => {
@@ -337,8 +322,8 @@ useEffect(()=>{
                         <option>Select</option>
                         {states &&
                           states.map((val) => (
-                            <option value={val} className="text-black">
-                              {val}
+                            <option value={val.stCode} className="text-black">
+                              {`${val.stCode} (${val.stName})`}
                             </option>
                           ))}
                         {states === [] && (<option value="0" className="text-black">

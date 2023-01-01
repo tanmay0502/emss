@@ -33,6 +33,11 @@ export default function OrderTypes(){
       if(elem){
         elem.classList.toggle('orderSelected')
     }
+
+    if(selected){
+        navigate('/session/ordermanagement/createorder/generateorder/'+ orderTypeMapping[selected])
+
+    }
     
       return () => {
         
@@ -41,7 +46,7 @@ export default function OrderTypes(){
     
 
     const toggle = (id) => {
-        alert(id);
+        console.log(id);
     }
     return (
        <>
@@ -49,22 +54,15 @@ export default function OrderTypes(){
         <div className="d-flex d-flex-center mt-5">
             <div className="wrapper d-flex d-flex-center d-flex-column">
                 <div className="d-flex d-flex-center d-flex-wrap">
-                    <TypeComponent id='1' code='New' text='New Units Order from the Manufacturer' setSelected = {setSelected}  toggle={() => toggle('1')}/>
-                    <TypeComponent id='2' code='REP' text='Repaired from the Manufacturer'  setSelected = {setSelected}  toggle={() => toggle('2')}/>
-                    <TypeComponent id='3' code='ITRS' text='Inter State Movement of the Units'  setSelected = {setSelected}  toggle={() => toggle('3')}/>
-                    <TypeComponent id='4' code='ITAS' text='Intra State Movement of the Units' setSelected = {setSelected}  toggle={() => toggle('4')}/>
-                    <TypeComponent id='5' code='SEC' text=' Loan to State Election commission'  setSelected = {setSelected}  toggle={() => toggle('5')}/>
-                    <TypeComponent id='6' code='DEF' text='Defective Unit Movement from Warehouse to Factory'  setSelected = {setSelected}  toggle={() => toggle('6')}/>
-                    <TypeComponent id='7' code='INTF' text=' Inter Factory movement of Units'   setSelected = {setSelected}  toggle={() => toggle('7')}/>
+                    <TypeComponent id='1' text={(<span className="text-lg  ">New Units Order from the Manufacturer</span>)} setSelected = {setSelected}  toggle={() => toggle('1')}/>
+                    <TypeComponent id='2' text={(<span className="text-lg ">Repaired from the Manufacturer</span>)}  setSelected = {setSelected}  toggle={() => toggle('2')}/>
+                    <TypeComponent id='3'  text={(<span className="text-lg ">Inter State Movement of the Units</span>)}  setSelected = {setSelected}  toggle={() => toggle('3')}/>
+                    <TypeComponent id='4'  text={(<span className="text-lg ">Intra State Movement of the Units</span>)} setSelected = {setSelected}  toggle={() => toggle('4')}/>
+                    <TypeComponent id='5' text={(<span className="text-lg ">Loan to State Election commission</span>)}  setSelected = {setSelected}  toggle={() => toggle('5')}/>
+                    <TypeComponent id='6' text={(<span className="text-lg ">Defective Unit Movement from Warehouse to Factory</span>)}  setSelected = {setSelected}  toggle={() => toggle('6')}/>
+                    <TypeComponent id='7'  text={(<span className="text-lg ">Inter Factory movement of Units</span>)}   setSelected = {setSelected}  toggle={() => toggle('7')}/>
                 </div>
-                <button className="btn" onClick={()=>{
-                    if(selected){
-                        navigate('/session/ordermanagement/createorder/generateorder/'+ orderTypeMapping[selected])
-                    }
-                    else{
-                        alert('Order Type not Selected!')
-                    }
-                }} >Proceed</button>
+               
             </div>
         </div>
        </>

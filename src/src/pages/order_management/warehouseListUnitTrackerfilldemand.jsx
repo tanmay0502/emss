@@ -36,6 +36,8 @@ export default function WareHouseListUnitTrackerFillDemand(props) {
         "Room Type": "Room Type",
     }
 
+    
+
 
     const  [total_BU_M2, settotal_BU_M2] = useState(0)
     const  [filled_BU_M2, setfilled_BU_M2] = useState(0)
@@ -310,6 +312,11 @@ export default function WareHouseListUnitTrackerFillDemand(props) {
                         "Content-Type": "application/json",
                     },
                     credentials: 'include',
+                    body:JSON.stringify({
+                        "buildingType": "G",
+                        "Type": "A",
+                        "status": "A"
+                      })
                     
                 })
 
@@ -520,7 +527,7 @@ export default function WareHouseListUnitTrackerFillDemand(props) {
 
                                     {WareHouse_List.length > 0 &&
                                         WareHouse_List.map((val, id) => (<>
-                                             <tr onClick={(e) => setBox(id) } className="flex justify-start ml-10 cursor-pointer">
+                                             <tr onClick={(e) => setBox(id) } className="flex justify-start ml-10 ">
                                                 <td className="text-black text-sm">{id+1}</td>
                                                 <td className="text-black text-sm">{val["Warehouse ID"]}</td>
                                                 {/* <td className="text-black text-sm">{val["Warehouse Type"]}</td> */}
@@ -532,7 +539,13 @@ export default function WareHouseListUnitTrackerFillDemand(props) {
                                                     <div className="">
                                                         
                                                         {orderCount[id][key]["type"]!="select" && orderCount[id][key]["model"]!="select" && orderCount[id][key]["manufacturer"]!="select" && <div className="flex justify-between p-3 h-6 text-sm pb-2 text-black">
-                                                            <p>{orderCount[id][key]["type"]}</p><p>{"-->"}</p><p>{orderCount[id][key]["model"]}</p><p>{"-->"}</p><p>{orderCount[id][key]["manufacturer"]}</p><p>{"-->"}</p><p>{orderCount[id][key]["quantity"]}</p>
+                                                            {/* <p>{orderCount[id][key]["type"]}</p><p>{"-->"}</p><p>{orderCount[id][key]["model"]}</p><p>{"-->"}</p><p>{orderCount[id][key]["manufacturer"]}</p><p>{"-->"}</p><p>{orderCount[id][key]["quantity"]}</p> */}
+                                                            <div className="w-full flex">
+                                                                <div className="w-1/4">{orderCount[id][key]["type"]}</div>
+                                                                <div className="w-1/4">{orderCount[id][key]["model"]}</div>
+                                                                <div className="w-1/4">{orderCount[id][key]["manufacturer"]}</div>
+                                                                <div className="w-1/4"><input type="number" placeholder="No of Unit" className="border " id={id.toString() + "_" + key.toString() + "_quantity"} onChange={(e)=>calculate(id,key,"quantity",e.target.value)} value={orderCount[id][key]["quantity"]} required></input></div>
+                                                            </div>
                                                         </div> }
                                                     </div>
                                                 ))}
@@ -540,7 +553,7 @@ export default function WareHouseListUnitTrackerFillDemand(props) {
                                             </td>
                                         </tr>}
                                        
-                                              { boxId.length==1 && boxId[0]==id && (
+                                              {/* { boxId.length==1 && boxId[0]==id && (
                                                 <tr>
                                                     <td colSpan="5">
                                                     <div className="border rounded-md p-3">
@@ -608,7 +621,7 @@ export default function WareHouseListUnitTrackerFillDemand(props) {
                                                     </div>
                                                     </td>
                                                 </tr>
-                                              )}
+                                              )} */}
                                               <tr>
                                                 <td colSpan="2">
                                                     <hr className="border-1 border-black"/>

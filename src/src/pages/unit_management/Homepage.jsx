@@ -1149,7 +1149,7 @@ export default function HomePage() {
                         </li>
                     </div>
                 </div>
-                {sessionStorage.getItem("sessionToken").substring(8)=="WHM"}
+                {sessionStorage.getItem("sessionToken").substring(8)=="WHM" &&
                 <div className={styles.myCardSampleHover} onClick={() => { navigate(`/session/unitmanagement/orders`) }}>
                     <div className={styles.card_title}>
                         {/* /session/unitmanagement/schedule_list */}
@@ -1211,6 +1211,7 @@ export default function HomePage() {
                         </li>
                     </div>
                 </div>
+            }
                 
             </div>
 

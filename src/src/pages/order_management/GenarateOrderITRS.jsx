@@ -4,6 +4,8 @@ import { useParams } from "react-router-dom";
 import "./styles/generateOrder.css";
 import Modal from 'react-modal';
 import UnitTraker from "./UnitTracker";
+import FillOrder from "./FillOrder";
+import { getRealm,formatRealm } from "../../components/utils";
 
 export default function GenarateOrderITRS() {
 
@@ -112,21 +114,11 @@ export default function GenarateOrderITRS() {
   const sampleBody = {
     "type": orderType,
     "details": [
-      {
-        "source": "",
-        "destination": "",
-        "unitDetails": [
-          {
-            "item": "",
-            "itemmodel": "",
-            "manufacturer": "",
-            "itemquantity": 0
-          }
-        ]
-      }
+      
     ]
   }
   const [body, setBody] = useState(sampleBody)
+
 
   const submmit = async () => {
     console.log("Submitted")
@@ -193,35 +185,24 @@ export default function GenarateOrderITRS() {
 
 
   async function getState() {
-    console.log("ff");
-    try {
-      let uri = `${process.env.REACT_APP_API_SERVER}/user/getRealm`
-      const response = await fetch(
-        uri,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: 'include',
-          body: {}
-        }
-      );
-      const data2 = await response.json();
-      console.log(data2["data"])
-      setStates(data2["data"]["state"]);
-    } catch (err) {
-      console.log(err);
-    }
+    let data = await getRealm("Order", "FillCapacity")
+    let stateList = formatRealm(data,"ADM","","","");
+    console.log(stateList)
+    setStates(stateList)
   }
 
   useEffect(() => {
-    if (isPageLoaded == 0) {
-      getState();
-      setIsPageLoaded(1);
+   
+    console.log("fetching")
+    let timer = setTimeout(()=>getState(),500);
+      
+    return (()=>{
+      clearTimeout(timer);
+    })
+     
 
-    }
-  })
+    
+  },[])
 
   const [update, setUpdate] = useState(0);
   useEffect(() => {
@@ -257,6 +238,60 @@ export default function GenarateOrderITRS() {
     }
   },[update])
 
+  const [Order, setOrder] = useState([{
+    "source":"select",
+    "destination":"select",
+    "details":[]
+}]);
+
+
+useEffect(()=>{
+  let tempBody={...sampleBody}
+  Order.map((val,id)=>{
+    if(val["source"]!="select" && val["destination"]!="select"){
+      console.log("both filled")
+    tempBody["details"].push({
+      "source": val["source"],
+      "destination": val["destination"],
+      "unitDetails": [
+        
+      ]
+    })
+    val["details"].map((val2)=>{
+      if(val2["model"]!="select" && val2["manufacturer"]!="select"){
+            if(val2["filledCU"]>0){
+            tempBody["details"][id]["unitDetails"].push({
+              "item": "CU",
+              "itemmodel": val2["model"],
+              "manufacturer": val2["manufacturer"],
+              "itemquantity": val2["filledCU"]
+            })
+          }
+          if(val2["filledBU"]>0){
+            tempBody["details"][id]["unitDetails"].push({
+              "item": "BU",
+              "itemmodel": val2["model"],
+              "manufacturer": val2["manufacturer"],
+              "itemquantity": val2["filledBU"]
+            })
+          }
+          if(val2["filledVVPAT"]>0){
+            tempBody["details"][id]["unitDetails"].push({
+              "item": "VVPAT",
+              "itemmodel": val2["model"],
+              "manufacturer": val2["manufacturer"],
+              "itemquantity": val2["filledVVPAT"]
+            })
+          }
+        }
+     
+    })
+  }
+  })
+  console.log(tempBody)
+  setBody(tempBody)
+},[Order])
+
   return (
     <div className="p-3">
       <Modal
@@ -282,251 +317,10 @@ export default function GenarateOrderITRS() {
         Request ID : {body.type}
       </p>
       <div className="flex w-full">
-        <div className=" w-3/5">
-          {body.details.map((val, ind) => (
+        <div className=" w-3/5 pt-10">
+          
+          <FillOrder Order={Order} setOrder={setOrder} sources={states} sname={"stName"} scode={"stCode"} destinations={states} dname={"stName"} dcode={"stCode"}/>
 
-
-            <div className="bg-white p-6 rounded-lg shadow-lg mt-2 w-full">
-              <div className="flex justify-between">
-                <div className="w-full">
-                  <label className="flex  w-full mb-2">Source<span className="text-red-600">*</span></label>
-
-                  <div className="flex">
-                    <select
-                      className="w-5/6 h-10 p-2 border rounded-md "
-                      placeholder="Type"
-                      required
-                      onChange={(e) => {
-                        setBody((prevBody) => {
-                          prevBody.details[ind].source = e.target.value;
-                          return (prevBody);
-                        })
-                      }}
-                    >
-                      <option>Select</option>
-                      {states &&
-                        states.map((st) => (
-                          <option value={st} className="text-black" onClick={() => {
-                            let prevBody = body;
-                            prevBody.details[ind].source = st;
-                            setBody(prevBody);
-                          }}>
-                            {st}
-                          </option>
-                        ))}
-                      {states == [] && (<option value="0" className="text-black">
-                        Select:
-                      </option>)}
-                    </select>
-                  </div>
-                </div>
-                <div className="flex w-full justify-end" >
-                  <div className="w-5/6">
-                    <label className="flex  w-full mb-2">Destination<span className="text-red-600">*</span></label>
-
-                    <div className="flex w-full">
-                      <select
-                        className="h-10 p-2 border rounded-md"
-                        placeholder="Type"
-                        required
-                        onChange={(e) => {
-                          setBody((prevBody) => {
-                            prevBody.details[ind].destination = e.target.value;
-                            return (prevBody);
-                          })
-                        }}
-                      >
-                        {" "}
-                        <option>Select</option>
-                        {states &&
-                          states.map((st) => (
-                            <option value={st} className="text-black">
-                              {st}
-                            </option>
-                          ))}
-                        {states == [] && (<option value="0" className="text-black">
-                          Select:
-                        </option>)}
-                      </select>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <p className="text-left font-bold mt-2 text-lg mb-4" >
-                Units Description
-              </p>
-              <div className="border rounded-md p-3">
-                <table className="w-full">
-                  <tr>
-                    <th className="font-normal w-1/5">Type</th>
-                    <th className="font-normal w-1/5">Model</th>
-                    <th className="font-normal w-1/5">Manufacturer</th>
-                    <th className="font-normal w-1/5">Quantity</th>
-                    <th className="font-normal w-1/5">Available</th>
-                  </tr>
-                  <br />
-
-                  {
-                    body.details[ind].unitDetails.map((val, ind2) => (
-                      <tr className="border-b-2 ">
-                        <td><select className="border p-2 mb-2"
-                          required
-                          onChange={(e) => {
-                            setBody((prevBody) => {
-                              prevBody.details[ind].unitDetails[ind2].item = e.target.value;
-                              return (prevBody);
-                            })
-                            setUpdate((prev)=>{return (prev+1)%10});
-                          }}
-                        >
-                          <option
-                          >select</option>
-                          <option value="BU">BU</option>
-                          <option value="CU">CU</option>
-                          <option value="VVPAT">VVPAT</option>
-                        </select></td>
-                        <td>
-                          <select className="border p-2 mb-2"
-                            required
-                            onChange={(e) => {
-                              setBody((prev)=>{
-                                prev.details[ind].unitDetails[ind2].itemmodel = e.target.value;
-                                return prev;
-                              })
-                              setUpdate((prev)=>{return (prev+1)%10});
-                            }}
-
-                          >
-                            <option
-                            >select</option>
-                            <option value="M2">M2</option>
-                            <option value="M3">M3</option>
-                          </select>
-                        </td>
-                        <td>
-                          <select className="border p-2 mb-2"
-                            required
-                            onChange={(e) => {
-                              setBody((prev)=>{
-                                prev.details[ind].unitDetails[ind2].manufacturer = e.target.value;
-                                return prev;
-                              })
-                              setUpdate((prev)=>{return (prev+1)%10});
-                            }}
-
-                          >
-                            <option
-                            >select</option>
-                            <option value="ECIL">ECIL</option>
-                            <option value="BEL">BEL</option>
-                          </select>
-                        </td>
-                        <td>
-                          <input type="number" placeholder="No of Unit" className="w-2/3 p-2 rounded-lg border mb-2"
-                            onChange={(e) => {
-                              setBody((prev)=>{
-                                prev.details[ind].unitDetails[ind2].itemquantity = e.target.value;
-                                return prev;
-                              })
-                              setUpdate((prev)=>{return (prev+1)%10});
-                            }} required></input>
-                        </td>
-                        <td>
-                          {[0].map(()=>{
-                            let sum = 0;
-                            const dict = {
-                              "B": "BEL",
-                              "E": "ECIL",
-                              "BU": "BU",
-                              "CU": "CU",
-                              "VT": "VVPAT",
-                            }
-                            for (let i = 0; i < availableUnits.length; i++) {
-                              const e = availableUnits[i];
-                              if (dict[e.unit_type] === val.item && dict[e.manufacturer] === val.manufacturer && e.model === val.itemmodel) {
-                                sum+=e.count;
-                              }
-                            }
-                            if(parseInt(val.itemquantity)){
-                              sum-=parseInt(val.itemquantity)
-                            }
-                            return <div>{sum}</div>;
-                          })}
-                        </td>
-                        <div className='mt-2'><button type="button" className="text-white bg-red-600 p-1 text-2xl w-8 h-8 -mt-5 " style={{ borderRadius: "50%" }}
-                        onClick={()=>{
-                            setBody((prev)=>{
-                                let temp = prev.details[ind].unitDetails.filter((e)=>e!=val);
-                                prev.details[ind].unitDetails = temp;
-                                return prev;
-                            })
-                            setUpdate((prev)=>{return (prev+1)%10});
-                        }}
-                        > -</button></div>
-                      </tr>
-                    ))
-                  }
-                </table>
-                <div className="flex justify-end w-full mt-1"><button type="button" onClick={() => {
-                  setBody((prev) => {
-                    let temp = {
-                      "item": "",
-                      "itemmodel": "",
-                      "manufacturer": "",
-                      "itemquantity": 0
-                    }
-                    let n = prev.details[ind].unitDetails.length;
-                    if (n) {
-                      if(prev.details[ind].unitDetails[n-1].itemquantity){
-                        prev.details[ind].unitDetails.push(temp)
-                      }
-                    } else {
-                      prev.details[ind].unitDetails.push(temp)
-                    }
-                    return prev;
-                  })
-                  setUpdate((prev)=>{return (prev+1)%10});
-                }} className="bg-orange-600 text-white  p-3  " >Add row</button></div>
-              </div>
-              <div className='flex justify-end mt-1'>
-                    <button type="button" className="text-white bg-red-600 p-1 text-2xl w-10 h-10 -mt-5 " style={{ borderRadius: "50%" }}onClick={()=>{
-                    setBody((prev)=>{
-                        prev.details = prev.details.filter((ele)=>ele!=val);
-                        return prev;
-                    })
-                    setUpdate((prev)=>{return (prev+1)%10});
-                }}> -</button>
-                </div>
-            </div>
-          ))}
-
-            <div className="flex justify-end">
-            <button onClick={() => {
-            setBody((prev) => {
-              let temp = {
-                "source": "",
-                "destination": "",
-                "unitDetails": [
-                  {
-                    "item": "",
-                    "itemmodel": "",
-                    "manufacturer": "",
-                    "itemquantity": 0
-                  }
-                ]
-              }
-              let n = prev.details.length;
-              if (n) {
-                if(prev.details[n-1].source&&prev.details[n-1].destination){
-                  prev.details.push(temp)
-                }
-              } else {
-                prev.details.push(temp)
-              }
-              return prev;
-            })
-            setUpdate((prev)=>{return (prev+1)%10});
-          }} type="button" className="text-white bg-orange-600 p-1 text-2xl w-10 h-10 -mt-5 " style={{ borderRadius: "50%" }}> +</button></div>
         </div>
         <div className="w-2/5">
           <div className="bg-white p-6 rounded-lg shadow-lg mt-2 w-full m-4 ">
@@ -635,10 +429,15 @@ export default function GenarateOrderITRS() {
             </table>
           </div>
         </div>
+        
+
       </div>
         </div>
       </div>
+
       <button className="text-white bg-orange-600" onClick={() => submmit()}>Submit</button>
+
+      
     </div>
   );
 }
