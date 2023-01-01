@@ -22,90 +22,90 @@ export default function GenarateOrderSEC() {
 
   function openModal() {
     setIsOpen(true);
-}
+  }
 
-function afterOpenModal() {
+  function afterOpenModal() {
     // references are now sync'd and can be accessed.
     //   subtitle.style.color = '#f00';
-}
+  }
 
-function closeModal() {
+  function closeModal() {
     setIsOpen(false);
-}
+  }
 
-const customStyles = {
+  const customStyles = {
     content: {
-        top: '50%',
-        left: '50%',
-        right: 'auto',
-        bottom: 'auto',
-        marginRight: '-50%',
-        transform: 'translate(-50%, -50%)',
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
     },
-};
+  };
 
-async function getcertificate(val) {
-  setflag(1)
-  console.log(val);
-  try {
-      const response = await fetch(
-          `${process.env.REACT_APP_API_SERVER}/order/getOrderPdf/`,
-          {
-              method: "POST",
-              headers: {
-                  "Content-Type": "application/json",
-              },
-              body: JSON.stringify(val),
-              credentials: 'include'
-          }
-      );
-      const data = await response.json();
-      console.log(data);
-      if (response.status == 200) {
-          setPhotoFileData(data)
-      }
-
-  } catch (err) {
-      console.log({ err });
-  }
-}
-
-if (flag == 0) {
-  if (photoFileName) {
-      getcertificate();
-  }
-}
-
-
-useEffect(()=>{
-  const getUnits = async ()=>{
+  async function getcertificate(val) {
+    setflag(1)
+    console.log(val);
     try {
-      const ID = window.sessionStorage.getItem('sessionToken');
-      console.log(ID)
       const response = await fetch(
-        `${process.env.REACT_APP_API_SERVER}/unit/available_units/`,
+        `${process.env.REACT_APP_API_SERVER}/order/getOrderPdf/`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          credentials: 'include',
-          body:JSON.stringify({
-            "oprnd":ID
-          })
+          body: JSON.stringify(val),
+          credentials: 'include'
         }
       );
       const data = await response.json();
-      console.log("/unit/available_units/",data);
-      if (data.data.length) {
-        setAvailableUnits(data.data);
+      console.log(data);
+      if (response.status == 200) {
+        setPhotoFileData(data)
       }
+
     } catch (err) {
       console.log({ err });
     }
   }
-  getUnits()
-},[])
+
+  if (flag == 0) {
+    if (photoFileName) {
+      getcertificate();
+    }
+  }
+
+
+  useEffect(() => {
+    const getUnits = async () => {
+      try {
+        const ID = window.sessionStorage.getItem('sessionToken');
+        console.log(ID)
+        const response = await fetch(
+          `${process.env.REACT_APP_API_SERVER}/unit/available_units/`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+              "oprnd": ID
+            })
+          }
+        );
+        const data = await response.json();
+        console.log("/unit/available_units/", data);
+        if (data.data.length) {
+          setAvailableUnits(data.data);
+        }
+      } catch (err) {
+        console.log({ err });
+      }
+    }
+    getUnits()
+  }, [])
 
   const sampleBody = {
     "type": orderType,
@@ -125,19 +125,19 @@ useEffect(()=>{
     ]
   }
 
-  const man = {"ECIL":"ME", "BEL":"MB"}
-  const manr = {"ME":"ECIL", "MB":"BEL"}
+  const man = { "ECIL": "ME", "BEL": "MB" }
+  const manr = { "ME": "ECIL", "MB": "BEL" }
   const [body, setBody] = useState(sampleBody)
 
   const submmit = async () => {
     console.log("Submitted")
     console.log(body);
-    body.details.map(function(val){
+    body.details.map(function (val) {
       let b = [];
-      val.unitDetails.map(function(v){
-        b.push(v.item+v.itemmodel+v.manufacturer);
+      val.unitDetails.map(function (v) {
+        b.push(v.item + v.itemmodel + v.manufacturer);
       });
-      if((new Set(b)).size !== b.length) {
+      if ((new Set(b)).size !== b.length) {
         alert("Error : Identical Entries");
         window.location.reload(false);
       }
@@ -159,7 +159,7 @@ useEffect(()=>{
       console.log(data2["OrderIDs List"]);
 
       let t = [];
-      data2['OrderIDs List'].map(function(val){
+      data2['OrderIDs List'].map(function (val) {
         t.push({
           "orderid": val
         });
@@ -195,13 +195,14 @@ useEffect(()=>{
             "Content-Type": "application/json",
           },
           credentials: 'include',
-          body: {}
+          body: JSON.stringify({
+          }),
         }
       );
       const data2 = await response.json();
       const da = data2.data;
       let a = [];
-      da.map(function(val){
+      da.map(function (val) {
         console.log(val);
         a.push(val.warehouseid);
       });
@@ -219,15 +220,15 @@ useEffect(()=>{
   })
 
 
-  const[manufacturer, setManufacturer] = useState("select");
+  const [manufacturer, setManufacturer] = useState("select");
 
-  function kk(){
+  function kk() {
     console.log("kdkd")
   }
 
-  useEffect(()=>{
-    console.log("manu",manufacturer)
-  },[manufacturer])
+  useEffect(() => {
+    console.log("manu", manufacturer)
+  }, [manufacturer])
 
   const [update, setUpdate] = useState(0);
   useEffect(() => {
@@ -242,26 +243,26 @@ useEffect(()=>{
       for (let j = 0; j < ele.unitDetails.length; j++) {
         const e = ele.unitDetails[j];
         if (e.item === "BU" && e.itemmodel === "M2") {
-          setTotal_BU_M2(prev=>prev+=parseInt(e.itemquantity));
+          setTotal_BU_M2(prev => prev += parseInt(e.itemquantity));
         }
         if (e.item === "BU" && e.itemmodel === "M3") {
-          setTotal_BU_M3(prev=>prev+=parseInt(e.itemquantity));
+          setTotal_BU_M3(prev => prev += parseInt(e.itemquantity));
         }
         if (e.item === "CU" && e.itemmodel === "M2") {
-          setTotal_CU_M2(prev=>prev+=parseInt(e.itemquantity));
+          setTotal_CU_M2(prev => prev += parseInt(e.itemquantity));
         }
         if (e.item === "CU" && e.itemmodel === "M3") {
-          setTotal_CU_M3(prev=>prev+=parseInt(e.itemquantity));
+          setTotal_CU_M3(prev => prev += parseInt(e.itemquantity));
         }
         if (e.item === "VVPAT" && e.itemmodel === "M2") {
-          setTotal_VVPAT_M2(prev=>prev+=parseInt(e.itemquantity));
+          setTotal_VVPAT_M2(prev => prev += parseInt(e.itemquantity));
         }
         if (e.item === "VVPAT" && e.itemmodel === "M3") {
-          setTotal_VVPAT_M3(prev=>prev+=parseInt(e.itemquantity));
+          setTotal_VVPAT_M3(prev => prev += parseInt(e.itemquantity));
         }
       }
     }
-  },[update])
+  }, [update])
 
   return (
     <div className="p-3">
@@ -307,7 +308,7 @@ useEffect(()=>{
                           prevBody.details[ind].source = e.target.value;
                           return (prevBody);
                         })
-                        setUpdate((prev)=>{return (prev+1)%10});
+                        setUpdate((prev) => { return (prev + 1) % 10 });
                       }}
                     >
                       <option>Select</option>
@@ -338,14 +339,14 @@ useEffect(()=>{
                             return (prevBody);
                           })
                         }}
-                        >
+                      >
                         {" "}
                         <option>Select</option>
                         {["ME", "MB"].map((val) => (
-                            <option value={val} className="text-black">
-                              {val}
-                            </option>
-                          ))}
+                          <option value={val} className="text-black">
+                            {val}
+                          </option>
+                        ))}
                       </select>
                     </div>
                   </div>
@@ -375,7 +376,7 @@ useEffect(()=>{
                               prevBody.details[ind].unitDetails[ind2].item = e.target.value;
                               return (prevBody);
                             })
-                            setUpdate((prev)=>{return (prev+1)%10});
+                            setUpdate((prev) => { return (prev + 1) % 10 });
                           }}
                         >
                           <option
@@ -388,11 +389,11 @@ useEffect(()=>{
                           <select className="border p-2 mb-2"
                             required
                             onChange={(e) => {
-                              setBody((prev)=>{
+                              setBody((prev) => {
                                 prev.details[ind].unitDetails[ind2].itemmodel = e.target.value;
                                 return prev;
                               })
-                              setUpdate((prev)=>{return (prev+1)%10});
+                              setUpdate((prev) => { return (prev + 1) % 10 });
                             }}
 
                           >
@@ -406,11 +407,11 @@ useEffect(()=>{
                           <select className="border p-2 mb-2"
                             required
                             onChange={(e) => {
-                              setBody((prev)=>{
+                              setBody((prev) => {
                                 prev.details[ind].unitDetails[ind2].manufacturer = e.target.value;
                                 return prev;
                               })
-                              setUpdate((prev)=>{return (prev+1)%10});
+                              setUpdate((prev) => { return (prev + 1) % 10 });
                             }}
                           >
                             <option>{body.details[ind].destination}</option>
@@ -419,16 +420,16 @@ useEffect(()=>{
                         <td>
                           <input type="number" placeholder="No of Unit" className="w-2/3 p-2 rounded-lg border mb-2"
                             onChange={(e) => {
-                              setBody((prev)=>{
+                              setBody((prev) => {
                                 prev.details[ind].unitDetails[ind2].itemquantity = e.target.value;
                                 prev.details[ind].unitDetails[ind2].manufacturer = prev.details[ind].destination;
                                 return prev;
                               })
-                              setUpdate((prev)=>{return (prev+1)%10});
+                              setUpdate((prev) => { return (prev + 1) % 10 });
                             }} required></input>
                         </td>
                         <td>
-                          {[0].map(()=>{
+                          {[0].map(() => {
                             let sum = 0;
                             const dict = {
                               "B": "BEL",
@@ -440,24 +441,24 @@ useEffect(()=>{
                             for (let i = 0; i < availableUnits.length; i++) {
                               const e = availableUnits[i];
                               if (dict[e.unit_type] === val.item && dict[e.manufacturer] === val.manufacturer && e.model === val.itemmodel) {
-                                sum+=e.count;
+                                sum += e.count;
                               }
                             }
-                            if(parseInt(val.itemquantity)){
-                              sum-=parseInt(val.itemquantity)
+                            if (parseInt(val.itemquantity)) {
+                              sum -= parseInt(val.itemquantity)
                             }
                             return <div>{sum}</div>;
                           })}
                         </td>
                         <div className='mt-2'><button type="button" className="text-white bg-red-600 p-1 text-2xl w-8 h-8 -mt-5 " style={{ borderRadius: "50%" }}
-                        onClick={()=>{
-                            setBody((prev)=>{
-                                let temp = prev.details[ind].unitDetails.filter((e)=>e!=val);
-                                prev.details[ind].unitDetails = temp;
-                                return prev;
+                          onClick={() => {
+                            setBody((prev) => {
+                              let temp = prev.details[ind].unitDetails.filter((e) => e != val);
+                              prev.details[ind].unitDetails = temp;
+                              return prev;
                             })
-                            setUpdate((prev)=>{return (prev+1)%10});
-                        }}
+                            setUpdate((prev) => { return (prev + 1) % 10 });
+                          }}
                         > -</button></div>
                       </tr>
                     ))
@@ -473,7 +474,7 @@ useEffect(()=>{
                     }
                     let n = prev.details[ind].unitDetails.length;
                     if (n) {
-                      if(prev.details[ind].unitDetails[n-1].itemquantity){
+                      if (prev.details[ind].unitDetails[n - 1].itemquantity) {
                         prev.details[ind].unitDetails.push(temp)
                       }
                     } else {
@@ -481,48 +482,48 @@ useEffect(()=>{
                     }
                     return prev;
                   })
-                  setUpdate((prev)=>{return (prev+1)%10});
+                  setUpdate((prev) => { return (prev + 1) % 10 });
                 }} className="bg-orange-600 text-white  p-3  " >Add row</button></div>
               </div>
               <div className='flex justify-end mt-1'>
-                    <button type="button" className="text-white bg-red-600 p-1 text-2xl w-10 h-10 -mt-5 " style={{ borderRadius: "50%" }}onClick={()=>{
-                    setBody((prev)=>{
-                        prev.details = prev.details.filter((ele)=>ele!=val);
-                        return prev;
-                    })
-                    setUpdate((prev)=>{return (prev+1)%10});
+                <button type="button" className="text-white bg-red-600 p-1 text-2xl w-10 h-10 -mt-5 " style={{ borderRadius: "50%" }} onClick={() => {
+                  setBody((prev) => {
+                    prev.details = prev.details.filter((ele) => ele != val);
+                    return prev;
+                  })
+                  setUpdate((prev) => { return (prev + 1) % 10 });
                 }}> -</button>
-                </div>
+              </div>
             </div>
           ))}
 
-            <div className="flex justify-end">
+          <div className="flex justify-end">
             <button onClick={() => {
-            setBody((prev) => {
-              let temp = {
-                "source": "",
-                "destination": "",
-                "unitDetails": [
-                  {
-                    "item": "",
-                    "itemmodel": "",
-                    "manufacturer": "",
-                    "itemquantity": 0
+              setBody((prev) => {
+                let temp = {
+                  "source": "",
+                  "destination": "",
+                  "unitDetails": [
+                    {
+                      "item": "",
+                      "itemmodel": "",
+                      "manufacturer": "",
+                      "itemquantity": 0
+                    }
+                  ]
+                }
+                let n = prev.details.length;
+                if (n) {
+                  if (prev.details[n - 1].source && prev.details[n - 1].destination) {
+                    prev.details.push(temp)
                   }
-                ]
-              }
-              let n = prev.details.length;
-              if (n) {
-                if(prev.details[n-1].source&&prev.details[n-1].destination){
+                } else {
                   prev.details.push(temp)
                 }
-              } else {
-                prev.details.push(temp)
-              }
-              return prev;
-            })
-            setUpdate((prev)=>{return (prev+1)%10});
-          }} type="button" className="text-white bg-orange-600 p-1 text-2xl w-10 h-10 -mt-5 " style={{ borderRadius: "50%" }}> +</button></div>
+                return prev;
+              })
+              setUpdate((prev) => { return (prev + 1) % 10 });
+            }} type="button" className="text-white bg-orange-600 p-1 text-2xl w-10 h-10 -mt-5 " style={{ borderRadius: "50%" }}> +</button></div>
         </div>
         <div className="w-2/5">
           <div className="bg-white p-6 rounded-lg shadow-lg mt-2 w-full m-4 ">
@@ -549,93 +550,93 @@ useEffect(()=>{
             <hr />
           </div>
           <div className="bg-white p-6 rounded-lg shadow-lg mt-2 w-full m-4 ">
-        <p className=" text-lg font-semibold text-center">Unit Tracker</p>
-        <div className="rounded-lg shadow-md mt-5 bg-white">
-          <div
-            className="rounded-t-lg p-2 text-left "
-            style={{ backgroundColor: "#84587C" }}
-          >
-            <span className="text-white text-lg ml-5">Ballot Units</span>
+            <p className=" text-lg font-semibold text-center">Unit Tracker</p>
+            <div className="rounded-lg shadow-md mt-5 bg-white">
+              <div
+                className="rounded-t-lg p-2 text-left "
+                style={{ backgroundColor: "#84587C" }}
+              >
+                <span className="text-white text-lg ml-5">Ballot Units</span>
+              </div>
+              <div className="p-2">
+                <table className="w-full mt-4 ">
+                  <tr className="text-red-400 border-b-2 ">
+                    <td className="">Model</td>
+                    <td>Quantity</td>
+                  </tr>
+                  <br />
+                  <tr className=" border-b-2 ">
+                    <td>M2</td>
+                    <td>{total_BU_M2}</td>
+                  </tr>
+                  <br />
+                  <tr className=" border-b-2 ">
+                    <td>M3</td>
+                    <td>{total_BU_M3}</td>
+                  </tr>
+                  <br />
+                </table>
+              </div>
+            </div>
+            <div className="rounded-lg shadow-md mt-5 bg-white">
+              <div
+                className="rounded-t-lg p-2 text-left "
+                style={{ backgroundColor: "#84587C" }}
+              >
+                <span className="text-white text-lg ml-5">Control Units</span>
+              </div>
+              <div className="p-2">
+                <table className="w-full mt-4 ">
+                  <tr className="text-red-400 border-b-2 ">
+                    <td className="">Model</td>
+                    <td>Quantity</td>
+                  </tr>
+                  <br />
+                  <tr className=" border-b-2 ">
+                    <td>M2</td>
+                    <td>{total_CU_M2}</td>
+                  </tr>
+                  <br />
+                  <tr className=" border-b-2 ">
+                    <td>M3</td>
+                    <td>{total_CU_M3}</td>
+                  </tr>
+                  <br />
+                </table>
+              </div>
+            </div>
+            <div className="rounded-lg shadow-md mt-5 bg-white">
+              <div
+                className="rounded-t-lg p-2 text-left "
+                style={{ backgroundColor: "#84587C" }}
+              >
+                <span className="text-white text-lg ml-5">VVPAT</span>
+              </div>
+              <div className="p-2">
+                <table className="w-full mt-4 ">
+                  <tr className="text-red-400 border-b-2 ">
+                    <td className="">Model</td>
+                    <td>Quantity</td>
+                  </tr>
+                  <br />
+                  <tr className=" border-b-2 ">
+                    <td>M2</td>
+                    <td>{total_VVPAT_M2}</td>
+                  </tr>
+                  <br />
+                  <tr className=" border-b-2 ">
+                    <td>M3</td>
+                    <td>{total_VVPAT_M3}</td>
+                  </tr>
+                  <br />
+                </table>
+              </div>
+            </div>
           </div>
-          <div className="p-2">
-            <table className="w-full mt-4 ">
-              <tr className="text-red-400 border-b-2 ">
-                <td className="">Model</td>
-                <td>Quantity</td>
-              </tr>
-              <br />
-              <tr className=" border-b-2 ">
-                <td>M2</td>
-                <td>{total_BU_M2}</td>
-              </tr>
-              <br />
-              <tr className=" border-b-2 ">
-                <td>M3</td>
-                <td>{total_BU_M3}</td>
-              </tr>
-              <br />
-            </table>
-          </div>
-        </div>
-        <div className="rounded-lg shadow-md mt-5 bg-white">
-          <div
-            className="rounded-t-lg p-2 text-left "
-            style={{ backgroundColor: "#84587C" }}
-          >
-            <span className="text-white text-lg ml-5">Control Units</span>
-          </div>
-          <div className="p-2">
-            <table className="w-full mt-4 ">
-              <tr className="text-red-400 border-b-2 ">
-                <td className="">Model</td>
-                <td>Quantity</td>
-              </tr>
-              <br />
-              <tr className=" border-b-2 ">
-                <td>M2</td>
-                <td>{total_CU_M2}</td>
-              </tr>
-              <br />
-              <tr className=" border-b-2 ">
-                <td>M3</td>
-                <td>{total_CU_M3}</td>
-              </tr>
-              <br />
-            </table>
-          </div>
-        </div>
-        <div className="rounded-lg shadow-md mt-5 bg-white">
-          <div
-            className="rounded-t-lg p-2 text-left "
-            style={{ backgroundColor: "#84587C" }}
-          >
-            <span className="text-white text-lg ml-5">VVPAT</span>
-          </div>
-          <div className="p-2">
-            <table className="w-full mt-4 ">
-              <tr className="text-red-400 border-b-2 ">
-                <td className="">Model</td>
-                <td>Quantity</td>
-              </tr>
-              <br />
-              <tr className=" border-b-2 ">
-                <td>M2</td>
-                <td>{total_VVPAT_M2}</td>
-              </tr>
-              <br />
-              <tr className=" border-b-2 ">
-                <td>M3</td>
-                <td>{total_VVPAT_M3}</td>
-              </tr>
-              <br />
-            </table>
-          </div>
-        </div>
-      </div>
         </div>
       </div>
       <button className="text-white bg-orange-600" onClick={() => submmit()}>Submit</button>
     </div>
-    );
-  }
-  
+  );
+}
+
