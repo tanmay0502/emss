@@ -195,11 +195,11 @@ function FlcEdit() {
                         setType_of_election_sf('GP')
                     }
                     else if (data['data'][0]['electiontype'] == 'BA') {
-                        setType_of_election('Byepoll Assembly')
+                        setType_of_election('By-poll Assembly')
                         setType_of_election_sf('BA')
                     }
                     else if (data['data'][0]['electiontype'] == 'BP') {
-                        setType_of_election('Byepoll Parliamentary')
+                        setType_of_election('By-poll Parliamentary')
                         setType_of_election_sf('BP')
                     }
 
@@ -971,6 +971,67 @@ function FlcEdit() {
                             </div>
                         </Modal>
 
+                        <label htmlFor="" style={{ paddingTop: "11px", fontSize: "20px", marginRight: '67%' }}>  Intimation Letter: </label>
+                        <div onClick={openModal_Intimation_Letter}
+                            style={{ marginRight: '86%', background: "white", color: "black", overflow: "hidden", display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                        >  <u> Generate </u>  </div>
+
+                        <Modal
+                            isOpen={modalIsOpen_Intimation_Letter}
+                            onAfterOpen={afterOpenModal_Intimation_Letter}
+                            onRequestClose={closeModal_Intimation_Letter}
+                            style={customStyles}
+                        >
+                            <div id="root" className=''>
+                                <div className='flex justify-center items-center'>
+                                    {<embed style={{ width: "600px", height: "600px", padding: "10px" }} src={`${Intimation_Letter}`} />}
+                                </div>
+                                <button style={{ color: "white", }} onClick={closeModal_Intimation_Letter}>Close</button>
+                            </div>
+                        </Modal>
+
+                        <label htmlFor="" style={{ paddingTop: "11px", fontSize: "20px", marginRight: '65%' }}>  Acknowledgment: </label>
+                        {Acknowledgment != '' && InputAcknowledgment == 1 &&
+                            <div onClick={openModal_Acknowledgment}
+                                style={{ marginRight: '70%', background: "white", color: "black", overflow: "hidden", display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                            ><u>View Acknowledgment</u></div>
+                        }
+
+                        {Acknowledgment == '' && Role != 'DEO' &&
+                            <div
+                                style={{ marginRight: '79%', background: "white", color: "black", overflow: "hidden", display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                            >  <u> Not Uploaded </u>  </div>
+                        }
+
+                        {Acknowledgment == '' && InputAcknowledgment == -1 && Role == 'DEO' &&
+                            <input
+                                id="formUserImage"
+                                type="file"
+                                required
+                                onChange={async (e) => {
+                                    setAcknowledgmentname(e.target.value.replace(/^.*[\\\/]/, ''))
+                                    setAcknowledgment(await getBase64(e.target.files[0]))
+                                }}
+                            />
+                        }
+
+                        {Acknowledgment != '' && InputAcknowledgment == -1 && Role == 'DEO' &&
+                            <button class={scheduleStyles.uploadBtn} onClick={UploadAcknowledgment}> Upload </button>
+                        }
+
+                        <Modal
+                            isOpen={modalIsOpen_Acknowledgment}
+                            onAfterOpen={afterOpenModal_Acknowledgment}
+                            onRequestClose={closeModal_Acknowledgment}
+                            style={customStyles}
+                        >
+                            <div id="root" className=''>
+                                <div className='flex justify-center items-center'>
+                                    {<embed style={{ width: "600px", height: "600px", padding: "10px" }} src={`${Acknowledgment}`} />}
+                                </div>
+                                <button style={{ color: "white", }} onClick={closeModal_Acknowledgment}>Close</button>
+                            </div>
+                        </Modal>
 
                         <label htmlFor="" style={{ paddingTop: "11px", fontSize: "20px", marginRight: '79%' }}>  Flc Report: </label>
 
@@ -1017,68 +1078,10 @@ function FlcEdit() {
                         </Modal>
 
 
-                        <label htmlFor="" style={{ paddingTop: "11px", fontSize: "20px", marginRight: '65%' }}>  Acknowledgment: </label>
-                        {Acknowledgment != '' && InputAcknowledgment == 1 &&
-                            <div onClick={openModal_Acknowledgment}
-                                style={{ marginRight: '70%', background: "white", color: "black", overflow: "hidden", display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-                            ><u>View Acknowledgment</u></div>
-                        }
-
-                        {Acknowledgment == '' && Role != 'DEO' &&
-                            <div
-                                style={{ marginRight: '79%', background: "white", color: "black", overflow: "hidden", display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-                            >  <u> Not Uploaded </u>  </div>
-                        }
-
-                        {Acknowledgment == '' && InputAcknowledgment == -1 && Role == 'DEO' &&
-                            <input
-                                id="formUserImage"
-                                type="file"
-                                required
-                                onChange={async (e) => {
-                                    setAcknowledgmentname(e.target.value.replace(/^.*[\\\/]/, ''))
-                                    setAcknowledgment(await getBase64(e.target.files[0]))
-                                }}
-                            />
-                        }
-
-                        {Acknowledgment != '' && InputAcknowledgment == -1 && Role == 'DEO' &&
-                            <button class={scheduleStyles.uploadBtn} onClick={UploadAcknowledgment}> Upload </button>
-                        }
-
-                        <Modal
-                            isOpen={modalIsOpen_Acknowledgment}
-                            onAfterOpen={afterOpenModal_Acknowledgment}
-                            onRequestClose={closeModal_Acknowledgment}
-                            style={customStyles}
-                        >
-                            <div id="root" className=''>
-                                <div className='flex justify-center items-center'>
-                                    {<embed style={{ width: "600px", height: "600px", padding: "10px" }} src={`${Acknowledgment}`} />}
-                                </div>
-                                <button style={{ color: "white", }} onClick={closeModal_Acknowledgment}>Close</button>
-                            </div>
-                        </Modal>
+                        
 
 
-                        <label htmlFor="" style={{ paddingTop: "11px", fontSize: "20px", marginRight: '67%' }}>  Intimation Letter: </label>
-                        <div onClick={openModal_Intimation_Letter}
-                            style={{ marginRight: '86%', background: "white", color: "black", overflow: "hidden", display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-                        >  <u> Generate </u>  </div>
-
-                        <Modal
-                            isOpen={modalIsOpen_Intimation_Letter}
-                            onAfterOpen={afterOpenModal_Intimation_Letter}
-                            onRequestClose={closeModal_Intimation_Letter}
-                            style={customStyles}
-                        >
-                            <div id="root" className=''>
-                                <div className='flex justify-center items-center'>
-                                    {<embed style={{ width: "600px", height: "600px", padding: "10px" }} src={`${Intimation_Letter}`} />}
-                                </div>
-                                <button style={{ color: "white", }} onClick={closeModal_Intimation_Letter}>Close</button>
-                            </div>
-                        </Modal>
+                        
                     </div>
                 </div>
 

@@ -12,6 +12,7 @@ function AllocateOrder({OrderID, type}) {
     const [total_VVPAT_M2, setTotal_VVPAT_M2] = useState(0)
     const [total_VVPAT_M3, setTotal_VVPAT_M3] = useState(0)
 	const [update, setUpdate] = useState(0);
+	const [wearhouse, setWearhouse] = useState({})
 
 	const sampleBody = {
 		"referenceorderid": OrderID,
@@ -55,6 +56,9 @@ function AllocateOrder({OrderID, type}) {
 					prev.details=data2.allocation;
 					return prev;
 				})
+				setWearhouse(data2);
+				
+
 				setUpdate(prev=>(prev+1)%10)
 			} catch (err) {
 					console.log(err);
@@ -62,7 +66,7 @@ function AllocateOrder({OrderID, type}) {
 			}
 			getState();
 	},[])
-
+	console.log(wearhouse,"ARnav")
     
     useEffect(() => {
         setTotal_BU_M2(0);
@@ -137,7 +141,6 @@ function AllocateOrder({OrderID, type}) {
 		// console.log("Submitted", body)
 	  };
 	  
-	const [wearhouse, setWearhouse] = useState({})
 	useEffect(() => {
 		async function getState() {
 		try {

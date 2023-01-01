@@ -6,7 +6,7 @@ import DestLocationPin from '../../assets/dest_location_pin.png'
 import { DynamicDataTable } from '@langleyfoxall/react-dynamic-data-table'
 
 function OrderAllocationTable({body, setBody, setUpdate, wearhouse }) {
-
+  console.log(wearhouse.supply,'wearhousewearhousewearhouse')
   return (
     <div className=" w-full">
           {body.details.map((val, ind) => (
@@ -29,8 +29,8 @@ function OrderAllocationTable({body, setBody, setUpdate, wearhouse }) {
                       }}
                     >
                       <option>{val.source?val.source:"Select"}</option>
-                      { wearhouse.Supply&&
-                        wearhouse.Supply.map((val) => (
+                      { wearhouse.supply&&
+                        (Object.keys(wearhouse.supply)).map((val) => (
                           <option value={val} className="text-black">
                             {val}
                           </option>
@@ -60,8 +60,8 @@ function OrderAllocationTable({body, setBody, setUpdate, wearhouse }) {
                       >
                         {" "}
                         <option>{val.destination?val.destination:"Select"}</option>
-                        {wearhouse.Demand&&
-                          wearhouse.Demand.map((val) => (
+                        {wearhouse.demand&&
+                          (Object.keys( wearhouse.demand)).map((val) => (
                             <option value={val} className="text-black">
                               {val}
                             </option>

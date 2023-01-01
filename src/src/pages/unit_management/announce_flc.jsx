@@ -308,11 +308,11 @@ function Announce_Flc() {
             setType_of_election_sf('GP')
         }
         else if (listElections[e.target.value]['electiontype'] == 'BA') {
-            setType_of_election('Byepoll Assembly')
+            setType_of_election('By-poll Assembly')
             setType_of_election_sf('BA')
         }
         else if (listElections[e.target.value]['electiontype'] == 'BP') {
-            setType_of_election('Byepoll Parliamentary')
+            setType_of_election('By-poll Parliamentary')
             setType_of_election_sf('BP')
         }
 
@@ -471,14 +471,14 @@ function Announce_Flc() {
                                 <option hidden>Select District</option>
                                 {District.length > 0 && District.map((val, ind) => (
                                     <option value={ind} >
-                                        {val[1][1]}
+                                        {`${val[1][0]} (${val[1][1]})`}
                                     </option>
                                 ))
                                 }
 
                             </select>
                         </div>
-                        <div className='flex flex-wrap w-full h-10 items-center'>
+                        <div className='flex flex-wrap w-full items-center'>
                             {selectedDistricts && selectedDistricts.map((val, index) => (
                                 <div className='rounded-lg gap-1 m-1 p-2 flex align-middle shadow-md shadow-black'>{val}
                                     <AiOutlineClose className='cursor-pointer text-red-400' onClick={() => {
@@ -651,14 +651,14 @@ function Announce_Flc() {
                         <div className='mt-5 grid gap-2'>
                             <h5>Districts :</h5>
                             {Object.keys(preparednessStatistics).length != 0 && Object.keys(preparednessStatistics['readyDistricts']).length != 0 && Object.keys(preparednessStatistics['readyDistricts']).map((val) => {
-                                return <div className='grid grid-cols-2 text-center'>
+                                return <div className='grid grid-cols-2 text-left'>
                                     <div>{val}</div>
                                     <div className='cursor-pointer text-black' style={{ fontSize: '19px' }} onClick={() => { getpreparednesscertificate(preparednessStatistics['readyDistricts'][val]) }} > <u> View</u></div>
                                 </div>
                             })}
 
                             {Object.keys(preparednessStatistics).length != 0 && preparednessStatistics['notReadyDistricts'].length != 0 && preparednessStatistics['notReadyDistricts'].map((val) => {
-                                return <div className='grid grid-cols-2 text-center'>
+                                return <div className='grid grid-cols-2 text-left'>
                                     <div>{val}</div>
                                     <div className='cursor-pointer text-black' > Not Uploaded</div>
                                 </div>

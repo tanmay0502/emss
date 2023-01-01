@@ -66,7 +66,7 @@ export default function FLCList() {
                     'FLC ID': val['flcid'],
                     'Manufacturer': val['manufacturer'],
                     'District': val['district'],
-                    'Election Type': ((val['electiontype'] == 'GA') ? "General Assembly" : (val['electiontype'] == 'GP') ? 'General Parliment' : (val['electiontype'] == 'BA') ? 'ByePoll Assembly' : 'ByePoll Parliment'),
+                    'Election Type': ((val['electiontype'] == 'GA') ? "General Assembly" : (val['electiontype'] == 'GP') ? 'General Parliment' : (val['electiontype'] == 'BA') ? 'By-Poll Assembly' : 'By-Poll Parliment'),
                     "FLC Period": (val['startdate'] && val['enddate']) ? val['startdate'].split('T')[0] + " - " + val['enddate'].split('T')[0] : ""
 
                 }
@@ -149,7 +149,7 @@ export default function FLCList() {
             {isDetail === 0 ?
                 <div class={styles.table}>
                     <DynamicDataTable
-                        rows={flcValue !== undefined ? tableData : "No Data"}
+                        rows={tableData.length != 0 ? tableData : [{"":"No FLC scheduled"}]}
                         fieldsToExclude={["FLC ID"]}
                         buttons={[]}
                         onClick={(event, row) => {
