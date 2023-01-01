@@ -38,8 +38,8 @@ function Home1() {
 	const cu = Number(compost.split(',')[2]).toLocaleString();
 	const vvpat = Number(compost.split(',')[3]).toLocaleString();
 	// console.log("compost: " + compost);
-	
-	
+
+
 	const [content2, setContent2] = useState("");
 	const [STName, setSTName] = useState("")
 	const [show, setShow] = useState(false);
@@ -51,75 +51,75 @@ function Home1() {
 	const [fetchData, setFetchData] = useState([]);
 	const [indiaMap, setIndiaMap] = useState(0);
 
-	const uri = process.env.REACT_APP_API_SERVER+"/unit/total_counts"
+	const uri = process.env.REACT_APP_API_SERVER + "/unit/total_counts"
 
-	const stateID = window.sessionStorage.getItem('sessionToken').slice(0,2)
+	const stateID = window.sessionStorage.getItem('sessionToken').slice(0, 2)
 
-	useEffect(()=>{
-		if(stateID!="IN"){
-			if (statesCode.find(e=>e.code==stateID)) {
+	useEffect(() => {
+		if (stateID != "IN") {
+			if (statesCode.find(e => e.code == stateID)) {
 				setIndiaMap(0);
-				setSTName(statesCode.find(e=>e.code==stateID).state)
+				setSTName(statesCode.find(e => e.code == stateID).state)
 			}
 		} else {
 			setIndiaMap(1)
 		}
-	},[stateID])
-	useEffect(()=>{
-		if(content2&&statesCode.find(e=>e.state==content2)&&!indiaMap){
-			const ID = statesCode.find(e=>e.state==content2).code+window.sessionStorage.getItem('sessionToken').slice(2,11);
+	}, [stateID])
+	useEffect(() => {
+		if (content2 && statesCode.find(e => e.state == content2) && !indiaMap) {
+			const ID = statesCode.find(e => e.state == content2).code + window.sessionStorage.getItem('sessionToken').slice(2, 11);
 			console.log(ID)
-			let getData = async ()=>{
+			let getData = async () => {
 				try {
 					// console.log("GET "+uri+ID)
 					const response = await fetch(
 						uri,
 						{
-						  method: "POST",
-						  headers: {
-							"Content-Type": "application/json",
-						  },
-						  credentials:'include',
-						  body: JSON.stringify(
-							{
-								oprnd: ID
-							}
-						  )
+							method: "POST",
+							headers: {
+								"Content-Type": "application/json",
+							},
+							credentials: 'include',
+							body: JSON.stringify(
+								{
+									oprnd: ID
+								}
+							)
 						}
-					  );
-						let data2 = await response.json();
-						console.log("Data fetched", data2);
-						let data = data2['data'];
-						console.log(data2)
-						setFetchData(data);
+					);
+					let data2 = await response.json();
+					console.log("Data fetched", data2);
+					let data = data2['data'];
+					console.log(data2)
+					setFetchData(data);
 				} catch (err) {
 					console.log(err);
 				}
 			}
 			getData();
 		}
-	},[content2,indiaMap])
-	useEffect(()=>{
+	}, [content2, indiaMap])
+	useEffect(() => {
 		if (indiaMap) {
 			console.log("ddd")
-			let getData = async ()=>{
-			try {
-				const ID = "IN"+window.sessionStorage.getItem('sessionToken').slice(2,11);
-				// console.log("GET "+uri+ID)
-				const response = await fetch(
-					uri,
-					{
-					  method: "POST",
-					  headers: {
-						"Content-Type": "application/json",
-					  },
-					  credentials:'include',
-					  body: JSON.stringify(
+			let getData = async () => {
+				try {
+					const ID = "IN" + window.sessionStorage.getItem('sessionToken').slice(2, 11);
+					// console.log("GET "+uri+ID)
+					const response = await fetch(
+						uri,
 						{
-							oprnd: ID
-						})
-					}
-				  );
+							method: "POST",
+							headers: {
+								"Content-Type": "application/json",
+							},
+							credentials: 'include',
+							body: JSON.stringify(
+								{
+									oprnd: ID
+								})
+						}
+					);
 					let data2 = await response.json();
 					let data = data2['data'];
 					console.log(data2)
@@ -132,8 +132,8 @@ function Home1() {
 			setContent2("")
 		}
 	}, [indiaMap])
-	
-	useEffect(()=>{
+
+	useEffect(() => {
 		data = fetchData;
 		let countCU = 0;
 		let countBU = 0;
@@ -142,12 +142,12 @@ function Home1() {
 		for (let i = 0; i < data.length; i++) {
 			const ele = data[i];
 			console.log(ele)
-			countBU+=ele.BU
-			countCU+=ele.CU
-			countVT+=ele.VT
-			console.log(countBU,countCU,countVT)
+			countBU += ele.BU
+			countCU += ele.CU
+			countVT += ele.VT
+			console.log(countBU, countCU, countVT)
 		}
-		console.log(countBU,countCU,countVT)
+		console.log(countBU, countCU, countVT)
 		setTotalBU(countBU)
 		setTotalCU(countCU)
 		setTotalVT(countVT)
@@ -162,7 +162,7 @@ function Home1() {
 			}
 			if (!found) {
 				status.push(data[i].status);
-			}			
+			}
 		}
 
 		// sort the data according to their status
@@ -170,13 +170,13 @@ function Home1() {
 		for (let i = 0; i < status.length; i++) {
 			let ele = status[i];
 			statusData.push({
-				status:ele,
-				data:data.filter((val)=>{return(val.status === ele)})
-			})	
+				status: ele,
+				data: data.filter((val) => { return (val.status === ele) })
+			})
 		}
 		// console.log(statusData)
 		setStatusData(statusData);
-	},[fetchData])
+	}, [fetchData])
 
 
 	const handleClose = () => {
@@ -187,8 +187,8 @@ function Home1() {
 		setIndiaMap(0);
 		for (let i = 0; i < statesCode.length; i++) {
 			const ele = statesCode[i];
-			if(ele.state===content2){
-				document.getElementById("statesDropdownHome").selectedIndex = i+1;
+			if (ele.state === content2) {
+				document.getElementById("statesDropdownHome").selectedIndex = i + 1;
 			}
 		}
 	}
@@ -210,7 +210,7 @@ function Home1() {
 		otherElements = ['District', 'Warehouse', 'Notifications', 'Order Status', 'Recent Issues']
 	}
 
-	async function getIssues(){
+	async function getIssues() {
 		const ID = window.sessionStorage.getItem('sessionToken')
 
 		const response = await fetch(
@@ -227,9 +227,9 @@ function Home1() {
 		const respJSON = await response.json();
 		var data = respJSON['data'].slice(-10)
 		console.log(data)
-		
 
-		data = data.sort((a,b) => {
+
+		data = data.sort((a, b) => {
 			return (new Date(a['createdon'])).getTime() - (new Date(b['createdon'])).getTime()
 		})
 		// console.log(data)
@@ -256,20 +256,20 @@ function Home1() {
 			<div className="w-100 gridCustom mt-4" >
 				<div className="gross_box d-flex justify-content-evenly">
 					<div className="left_sec">
-						<img src={CUImg} alt="" />
-					</div>
-					<div className="right_sec">
-						<p>{totalCU}</p>
-						<p>Control Units</p>
-					</div>
-				</div>
-				<div className="gross_box d-flex justify-content-evenly">
-					<div className="left_sec">
 						<img src={BUImg} alt="" />
 					</div>
 					<div className="right_sec">
 						<p>{totalBU}</p>
 						<p>Ballot Units</p>
+					</div>
+				</div>
+				<div className="gross_box d-flex justify-content-evenly">
+					<div className="left_sec">
+						<img src={CUImg} alt="" />
+					</div>
+					<div className="right_sec">
+						<p>{totalCU}</p>
+						<p>Control Units</p>
 					</div>
 				</div>
 				<div className="gross_box d-flex justify-content-evenly">
@@ -284,21 +284,21 @@ function Home1() {
 			</div>
 
 			<div className='w-100 gridCustom  pb-10'>
-				{otherElements.includes("District") && <div className="myCardSample" style={{padding:"15px 30px 0"}}>
-					{stateID==="IN"?<><label className="card_title">
+				{otherElements.includes("District") && <div className="myCardSample" style={{ padding: "15px 30px 0" }}>
+					{stateID === "IN" ? <><label className="card_title">
 						Select State:
 					</label>
-					<select name="" id="statesDropdownHome">
-					<option>{"none"}</option>
-						{statesCode.map((val, ind)=>{
-							return(
-								<option onClick={()=>{setSTName(val.state);setIndiaMap(0);show2();setContent2(val.state)}}>{val.state}</option>
-							)
-						})}
-					</select></>:""}
+						<select name="" id="statesDropdownHome">
+							<option>{"none"}</option>
+							{statesCode.map((val, ind) => {
+								return (
+									<option onClick={() => { setSTName(val.state); setIndiaMap(0); show2(); setContent2(val.state) }}>{val.state}</option>
+								)
+							})}
+						</select></> : ""}
 
 					<div style={{ height: '75%', overflow: 'hidden' }}>
-						<span className="heading" style={{ maxWidth: "100%", display: "block", "textOverflow": "ellipsis", "whiteSpace": "nowrap" }}> {"India:" + content2 }</span>
+						<span className="heading" style={{ maxWidth: "100%", display: "block", "textOverflow": "ellipsis", "whiteSpace": "nowrap" }}> {"India:" + content2}</span>
 						<div className='map' >
 							{indiaMap == 0 && <MapDialog show={show} StateName={STName} closeModal={handleClose} setTooltipContent={setContent2} />}
 							{indiaMap == 1 && <MapIndia show2={show2} closeModal2={handleOpen} setTooltipContent={setContent2} setStateName={setSTName} setShowDistrict={setShow} showInfo={setContent} />}
@@ -307,16 +307,17 @@ function Home1() {
 				</div>}
 				{/* {console.log({statusData})} */}
 				{data.length && data.map(val => (
-					
+
 					<UnitCard title={val} statusData={statusData} />
-					
+
 				))}
 
 
 				{otherElements.includes('Warehouse') && <div
-								className="myCardSample hover:cursor-pointer transition delay-50 hover:scale-105"
-								onClick={() => {
-									navigate("/session/warehousemanagement") }}
+					className="myCardSample hover:cursor-pointer transition delay-50 hover:scale-105"
+					onClick={() => {
+						navigate("/session/warehousemanagement")
+					}}
 				>
 					<div className="card_title d-flex justify-content-between">
 						<span>Warehouse</span> <OtherServicesIcon />
@@ -416,199 +417,201 @@ function Home1() {
 				</div>}
 
 
-				{otherElements.includes("Order Status") && 
-				<div  
-				className="myCardSample transCard hover:cursor-pointer transition delay-50 hover:scale-105"
-				onClick={() => {
-					navigate("/session/ordermanagement") }}
-				>
-					<div className="card_title"><span>Order Status</span></div>
+				{otherElements.includes("Order Status") &&
+					<div
+						className="myCardSample transCard hover:cursor-pointer transition delay-50 hover:scale-105"
+						onClick={() => {
+							navigate("/session/ordermanagement")
+						}}
+					>
+						<div className="card_title"><span>Order Status</span></div>
 
-					<div className="cardBody cardList" >
-						<div className='TransitCard'>
-							<div className="transit d-flex justify-content-between align-items-center mt-15">
-								<span className='d-flex align-items-center'><img src={SourceIcon} alt="" /> Delhi</span>
-								<div className='w-100 text-center'>
-									<div className='progressText'>in progress</div>
-									<div className='d-flex align-items-center'><div className='border_dashed'></div> <ChevronRight className='chevron mt-che' /></div>
+						<div className="cardBody cardList" >
+							<div className='TransitCard'>
+								<div className="transit d-flex justify-content-between align-items-center mt-15">
+									<span className='d-flex align-items-center'><img src={SourceIcon} alt="" /> Delhi</span>
+									<div className='w-100 text-center'>
+										<div className='progressText'>in progress</div>
+										<div className='d-flex align-items-center'><div className='border_dashed'></div> <ChevronRight className='chevron mt-che' /></div>
+									</div>
+									<span className='d-flex'><img src={DestIcon} alt="" /> Haryana</span>
 								</div>
-								<span className='d-flex'><img src={DestIcon} alt="" /> Haryana</span>
-							</div>
-							<div className="transitCount d-flex">
-								<div className='d-flex'><div className='cuDot'></div> 344 CU</div>
-								<div className='d-flex'><div className='buDot'> </div> 344 BU</div>
-								<div className='d-flex'><div className='vvpatDot'></div> 344 VVPAT</div>
-							</div>
-						</div>
-
-						<div className='TransitCard'>
-							<div className="transit d-flex justify-content-between align-items-center mt-15">
-								<span className='d-flex align-items-center'><img src={SourceIcon} alt="" /> Delhi</span>
-								<div className='w-100 text-center'>
-									<div className='progressText'>in progress</div>
-									<div className='d-flex align-items-center'><div className='border_dashed'></div> <ChevronRight className='chevron mt-che' /></div>
+								<div className="transitCount d-flex">
+									<div className='d-flex'><div className='cuDot'></div> 344 CU</div>
+									<div className='d-flex'><div className='buDot'> </div> 344 BU</div>
+									<div className='d-flex'><div className='vvpatDot'></div> 344 VVPAT</div>
 								</div>
-								<span className='d-flex'><img src={DestIcon} alt="" /> Haryana</span>
 							</div>
-							<div className="transitCount d-flex">
-								<div className='d-flex'><div className='cuDot'></div> 344 CU</div>
-								<div className='d-flex'><div className='buDot'> </div> 344 BU</div>
-								<div className='d-flex'><div className='vvpatDot'></div> 344 VVPAT</div>
-							</div>
-						</div>
 
-						<div className='TransitCard'>
-							<div className="transit d-flex justify-content-between align-items-center mt-15">
-								<span className='d-flex align-items-center'><img src={SourceIcon} alt="" /> Delhi</span>
-								<div className='w-100 text-center'>
-									<div className='progressText'>in progress</div>
-									<div className='d-flex align-items-center'><div className='border_dashed'></div> <ChevronRight className='chevron mt-che' /></div>
+							<div className='TransitCard'>
+								<div className="transit d-flex justify-content-between align-items-center mt-15">
+									<span className='d-flex align-items-center'><img src={SourceIcon} alt="" /> Delhi</span>
+									<div className='w-100 text-center'>
+										<div className='progressText'>in progress</div>
+										<div className='d-flex align-items-center'><div className='border_dashed'></div> <ChevronRight className='chevron mt-che' /></div>
+									</div>
+									<span className='d-flex'><img src={DestIcon} alt="" /> Haryana</span>
 								</div>
-								<span className='d-flex'><img src={DestIcon} alt="" /> Haryana</span>
-							</div>
-							<div className="transitCount d-flex">
-								<div className='d-flex'><div className='cuDot'></div> 344 CU</div>
-								<div className='d-flex'><div className='buDot'> </div> 344 BU</div>
-								<div className='d-flex'><div className='vvpatDot'></div> 344 VVPAT</div>
-							</div>
-						</div>
-
-						<div className='TransitCard'>
-							<div className="transit d-flex justify-content-between align-items-center mt-15">
-								<span className='d-flex align-items-center'><img src={SourceIcon} alt="" /> Delhi</span>
-								<div className='w-100 text-center'>
-									<div className='progressText'>in progress</div>
-									<div className='d-flex align-items-center'><div className='border_dashed'></div> <ChevronRight className='chevron mt-che' /></div>
+								<div className="transitCount d-flex">
+									<div className='d-flex'><div className='cuDot'></div> 344 CU</div>
+									<div className='d-flex'><div className='buDot'> </div> 344 BU</div>
+									<div className='d-flex'><div className='vvpatDot'></div> 344 VVPAT</div>
 								</div>
-								<span className='d-flex'><img src={DestIcon} alt="" /> Haryana</span>
 							</div>
-							<div className="transitCount d-flex">
-								<div className='d-flex'><div className='cuDot'></div> 344 CU</div>
-								<div className='d-flex'><div className='buDot'> </div> 344 BU</div>
-								<div className='d-flex'><div className='vvpatDot'></div> 344 VVPAT</div>
-							</div>
-						</div>
 
-						<div className='TransitCard'>
-							<div className="transit d-flex justify-content-between align-items-center mt-15">
-								<span className='d-flex align-items-center'><img src={SourceIcon} alt="" /> Delhi</span>
-								<div className='w-100 text-center'>
-									<div className='progressText'>in progress</div>
-									<div className='d-flex align-items-center'><div className='border_dashed'></div> <ChevronRight className='chevron mt-che' /></div>
+							<div className='TransitCard'>
+								<div className="transit d-flex justify-content-between align-items-center mt-15">
+									<span className='d-flex align-items-center'><img src={SourceIcon} alt="" /> Delhi</span>
+									<div className='w-100 text-center'>
+										<div className='progressText'>in progress</div>
+										<div className='d-flex align-items-center'><div className='border_dashed'></div> <ChevronRight className='chevron mt-che' /></div>
+									</div>
+									<span className='d-flex'><img src={DestIcon} alt="" /> Haryana</span>
 								</div>
-								<span className='d-flex'><img src={DestIcon} alt="" /> Haryana</span>
-							</div>
-							<div className="transitCount d-flex">
-								<div className='d-flex'><div className='cuDot'></div> 344 CU</div>
-								<div className='d-flex'><div className='buDot'> </div> 344 BU</div>
-								<div className='d-flex'><div className='vvpatDot'></div> 344 VVPAT</div>
-							</div>
-						</div>
-
-						<div className='TransitCard'>
-							<div className="transit d-flex justify-content-between align-items-center mt-15">
-								<span className='d-flex align-items-center'><img src={SourceIcon} alt="" /> Delhi</span>
-								<div className='w-100 text-center'>
-									<div className='progressText'>in progress</div>
-									<div className='d-flex align-items-center'><div className='border_dashed'></div> <ChevronRight className='chevron mt-che' /></div>
+								<div className="transitCount d-flex">
+									<div className='d-flex'><div className='cuDot'></div> 344 CU</div>
+									<div className='d-flex'><div className='buDot'> </div> 344 BU</div>
+									<div className='d-flex'><div className='vvpatDot'></div> 344 VVPAT</div>
 								</div>
-								<span className='d-flex'><img src={DestIcon} alt="" /> Haryana</span>
 							</div>
-							<div className="transitCount d-flex">
-								<div className='d-flex'><div className='cuDot'></div> 344 CU</div>
-								<div className='d-flex'><div className='buDot'> </div> 344 BU</div>
-								<div className='d-flex'><div className='vvpatDot'></div> 344 VVPAT</div>
-							</div>
-						</div>
 
-
-						<div className='TransitCard'>
-							<div className="transit d-flex justify-content-between align-items-center mt-15">
-								<span className='d-flex align-items-center'><img src={SourceIcon} alt="" /> Delhi</span>
-								<div className='w-100 text-center'>
-									<div className='progressText'>in progress</div>
-									<div className='d-flex align-items-center'><div className='border_dashed'></div> <ChevronRight className='chevron mt-che' /></div>
+							<div className='TransitCard'>
+								<div className="transit d-flex justify-content-between align-items-center mt-15">
+									<span className='d-flex align-items-center'><img src={SourceIcon} alt="" /> Delhi</span>
+									<div className='w-100 text-center'>
+										<div className='progressText'>in progress</div>
+										<div className='d-flex align-items-center'><div className='border_dashed'></div> <ChevronRight className='chevron mt-che' /></div>
+									</div>
+									<span className='d-flex'><img src={DestIcon} alt="" /> Haryana</span>
 								</div>
-								<span className='d-flex'><img src={DestIcon} alt="" /> Haryana</span>
-							</div>
-							<div className="transitCount d-flex">
-								<div className='d-flex'><div className='cuDot'></div> 344 CU</div>
-								<div className='d-flex'><div className='buDot'> </div> 344 BU</div>
-								<div className='d-flex'><div className='vvpatDot'></div> 344 VVPAT</div>
-							</div>
-						</div>
-
-
-						<div className='TransitCard'>
-							<div className="transit d-flex justify-content-between align-items-center mt-15">
-								<span className='d-flex align-items-center'><img src={SourceIcon} alt="" /> Delhi</span>
-								<div className='w-100 text-center'>
-									<div className='progressText'>in progress</div>
-									<div className='d-flex align-items-center'><div className='border_dashed'></div> <ChevronRight className='chevron mt-che' /></div>
+								<div className="transitCount d-flex">
+									<div className='d-flex'><div className='cuDot'></div> 344 CU</div>
+									<div className='d-flex'><div className='buDot'> </div> 344 BU</div>
+									<div className='d-flex'><div className='vvpatDot'></div> 344 VVPAT</div>
 								</div>
-								<span className='d-flex'><img src={DestIcon} alt="" /> Haryana</span>
 							</div>
-							<div className="transitCount d-flex">
-								<div className='d-flex'><div className='cuDot'></div> 344 CU</div>
-								<div className='d-flex'><div className='buDot'> </div> 344 BU</div>
-								<div className='d-flex'><div className='vvpatDot'></div> 344 VVPAT</div>
-							</div>
-						</div>
 
-
-						<div className='TransitCard'>
-							<div className="transit d-flex justify-content-between align-items-center mt-15">
-								<span className='d-flex align-items-center'><img src={SourceIcon} alt="" /> Delhi</span>
-								<div className='w-100 text-center'>
-									<div className='progressText'>in progress</div>
-									<div className='d-flex align-items-center'><div className='border_dashed'></div> <ChevronRight className='chevron mt-che' /></div>
+							<div className='TransitCard'>
+								<div className="transit d-flex justify-content-between align-items-center mt-15">
+									<span className='d-flex align-items-center'><img src={SourceIcon} alt="" /> Delhi</span>
+									<div className='w-100 text-center'>
+										<div className='progressText'>in progress</div>
+										<div className='d-flex align-items-center'><div className='border_dashed'></div> <ChevronRight className='chevron mt-che' /></div>
+									</div>
+									<span className='d-flex'><img src={DestIcon} alt="" /> Haryana</span>
 								</div>
-								<span className='d-flex'><img src={DestIcon} alt="" /> Haryana</span>
+								<div className="transitCount d-flex">
+									<div className='d-flex'><div className='cuDot'></div> 344 CU</div>
+									<div className='d-flex'><div className='buDot'> </div> 344 BU</div>
+									<div className='d-flex'><div className='vvpatDot'></div> 344 VVPAT</div>
+								</div>
 							</div>
-							<div className="transitCount d-flex">
-								<div className='d-flex'><div className='cuDot'></div> 344 CU</div>
-								<div className='d-flex'><div className='buDot'> </div> 344 BU</div>
-								<div className='d-flex'><div className='vvpatDot'></div> 344 VVPAT</div>
+
+							<div className='TransitCard'>
+								<div className="transit d-flex justify-content-between align-items-center mt-15">
+									<span className='d-flex align-items-center'><img src={SourceIcon} alt="" /> Delhi</span>
+									<div className='w-100 text-center'>
+										<div className='progressText'>in progress</div>
+										<div className='d-flex align-items-center'><div className='border_dashed'></div> <ChevronRight className='chevron mt-che' /></div>
+									</div>
+									<span className='d-flex'><img src={DestIcon} alt="" /> Haryana</span>
+								</div>
+								<div className="transitCount d-flex">
+									<div className='d-flex'><div className='cuDot'></div> 344 CU</div>
+									<div className='d-flex'><div className='buDot'> </div> 344 BU</div>
+									<div className='d-flex'><div className='vvpatDot'></div> 344 VVPAT</div>
+								</div>
 							</div>
+
+
+							<div className='TransitCard'>
+								<div className="transit d-flex justify-content-between align-items-center mt-15">
+									<span className='d-flex align-items-center'><img src={SourceIcon} alt="" /> Delhi</span>
+									<div className='w-100 text-center'>
+										<div className='progressText'>in progress</div>
+										<div className='d-flex align-items-center'><div className='border_dashed'></div> <ChevronRight className='chevron mt-che' /></div>
+									</div>
+									<span className='d-flex'><img src={DestIcon} alt="" /> Haryana</span>
+								</div>
+								<div className="transitCount d-flex">
+									<div className='d-flex'><div className='cuDot'></div> 344 CU</div>
+									<div className='d-flex'><div className='buDot'> </div> 344 BU</div>
+									<div className='d-flex'><div className='vvpatDot'></div> 344 VVPAT</div>
+								</div>
+							</div>
+
+
+							<div className='TransitCard'>
+								<div className="transit d-flex justify-content-between align-items-center mt-15">
+									<span className='d-flex align-items-center'><img src={SourceIcon} alt="" /> Delhi</span>
+									<div className='w-100 text-center'>
+										<div className='progressText'>in progress</div>
+										<div className='d-flex align-items-center'><div className='border_dashed'></div> <ChevronRight className='chevron mt-che' /></div>
+									</div>
+									<span className='d-flex'><img src={DestIcon} alt="" /> Haryana</span>
+								</div>
+								<div className="transitCount d-flex">
+									<div className='d-flex'><div className='cuDot'></div> 344 CU</div>
+									<div className='d-flex'><div className='buDot'> </div> 344 BU</div>
+									<div className='d-flex'><div className='vvpatDot'></div> 344 VVPAT</div>
+								</div>
+							</div>
+
+
+							<div className='TransitCard'>
+								<div className="transit d-flex justify-content-between align-items-center mt-15">
+									<span className='d-flex align-items-center'><img src={SourceIcon} alt="" /> Delhi</span>
+									<div className='w-100 text-center'>
+										<div className='progressText'>in progress</div>
+										<div className='d-flex align-items-center'><div className='border_dashed'></div> <ChevronRight className='chevron mt-che' /></div>
+									</div>
+									<span className='d-flex'><img src={DestIcon} alt="" /> Haryana</span>
+								</div>
+								<div className="transitCount d-flex">
+									<div className='d-flex'><div className='cuDot'></div> 344 CU</div>
+									<div className='d-flex'><div className='buDot'> </div> 344 BU</div>
+									<div className='d-flex'><div className='vvpatDot'></div> 344 VVPAT</div>
+								</div>
+							</div>
+
 						</div>
+					</div>}
 
-					</div>
-				</div>}
-
-				{otherElements.includes("Recent Issues") && 
-				
-				<div 
-				className="myCardSample hover:cursor-pointer transition delay-100 hover:scale-105"
-				onClick={() => {
-					navigate("/session/issuemanagement") }}
-				>
+				{otherElements.includes("Recent Issues") &&
 
 					<div
-					
-					className="card_header_noti">
-						<div className="heading">Recent Issues</div>
-						<div className='hBox'>
-							<ul className='li_noti '>
-								{
-									issues.map((val)=>{
-										return (
-											<li>
-												<span>
-													<span>
-														{val['severity'] == 'H' ? <span></span> : <></>}
-														{val['subject']}
-													</span>
-													<span>{timeSince(new Date(val['createdon']))}</span>
-												</span>
-											</li>
-										)
-									})
-								}
-							</ul>
-						</div>
-					</div>
+						className="myCardSample hover:cursor-pointer transition delay-100 hover:scale-105"
+						onClick={() => {
+							navigate("/session/issuemanagement")
+						}}
+					>
 
-				</div>}
+						<div
+
+							className="card_header_noti">
+							<div className="heading">Recent Issues</div>
+							<div className='hBox'>
+								<ul className='li_noti '>
+									{
+										issues.map((val) => {
+											return (
+												<li>
+													<span>
+														<span>
+															{val['severity'] == 'H' ? <span></span> : <></>}
+															{val['subject']}
+														</span>
+														<span>{timeSince(new Date(val['createdon']))}</span>
+													</span>
+												</li>
+											)
+										})
+									}
+								</ul>
+							</div>
+						</div>
+
+					</div>}
 			</div>
 		</div>
 	);

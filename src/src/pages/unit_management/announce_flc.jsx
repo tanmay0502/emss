@@ -308,11 +308,11 @@ function Announce_Flc() {
             setType_of_election_sf('GP')
         }
         else if (listElections[e.target.value]['electiontype'] == 'BA') {
-            setType_of_election('By-poll Assembly')
+            setType_of_election('By-Poll Assembly')
             setType_of_election_sf('BA')
         }
         else if (listElections[e.target.value]['electiontype'] == 'BP') {
-            setType_of_election('By-poll Parliamentary')
+            setType_of_election('By-Poll Parliamentary')
             setType_of_election_sf('BP')
         }
 

@@ -286,20 +286,16 @@
 }
 
 .div23 { 
-  grid-area: 9 / 1 / 10 / 2;
+  grid-area: 9 / 2 / 10 / 3;
   margin: 5% 15%;
 }
 
 
 .div24 { 
-  grid-area: 9 / 1 / 10 / 2;
+  grid-area: 9 / 3 / 10 / 4;
   margin: 5% 15%;
 }
 
-.div25 { 
-  grid-area: 10 / 1 / 11 / 2;
-  margin: 5% 15%;
-}
 
 .submitBtn{
   margin-top:30px;

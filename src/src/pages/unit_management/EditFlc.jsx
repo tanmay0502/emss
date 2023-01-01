@@ -129,7 +129,137 @@ function FlcEdit() {
     const [Acknowledgment, setAcknowledgment] = useState("")
     const [InputAcknowledgment, setInputAcknowledgment] = useState(-1)
     const [Intimation_Letter, setIntimation_Letter] = useState("")
+    const [Details, setDetails] = React.useState([]);
+    const [ListFLC_Assembly_Warehouse, setListFLC_Assembly_Warehouse] = useState([]);
+    const [ListDistrict_Strong_Room, setListDistrict_Strong_Room] = useState([]);
+    const [ListDefective_Warehouse, setListDefective_Warehouse] = useState([]);
+    const [FLC_Assembly_Warehouse, setFLC_Assembly_Warehouse] = useState('');
+    const [District_Strong_Room, setDistrict_Strong_Room] = useState('');
+    const [Defective_Warehouse, setDefective_Warehouse] = useState('');
     const Role = User_ID.substring(8)
+
+
+    // NDK 
+    async function getListN() {
+
+        try {
+            const response = await fetch(
+                `${process.env.REACT_APP_API_SERVER}/warehouse/listWarehouses`,
+                {
+                    method: "POST",
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        "Type": 'N'
+                    }),
+                })
+
+            const data = await response.json();
+            setListFLC_Assembly_Warehouse(data["data"])
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
+
+
+
+    useEffect(
+        () => {
+
+            setIsLoading(1);
+
+            let timer1 = setTimeout(() => getListN(), 1 * 1000);
+
+            return () => {
+                clearTimeout(timer1);
+            };
+        },
+
+        []
+    );
+
+
+
+    async function getListD() {
+
+        try {
+            const response = await fetch(
+                `${process.env.REACT_APP_API_SERVER}/warehouse/listWarehouses`,
+                {
+                    method: "POST",
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        "Type": 'D'
+                    }),
+                })
+
+            const data = await response.json();
+            setListDistrict_Strong_Room(data["data"])
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
+
+
+    useEffect(
+        () => {
+
+            setIsLoading(1);
+
+            let timer1 = setTimeout(() => getListD(), 1 * 1000);
+
+            return () => {
+                clearTimeout(timer1);
+            };
+        },
+
+        []
+    );
+    async function getListK() {
+
+        try {
+            const response = await fetch(
+                `${process.env.REACT_APP_API_SERVER}/warehouse/listWarehouses`,
+                {
+                    method: "POST",
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        "Type": 'K'
+                    }),
+                })
+
+            const data = await response.json();
+            setListDefective_Warehouse(data["data"])
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
+    useEffect(
+        () => {
+
+            setIsLoading(1);
+
+            let timer1 = setTimeout(() => getListK(), 1 * 1000);
+
+            return () => {
+                clearTimeout(timer1);
+            };
+        },
+
+        []
+    );
+
 
     async function getFLC() {
         let id = issueId();
@@ -152,7 +282,6 @@ function FlcEdit() {
 
 
             const data = await response.json();
-            console.log(data['data'], "flcccccccccccc")
             if (response.status == 200) {
                 if (data['data'].length) {
                     setFlc((data['data'] != null) ? data['data'] : [])
@@ -252,7 +381,6 @@ function FlcEdit() {
 
 
             const data = await response.json();
-            console.log(data, "setPhotoFileData")
             if (response.status == 200) {
                 setPhotoFileData(data['data'])
             }
@@ -523,7 +651,7 @@ function FlcEdit() {
         e.preventDefault();
         setenddate(date)
         setenddateshow(((date) ? date.slice(8) + '-' + date.slice(5, 7) + "-" + date.slice(0, 4) : ''))
-        if (isenddateopen == 1)
+        if (isenddateopen == 1 || Role == 'CEO')
             FinalSetEndDate(e.target.value);
     };
 
@@ -625,6 +753,7 @@ function FlcEdit() {
         }
 
     };
+
 
     return (
         <>
@@ -942,6 +1071,51 @@ function FlcEdit() {
                                 value={manufacturerdistrictcoordinatormobno}
                                 onChange={(e) => { setmanufacturerdistrictcoordinatormobno(e.target.value) }}
                             ></input>
+                        </div>
+                        <div class={scheduleStyles.div22}>
+                            <p> FLC Assembly Warehouse</p>
+                            <select
+                                onChange={(e) => { setFLC_Assembly_Warehouse(e.target.value) }}
+                            >
+                                {" "}
+                                <option hidden>Select</option>
+                                {ListFLC_Assembly_Warehouse &&
+                                    ListFLC_Assembly_Warehouse.map((val, ind) => {
+                                        return (<>
+                                            <option value={val['warehouseid']}>{val['warehouseid']}</option>
+                                        </>)
+                                    })}
+                            </select>
+                        </div>
+                        <div class={scheduleStyles.div23}>
+                            <p> District Strong Room</p>
+                            <select
+                                onChange={(e) => { setDistrict_Strong_Room(e.target.value) }}
+                            >
+                                {" "}
+                                <option hidden>Select</option>
+                                {ListDistrict_Strong_Room &&
+                                    ListDistrict_Strong_Room.map((val, ind) => {
+                                        return (<>
+                                            <option value={val['warehouseid']}>{val['warehouseid']}</option>
+                                        </>)
+                                    })}
+                            </select>
+                        </div>
+                        <div class={scheduleStyles.div24}>
+                            <p> Defective Warehouse</p>
+                            <select
+                                onChange={(e) => { setDefective_Warehouse(e.target.value) }}
+                            >
+                                {" "}
+                                <option hidden>Select</option>
+                                {ListDefective_Warehouse &&
+                                    ListDefective_Warehouse.map((val, ind) => {
+                                        return (<>
+                                            <option value={val['warehouseid']}>{val['warehouseid']}</option>
+                                        </>)
+                                    })}
+                            </select>
                         </div>
                     </div>
 
