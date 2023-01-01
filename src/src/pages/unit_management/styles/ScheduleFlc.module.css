@@ -193,10 +193,28 @@
   grid-area: 2 / 2 / 3 / 3; 
   margin: 5% 15%;
 }
-.div6 { 
+
+.div6_CEO { 
   grid-area: 2 / 3 / 3 / 4;
   margin: 5% 15%;
+
 }
+
+.div6_DEO { 
+  grid-area: 2 / 3 / 3 / 4;
+  margin: 5% 15%;
+  width:60%;
+}
+
+.enddatediv { 
+  grid-area: 2 / 3 / 3 /4;
+  margin: 5% 15%;
+  width:8%;
+  margin-left:78%;
+  margin-top:10%;
+  height:2%;
+}
+
 .div7 { 
   grid-area: 3 / 1 / 4 / 2;
   margin: 5% 15%;
@@ -221,45 +239,49 @@
   grid-area: 4 / 3 / 5 / 4;
   margin: 5% 15%;
 }
-.div13 { 
+
+.div13{
   grid-area: 5 / 1 / 6 / 2;
   margin: 5% 15%;
-}
+} 
+
 .div14 { 
-  grid-area: 5 / 2 / 6 / 3;
-  margin: 5% 15%;
-  width: 175%;
-}
-.div15 { 
-  grid-area: 5 / 3 / 6 / 4;
-  margin: 5% 15%;
-}
-.div16 { 
   grid-area: 6 / 1 / 7 / 2;
   margin: 5% 15%;
 }
-.div17 { 
+.div15 { 
   grid-area: 6 / 2 / 7 / 3;
   margin: 5% 15%;
+  width: 175%;
 }
-.div18 { 
-  grid-area: 6 / 3 / 7 / 4;
-  margin: 5% 15%;
-}
-.div19 { 
+
+.div16 { 
   grid-area: 7 / 1 / 8 / 2;
   margin: 5% 15%;
 }
-.div20 { 
+.div17 { 
   grid-area: 7 / 2 / 8 / 3;
   margin: 5% 15%;
 }
-.div21 { 
+.div18 { 
   grid-area: 7 / 3 / 8 / 4;
   margin: 5% 15%;
 }
-.div22 { 
+.div19 { 
   grid-area: 8 / 1 / 9 / 2;
+  margin: 5% 15%;
+}
+.div20 { 
+  grid-area: 8 / 2 / 9 / 3;
+  margin: 5% 15%;
+}
+.div21 { 
+  grid-area: 8 / 3 / 9 / 4;
+  margin: 5% 15%;
+}
+
+.div22 { 
+  grid-area: 9 / 1 / 10 / 2;
   margin: 5% 15%;
 }
 
@@ -270,12 +292,12 @@
 
 
 .div24 { 
-  grid-area: 10 / 1 / 11 / 2;
+  grid-area: 9 / 1 / 10 / 2;
   margin: 5% 15%;
 }
 
 .div25 { 
-  grid-area: 11 / 1 / 12 / 2;
+  grid-area: 10 / 1 / 11 / 2;
   margin: 5% 15%;
 }
 
@@ -283,6 +305,13 @@
   margin-top:30px;
   background-color: #F56A3F;
   color: white
+}
+
+.enddatebutton{
+  margin-top:30px;
+  background-color: #F56A3F;
+  color: white;
+  border-radius: 10px
 }
 
 

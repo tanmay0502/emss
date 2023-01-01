@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import jwt_decode from "jwt-decode";
 import './styles/UserList.css'
 import UserDetail from './UserDetail';
-import { FaUserEdit,FaCircle } from "react-icons/fa";
+import { FaUserEdit, FaCircle } from "react-icons/fa";
 import { AiOutlineSortAscending, AiOutlineSortDescending } from "react-icons/ai";
 
 import { useNavigate } from 'react-router-dom'
@@ -16,8 +16,8 @@ import { ReactComponent as InActiveUsers } from '../assets/InActiveUsers.svg';
 
 import DynamicDataTable from "@langleyfoxall/react-dynamic-data-table";
 import ToggleButton from './ToggleButton';
-import {CSVLink, CSVDownload} from 'react-csv';
-import {AiOutlineDownload} from 'react-icons/ai'
+import { CSVLink, CSVDownload } from 'react-csv';
+import { AiOutlineDownload } from 'react-icons/ai'
 import UserImageTest from '../assets/UserImageTest.png'
 import EditUser from '../pages/user_management/EditUser';
 
@@ -41,7 +41,7 @@ function UserList() {
 	const [noOfInActiveUsers, setNoOfInActiveUsers] = useState(0);
 	const [noOfTotalUsers, setNoOfTotalUsers] = useState(0);
 	const [currImage, setCurrImage] = useState("");
-	
+
 	const [isTemporary, setIsTemporary] = useState(false);
 
 	const sortMapping = {
@@ -82,16 +82,16 @@ function UserList() {
 
 
 			var data = users.filter((elem) => {
-				
-				if (isTemporary){
+
+				if (isTemporary) {
 					const filter = "tmp";
-					return (elem["userid"].slice(8,11).toLowerCase().includes(filter));
+					return (elem["userid"].slice(8, 11).toLowerCase().includes(filter));
 				}
-				else{
+				else {
 					const filter = "tmp";
-					return !(elem["userid"].slice(8,11).toLowerCase().includes(filter));
-			}
-			}).filter((elem)=>{
+					return !(elem["userid"].slice(8, 11).toLowerCase().includes(filter));
+				}
+			}).filter((elem) => {
 				if (tableFilter === "") {
 					return true;
 				}
@@ -100,16 +100,16 @@ function UserList() {
 					return (elem["userid"].toLowerCase().includes(filter) || elem["name"].toLowerCase().includes(filter))
 				}
 			}).map((val) => {
-			    return {
-				        " ": <FaCircle size='0.8em' style={{color: val["loggedin"]? "#008767":"#888888"}} />,
+				return {
+					" ": <FaCircle size='0.8em' style={{ color: val["loggedin"] ? "#008767" : "#888888" }} />,
 					"User ID": val["userid"],
-					"": <div  style={{borderRadius: "50%", display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", paddingRight: "15px" }}>
-						<img className='thimage' style={{ height: "35px", width: "35px" }} src={val["photodata"] !== '' ? val["photodata"]: UserImageTest} alt="Img"/>
-						</div>,
+					"": <div style={{ borderRadius: "50%", display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "flex-start", paddingRight: "15px" }}>
+						<img className='thimage' style={{ height: "35px", width: "35px" }} src={val["photodata"] !== '' ? val["photodata"] : UserImageTest} alt="Img" />
+					</div>,
 					"User Name": val["name"],
-					"status" : val["active"]+val["userid"],
-					"newUserId": (val["userid"].slice(0,2)).concat(val["userid"].slice(8),val["userid"].slice(2,6),val["userid"].slice(6,8)),
-					"Phone Number": val["mobilenumber"].substring(0, 5) + " " + val["mobilenumber"].substring(5) ,
+					"status": val["active"] + val["userid"],
+					"newUserId": (val["userid"].slice(0, 2)).concat(val["userid"].slice(8), val["userid"].slice(2, 6), val["userid"].slice(6, 8)),
+					"Phone Number": val["mobilenumber"].substring(0, 5) + " " + val["mobilenumber"].substring(5),
 					"Role": val["userid"].slice(8),
 					Details: val,
 					Edit: <button className="modifyBtn p-2 text-white" disabled={true}>
@@ -117,60 +117,64 @@ function UserList() {
 					</button>,
 					"Status": <ToggleButton userID={val["userid"]} checked={val["active"] == 'A'} onToggle={(e) => {
 						if (val["active"] == "A") {
-						    deactivateUser(e)
+							deactivateUser(e)
 						}
 						else {
-						    activateUser(e)
+							activateUser(e)
 						}
-					    }} 	
-			      />
+					}}
+					/>
+				}
+			})
+			data.sort(function (a, b) {
+				if (sortMapping[sortBy] !== null) {
+					// console.log(data)
+					return (a[sortMapping[sortBy]].toString()).localeCompare(b[sortMapping[sortBy]].toString())
+				}
+				else return 0;
+			});
+			if (sortMapping[sortBy] !== null && sortOrder === 'desc') {
+				data.reverse();
+			}
+
+			setTableData(data)
+
 		}
-	    })
-	    data.sort(function (a, b) {
-		if (sortMapping[sortBy] !== null) {
-		    // console.log(data)
-		    return (a[sortMapping[sortBy]].toString()).localeCompare(b[sortMapping[sortBy]].toString())
+		return () => {
+
 		}
-		else return 0;
-	    });
-	    if (sortMapping[sortBy] !== null && sortOrder === 'desc') {
-		data.reverse();
-	    }
-	    
-	    setTableData(data)
-	    
-	}
-	return () => {
-	    
-	}
-    }, [users, tableFilter, sortBy, sortOrder,isTemporary])
-    
-    async function getUser() {
-	
-	try {
-	    const response = await fetch(
-		`${process.env.REACT_APP_API_SERVER}/user/getSubordinateUsers`,
-		{
-		    method: "POST",
-		    headers: {
-			"Content-Type": "application/json",
-		    },
-		    credentials: 'include'
+	}, [users, tableFilter, sortBy, sortOrder, isTemporary])
+
+	async function getUser() {
+
+		try {
+			const response = await fetch(
+				`${process.env.REACT_APP_API_SERVER}/user/getSubordinateUsers`,
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					credentials: 'include'
+				}
+			);
+			const tmp = await response.json();
+
+			console.log("/user/getSubordinateUsers", tmp)
+			if (tmp['message'] != "Permission Denied") {
+
+				setLoggedinUsers(tmp["data"]["loggedin_users"]);
+				setNoOfActiveUsers(tmp["data"]["active_users"]);
+				setNoOfInActiveUsers(tmp["data"]["inactive_users"]);
+				setNoOfTotalUsers(tmp["data"]["total_users"]);
+				setUsers(tmp["data"]["users"]);
+			}
+
+
+		} catch (err) {
+			console.log(err);
 		}
-	    );
-	    const tmp = await response.json();
-	    
-	    console.log("/user/getSubordinateUsers", tmp)
-	    setLoggedinUsers(tmp["data"]["loggedin_users"]);
-	    setNoOfActiveUsers(tmp["data"]["active_users"]);
-	    setNoOfInActiveUsers(tmp["data"]["inactive_users"]);
-	    setNoOfTotalUsers(tmp["data"]["total_users"]);
-	    setUsers(tmp["data"]["users"]);
-	    
-	} catch (err) {
-	    console.log(err);
 	}
-    }
 
 	useEffect(() => {
 		getUser();
@@ -254,11 +258,11 @@ function UserList() {
 				{isDetail == 0 && isEdit == 0 ? <div style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between" }}>
 					<h4>Dependent Users</h4>
 					<div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center" }}>
-					<div className="userTemporaryToggle mr-7">
-          <span >Permanent </span>
-          <Switch onClick={toggler} />
-          <span >Temporary </span>
-        </div>
+						<div className="userTemporaryToggle mr-7">
+							<span >Permanent </span>
+							<Switch onClick={toggler} />
+							<span >Temporary </span>
+						</div>
 						<button className='createUserBtn' onClick={() => {
 							navigate("/session/usermanagement/createUser")
 						}}>Create User</button>
@@ -266,7 +270,7 @@ function UserList() {
 							<SearchInputElement style={{ margin: "0 7.5px", width: "20px" }} />
 							<input type={'search'} defaultValue={tableFilter} onChange={(e) => { setTableFilter(e.target.value) }} placeholder='Search' style={{ outline: "none", background: "transparent" }} />
 						</div>
-						<div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center", marginLeft: "10px", background: "var(--lightGrayBG )", borderRadius: "10px", padding: "7.5px 15px 7.5px 0", fontSize: "0.8em",height:"40px" }}>
+						<div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center", marginLeft: "10px", background: "var(--lightGrayBG )", borderRadius: "10px", padding: "7.5px 15px 7.5px 0", fontSize: "0.8em", height: "40px" }}>
 							<span className='SampleText' style={{ minWidth: "max-content", paddingInlineStart: "0 7.5px" }}>Sort by : &nbsp;</span>
 							<select
 								style={{ textAlign: "center", outline: "none", background: "transparent", padding: "0px", border: "none" }}
@@ -282,7 +286,7 @@ function UserList() {
 							}}>
 								{sortOrder === 'asc' ? <AiOutlineSortAscending /> : <AiOutlineSortDescending />}
 							</button>
-					<CSVLink filename={"UserList.csv"} data={users}><div className="text-gray-400 text-lg m-2 py-1 px-2" title='Export To CSV'><AiOutlineDownload/></div></CSVLink>
+							<CSVLink filename={"UserList.csv"} data={users}><div className="text-gray-400 text-lg m-2 py-1 px-2" title='Export To CSV'><AiOutlineDownload /></div></CSVLink>
 
 						</div>
 					</div>
@@ -290,7 +294,7 @@ function UserList() {
 				</div> : <></>}
 				{isDetail == 0 && isEdit == 0 ? <DynamicDataTable className="users-table"
 					rows={tableData}
-					fieldsToExclude={["Details", "Edit","status","newUserId"]}
+					fieldsToExclude={["Details", "Edit", "status", "newUserId"]}
 					orderByField={sortMapping[sortBy]}
 					orderByDirection={sortOrder}
 					columnWidths={{
@@ -301,10 +305,10 @@ function UserList() {
 						// console.log(row)
 					}}
 					fieldMap={{
-						"User ID": (<div className="cursor-pointer" onClick={()=>{setSortBy("User ID")}}>User ID</div>),
-						"User Name": (<div className="cursor-pointer" onClick={()=>{setSortBy("Name")}}>User Name</div>),
-						"Role": (<div className="cursor-pointer" onClick={()=>{setSortBy("Role")}}>Role</div>),
-						"Status": (<div className="cursor-pointer" onClick={()=>{setSortBy("None")}}>Status</div>)
+						"User ID": (<div className="cursor-pointer" onClick={() => { setSortBy("User ID") }}>User ID</div>),
+						"User Name": (<div className="cursor-pointer" onClick={() => { setSortBy("Name") }}>User Name</div>),
+						"Role": (<div className="cursor-pointer" onClick={() => { setSortBy("Role") }}>Role</div>),
+						"Status": (<div className="cursor-pointer" onClick={() => { setSortBy("None") }}>Status</div>)
 					}}
 					buttons={[]}
 					allowOrderingBy={[

@@ -9,13 +9,13 @@ import { useNavigate } from 'react-router-dom'
 import { ReactComponent as SearchInputElement } from '../../assets/searchInputIcon.svg';
 import { ReactComponent as ChevronDown } from '../../assets/ChevronDown.svg';
 import { Fragment } from 'react';
-import {AiOutlineDownload} from 'react-icons/ai'
+import { AiOutlineDownload } from 'react-icons/ai'
 import DynamicDataTable from "@langleyfoxall/react-dynamic-data-table";
 import ToggleButton from '../../components/ToggleButton';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
 import UserImageTest from '../../assets/UserImageTest.png'
-import {CSVLink, CSVDownload} from 'react-csv';
+import { CSVLink, CSVDownload } from 'react-csv';
 
 
 // React Icons
@@ -27,7 +27,7 @@ const uri = process.env.REACT_APP_API_SERVER;
 function WarehouseList() {
 	const navigate = useNavigate();
 	const [Details, setDetails] = React.useState([]);
-	
+
 	const [warehouseMapping, setWarehouseMapping] = useState(null)
 	// console.log(window.localStorage.getItem("token"))
 
@@ -47,7 +47,7 @@ function WarehouseList() {
 				})
 
 			const data = await response.json();
-			console.log(data);
+			console.log(data, 'warehouselist');
 			setDetails(data["data"])
 			console.log(data["data"], "data")
 		} catch (error) {
@@ -55,7 +55,7 @@ function WarehouseList() {
 		}
 
 	}
-	
+
 	useEffect(() => {
 		MapWarehouseTypes();
 		getList();
@@ -70,7 +70,8 @@ function WarehouseList() {
 					headers: {
 						"Content-Type": "application/json",
 					},
-					credentials: 'include'
+					credentials: 'include',
+
 				}
 			)
 			const types = await response.json();
@@ -132,28 +133,28 @@ function WarehouseList() {
 			return {
 				"Warehouse ID": val["type"] == 'P' ?
 					<Fragment><span style={{ display: 'flex', justifyContent: 'left', alignItems: 'center', marginLeft: "12%" }}>
-						<FaCircle size='0.8em' className= 'PermaWarehouse' />
+						<FaCircle size='0.8em' className='PermaWarehouse' />
 						{/* <Tippy content={ val['incharge'] === null ? "Incharge: Not Available" :"Incharge: " +  val['incharge'] }> */}
 						<span style={{ marginLeft: '25px', marginRight: '25px' }}>
 							{val['warehouseid']}</span>
-									</span>
+					</span>
 
-						</Fragment>
+					</Fragment>
 					:
 					<Fragment><span style={{ display: 'flex', justifyContent: 'left', alignItems: 'center', marginLeft: "12%" }}>
-						<FaCircle size='0.8em' className= {val["type"] === 'T'? 'TempWarehouse':'PrivateWarehouse' } />
+						<FaCircle size='0.8em' className={val["type"] === 'T' ? 'TempWarehouse' : 'PrivateWarehouse'} />
 						<span style={{ marginLeft: '25px', marginRight: '25px' }}>{val['warehouseid']}</span>
 					</span>
 					</Fragment>,
 				"warehouseid": val['warehouseid'],
-				"Warehouse Type":warehouseMapping ? warehouseMapping["data"][val["type"]] : "",
+				"Warehouse Type": warehouseMapping ? warehouseMapping["data"][val["type"]] : "",
 				"room_type": warehouseMapping ? warehouseMapping["data"][val["type"]] : "",
 				Details: val,
 				Edit: <button className="modifyBtn p-2 text-white" disabled={true}>
 					<FaUserEdit style={{ transform: "translateX(1px)" }} />
 				</button>,
-				"Address": <Tippy content={ val['incharge'] === null ? "Incharge: Not Available" :"Incharge: " +  val['incharge'] }><div>{val["address"]}</div></Tippy>, 
-				"status":val["status"],
+				"Address": <Tippy content={val['incharge'] === null ? "Incharge: Not Available" : "Incharge: " + val['incharge']}><div>{val["address"]}</div></Tippy>,
+				"status": val["status"],
 				"Status": <ToggleButton warehouseID={val["warehouseid"]} checked={val["status"] === 'A'} onToggle={(e) => {
 					if (val["status"] === "A") {
 						DectivateWarehouse(val["warehouseid"])
@@ -162,7 +163,7 @@ function WarehouseList() {
 						ActivateWarehouse(val["warehouseid"])
 					}
 					console.log(val["warehouseid"])
-				}}/>
+				}} />
 			}
 		})
 
@@ -188,7 +189,7 @@ function WarehouseList() {
 			data.sort(function (a, b) {
 				if (sortMapping[sortBy] !== null) {
 					// console.log(data)
-					
+
 					return (a[sortMapping[sortBy]].toString()).localeCompare(b[sortMapping[sortBy]].toString())
 				}
 				else return 0;
@@ -310,25 +311,25 @@ function WarehouseList() {
 							}}>
 								{sortOrder === 'asc' ? <AiOutlineSortAscending /> : <AiOutlineSortDescending />}
 							</button>
-					<CSVLink filename={"wareHouseList.csv"} data={Details}><div className="text-gray-400 text-lg m-2 py-1 px-2" title="Export To CSV"><AiOutlineDownload/></div></CSVLink>
+							<CSVLink filename={"wareHouseList.csv"} data={Details}><div className="text-gray-400 text-lg m-2 py-1 px-2" title="Export To CSV"><AiOutlineDownload /></div></CSVLink>
 
 						</div>
 					</div>
 
 				</div> : <></>}
-							{/* {console.log(tableData)} */}
+				{/* {console.log(tableData)} */}
 				{isDetail == 0 ? <DynamicDataTable className="warehouses-table"
-				
+
 					rows={tableData}
-					fieldsToExclude={["Details", "Edit", "BuildingType", "room_type", "warehouseid","status"]}
+					fieldsToExclude={["Details", "Edit", "BuildingType", "room_type", "warehouseid", "status"]}
 					orderByField={sortMapping[sortBy]}
 					orderByDirection={sortOrder}
 					onClick={(event, row) => {
 						details(row)
 					}}
 					fieldMap={{
-						"Warehouse ID": (<div className="cursor-pointer" onClick={()=>{setSortBy("Warehouse ID")}}>Warehouse ID</div>),
-						"Status": (<div className="cursor-pointer" onClick={()=>{setSortBy("Status")}}>Status</div>)
+						"Warehouse ID": (<div className="cursor-pointer" onClick={() => { setSortBy("Warehouse ID") }}>Warehouse ID</div>),
+						"Status": (<div className="cursor-pointer" onClick={() => { setSortBy("Status") }}>Status</div>)
 					}}
 					buttons={[]}
 					allowOrderingBy={[

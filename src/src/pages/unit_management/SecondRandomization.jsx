@@ -55,7 +55,7 @@ const SecondRandomisationForm = ({ isVisible }) => {
         getACs();
     }, [])
 
-    const getACs = async ()=>{
+    const getACs = async () => {
         try {
             const response = await fetch(`${baseUrl}/fetch-ac-pc`, {
                 method: "POST",
@@ -133,46 +133,9 @@ const SecondRandomisationForm = ({ isVisible }) => {
             }
         }
         else { }
-        // setIsSubmitted(false);
-        // const units_requirement = assemblyData
-        //     .filter((d) => d.ps_no)
-        //     .map((d) => {
-        //         d.cu_count = d.cu_count ? parseInt(d.cu_count) : 0;
-        //         d.bu_count = d.bu_count ? parseInt(d.bu_count) : 0;
-        //         d.vt_count = d.vt_count ? parseInt(d.vt_count) : 0;
-        //         return d;
-        //     });
-
-        // // fetch request
-        // try {
-        //     const response = await fetch(`${baseUrl}/second-randomization`, {
-        //         method: "POST",
-        //         headers: { "Content-Type": "application/json" },
-        //         credentials: 'include',
-        //         body: JSON.stringify({
-        //             units_requirement,
-        //         }),
-        //     });
-        //     const data = await response.json();
-        //     console.log("Randomisation results: ", data);
-
-        //     if (response.status === 200) {
-
-        //         setRandomisedData(data);
-        //         setIterationIndex(data.length);
-        //         setAssemblyData(units_requirement);
-        //         setIsSubmitted(true);
-        //         // pass the data to child component & re-render
-        //     } else {
-        //         console.log("Could not fetch randomisation results");
-        //         alert(data.message);
-        //     }
-        // } catch (err) {
-        //     alert(`Error occured: ${err}`);
-        // }
     };
 
-    
+
     const [pollingStationDataMessage, setPollingStationDataMessage] = useState("Fetching Polling Station Data...")
 
     useEffect(() => {
@@ -183,7 +146,7 @@ const SecondRandomisationForm = ({ isVisible }) => {
             (async () => {
 
                 try {
-                    const response = await fetch(`${baseUrl}/fetch-polling-stations?ac_no='${ACCode}'`, {
+                    const response = await fetch(`${baseUrl}/fetch-polling-stations?ac_no=${ACCode}`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         credentials: "include",
@@ -192,7 +155,7 @@ const SecondRandomisationForm = ({ isVisible }) => {
                         // })
                     });
                     const data = await response.json();
-                    console.log("----",data)
+                    console.log("----", data)
                     if (response.status === 200) {
                         console.log(data['data'][ACCode])
                         if (data.hasOwnProperty('data')) {
@@ -200,7 +163,7 @@ const SecondRandomisationForm = ({ isVisible }) => {
                             setAssemblyList(data['data'][ACCode]['ps']);
                         }
                     }
-                    else{
+                    else {
                         setPollingStationDataMessage(data.message)
                     }
                 } catch (err) {
@@ -222,87 +185,88 @@ const SecondRandomisationForm = ({ isVisible }) => {
                     <div className={styles.unit_list_header}>
                         <h4>Second Randomisation</h4>
                     </div>
-                        <div className="mt-2 w-full bg-white p-6">
-                            <div className="flex flex-col">
-                                <div className="mb-5 flex w-full flex-row justify-evenly">
+                    <div className="mt-2 w-full bg-white p-6">
+                        <div className="flex flex-col">
+                            <div className="mb-5 flex w-full flex-row justify-evenly">
+                                <div className="flex w-3/8 flex-col text-left">
+                                    <label className="mb-2 w-full text-base">
+                                        Assembly Segment ID<span className="text-red-600">*</span>
+                                    </label>
+                                    <select value={ACCode} onChange={(e) => setACCode(e.target.value)}>
+                                        {
+                                            ACList && Object.keys(ACList).map((val) => {
+                                                console.log(val)
+                                                return <option value={val}>
+                                                    {val}&nbsp;({ACList[val]['ac_name']})
+                                                </option>
+                                            })
+                                        }
+                                    </select>
+                                </div>
+
+                            </div>
+
+                            {!isFetching && assemblyList && assemblyList.length > 0 ? (
+                                <div className="group mb-5 flex w-full justify-evenly items-center">
+                                    <div className="mr-8 flex w-3/8 flex-col text-left">
+                                        <label className=" w-full text-base">
+                                            Polling Station Count
+                                        </label>
+                                        <div className="flex w-full justify-between gap-2 text-gray-800">
+                                            <input
+                                                className="h-10 w-1/3 rounded-md border-0 bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                                                type="number"
+                                                name="cu_count"
+                                                placeholder="CU"
+                                                value={assemblyList.length}
+                                                disabled
+                                            />
+                                        </div>
+                                    </div>
                                     <div className="flex w-3/8 flex-col text-left">
                                         <label className="mb-2 w-full text-base">
-                                            Assembly Segment ID<span className="text-red-600">*</span>
+                                            Total Units Count {"(CU  BU  VT)"}
+                                            <span className="text-red-600"> *</span>
                                         </label>
-                                        <select value={ACCode} onChange={(e) => setACCode(e.target.value)}>
-                                            {
-                                                ACList && Object.keys(ACList).map((val) => {
-                                                    console.log(val)
-                                                    return <option value={val}>
-                                                        {val}&nbsp;({ACList[val]['ac_name']})
-                                                    </option>
-                                                })
-                                            }
-                                        </select>
+                                        <div className="flex w-full justify-between gap-2 text-gray-800">
+                                            <input
+                                                className="h-10 w-1/3 rounded-md border-0 bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                                                type="number"
+                                                name="cu_count"
+                                                placeholder="CU"
+                                                title="Total CUs"
+                                                value={assemblyList.length}
+                                                disabled
+                                            />
+                                            <input
+                                                className="h-10 w-1/3 rounded-md border-0 bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                                                type="number"
+                                                name="bu_count"
+                                                placeholder="BU"
+                                                title="Total BUs"
+                                                value={assemblyData['bu_no'] ? assemblyList.length * assemblyData['bu_no'] : 0}
+                                                disabled
+                                            />
+                                            <input
+                                                className="h-10 w-1/3 rounded-md border-0 bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                                                type="number"
+                                                name="vt_count"
+                                                placeholder="VT"
+                                                title="Total VTs"
+                                                value={assemblyList.length}
+                                                disabled
+                                            />
+                                        </div>
                                     </div>
-
                                 </div>
-                            {!isFetching && assemblyList && assemblyList.length > 0 ? (
-                                    <div className="group mb-5 flex w-full justify-evenly items-center">
-                                        <div className="mr-8 flex w-3/8 flex-col text-left">
-                                            <label className=" w-full text-base">
-                                                Polling Station Count
-                                            </label>
-                                            <div className="flex w-full justify-between gap-2 text-gray-800">
-                                                <input
-                                                    className="h-10 w-1/3 rounded-md border-0 bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-                                                    type="number"
-                                                    name="cu_count"
-                                                    placeholder="CU"
-                                                    value={assemblyList.length}
-                                                    disabled
-                                                />
-                                            </div>
-                                        </div>
-                                        <div className="flex w-3/8 flex-col text-left">
-                                            <label className="mb-2 w-full text-base">
-                                                Total Units Count {"(CU  BU  VT)"}
-                                                <span className="text-red-600"> *</span>
-                                            </label>
-                                            <div className="flex w-full justify-between gap-2 text-gray-800">
-                                                <input
-                                                    className="h-10 w-1/3 rounded-md border-0 bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-                                                    type="number"
-                                                    name="cu_count"
-                                                    placeholder="CU"
-                                                    title="Total CUs"
-                                                    value={assemblyList.length}
-                                                    disabled
-                                                />
-                                                <input
-                                                    className="h-10 w-1/3 rounded-md border-0 bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-                                                    type="number"
-                                                    name="bu_count"
-                                                    placeholder="BU"
-                                                    title="Total BUs"
-                                                    value={assemblyData['bu_no'] ? assemblyList.length * assemblyData['bu_no'] : 0}
-                                                    disabled
-                                                />
-                                                <input
-                                                    className="h-10 w-1/3 rounded-md border-0 bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-                                                    type="number"
-                                                    name="vt_count"
-                                                    placeholder="VT"
-                                                    title="Total VTs"
-                                                    value={assemblyList.length}
-                                                    disabled
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
-                                )
+                            )
                                 :
                                 <h4 style={{
                                     'textAlign': 'center'
                                 }}>{pollingStationDataMessage}</h4>
                             }
-                            </div>
                         </div>
+                    </div>
                     <button
                         className="mb-8 font-semibold text-white"
                         onClick={handleFormSubmit}
@@ -374,8 +338,8 @@ const SecondRandomisationOutput = ({
         }
         fetchNewIterations(newIndex);
     };
-    
-    
+
+
     const handleRadomisationSave = async () => {
         try {
             const response = await fetch(
@@ -389,7 +353,7 @@ const SecondRandomisationOutput = ({
                     credentials: "include",
                     body: JSON.stringify({
                         iteration_index: iterationIndex,
-                        ac_no:ACCode
+                        ac_no: ACCode
                     }),
                 }
             );

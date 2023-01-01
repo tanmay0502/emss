@@ -10,7 +10,10 @@ function FlcEdit() {
     const [modalIsOpen_flcreport, setIsOpen_flc_report] = React.useState(false);
     const [modalIsOpen_Acknowledgment, setIsOpen_Acknowledgment] = React.useState(false);
     const [modalIsOpen_Intimation_Letter, setIsOpen_Intimation_Letter] = React.useState(false);
+    const [isenddateopen, setisenddateopen] = React.useState(0);
     const [isLoading, setIsLoading] = useState(0);
+
+
     function openModal_Preparedness_Certificate() {
         setIsOpen_Preparedness_Certificate(true);
     }
@@ -23,7 +26,7 @@ function FlcEdit() {
     function closeModal_Preparedness_Certificate() {
         setIsOpen_Preparedness_Certificate(false);
     }
-
+    // ======================================================
     function openModal_flcreport() {
         setIsOpen_flc_report(true);
     }
@@ -37,8 +40,10 @@ function FlcEdit() {
         setIsOpen_flc_report(false);
     }
 
+    // ===================================================
+
     function openModal_Acknowledgment() {
-        setIsOpen_flc_report(true);
+        setIsOpen_Acknowledgment(true);
     }
 
     function afterOpenModal_Acknowledgment() {
@@ -47,11 +52,13 @@ function FlcEdit() {
     }
 
     function closeModal_Acknowledgment() {
-        setIsOpen_flc_report(false);
+        setIsOpen_Acknowledgment(false);
     }
 
+    // =====================================================
+
     function openModal_Intimation_Letter() {
-        setIsOpen_flc_report(true);
+        setIntimation_Letter(true);
     }
 
     function afterOpenModal_Intimation_Letter() {
@@ -60,7 +67,7 @@ function FlcEdit() {
     }
 
     function closeModal_Intimation_Letter() {
-        setIsOpen_flc_report(false);
+        setIntimation_Letter(false);
     }
 
     const customStyles = {
@@ -117,9 +124,9 @@ function FlcEdit() {
     const [photoFileData, setPhotoFileData] = useState("")
     const [flcreport, setflcreport] = useState("")
     const [flcreportname, setflcreportname] = useState("")
+    const [Acknowledgmentname, setAcknowledgmentname] = useState("")
     const [inputflcreport, setinputflcreport] = useState(-1)
     const [Acknowledgment, setAcknowledgment] = useState("")
-    const [Acknowledgmentname, setAcknowledgmentname] = useState("")
     const [InputAcknowledgment, setInputAcknowledgment] = useState(-1)
     const [Intimation_Letter, setIntimation_Letter] = useState("")
     const Role = User_ID.substring(8)
@@ -169,11 +176,13 @@ function FlcEdit() {
                     if (data['data'][0]['startdate']) {
                         let StartDate = data['data'][0]['startdate'].split('T')[0];
                         setstartdate(StartDate.slice(6) + '-' + StartDate.slice(3, 5) + "-" + StartDate.slice(0, 2))
+                        // setstartdate(data['data'][0]['startdate'])
                         setstartdateshow(data['data'][0]['startdate'])
                     }
                     if (data['data'][0]['enddate']) {
                         let EndDate = data['data'][0]['enddate'].split('T')[0];
                         setenddate(EndDate.slice(6) + '-' + EndDate.slice(3, 5) + "-" + EndDate.slice(0, 2))
+                        // setenddate(data['data'][0]['enddate'])
                         setenddateshow(data['data'][0]['enddate'])
                     }
 
@@ -243,7 +252,7 @@ function FlcEdit() {
 
 
             const data = await response.json();
-            console.log(data, "datatatatat")
+            console.log(data, "setPhotoFileData")
             if (response.status == 200) {
                 setPhotoFileData(data['data'])
             }
@@ -428,8 +437,18 @@ function FlcEdit() {
         }
     }
 
+    // "flcID": "42",
+    // "manufacturerDistrictCoordinatorName": "sushant",
+    // "manufacturerDistrictCoordinatorMobNo": "8805619501",
+    // "manufacturerDistrictCoordinatorEmailId": "str4ing@gmail.com",
+    // "flcSupervisorName": "sushant",
+    // "flcSupervisorMobNo": "8805619501",
+    // "flcSupervisorEmailId": "str4ing@gmail.com",
+    // "numEngineers": "11",
+    // "flcVenue": "address"
 
     async function postFlcdistrict() {
+
         try {
             let id = issueId();
 
@@ -442,7 +461,7 @@ function FlcEdit() {
                     },
                     credentials: 'include',
                     body: JSON.stringify({
-                        "flcId": String(id),
+                        "flcID": String(id),
                         "manufacturerDistrictCoordinatorName": manufacturerdistrictcoordinatorname,
                         "manufacturerDistrictCoordinatorMobNo": manufacturerdistrictcoordinatormobno,
                         "manufacturerDistrictCoordinatorEmailId": manufacturerdistrictcoordinatoremailid,
@@ -456,7 +475,7 @@ function FlcEdit() {
             );
 
             const data = await response.json();
-            if (data["message"] === "Success") {
+            if (response.status == 200) {
                 document.getElementById("form").reset();
                 alert("Successful");
                 window.location.pathname = "/session/unitmanagement/flc_list";
@@ -471,7 +490,6 @@ function FlcEdit() {
 
 
     async function FinalSetEndDate(val) {
-
         try {
             let id = issueId();
             const response = await fetch(
@@ -490,14 +508,9 @@ function FlcEdit() {
             );
 
             const data = await response.json();
-            // if (data["message"] === "Success") {
-            //     document.getElementById("form").reset();
-            //     alert("Successful");
-            //     window.location.pathname = "/session/unitmanagement/flc_list";
-            // } else {
-            //     alert("Edit Failed! ");
-
-            // }
+            if (response.status == 200) {
+                setisenddateopen(0);
+            }
         } catch (err) {
             console.log(err);
         }
@@ -506,9 +519,11 @@ function FlcEdit() {
 
 
     const SetEndDate = async (e) => {
+        const date = e.target.value;
         e.preventDefault();
-        setenddate(e.target.value)
-        if (edit == 'DEO')
+        setenddate(date)
+        setenddateshow(((date) ? date.slice(8) + '-' + date.slice(5, 7) + "-" + date.slice(0, 4) : ''))
+        if (isenddateopen == 1)
             FinalSetEndDate(e.target.value);
     };
 
@@ -613,7 +628,7 @@ function FlcEdit() {
 
     return (
         <>
-            {(Role == 'CEO' || Role == 'DEO') && edit == '' &&
+            {(Role == 'CEO') && edit == '' &&
                 <button className="text-white mb-4 flex"
                     onClick={() => { setEdit(Role) }}
                 >
@@ -713,9 +728,9 @@ function FlcEdit() {
                             }
                         </div>
 
-                        <div class={scheduleStyles.div6}>
+                        <div class={(Role == 'DEO' || isenddateopen == 1) ? scheduleStyles.div6_DEO : scheduleStyles.div6_CEO}>
                             <p>End date</p>
-                            {(edit == 'DEO' || edit == 'CEO') ?
+                            {(isenddateopen == 1 || edit == 'CEO') ?
                                 <input
                                     class={scheduleStyles.dateInput}
                                     type="date"
@@ -726,7 +741,7 @@ function FlcEdit() {
                                     onChange={(e) => {
                                         SetEndDate(e)
                                     }}
-                                    disabled={(edit === 'CEO' || edit == 'DEO') ? false : true}
+                                    disabled={(edit === 'CEO' || isenddateopen === 1) ? false : true}
                                     id="10"
                                 ></input>
                                 :
@@ -736,10 +751,16 @@ function FlcEdit() {
                                     type="text"
                                     className=" selectBox"
                                     placeholder='End Date'
-                                    disabled={edit === 'CEO' ? false : true}
+                                    disabled={true}
                                 ></input>
                             }
                         </div>
+
+                        {isenddateopen == 0 && Role == 'DEO' &&
+                            <div class={scheduleStyles.enddatediv}>
+                                <div class={scheduleStyles.enddatebutton} onClick={(e) => { setisenddateopen(1) }}> Edit</div>
+                            </div>
+                        }
 
                         <div class={scheduleStyles.div7}>
                             <p> Manufacturer State Coordinator Name</p>
@@ -797,8 +818,18 @@ function FlcEdit() {
                             ></input>
                         </div>
 
+                        {Role == "DEO" && edit == '' &&
 
-                        <div class={scheduleStyles.div13}>
+                            <div class={scheduleStyles.div13}>
+                                <button className="text-white mb-4 flex"
+                                    onClick={() => { setEdit(Role) }}
+                                >
+                                    Edit Flc Schedule
+                                </button>
+                            </div>
+                        }
+
+                        <div class={scheduleStyles.div14}>
                             <p>Number Of Engineer</p>
                             <input
                                 class={scheduleStyles.numberfield}
@@ -811,7 +842,7 @@ function FlcEdit() {
                             ></input>
                         </div>
 
-                        <div class={scheduleStyles.div14}>
+                        <div class={scheduleStyles.div15}>
                             <p>Flc venue</p>
                             <input
 
