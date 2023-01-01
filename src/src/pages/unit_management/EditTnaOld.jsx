@@ -1,17 +1,16 @@
 import { DynamicDataTable } from '@langleyfoxall/react-dynamic-data-table'
 import React, { useState,useEffect } from 'react'
-import styles from './styles/ScheduleTNA.module.css'
-import defStyles from './styles/TemporaryUser.module.css'
+import defStyles from './styles/ScheduleNew.module.css'
+import styles from './styles/TemporaryUser.module.css'
 import UserImageTest from '../../assets/UserImageTest.png'
 import { ReactComponent as SearchInputElement } from '../../assets/searchInputIcon.svg';
 import { TagsInput } from "react-tag-input-component";
 
 function EditTna() {
-    const [details, setDetails] = useState([])
+
     const [tags, setTags] = React.useState([]);
     const [edit, setEdit] = useState(false)
     const [tna,setTna] = useState([])
-    const [polling, setPolling] = useState([])
 
     const issueId = () => {
         const URL = window.location.href;
@@ -45,60 +44,9 @@ function EditTna() {
             console.log({err});
         }
     }
-    
-    async function getList() {
-                    try {
-                        const response = await fetch(
-                            `${process.env.REACT_APP_API_SERVER}/warehouse/listWarehouses`,
-                            {
-                                method: "POST",
-                                credentials: "include",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                },
-                                body: JSON.stringify({
-                                }),
-                            })
-
-                        const data = await response.json();
-                        console.log(data);
-                        setDetails(data["data"])
-                        console.log(data["data"], "data")
-                    } catch (error) {
-                        console.log(error)
-                    }
-
-                }
-                async function getPoll() {
-
-                    try {
-                        const response = await fetch(
-                            `${process.env.REACT_APP_API_SERVER}/unit/countPolling`,
-                            {
-                                method: "POST",
-                                credentials: "include",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                },
-                                body: JSON.stringify({
-                                }),
-                            })
-
-                        const data = await response.json();
-                        console.log(data);
-                        setPolling(data["data"])
-                        console.log(data["data"], "data")
-                    } catch (error) {
-                        console.log(error)
-                    }
-
-                }
-
-                useEffect(() => {
-                    getList();
-                    getPoll();
-                    getTna(); 
-                }, [])
+    useEffect(() => {
+        getTna();        
+    }, []);
 
     const [currStrong,setCurrStrong] = useState("")
     const [currNum,setCurrNum] = useState()
@@ -230,202 +178,171 @@ function EditTna() {
         <>
 
         {edit === false ? 
-        <button className={styles.editBtn} 
+        <button className={defStyles.editBtn} 
             onClick = {() => {setEdit(true)}}
         >
-            Edit Training and Awareness
+            Edit TnA
         </button>
         : "" }
         <form onSubmit={onFormSubmit} id="form">
-        <div className={styles.mainDiv}>
-        <div className={styles.Schedule_container}>
-            <div className={styles.Schedule_header}>
+        <div className={defStyles.mainDiv}>
+        <div className={defStyles.Schedule_container}>
+            <div className={defStyles.Schedule_header}>
                 <h4>
-                Edit Training and Awareness
+                Schedule TnA
                 </h4> 
             </div>
-            <div class={styles.parent}>
+            <div class={defStyles.parent}>
 
-                    <div class={styles.div1}>
-                        <p>Source Strong Room</p>
+                <div class={defStyles.div1}>
+                    <p> Strong Room</p>
+
+                    {edit === false ?
+                    <input 
+                    class={defStyles.input}
+                    disabled = {true}
+                    defaultValue={currStrong}
+                    type = "text"
+                    className=" selectBox"
+                    
+                    ></input>:
+
+                    <input  
+                    class={defStyles.input}
+                    type="text"
+                    // id="formLevel"
+                    className="selectBox"
+                    placeholder='Enter Warehouse ID'
+                    // disabled = {edit === true ? false : true}
+                    ></input>
+                    }
+
+                </div>
+
+                <div class={defStyles.div2}> 
+                <p> Num Awareness Unit</p>
+
+                {edit === false ?
+                    <input 
+                    class={defStyles.input}
+                    disabled = {true}
+                    defaultValue={currNum}
+                    type = "text"
+                    className=" selectBox"
+                    
+                    ></input>:
+
+                    <input  
+                    class={defStyles.input}
+                    type="number"
+                    // id="formLevel"
+                    className="selectBox"
+                    placeholder='Enter Number'
+                    defaultValue={currNum}
+                    // disabled = {edit === true ? false : true}
+                    ></input>
+                    }
+                
+                </div>
+
+                <div class={defStyles.div3}> 
+                <p> Unit Type</p>
+                    
+
+                    {edit === false ?
+                    <input 
+                    class={defStyles.input}
+                    disabled = {true}
+                    defaultValue={currType}
+                    type = "text"
+                    className=" selectBox"
+                    
+                    ></input>:
+
                         <select
-                            //   required={!isTemporary}
-                            required
-                            name=""
-                            id="1"
-                            className=" selectBox"
-                        //   onChange={(e) => setRoleFunc(e.target.value)}
-                        >
-                            <option value="" disabled selected>
-                                Select Source Strong Room
+                        //   required={!isTemporary}
+                        required
+                        name=""
+                        id="formLevel"
+                        className=" selectBox"
+                        defaultValue={currType}
+                        // disabled = {edit === true ? false : true}
+                    //   onChange={(e) => setRoleFunc(e.target.value)}
+                    >
+                        <option value="" disabled selected>
+                            Select Unit Type
+                        </option>
+                        <option value="CU">
+                            CU
+                        </option>
+                        <option value="BU">
+                            BU
+                        </option>
+                        <option value="VT">
+                            VT
+                        </option>
+                        <option value="SC">
+                            SC
+                        </option>
+
+                        {/* {levelArray.map((st, index) => (
+                            <option value={st} className="text-black">
+                                {index + 1}. {st}
                             </option>
-                                {details.map(item => (
-                                            <option value={item.warehouseid}>{item.warehouseid}</option>
-                                )) }
-                        </select>
+                        ))} */}
 
-                    </div>
+                    </select>
+                    }
+                
+                </div>
 
-                    <div class={styles.div3}> 
-                    <p>Destination Strong Room</p>
-                        <select
-                            //   required={!isTemporary}
-                            required
-                            name=""
-                            id="2"
-                            className=" selectBox"
-                        //   onChange={(e) => setRoleFunc(e.target.value)}
-                        >
-                            <option value="" disabled selected>
-                            Select Destination Strong Room
-                            </option>
-                            {details.map(item => (
-                                            <option value={item.warehouseid}>{item.warehouseid}</option>
-                                )) }
-                        </select>
+                <div class={defStyles.div4}> 
+               
+                </div>
 
-                    </div>
+                <div class={defStyles.div5Tna}> 
+                <p>{edit === true ? "Add": " "} Temporary Users</p>
 
-                    <div class={styles.div2}>
-                    <p> Number of Polling Stations:</p>
-                        <input  
-                        class={styles.input}
-                        type="number"
-                        disabled= {true}
-                        // id="3"
-                        className="selectBox"
-                        placeholder='Fetching Number of Polling Stations'
-                        ></input>
-
-                    </div>
-
-
-                    <div class={styles.div4}>
-                        <h5>Awareness Units:</h5>
-
-                    </div>
-
-
-                    <div class={styles.div5}>
-                        <input  
-                        class={styles.input}
-                        type="text"
-                        id="1"
-                        className="selectBox"
-                        placeholder='Awareness Units in Percentage'
-                        ></input>
-                        <h5 className='pl-2 pt-2 flex items-center' >(%)</h5>
-                    </div>
-
-
-                    <div class={styles.div6}>
-                        
-                        <input  
-                        class={styles.input}
-                        type="text"
-                        id="3"
-                        className="selectBox"
-                        placeholder='Number of Awareness Units'
-                        ></input>
-                        <h5 className='pl-2 pt-2 flex items-center' >(Count)</h5>
-                    </div>
-
-
-                    <div class={styles.div10}>
-                        <h4 className='pt-12'> Person Handed over to: </h4>
-
-                    </div>
-
-
-                    <div class={styles.div13}>
-                        <p>Name</p>
-                        <input  
-                        class={styles.input}
-                        type="text"
-                        id="4"
-                        className="selectBox"
-                        placeholder='Enter Name'
-                        ></input>
-
-                    </div>
-
-
-                    <div class={styles.div14}>
-                        <p>Mobile Number</p>
-                        <input  
-                        class={styles.input}
-                        type="number"
-                        id="5"
-                        className="selectBox"
-                        placeholder='Enter Mobile Number'
-                        ></input>
-
-                    </div>
-
-
-                    <div class={styles.div15}>
-                        <p>Designation</p>
-                        <input  
-                        class={styles.input}
-                        type="text"
-                        id="6"
-                        className="selectBox"
-                        placeholder='Enter Designation'
-                        ></input>
-
-                    </div>
-
-
-                    <div class={styles.div16}>
-                    <p>Start Date</p>
-                        <input  
-                            class={styles.dateInput}
-                            type="date"
-                            id="7"
-                            className=" selectBox"
-                        ></input>
-
-
-                    </div>
-
-
-                    <div class={styles.div18}>
-                    <p>End Date</p>
-                            <input  
-                                class={styles.dateInput}
-                                type="date"
-                                id="8"
-                                className=" selectBox"
-                            ></input>
-
-                    </div>
-
-
-                    {/* <div class={styles.div19}>
-                        <h5> Temporary Users:</h5>
-                    </div> */}
-                    <div class={styles.div17}>
-                        <p>Temporary Users</p>
+                {edit === false ?
+                    <input 
+                    class={defStyles.input}
+                    disabled = {true}
+                    defaultValue={currTags.map((val,index) => {
+                        if(index === 0){
+                            return(val) 
+                        }else{
+                            return(" " + val)
+                        }
+                         
+                    }) }
+                    type = "text"
+                    className=" selectBox"
+                    
+                    ></input>:
 
                     <TagsInput
-                        className='li_noti hide-scroll-bar tagInput'
-                        value={tags}
-                        id="formTags"
-                        onChange={setTags}
-                        placeHolder="SSPPAAARRR, SSPPAAARRR"
-                        />
+                    // style={{ width: '100%' }}
+                    className='li_noti hide-scroll-bar tagInput p-2'
+                    value={tags}
+                    id="formTags"
+                    onChange={setTags}
+                    // disabled = {edit === true ? false : true}
+                    placeHolder="SSPPAAARRR, SSPPAAARRR"
+                    />
+                    }
+                
 
-                    </div>
 
-                    </div>
-            
 
-            
+                </div>
+
+                
+            </div>
             
         </div>
 
-        <div class={defStyles.Schedule_container2}>
-                    <div class={defStyles.Schedule_header2}>
+        <div class={styles.Schedule_container2}>
+                    <div class={styles.Schedule_header2}>
                         <h4>
                             Temporary Users
                         </h4>
@@ -434,7 +351,7 @@ function EditTna() {
                             <input type={'search'} defaultValue={tableFilter} onChange={(e) => { setTableFilter(e.target.value) }} placeholder='Search' style={{ outline: "none", background: "transparent" }} />
                         </div>
                     </div>
-                    <div class={defStyles.Schedule_CDP_table}>
+                    <div class={styles.Schedule_CDP_table}>
                         {/* <DynamicDataTable rows={data2} buttons={[]} /> */}
                         <table >
                             <thead >
@@ -463,7 +380,7 @@ function EditTna() {
                                             <tr onDoubleClick={() => { handleEdit_Temporary_Users(-1) }}>
                                                 <td >
                                                     <input
-                                                        className={defStyles.Assigned_Engineer_Tr}
+                                                        className={styles.Assigned_Engineer_Tr}
                                                         value={val.User_ID}
                                                         name="User_ID"
                                                         placeholder="User ID"
@@ -473,7 +390,7 @@ function EditTna() {
                                                 <td className="text-black text-sm" >{val['']}</td>
                                                 <td >
                                                     <input
-                                                        className={defStyles.Assigned_Engineer_Tr}
+                                                        className={styles.Assigned_Engineer_Tr}
                                                         value={val.Name}
                                                         placeholder="Name"
                                                         name="Name"
@@ -494,7 +411,7 @@ function EditTna() {
             </div>
 
             {edit === true ?
-            <button class={styles.submitBtn} type='submit' > Submit </button>
+            <button class={defStyles.submitBtn} type='submit' > Submit </button>
             : " "}
             </form>
             

@@ -1,6 +1,6 @@
 import { DynamicDataTable } from '@langleyfoxall/react-dynamic-data-table'
-import React, { useState } from 'react'
-import styles from './styles/ScheduleNew.module.css'
+import React, { useEffect, useState } from 'react'
+import styles from './styles/ScheduleTNA.module.css'
 import { TagsInput } from "react-tag-input-component";
 
 function ScheduleTna() {
@@ -28,13 +28,87 @@ function ScheduleTna() {
     //             + secs;
 
     // console.log(time)
+    const [details, setDetails] = useState([])
+    const [polling, setPolling] = useState([])
 
+    const [perc, setPerc] = useState("")
+    const [count, setCount] = useState("")
+    const [percNew, setPercNew] = useState("")
+    const [countNew, setCountNew] = useState("")
+    const poll = 10
+    
+    
+    const checkPerc = () => {
+        // alert(perc)
+        setCountNew(perc*100)
+
+    }
+    useEffect(() => {
+		checkPerc();
+	}, [perc, count])
+
+	async function getList() {
+
+		try {
+			const response = await fetch(
+				`${process.env.REACT_APP_API_SERVER}/warehouse/listWarehouses`,
+				{
+					method: "POST",
+					credentials: "include",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+                    }),
+				})
+
+			const data = await response.json();
+			console.log(data);
+			setDetails(data["data"])
+			console.log(data["data"], "data")
+		} catch (error) {
+			console.log(error)
+		}
+
+	}
+	async function getPoll() {
+
+		try {
+			const response = await fetch(
+				`${process.env.REACT_APP_API_SERVER}/unit/countPolling`,
+				{
+					method: "POST",
+					credentials: "include",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({
+                    }),
+				})
+
+			const data = await response.json();
+			console.log(data);
+			setPolling(data["data"])
+			console.log(data["data"], "data")
+		} catch (error) {
+			console.log(error)
+		}
+
+	}
+
+    useEffect(() => {
+		getList();
+        getPoll();
+	}, [])
+    useEffect(() => {
+		console.log(details)
+	}, [details])
     
     async function postTna() {
 
         try {
             const response = await fetch(
-                `${process.env.REACT_APP_API_SERVER}/unit/tna_schedule`,
+                `${process.env.REACT_APP_API_SERVER}/unit/trainingAwarnessSchedule`,
                 {
                     method: "POST",
                     headers: {
@@ -42,11 +116,15 @@ function ScheduleTna() {
                     },
                     credentials: 'same-origin',
                     body: JSON.stringify({
-                        // Severity: document.getElementById("formSeverity").value.slice(-1),
-                            StrongRoom: document.getElementById("1").value,
-                            NumAwarenessUnit: document.getElementById("2").value,
-                            UnitType: document.getElementById("3").value,
-                            tempUsers: tags
+                        sourceStrongRoom: document.getElementById("1").value,
+                        destinationStrongRoom: document.getElementById("2").value,
+                        awarnessUnits: document.getElementById("3").value,
+                        personHandedOverToName: document.getElementById("4").value,
+                        personHandedOverToMobNo: document.getElementById("5").value,
+                        personHandedOverToDesignation: document.getElementById("6").value,
+                        startDate: document.getElementById("7").value,
+                        endDate: document.getElementById("8").value,
+                        tempUsers: tags
                     }),
                 }
             );
@@ -102,88 +180,184 @@ function ScheduleTna() {
         <div className={styles.Schedule_container}>
             <div className={styles.Schedule_header}>
                 <h4>
-                Schedule TnA
+                Schedule Training and Awareness
                 </h4> 
             </div>
             <div class={styles.parent}>
 
                 <div class={styles.div1}>
-                    <p> Strong Room</p>
-                    <input  
-                    class={styles.input}
-                    type="text"
-                    id="1"
-                    className="selectBox"
-                    placeholder='Enter Warehouse ID'
-                    ></input>
-
-                </div>
-
-                <div class={styles.div2}> 
-                <p> Num Awareness Unit</p>
-                <input  
-                    class={styles.input}
-                    type="number"
-                    id="2"
-                    className="selectBox"
-                    placeholder='Enter Number'
-                    ></input>
-                </div>
-
-                <div class={styles.div3}> 
-                <p> Unit Type</p>
+                    <p>Source Strong Room</p>
                     <select
                         //   required={!isTemporary}
                         required
                         name=""
-                        id="3"
+                        id="1"
                         className=" selectBox"
                     //   onChange={(e) => setRoleFunc(e.target.value)}
                     >
                         <option value="" disabled selected>
-                            Select Unit Type
+                            Select Source Strong Room
                         </option>
-                        <option value="CU">
-                            CU
-                        </option>
-                        <option value="BU">
-                            BU
-                        </option>
-                        <option value="VT">
-                            VT
-                        </option>
-                        <option value="SC">
-                            SC
-                        </option>
+                            {details.map(item => (
+                                        <option value={item.warehouseid}>{item.warehouseid}</option>
+                            )) }
+                    </select>
 
+                </div>
 
+                <div class={styles.div3}> 
+                <p>Destination Strong Room</p>
+                    <select
+                        //   required={!isTemporary}
+                        required
+                        name=""
+                        id="2"
+                        className=" selectBox"
+                    //   onChange={(e) => setRoleFunc(e.target.value)}
+                    >
+                        <option value="" disabled selected>
+                        Select Destination Strong Room
+                        </option>
+                        {details.map(item => (
+                                        <option value={item.warehouseid}>{item.warehouseid}</option>
+                            )) }
                     </select>
                 
                 </div>
 
-                {/* <div class={styles.div4}> 
-                <p> Timestamp</p>
-                <input  
-                    class={styles.dateInput}
-                    type="date"
-                    // id="formLevel"
-                    className=" selectBox"
+                <div class={styles.div2}>
+                <p> Number of Polling Stations:</p>
+                    <input  
+                    class={styles.input}
+                    type="number"
+                    disabled= {true}
+                    // id="3"
+                    className="selectBox"
+                    placeholder='Fetching Number of Polling Stations'
                     ></input>
+
+                </div>
+
+                
+                <div class={styles.div4}>
+                    <h5>Awareness Units:</h5>
+                </div>
+
+                
+                <div class={styles.div5}>
+                    <input  
+                    class={styles.input}
+                    type="text"
+                    id="x"
+                    className="selectBox"
+                    value={percNew}
+                    placeholder='Awareness Units in Percentage'
+                    onChange={(e) => setPerc(e.target.value)}
+                    ></input>
+                    <h5 className='pl-2 pt-2 flex items-center' >(%)</h5>
+                </div>
+
+                
+                <div class={styles.div6}>
+                    
+                    <input  
+                    class={styles.input}
+                    type="text"
+                    id="3"
+                    className="selectBox"
+                    value={countNew}
+                    placeholder='Number of Awareness Units'
+                    onChange={(e) => setCount(e.target.value)}
+                    ></input>
+                    <h5 className='pl-2 pt-2 flex items-center' >(Count)</h5>
+                </div>
+
+                
+                <div class={styles.div10}>
+                    <h4 className='pt-12'> Person Handed over to: </h4>
+
+                </div>
+
+                
+                <div class={styles.div13}>
+                    <p>Name</p>
+                    <input  
+                    class={styles.input}
+                    type="text"
+                    id="4"
+                    className="selectBox"
+                    placeholder='Enter Name'
+                    ></input>
+
+                </div>
+
+                
+                <div class={styles.div14}>
+                    <p>Mobile Number</p>
+                    <input  
+                    class={styles.input}
+                    type="number"
+                    id="5"
+                    className="selectBox"
+                    placeholder='Enter Mobile Number'
+                    ></input>
+
+                </div>
+
+                
+                <div class={styles.div15}>
+                    <p>Designation</p>
+                    <input  
+                    class={styles.input}
+                    type="text"
+                    id="6"
+                    className="selectBox"
+                    placeholder='Enter Designation'
+                    ></input>
+
+                </div>
+
+                
+                <div class={styles.div16}>
+                <p>Start Date</p>
+                    <input  
+                        class={styles.dateInput}
+                        type="date"
+                        id="7"
+                        className=" selectBox"
+                    ></input>
+
+
+                </div>
+
+                
+                <div class={styles.div18}>
+                <p>End Date</p>
+                        <input  
+                            class={styles.dateInput}
+                            type="date"
+                            id="8"
+                            className=" selectBox"
+                        ></input>
+
+                </div>
+
+                
+                {/* <div class={styles.div19}>
+                    <h5> Temporary Users:</h5>
                 </div> */}
-
-                <div class={styles.div5Tna}> 
-                <p> Add Temporary Users</p>
-                    <TagsInput
-
-                    // style={{ width: '100%' }}
-                    className='li_noti hide-scroll-bar tagInput p-2'
+                <div class={styles.div17}>
+                    <p>Temporary Users</p>
+                
+                <TagsInput
+                    className='li_noti hide-scroll-bar tagInput'
                     value={tags}
                     id="formTags"
                     onChange={setTags}
                     placeHolder="SSPPAAARRR, SSPPAAARRR"
                     />
+                
                 </div>
-
                 
             </div>
             

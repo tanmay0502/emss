@@ -160,7 +160,7 @@ function Routed(props) {
 		if (location.pathname === '/session/unitmanagement/schedule_tna_list' || location.pathname === '/session/unitmanagement/tna_scheduling' || location.pathname.startsWith('/session/unitmanagement/edit_tna')) {
 			return (<>
 				<UnitManagementIcon />
-				<span>TnA Scheduling</span>
+				<span>Training and Awareness Scheduling</span>
 			</>);
 		}
 		

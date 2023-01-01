@@ -8,8 +8,10 @@ import { AiOutlineSortAscending, AiOutlineSortDescending } from "react-icons/ai"
 import { ReactComponent as SearchInputElement } from '../../assets/searchInputIcon.svg';
 import { ReactComponent as ChevronDown } from '../../assets/ChevronDown.svg';
 // import { ReactComponent as Edit } from '../../assets/editBtn.svg';
-export default function ScheduleList() {
 
+
+export default function ScheduleList() {
+    let post = sessionStorage.getItem("sessionToken").substring(8);
     const navigate = useNavigate()
     const [sortOrder, setSortOrder] = useState("asc");
     const [sortBy, setSortBy] = useState("None");
@@ -22,12 +24,11 @@ export default function ScheduleList() {
             const response = await fetch(
                 `${process.env.REACT_APP_API_SERVER}/unit/listTNA`,
                 {
-                    method: "GET",
+                    method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
                     credentials: 'same-origin',
-                    mode: "cors"
                 }
             );
             const data = await response.json();
@@ -43,8 +44,6 @@ export default function ScheduleList() {
     
     useEffect(() => {
         getTnaList();
-        // s(elections);
-        
     }, []);
 
     {
@@ -54,9 +53,8 @@ export default function ScheduleList() {
     function makeTnaList(props){
         try{
 
-        
         let eList = []
-        for( const i in props){
+        for(const i in props){
             console.log("i " + i + "data: " + props[i])
             // var start ='';
             // var end = '';
@@ -68,11 +66,11 @@ export default function ScheduleList() {
            
 
             const row = {
-                'Strong Room': props[i]['strongroom'],
-                'Num Awareness Unit': props[i]['numawarenessunit'],
-                "Unit Type": props[i]['unittype'],
-                "Timestamp": props[i]['madeon'].slice(0,10),
-                "ID":props[i]['tnaid']
+                'Source Strong Room': props[i]['sourcestrongroom'],
+                'Destination Strong Room': props[i]['destinationstrongroom'],
+                "Number of Awareness Unit": props[i]['awarnessunits'],
+                "Handler": props[i]['personhandedovertoname'],
+                "Training and Awareness Period (Start - End Date)": props[i]['startdate'] + " to " + props[i]['enddate'] 
             }  
             console.log({row})
             eList.push(row);
@@ -90,6 +88,7 @@ export default function ScheduleList() {
             makeTnaList(tnaList);
         }
     }, [tnaList])
+
     const sortMapping = {
         "None": null,
         "Strong Room": "Strong Room",
@@ -143,14 +142,17 @@ export default function ScheduleList() {
     return (
         <div className={`${styles.myWrapper1}`} style={{ position: "relative", height: "100%" }}>
             {isDetail == 0 ? <div className='MainHeader pd-5 ' style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between", "alignItems": "center" }}>
-                <h4 className='text-white'>Scheduled TnA List</h4>
+                <h4 className='text-white'>Scheduled Training and Awareness List</h4>
 
                 <div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center" }}>
+                    {post === "DEO" ? 
                     <button className='createRequestBtn' onClick={() => {
                         window.location.pathname = "/session/unitmanagement/tna_scheduling";
                     }}>
-                        Schedule Tna
+                        Schedule Training and Awareness
                     </button>
+                    : <div className="text-white pr-2"> Only DEOs Can Schedule </div>   
+                }
 
                     <div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center", background: "#F9FBFF", borderRadius: "10px", padding: "7.5px 15px 7.5px 0", fontSize: "0.8em" }}>
                         <SearchInputElement style={{ margin: "0 7.5px", width: "20px" }} />
@@ -183,7 +185,7 @@ export default function ScheduleList() {
             <div class={styles.table}>
             
             <DynamicDataTable 
-                rows={tna}
+                rows={tna && tna}
                 buttons={[]} 
                 fieldsToExclude={["ID"]}
                 onClick={(event, row) => {

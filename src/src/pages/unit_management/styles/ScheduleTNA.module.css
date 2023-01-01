@@ -1,0 +1,165 @@
+.Schedule_container {
+    /* height: 50%; */
+    width: 100%;
+    max-height: 100%;
+    border-radius: 25px;
+    background: #ffffff;
+    box-shadow: 0px 10px 60px rgba(226, 236, 249, 0.5);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-bottom: 25px;
+    /* box-shadow: 200px ; */
+    box-shadow: 0px 8px 45px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .Schedule_header {
+    height: 10vh;
+    background: linear-gradient(180deg, #84587c 0%, #ba8bb1 100%);
+    border-radius: 25px 25px 0 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5vh;
+    width: 100%;
+  }
+  .Schedule_header h4 {
+    margin-bottom: 0 !important;
+    color: white !important;
+  }
+  .submitBtn {
+    margin-top: 30px;
+    background-color: #f56a3f;
+    color: white;
+  }
+  .editBtn{
+    display: flex;
+    margin-left: 0%;
+    margin-bottom:15px;
+    background-color: #F56A3F;
+    color: white
+  }
+  
+  ::-webkit-datetime-edit {
+    padding: 1em;
+  }
+  ::-webkit-inner-spin-button {
+    display: none;
+  }
+  ::-webkit-calendar-picker-indicator {
+    margin-right: 1px;
+    cursor: pointer;
+    color: orange;
+    padding-right: 20px;
+    /* width: 100%; */
+  }
+  .parent input[type="number"],input[type="text"] {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 12.5px 10px;
+    border-radius: var(--border-radius);
+    border: 2px solid #84587c;
+    font-family: "Nunito Sans";
+    outline: none;
+  }
+  .parent input[type="date"] {
+    box-sizing: border-box;
+    width: 100%;
+    /* padding: 12.5px 10px; */
+    border-radius: var(--border-radius);
+    border: 2px solid #84587c;
+    font-family: "Nunito Sans";
+    outline: none;
+  }
+  .div5Tna {
+    grid-area: 2 / 2 / 3 / 4;
+    margin: 2% 7.5%;
+  }
+  .parent {
+    margin: 1.5% 0%;
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows:repeat(1, 0.8fr) 0.6fr 0fr repeat(2, 0.8fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    }
+
+    .parent div {
+        margin: 1.3% 15%;
+    }
+    .parent p {
+        font-size: 16px;
+        display: flex;
+        padding-bottom: 10px;
+      }
+      
+    .div1 { 
+        grid-area: 1 / 1 / 2 / 2; 
+        
+    }
+    .div2 { grid-area: 1 / 2 / 2 / 3; }
+    .div3 { grid-area: 1 / 3 / 2 / 4; }
+
+    .div4 { 
+        display: flex;
+        align-items: center;
+        grid-area: 2 / 1 / 3 / 2; 
+    }
+
+    .div5 { display: flex; grid-area: 2 / 2 / 3 / 3; }
+    .div6 { display: flex; grid-area: 2 / 3 / 3 / 4; }
+    .div7 { 
+        grid-area: 3 / 1 / 4 / 2;
+        display: flex;
+        align-items: center;
+     }
+    .div8 { 
+        display: flex;
+        grid-area: 3 / 2 / 4 / 3;
+     }
+    .div9 { 
+        display: flex;
+        grid-area: 3 / 3 / 4 / 4; }
+
+    .div10 { 
+        grid-area: 4 / 1 / 5 / 2;
+        display: flex;
+    }
+    .div11 { grid-area: 4 / 2 / 5 / 3; }
+    .div12 { grid-area: 4 / 3 / 5 / 4; }
+    .div13 { grid-area: 5 / 1 / 6 / 2; }
+    .div14 { grid-area: 5 / 2 / 6 / 3; }
+    .div15 { grid-area: 5 / 3 / 6 / 4; }
+    .div16 { grid-area: 6 / 1 / 7 / 2; }
+    .div17 { grid-area: 6 / 2 / 7 / 3; }
+    .div18 { grid-area: 6 / 3 / 7 / 4; }
+    .div19 { 
+        grid-area: 7 / 1 / 8 / 2; 
+        display: flex;
+        justify-content: end;
+        align-items: center;
+
+    }
+    .div20 { 
+        /* display: flex; */
+        grid-area: 7 / 2 / 8 / 4;
+     }
+    .div21 { grid-area: 7 / 3 / 8 / 4; }
+  
+    input[type="date"]{
+        box-sizing: border-box;
+        width: 100%;
+        /* padding: 12.5px 10px; */
+        border-radius: var(--border-radius);
+        border: 2px solid #84587C;
+        font-family: 'Nunito Sans';
+        outline: none; 
+      }
+      .rti--container{
+        width: 100%;
+        margin: 0px !important; 
+      }

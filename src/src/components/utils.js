@@ -1,7 +1,13 @@
-export const formatRealm = (data, role = "", stCode = "", dtCode = "", ac = "") => {
+export const formatRealm = (
+  data,
+  role = "",
+  stCode = "",
+  dtCode = "",
+  ac = ""
+) => {
   if (!role && !stCode && !dtCode && !ac) {
     let roles = [];
-    let temp = {}
+    let temp = {};
     for (let i = 0; i < data.length; i++) {
       const e = data[i];
       temp[e[3][0]] = e[3][1];
@@ -9,13 +15,13 @@ export const formatRealm = (data, role = "", stCode = "", dtCode = "", ac = "") 
     Object.keys(temp).map((val) => {
       roles.push({
         roleCode: val,
-        roleName: temp[val]
-      })
-    })
+        roleName: temp[val],
+      });
+    });
     return roles;
   } else if (role && !stCode && !dtCode && !ac) {
     let states = [];
-    let temp = {}
+    let temp = {};
     for (let i = 0; i < data.length; i++) {
       const e = data[i];
       if (e[3][0] === role) {
@@ -25,13 +31,13 @@ export const formatRealm = (data, role = "", stCode = "", dtCode = "", ac = "") 
     Object.keys(temp).map((val) => {
       states.push({
         stCode: val,
-        stName: temp[val]
-      })
-    })
+        stName: temp[val],
+      });
+    });
     return states;
   } else if (role && stCode && !dtCode && !ac) {
     let districts = [];
-    let temp = {}
+    let temp = {};
     for (let i = 0; i < data.length; i++) {
       const e = data[i];
       if (e[3][0] === role && e[0][0] === stCode) {
@@ -41,13 +47,13 @@ export const formatRealm = (data, role = "", stCode = "", dtCode = "", ac = "") 
     Object.keys(temp).map((val) => {
       districts.push({
         dtCode: val,
-        dtName: temp[val]
-      })
-    })
+        dtName: temp[val],
+      });
+    });
     return districts;
   } else if (role && stCode && dtCode && !ac) {
     let acs = [];
-    let temp = {}
+    let temp = {};
     for (let i = 0; i < data.length; i++) {
       const e = data[i];
       if (e[3][0] === role && e[0][0] === stCode && e[1][0] === dtCode) {
@@ -57,18 +63,24 @@ export const formatRealm = (data, role = "", stCode = "", dtCode = "", ac = "") 
     Object.keys(temp).map((val) => {
       acs.push({
         acCode: val,
-        acName: temp[val]
-      })
-    })
+        acName: temp[val],
+      });
+    });
     return acs;
   }
   return [];
-}
+};
 
-export const formatRealm2 = (data, stCode = "", dtCode = "", ac = "", role = "") => {
+export const formatRealm2 = (
+  data,
+  stCode = "",
+  dtCode = "",
+  ac = "",
+  role = ""
+) => {
   if (!stCode && !dtCode && !ac && !role) {
     let states = [];
-    let temp = {}
+    let temp = {};
     for (let i = 0; i < data.length; i++) {
       const e = data[i];
       temp[e[0][0]] = e[0][1];
@@ -76,13 +88,13 @@ export const formatRealm2 = (data, stCode = "", dtCode = "", ac = "", role = "")
     Object.keys(temp).map((val) => {
       states.push({
         stCode: val,
-        stName: temp[val]
-      })
-    })
+        stName: temp[val],
+      });
+    });
     return states;
   } else if (stCode && !dtCode && !ac & !role) {
     let districts = [];
-    let temp = {}
+    let temp = {};
     for (let i = 0; i < data.length; i++) {
       const e = data[i];
       if (e[0][0] === stCode) {
@@ -92,13 +104,13 @@ export const formatRealm2 = (data, stCode = "", dtCode = "", ac = "", role = "")
     Object.keys(temp).map((val) => {
       districts.push({
         dtCode: val,
-        dtName: temp[val]
-      })
-    })
+        dtName: temp[val],
+      });
+    });
     return districts;
   } else if (stCode && dtCode && !ac && !role) {
     let acs = [];
-    let temp = {}
+    let temp = {};
     for (let i = 0; i < data.length; i++) {
       const e = data[i];
       if (e[0][0] === stCode && e[1][0] === dtCode) {
@@ -108,13 +120,13 @@ export const formatRealm2 = (data, stCode = "", dtCode = "", ac = "", role = "")
     Object.keys(temp).map((val) => {
       acs.push({
         acCode: val,
-        acName: temp[val]
-      })
-    })
+        acName: temp[val],
+      });
+    });
     return acs;
   } else if (stCode && dtCode && ac && !role) {
     let roles = [];
-    let temp = {}
+    let temp = {};
     for (let i = 0; i < data.length; i++) {
       const e = data[i];
       if (e[0][0] === stCode && e[1][0] === dtCode && e[2][0] === ac) {
@@ -124,13 +136,13 @@ export const formatRealm2 = (data, stCode = "", dtCode = "", ac = "", role = "")
     Object.keys(temp).map((val) => {
       roles.push({
         roleCode: val,
-        roleName: temp[val]
-      })
-    })
+        roleName: temp[val],
+      });
+    });
     return roles;
   }
   return [];
-}
+};
 
 export const getRealm = async (module_name, operation) => {
   try {
@@ -141,22 +153,79 @@ export const getRealm = async (module_name, operation) => {
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: 'include',
+        credentials: "include",
         body: JSON.stringify({
-          "module_name": module_name,
-          "operation": operation
-        })
-
+          module_name: module_name,
+          operation: operation,
+        }),
       }
     );
     const data2 = await response.json();
+    console.log("/user/getRealm", data2)
     if (data2.data) {
       return data2.data;
     } else {
-      return []
+      return [];
     }
   } catch (err) {
     console.log(err);
   }
   return [];
-}
+};
+
+export const getTotalCounts = async (oprnd) => {
+  try {
+    const response = await fetch(
+      process.env.REACT_APP_API_SERVER + "/unit/total_counts",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+          oprnd: oprnd,
+        }),
+      }
+    );
+    let data2 = await response.json();
+    console.log("oprnd", oprnd);
+    console.log("/unit/total_counts", data2);
+    // return data;
+    if (data2) {
+      return data2;
+    } else {
+      return {};
+    }
+  } catch (err) {
+    console.log(err);
+    return {}
+  }
+};
+
+export const totalStatusAvailable = [
+  "Available for Use",
+  "Block",
+  "Counting",
+  "Counting Defective",
+  "Commissioning Defective",
+  "Destroyed",
+  "Dispersal Defective",
+  "EP Marked",
+  "FLC Assembly",
+  "FLC NOT OK",
+  "FLC OK",
+  "In Election",
+  "In EP Period",
+  "In Poll",
+  "In Reserve",
+  "In Transit",
+  "Manufacturer New Stock",
+  "Manufacturer Repaired Stock",
+  "Manufacturer Under-repair",
+  "Polled Defective",
+  "Under FIR",
+  "Under Loan",
+  "Under T&A",
+  "Unpolled Defective",
+]
