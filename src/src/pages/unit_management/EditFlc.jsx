@@ -90,7 +90,7 @@ function FlcEdit() {
 
 
 
-    const [edit, setEdit] = useState(false)
+    const [edit, setEdit] = useState('')
     const [flc, setFlc] = useState([]);
     const [district, setdistrict] = useState('');
     const [flcsupervisoremailid, setflcsupervisoremailid] = useState('');
@@ -746,7 +746,6 @@ function FlcEdit() {
                     Edit Flc Schedule
                 </button>
             }
-
             <form id="form">
                 <div className={scheduleStyles.Schedule_container}>
                     <div className={scheduleStyles.Schedule_header}>
@@ -1058,6 +1057,7 @@ function FlcEdit() {
                             <p> FLC Assembly Warehouse</p>
                             <select
                                 onChange={(e) => { setFLC_Assembly_Warehouse(e.target.value) }}
+                                disabled={edit === 'CEO' || edit === 'DEO' ? false : true}
                             >
                                 {" "}
                                 <option hidden>Select</option>
@@ -1073,6 +1073,7 @@ function FlcEdit() {
                             <p> District Strong Room</p>
                             <select
                                 onChange={(e) => { setDistrict_Strong_Room(e.target.value) }}
+                                disabled={edit === 'CEO' || edit === 'DEO' ? false : true}
                             >
                                 {" "}
                                 <option hidden>Select</option>
@@ -1088,6 +1089,7 @@ function FlcEdit() {
                             <p> Defective Warehouse</p>
                             <select
                                 onChange={(e) => { setDefective_Warehouse(e.target.value) }}
+                                disabled={edit === 'CEO' || edit === 'DEO' ? false : true}
                             >
                                 {" "}
                                 <option hidden>Select</option>
