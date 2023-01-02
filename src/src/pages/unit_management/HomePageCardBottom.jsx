@@ -33,11 +33,12 @@ export default function HomePageCardBottom() {
 
 		const data = await response.json();
 
-		if (response.status === 200) {
+		if (Role == "CEO") {
 			navigate(`/session/unitmanagement/first_randomisation_scheduling`);
-		} else if (Role == "DEO") {
-			navigate(`/session/unitmanagement/firstrandomization`);
 		}
+		// else if (Role == "DEO") {
+		// 	navigate(`/session/unitmanagement/firstrandomization`);
+		// }
 	};
 
 	const Second_Randomisation_call = (e) => {
@@ -75,11 +76,11 @@ export default function HomePageCardBottom() {
 				},
 				credentials: "include",
 				body: JSON.stringify({
-					
-						"stateFilter": "TS",
-						"distFilter": "BDK",
-						"schedsFilter": "flc"
-					  
+
+					"stateFilter": "TS",
+					"distFilter": "BDK",
+					"schedsFilter": "flc"
+
 				}),
 			});
 			const data = await response.json();
@@ -87,7 +88,7 @@ export default function HomePageCardBottom() {
 			console.log(data);
 
 			if (data["data"].length !== 0) {
-				setflc({...data["data"]});
+				setflc({ ...data["data"] });
 				console.log(flc);
 			}
 		} catch (err) {

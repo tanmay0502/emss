@@ -44,7 +44,7 @@ function WarehouseList() {
 						"Content-Type": "application/json",
 					},
 					body: JSON.stringify({
-                    }),
+					}),
 				})
 
 			const data = await response.json();
@@ -353,7 +353,7 @@ function WarehouseList() {
 					<li className='tableHeader'>Inactive</li>
 					<li className='tableHeader'>Total</li>
 					{/* Private Count */}
-					<li className='tableHeader'>Private</li>
+					<li className='tableHeader' style={{ textAlign: 'left' }}><span><FaCircle className='PrivateWarehouse' /></span>Private</li>
 					<li>
 						{tableData.filter((elem) => {
 							return elem["Details"] && elem["Details"]["type"] === 'P' && elem["Details"]["status"] === "A"
@@ -370,7 +370,7 @@ function WarehouseList() {
 						}).length.toLocaleString()}
 					</li>
 					{/* Govt. Count */}
-					<li className='tableHeader'>Govt.</li>
+					<li className='tableHeader' style={{ textAlign: 'left' }}> <span><FaCircle className='PermaWarehouse' /></span>Govt.</li>
 					<li>
 						{tableData.filter((elem) => {
 							return elem["Details"] && elem["Details"]["type"] === 'G' && elem["Details"]["status"] === "A"
@@ -387,7 +387,7 @@ function WarehouseList() {
 						}).length.toLocaleString()}
 					</li>
 					{/* Own Count */}
-					<li className='tableHeader'>Dedicated</li>
+					<li className='tableHeader' style={{ textAlign: 'left' }}> <span><FaCircle className='TempWarehouse' /></span>Dedicated</li>
 					<li>
 						{tableData.filter((elem) => {
 							return elem["Details"] && elem["Details"]["type"] === 'O' && elem["Details"]["status"] === "A"

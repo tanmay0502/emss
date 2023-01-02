@@ -13,7 +13,7 @@ import { ReactComponent as OptionsIndicator } from "../../assets/Options_Indicat
 import { ReactComponent as SearchInputElement } from "../../assets/searchInputIcon.svg";
 import { ReactComponent as ChevronDown } from "../../assets/ChevronDown.svg";
 import { expD } from "./Homepage";
-import {formatRealm2, getRealm } from "../../components/utils"
+import { formatRealm2, getRealm } from "../../components/utils"
 
 const userID = sessionStorage.getItem("sessionToken");
 const baseUrl = `${process.env.REACT_APP_API_SERVER}/unit`;
@@ -21,6 +21,14 @@ const baseUrl = `${process.env.REACT_APP_API_SERVER}/unit`;
 
 
 export default function FirstRandomization() {
+
+    const FirstRandomization_ID = () => {
+        const URL = window.location.href;
+        const arr = URL.split("/");
+        const param = arr[arr.length - 1];
+        const arr1 = param.split("=");
+        return arr1[0];
+    }
 
     const initialVisibilityValues = {
         firstRandomisationForm: true,
@@ -92,9 +100,9 @@ const FirstRandomisationForm = ({ isVisible = true }) => {
             ...assemblyData.slice(0, id + 1),
             {
                 ac_no: "",
-		ac_name:"",
-		ps_no:"",
-		unit_no:"",
+                ac_name: "",
+                ps_no: "",
+                unit_no: "",
                 cu_count: "120",
                 bu_count: "120",
                 vt_count: "120",
@@ -116,16 +124,16 @@ const FirstRandomisationForm = ({ isVisible = true }) => {
         if (confirmation === true) {
             setIsSubmitted(false);
             const units_requirement = [];
-	    for (let i=0;i<assemblyData.length;i++){
-		units_requirement.push(
-		    {
-			ac_no:assemblyData[i].ac_no,
-			cu_count: assemblyData[i].cu_count?Math.ceil(parseInt(assemblyData[i].cu_count)*parseInt(assemblyData[i].ps_no)/100) : 0,
-			bu_count: assemblyData[i].bu_count ? Math.ceil(parseInt(assemblyData[i].bu_count)*parseInt(assemblyData[i].ps_no)*parseInt(assemblyData[i].unit_no)/100) : 0,
-			vt_count: assemblyData[i].vt_count ? Math.ceil(parseInt(assemblyData[i].vt_count)*parseInt(assemblyData[i].ps_no)/100) : 0,
-		    }
-		);
-                    
+            for (let i = 0; i < assemblyData.length; i++) {
+                units_requirement.push(
+                    {
+                        ac_no: assemblyData[i].ac_no,
+                        cu_count: assemblyData[i].cu_count ? Math.ceil(parseInt(assemblyData[i].cu_count) * parseInt(assemblyData[i].ps_no) / 100) : 0,
+                        bu_count: assemblyData[i].bu_count ? Math.ceil(parseInt(assemblyData[i].bu_count) * parseInt(assemblyData[i].ps_no) * parseInt(assemblyData[i].unit_no) / 100) : 0,
+                        vt_count: assemblyData[i].vt_count ? Math.ceil(parseInt(assemblyData[i].vt_count) * parseInt(assemblyData[i].ps_no) / 100) : 0,
+                    }
+                );
+
             }
             try {
                 const response = await fetch(`${baseUrl}/first_randomization`, {
@@ -155,7 +163,7 @@ const FirstRandomisationForm = ({ isVisible = true }) => {
                 alert(`Error occured: ${err}`);
             }
         }
-	else { }
+        else { }
         // setIsSubmitted(false);
 
         // const units_requirement = assemblyData
@@ -242,41 +250,41 @@ const FirstRandomisationForm = ({ isVisible = true }) => {
                         console.log(data["data"])
                         setDistrictName(data["data"]["dist_name"])
                         setDistrictID(data["data"]["dist_code"])
-                            let tempdata = []
-			                let templist = []
+                        let tempdata = []
+                        let templist = []
                         console.log(data['data']['acs'])
                         console.log(Object.keys(data['data']['acs']));
                         const keys = Object.keys(data['data']['acs'])
-                            for(let i=0;i<Object.keys(data['data']['acs']).length;i++){
-                                console.log(data['data']['acs'][keys[i]])
-                                // if(data['data']['acs'][keys[i]] === "110" || data['data']['acs'][keys[i]] === "119"){
+                        for (let i = 0; i < Object.keys(data['data']['acs']).length; i++) {
+                            console.log(data['data']['acs'][keys[i]])
+                            // if(data['data']['acs'][keys[i]] === "110" || data['data']['acs'][keys[i]] === "119"){
 
-                                
-                                tempdata.push(
-                                    {
-                                        ac_name: data['data']['acs'][keys[i]]['ac_name'],
-                                        ac_no: data['data']['acs'][keys[i]]['ac_no'],
-                                        ps_no: data['data']['acs'][keys[i]]['ps_no'],
-                                        unit_no: data['data']['acs'][keys[i]]['bu_no'],
-                                        cu_count: "120",
-                                        bu_count: "120",
-                                        vt_count: "120"
-                                    }
-                                );
-                                templist.push(
-                                    {
-                                        ac_name: data['data']['acs'][keys[i]]['ac_name'],
-                                        ac_no: data['data']['acs'][keys[i]]['ac_no']
-                                    }
-                                );
+
+                            tempdata.push(
+                                {
+                                    ac_name: data['data']['acs'][keys[i]]['ac_name'],
+                                    ac_no: data['data']['acs'][keys[i]]['ac_no'],
+                                    ps_no: data['data']['acs'][keys[i]]['ps_no'],
+                                    unit_no: data['data']['acs'][keys[i]]['bu_no'],
+                                    cu_count: "120",
+                                    bu_count: "120",
+                                    vt_count: "120"
+                                }
+                            );
+                            templist.push(
+                                {
+                                    ac_name: data['data']['acs'][keys[i]]['ac_name'],
+                                    ac_no: data['data']['acs'][keys[i]]['ac_no']
+                                }
+                            );
                             // }
-                            }
-			setAssemblyList(templist);
+                        }
+                        setAssemblyList(templist);
                         setAssemblyData(tempdata);
                         setAssemblyPSData(tempdata);
                         console.log(tempdata)
                     }
-		} catch (err) {
+                } catch (err) {
                     alert(`Error occured: ${err}`);
                 }
             })();
@@ -396,7 +404,7 @@ const FirstRandomisationForm = ({ isVisible = true }) => {
                                                 <input
                                                     className="h-10 w-1/2 rounded-md border-0 bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
                                                     name="unit_no"
-                                                    value={data.ps_no*data.unit_no}
+                                                    value={data.ps_no * data.unit_no}
                                                     onChange={handleInputChange}
                                                     data-id={id}
                                                 />
@@ -541,7 +549,7 @@ const RandomisationOutput = ({
             const response = await fetch(
                 `${baseUrl}/generate-first-randomization-report/`,
                 {
-		    method: "POST",
+                    method: "POST",
                     credentials: "include",
                 }
             );

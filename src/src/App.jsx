@@ -138,7 +138,7 @@ function App() {
 							element={<Second_Randomisation_Scheduling />}
 						/>
 						<Route
-							path="/session/unitmanagement/firstrandomization"
+							path="/session/unitmanagement/firstrandomization/:id"
 							element={<FirstRandomization />}
 						/>
 						<Route
