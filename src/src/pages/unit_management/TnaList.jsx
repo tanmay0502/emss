@@ -11,6 +11,7 @@ import { ReactComponent as ChevronDown } from '../../assets/ChevronDown.svg';
 
 
 export default function ScheduleList() {
+    const [isLoading,setIsLoading] = useState(0);
     let post = sessionStorage.getItem("sessionToken").substring(8);
     const navigate = useNavigate()
     const [sortOrder, setSortOrder] = useState("asc");
@@ -20,7 +21,9 @@ export default function ScheduleList() {
     const [tnaList, setTnaList] = useState([]);
     const [tna, setTna] = useState([]);
     async function getTnaList() {
+        setIsLoading(1);
         try {
+            
             const response = await fetch(
                 `${process.env.REACT_APP_API_SERVER}/unit/listTNA`,
                 {
@@ -32,18 +35,22 @@ export default function ScheduleList() {
                 }
             );
             const data = await response.json();
-            console.log(data['data'])
-            if(data["data"]!=404){
-                setTnaList(data);       
-            }
-            
+            console.log(data)
+                setTnaList(data);                 
+            setIsLoading(0);
         } catch (err) {
             console.log({err});
         }
     }
     
     useEffect(() => {
-        getTnaList();
+        setIsLoading(1);
+        let timer1 = setTimeout(() => getTnaList(), 1 * 1000);
+
+        return () => {
+          clearTimeout(timer1);
+        };
+        
     }, []);
 
     {

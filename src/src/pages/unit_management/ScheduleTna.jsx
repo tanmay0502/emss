@@ -35,12 +35,20 @@ function ScheduleTna() {
     const [count, setCount] = useState("")
     const [percNew, setPercNew] = useState("")
     const [countNew, setCountNew] = useState("")
-    const poll = 10
+    const [percDef, setPercDef] = useState("")
+    const [countDef, setCountDef] = useState("")
+    const poll = 200
     
-    
+
+
+
     const checkPerc = () => {
         // alert(perc)
-        setCountNew(perc*100)
+        setPercDef(10)
+        setCountDef(poll/10)
+
+        // setPercNew((countNew/poll)*100)
+        // setCountNew(poll/10)
 
     }
     useEffect(() => {
@@ -231,6 +239,7 @@ function ScheduleTna() {
                     class={styles.input}
                     type="number"
                     disabled= {true}
+                    value={poll}
                     // id="3"
                     className="selectBox"
                     placeholder='Fetching Number of Polling Stations'
@@ -250,7 +259,7 @@ function ScheduleTna() {
                     type="text"
                     id="x"
                     className="selectBox"
-                    value={percNew}
+                    value={percNew === "" ? percDef : percNew}
                     placeholder='Awareness Units in Percentage'
                     onChange={(e) => setPerc(e.target.value)}
                     ></input>
@@ -265,7 +274,7 @@ function ScheduleTna() {
                     type="text"
                     id="3"
                     className="selectBox"
-                    value={countNew}
+                    value={countNew === "" ? countDef : countNew}
                     placeholder='Number of Awareness Units'
                     onChange={(e) => setCount(e.target.value)}
                     ></input>
