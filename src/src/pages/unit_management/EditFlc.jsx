@@ -5,6 +5,7 @@ import { getBase64 } from "../../assets/helper/FileHelpers";
 function FlcEdit() {
 
 
+
     const [modalIsOpen_Preparedness_Certificate, setIsOpen_Preparedness_Certificate] = React.useState(false);
     const [modalIsOpen_flcreport, setIsOpen_flc_report] = React.useState(false);
     const [modalIsOpen_Acknowledgment, setIsOpen_Acknowledgment] = React.useState(false);
@@ -295,6 +296,9 @@ function FlcEdit() {
                     setmanufacturerdistrictcoordinatormobno((data['data'][0]['manufacturerdistrictcoordinatormobno'] !== null) ? data['data'][0]['manufacturerdistrictcoordinatormobno'] : '')
                     setmanufacturerdistrictcoordinatorname((data['data'][0]['manufacturerdistrictcoordinatorname'] !== null) ? data['data'][0]['manufacturerdistrictcoordinatorname'] : '')
                     setnumengineers((data['data'][0]['numengineers'] !== null) ? data['data'][0]['numengineers'] : 0)
+                    setFLC_Assembly_Warehouse((data['data'][0]['flcassemblywarehouse']))
+                    setDistrict_Strong_Room((data['data'][0]['districtstrongroom']))
+                    setDefective_Warehouse((data['data'][0]['defectivewarehouse']))
 
 
                     if (data['data'][0]['startdate']) {
@@ -531,7 +535,10 @@ function FlcEdit() {
                         "numEngineers": numengineers,
                         "startDate": startdate ? startdate.slice(8) + '-' + startdate.slice(5, 7) + "-" + startdate.slice(0, 4) : '',
                         "endDate": enddate ? enddate.slice(8) + '-' + enddate.slice(5, 7) + "-" + enddate.slice(0, 4) : '',
-                        "flcVenue": flcvenue
+                        "flcVenue": flcvenue,
+                        "flcassemblywarehouse":FLC_Assembly_Warehouse? FLC_Assembly_Warehouse:'',
+                        "districtstrongroom": District_Strong_Room ? District_Strong_Room : '',
+                        "defectivewarehouse": Defective_Warehouse ? Defective_Warehouse : '',
                     }),
                 }
             );
@@ -581,7 +588,10 @@ function FlcEdit() {
                         "flcSupervisorMobNo": flcsupervisormobno,
                         "flcSupervisorEmailId": flcsupervisoremailid,
                         "numEngineers": numengineers,
-                        "flcVenue": flcvenue
+                        "flcVenue": flcvenue,
+                        "flcassemblywarehouse":FLC_Assembly_Warehouse ,
+                        "districtstrongroom": District_Strong_Room,
+                        "defectivewarehouse": Defective_Warehouse
                     }),
                 }
             );
@@ -1062,7 +1072,7 @@ function FlcEdit() {
                                 disabled={edit === 'CEO' || edit === 'DEO' ? false : true}
                             >
                                 {" "}
-                                <option hidden>Select</option>
+                                <option hidden>{FLC_Assembly_Warehouse}</option>
                                 {ListFLC_Assembly_Warehouse &&
                                     ListFLC_Assembly_Warehouse.map((val, ind) => {
                                         return (<>
@@ -1078,7 +1088,7 @@ function FlcEdit() {
                                 disabled={edit === 'CEO' || edit === 'DEO' ? false : true}
                             >
                                 {" "}
-                                <option hidden>Select</option>
+                                <option hidden>{District_Strong_Room}</option>
                                 {ListDistrict_Strong_Room &&
                                     ListDistrict_Strong_Room.map((val, ind) => {
                                         return (<>
@@ -1094,7 +1104,7 @@ function FlcEdit() {
                                 disabled={edit === 'CEO' || edit === 'DEO' ? false : true}
                             >
                                 {" "}
-                                <option hidden>Select</option>
+                                <option hidden>{Defective_Warehouse}</option>
                                 {ListDefective_Warehouse &&
                                     ListDefective_Warehouse.map((val, ind) => {
                                         return (<>

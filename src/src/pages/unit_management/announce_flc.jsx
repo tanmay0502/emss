@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import styles from './styles/announce_flc.module.css'
 import { AiOutlineClose } from "react-icons/ai"
 import Modal from 'react-modal';
-
+import { formatRealm2 } from '../../components/utils';
 
 function Announce_Flc() {
 
@@ -105,8 +105,11 @@ function Announce_Flc() {
             )
 
             const data = await response.json();
+            console.log(data)
             if (response.status === 200) {
-                setDistrict(data['data']);
+                let distList = formatRealm2(data['data'],window.sessionStorage.getItem("sessionToken").substring(0, 2),"","","");
+                console.log("adi",distList)
+                setDistrict(distList);
             }
         } catch (error) {
             console.log(error)
@@ -473,7 +476,7 @@ function Announce_Flc() {
                                 <option hidden>Select District</option>
                                 {District.length > 0 && District.map((val, ind) => (
                                     <option value={ind} >
-                                        {`${val[1][0]} (${val[1][1]})`}
+                                        {`${val.dtCode} (${val.dtName})`}
                                     </option>
                                 ))
                                 }
