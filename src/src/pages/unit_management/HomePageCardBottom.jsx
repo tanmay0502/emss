@@ -10,7 +10,7 @@ import TnASchdulingCard from "./TnASchdulingCard";
 import PhysVerificationCard from "./PhysVerificationCard";
 import { useNavigate } from "react-router-dom";
 
-export default function HomePageCardBottom() {
+export default function HomePageCardBottom({state, dist}) {
 	const navigate = useNavigate()
 	const User_ID = sessionStorage.getItem("sessionToken");
 	const Role = User_ID.substring(8);
@@ -68,39 +68,6 @@ export default function HomePageCardBottom() {
 		}
 	};
 
-	const [flc, setflc] = useState([]);
-	async function getFLC() {
-		try {
-			const response = await fetch(`${process.env.REACT_APP_API_SERVER}/unit/dashboard_cards`, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				credentials: "include",
-				body: JSON.stringify({
-
-					"stateFilter": "TS",
-					"distFilter": "BDK",
-					"schedsFilter": "flc"
-
-				}),
-			});
-			const data = await response.json();
-			console.log("mydata");
-			console.log(data);
-
-			if (data["data"].length !== 0) {
-				setflc({ ...data["data"] });
-				console.log(flc);
-			}
-		} catch (err) {
-			console.log({ err });
-		}
-	}
-
-	useEffect(() => {
-		getFLC();
-	}, []);
 
 	return (
 		<div className={styles.myCardSampleHover}>
@@ -137,15 +104,15 @@ export default function HomePageCardBottom() {
 			</div>
 			{(() => {
 				if (cardVal === "FLC Scheduling") {
-					return <FLCSchedulecard data={flc["flc"]} />;
+					return <FLCSchedulecard state={state} dist={dist}/>;
 				} else if (cardVal === "1st Randomisation Scheduling") {
-					return <FirstRandcard />;
+					return <FirstRandcard state={state} dist={dist} />;
 				} else if (cardVal === "2nd Randomisation Scheduling") {
-					return <SecondRandCard />;
+					return <SecondRandCard state={state} dist={dist}/>;
 				} else if (cardVal === "Election Scheduling") {
 					return <ElecSchedulingCard />;
 				} else if (cardVal === "TnA Scheduling") {
-					return <TnASchdulingCard />;
+					return <TnASchdulingCard state={state} dist={dist}/>;
 				} else if (cardVal === "Physical Verification") {
 					return <PhysVerificationCard />;
 				}
