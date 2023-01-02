@@ -1,4 +1,4 @@
-import React, { ReactComponent } from 'react'
+import React from 'react'
 import { useState, useEffect } from "react";
 import './css/WarehouseList.css'
 import WarehouseDetail from './WarehouseDetail';
@@ -14,15 +14,16 @@ import DynamicDataTable from "@langleyfoxall/react-dynamic-data-table";
 import ToggleButton from '../../components/ToggleButton';
 import Tippy from '@tippyjs/react';
 import 'tippy.js/dist/tippy.css';
-import UserImageTest from '../../assets/UserImageTest.png'
-import { CSVLink, CSVDownload } from 'react-csv';
+// import UserImageTest from '../../assets/UserImageTest.png'
+// import { CSVLink, CSVDownload } from 'react-csv';
+import { CSVLink } from 'react-csv';
 
 
 // React Icons
 import { FaCircle } from 'react-icons/fa'
-import { FaKey } from 'react-icons/fa'
+// import { FaKey } from 'react-icons/fa'
 
-const uri = process.env.REACT_APP_API_SERVER;
+// const uri = process.env.REACT_APP_API_SERVER;
 
 function WarehouseList() {
 	const navigate = useNavigate();
@@ -96,7 +97,7 @@ function WarehouseList() {
 		"Type": "Warehouse Type",
 	}
 
-	const [id, setID] = useState("")
+	// const [id, setID] = useState("")
 	// useEffect(() => {
 	// 	console.log(tableData[0]['warehouseid'])
 	// }, [tableData])
@@ -131,7 +132,7 @@ function WarehouseList() {
 			}
 		}).map((val) => {
 			return {
-				"Warehouse ID": val["type"] == 'P' ?
+				"Warehouse ID": val["type"] === 'P' ?
 					<Fragment><span style={{ display: 'flex', justifyContent: 'left', alignItems: 'center', marginLeft: "12%" }}>
 						<FaCircle size='0.8em' className='PermaWarehouse' />
 						{/* <Tippy content={ val['incharge'] === null ? "Incharge: Not Available" :"Incharge: " +  val['incharge'] }> */}
@@ -157,9 +158,75 @@ function WarehouseList() {
 				"status": val["status"],
 				"Status": <ToggleButton warehouseID={val["warehouseid"]} checked={val["status"] === 'A'} onToggle={(e) => {
 					if (val["status"] === "A") {
+						const DectivateWarehouse = async (myId) => {
+							if (window.confirm(`Are you sure you want to Deactivate Warehouse ${myId}? `)) {
+								try {
+					
+									const response = await fetch(
+										`${process.env.REACT_APP_API_SERVER}/warehouse/deactivateWarehouse/`,
+										{
+											method: "POST",
+											headers: {
+												"Content-Type": "application/json",
+											},
+											credentials: "include",
+											body: JSON.stringify({
+												"warehouseID": myId
+											})
+										}
+									)
+					
+									const status = response;
+									if (status.status === 200) {
+										alert("Warehouse Deactivated Successfully");
+										// window.location.href = '/session/warehousemanagement';
+										getList();
+									}
+									else {
+										alert("Deactivation Failed");
+									}
+					
+								} catch (error) {
+									console.log(error);
+								}
+							}
+						}
 						DectivateWarehouse(val["warehouseid"])
 					}
 					else {
+						const ActivateWarehouse = async (myId) => {
+							if (window.confirm(`Are you sure you want to Activate Warehouse ${myId}? `)) {
+								try {
+					
+									const response = await fetch(
+										`${process.env.REACT_APP_API_SERVER}/warehouse/activateWarehouse`,
+										{
+											method: "POST",
+											headers: {
+												"Content-Type": "application/json",
+											},
+											credentials: "include",
+											body: JSON.stringify({
+												"warehouseID": myId
+											})
+										}
+									)
+					
+									const status = response;
+									if (status.status === 200) {
+										alert("Warehouse Activated Successfully");
+										// navigate('/session/warehousemanagement');
+										getList();
+									}
+									else {
+										alert("Activation Failed");
+									}
+					
+								} catch (error) {
+									console.log(error);
+								}
+							}
+						}
 						ActivateWarehouse(val["warehouseid"])
 					}
 					console.log(val["warehouseid"])
@@ -167,7 +234,7 @@ function WarehouseList() {
 			}
 		})
 
-		let finalData = []
+		// let finalData = []
 		let tmpWare = [], tmpStrong = []
 
 		tmpWare = data.filter((val) => {
@@ -184,17 +251,22 @@ function WarehouseList() {
 
 		data = tmpWare.concat(...tmpStrong)
 
-
+		const sortMapping = {
+			"None": null,
+			"Warehouse ID": "warehouseid",
+			"Status": "status",
+			"Type": "Warehouse Type",
+		}
 		if (sortMapping[sortBy] !== null) {
 			data.sort(function (a, b) {
 				if (sortMapping[sortBy] !== null) {
 					// console.log(data)
-
+					
 					return (a[sortMapping[sortBy]].toString()).localeCompare(b[sortMapping[sortBy]].toString())
 				}
 				else return 0;
 			});
-			if (sortOrder === 'desc') {
+			if (sortOrder === 'desc') {	
 				data.reverse();
 			}
 		}
@@ -207,73 +279,7 @@ function WarehouseList() {
 	}, [Details, warehouseMapping, tableFilter, sortBy, sortOrder])
 
 
-	const ActivateWarehouse = async (myId) => {
-		if (window.confirm(`Are you sure you want to Activate Warehouse ${myId}? `)) {
-			try {
 
-				const response = await fetch(
-					`${process.env.REACT_APP_API_SERVER}/warehouse/activateWarehouse`,
-					{
-						method: "POST",
-						headers: {
-							"Content-Type": "application/json",
-						},
-						credentials: "include",
-						body: JSON.stringify({
-							"warehouseID": myId
-						})
-					}
-				)
-
-				const status = response;
-				if (status.status == 200) {
-					alert("Warehouse Activated Successfully");
-					// navigate('/session/warehousemanagement');
-					getList();
-				}
-				else {
-					alert("Activation Failed");
-				}
-
-			} catch (error) {
-				console.log(error);
-			}
-		}
-	}
-
-	const DectivateWarehouse = async (myId) => {
-		if (window.confirm(`Are you sure you want to Deactivate Warehouse ${myId}? `)) {
-			try {
-
-				const response = await fetch(
-					`${process.env.REACT_APP_API_SERVER}/warehouse/deactivateWarehouse/`,
-					{
-						method: "POST",
-						headers: {
-							"Content-Type": "application/json",
-						},
-						credentials: "include",
-						body: JSON.stringify({
-							"warehouseID": myId
-						})
-					}
-				)
-
-				const status = response;
-				if (status.status == 200) {
-					alert("Warehouse Deactivated Successfully");
-					// window.location.href = '/session/warehousemanagement';
-					getList();
-				}
-				else {
-					alert("Deactivation Failed");
-				}
-
-			} catch (error) {
-				console.log(error);
-			}
-		}
-	}
 	// console.log(users);
 	return (
 		<div className="warehouse-list-grid">
@@ -285,7 +291,7 @@ function WarehouseList() {
 					<div className='label d-flex d-flex-center'><span><FaCircle className='TempWarehouse' /></span> Dedicated Building</div>
 
 				</div>
-				{isDetail == 0 ? <div style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between" }}>
+				{isDetail === 0 ? <div style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between" }}>
 					<h4>Associated Warehouses</h4>
 					<div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center" }}>
 						<button className='createUserBtn' onClick={() => {
@@ -318,7 +324,7 @@ function WarehouseList() {
 
 				</div> : <></>}
 				{/* {console.log(tableData)} */}
-				{isDetail == 0 ? <DynamicDataTable className="warehouses-table"
+				{isDetail === 0 ? <DynamicDataTable className="warehouses-table"
 
 					rows={tableData}
 					fieldsToExclude={["Details", "Edit", "BuildingType", "room_type", "warehouseid", "status"]}

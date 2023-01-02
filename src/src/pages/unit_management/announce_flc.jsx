@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { DynamicDataTable } from '@langleyfoxall/react-dynamic-data-table'
+// import { DynamicDataTable } from '@langleyfoxall/react-dynamic-data-table'
 import styles from './styles/announce_flc.module.css'
 import { AiOutlineClose } from "react-icons/ai"
 import Modal from 'react-modal';
@@ -12,7 +12,8 @@ function Announce_Flc() {
     var mins = currentdate.getMinutes();
     var secs = currentdate.getSeconds();
     const [District, setDistrict] = useState([])
-    const [details, setDetails] = useState([])
+    // const [details, setDetails] = useState([])
+    const [setDetails] = useState([])
     const [listElections, setListElections] = useState([])
     const [electionid, setelectionid] = useState(-1)
     const [manufacture, setmanufacture] = useState('')
@@ -29,7 +30,7 @@ function Announce_Flc() {
     const [selectedDistrictssf, setSelectedDistrictssf] = useState([])
     const [preparednessStatistics, setpreparednessStatistics] = useState([])
     const [photoFileData, setPhotoFileData] = useState("")
-    const [flcid, setflcid] = useState(-1)
+    // const [flcid, setflcid] = useState(-1)
     const [modalIsOpen, setIsOpen] = React.useState(false);
 
     function openModal() {
@@ -57,13 +58,13 @@ function Announce_Flc() {
         },
     };
 
-    const issueId = () => {
-        const URL = window.location.href;
-        const arr = URL.split("/");
-        const param = arr[arr.length - 1];
-        const arr1 = param.split("=");
-        return arr1[0];
-    }
+    // const issueId = () => {
+    //     const URL = window.location.href;
+    //     const arr = URL.split("/");
+    //     const param = arr[arr.length - 1];
+    //     const arr1 = param.split("=");
+    //     return arr1[0];
+    // }
 
 
     if (hrs < 10) {
@@ -77,33 +78,13 @@ function Announce_Flc() {
         secs = "0" + secs;
     }
 
-    var time = hrs + ":"
-        + mins + ":"
-        + secs;
+    // var time = hrs + ":"
+    //     + mins + ":"
+    //     + secs;
 
 
-    async function getList() {
+    // async function getList() {
 
-        try {
-            const response = await fetch(
-                `${process.env.REACT_APP_API_SERVER}/warehouse/listWarehouses`,
-                {
-                    method: "POST",
-                    credentials: "include",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                    }),
-                })
-
-            const data = await response.json();
-            setDetails(data["data"])
-
-        } catch (error) {
-            console.log(error)
-        }
-    }
 
     async function getDistrictsList() {
 
@@ -124,7 +105,7 @@ function Announce_Flc() {
             )
 
             const data = await response.json();
-            if (response.status == 200) {
+            if (response.status === 200) {
                 setDistrict(data['data']);
             }
         } catch (error) {
@@ -158,14 +139,35 @@ function Announce_Flc() {
 
     useEffect(
         () => {
+            async function getList() {
+
+                try {
+                    const response = await fetch(
+                        `${process.env.REACT_APP_API_SERVER}/warehouse/listWarehouses`,
+                        {
+                            method: "POST",
+                            credentials: "include",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                            }),
+                        })
+        
+                    const data = await response.json();
+                    setDetails(data["data"])
+        
+                } catch (error) {
+                    console.log(error)
+                }
+            }
             let timer1 = setTimeout(() => getList(), 1 * 1000);
 
             return () => {
                 clearTimeout(timer1);
             };
         },
-
-        []
+        [setDetails]
     );
 
 
@@ -194,7 +196,7 @@ function Announce_Flc() {
 
     async function getpreparednessStatistics(id_election) {
 
-        if (id_election != -1) {
+        if (id_election !== -1) {
             try {
                 const response = await fetch(
                     `${process.env.REACT_APP_API_SERVER}/unit/preparednessStatistics`,
@@ -215,7 +217,7 @@ function Announce_Flc() {
 
                 const data = await response.json();
 
-                if (response.status == 200) {
+                if (response.status === 200) {
                     setpreparednessStatistics(data['data'])
                 }
 
@@ -261,7 +263,7 @@ function Announce_Flc() {
 
             const data = await response.json();
 
-            if (response.status == 200) {
+            if (response.status === 200) {
                 setPhotoFileData(data['data'])
                 openModal()
             }
@@ -299,19 +301,15 @@ function Announce_Flc() {
 
 
         // set Type of election 
-        if (listElections[e.target.value]['electiontype'] == 'GA') {
-            setType_of_election('General Assembly')
-            setType_of_election_sf('GA')
-        }
-        else if (listElections[e.target.value]['electiontype'] == 'GP') {
+        if (listElections[e.target.value]['electiontype'] === 'GP') {
             setType_of_election('General Parliamentary')
             setType_of_election_sf('GP')
         }
-        else if (listElections[e.target.value]['electiontype'] == 'BA') {
+        else if (listElections[e.target.value]['electiontype'] === 'BA') {
             setType_of_election('By-Poll Assembly')
             setType_of_election_sf('BA')
         }
-        else if (listElections[e.target.value]['electiontype'] == 'BP') {
+        else if (listElections[e.target.value]['electiontype'] === 'BP') {
             setType_of_election('By-Poll Parliamentary')
             setType_of_election_sf('BP')
         }
@@ -319,40 +317,40 @@ function Announce_Flc() {
 
         // set month of election 
 
-        if (month == "01") {
+        if (month === "01") {
             setTentative_month_of_election("January")
         }
-        else if (month == "02") {
+        else if (month === "02") {
             setTentative_month_of_election("February")
         }
-        else if (month == "03") {
+        else if (month === "03") {
             setTentative_month_of_election("March")
         }
-        else if (month == "04") {
+        else if (month === "04") {
             setTentative_month_of_election("April")
         }
-        else if (month == "05") {
+        else if (month === "05") {
             setTentative_month_of_election("May")
         }
-        else if (month == "06") {
+        else if (month === "06") {
             setTentative_month_of_election("June")
         }
-        else if (month == "07") {
+        else if (month === "07") {
             setTentative_month_of_election("July")
         }
-        else if (month == "08") {
+        else if (month === "08") {
             setTentative_month_of_election("August")
         }
-        else if (month == "09") {
+        else if (month === "09") {
             setTentative_month_of_election("September")
         }
-        else if (month == "10") {
+        else if (month === "10") {
             setTentative_month_of_election("October")
         }
-        else if (month == "11") {
+        else if (month === "11") {
             setTentative_month_of_election("November")
         }
-        else if (month == "12") {
+        else if (month === "12") {
             setTentative_month_of_election("December")
         }
 
@@ -361,7 +359,7 @@ function Announce_Flc() {
 
     async function AnnounceFLC() {
 
-        if (electionid != -1) {
+        if (electionid !== -1) {
 
             try {
                 const response = await fetch(
@@ -458,7 +456,7 @@ function Announce_Flc() {
                             <p>Districts</p>
                             <select
                                 required
-                                disabled={electionid != -1 ? false : true}
+                                disabled={electionid !== -1 ? false : true}
                                 value={selectedDistricts}
                                 name=""
                                 id="1"
@@ -491,7 +489,7 @@ function Announce_Flc() {
                             <div className=''>
                                 <p> Manufacturer</p>
                                 <select
-                                    disabled={electionid != -1 ? false : true}
+                                    disabled={electionid !== -1 ? false : true}
                                     required
                                     name=""
                                     id="1"
@@ -512,7 +510,7 @@ function Announce_Flc() {
                                 <p> Manufacturer State Coordinator Name</p>
                                 <input
                                     required
-                                    disabled={electionid != -1 ? false : true}
+                                    disabled={electionid !== -1 ? false : true}
                                     class={styles.input}
                                     type="text"
                                     id="2"
@@ -528,7 +526,7 @@ function Announce_Flc() {
                                 <p>Manufacturer State Coordinator Email ID</p>
                                 <input
                                     required
-                                    disabled={electionid != -1 ? false : true}
+                                    disabled={electionid !== -1 ? false : true}
                                     class={styles.input}
                                     type="email"
                                     id="3"
@@ -544,7 +542,7 @@ function Announce_Flc() {
                                 <p>Manufacturer State Coordinator Mobile No.</p>
                                 <input
                                     required
-                                    disabled={electionid != -1 ? false : true}
+                                    disabled={electionid !== -1 ? false : true}
                                     class={styles.input}
                                     type="number"
                                     id="4"
@@ -559,7 +557,7 @@ function Announce_Flc() {
                             <div className=''>
                                 <p>Start date</p>
                                 <input
-                                    disabled={electionid != -1 ? false : true}
+                                    disabled={electionid !== -1 ? false : true}
                                     class={styles.dateInput}
                                     type="date"
                                     id="5"
@@ -575,7 +573,7 @@ function Announce_Flc() {
                                 <p>End date</p>
                                 <input
                                     required
-                                    disabled={electionid != -1 ? false : true}
+                                    disabled={electionid !== -1 ? false : true}
                                     class={styles.dateInput}
                                     type="date"
                                     id="6"
@@ -640,24 +638,24 @@ function Announce_Flc() {
                     <div className='mt-10'>
                         <div className='grid grid-cols-2'>
                             <h4 className='m-auto'>Total Districts</h4>
-                            <div>{((Object.keys(preparednessStatistics).length != 0) ? preparednessStatistics['notReadyDistricts'].length : 0) + ((Object.keys(preparednessStatistics).length != 0) ? Object.keys(preparednessStatistics['readyDistricts']).length : 0)}</div>
+                            <div>{((Object.keys(preparednessStatistics).length !== 0) ? preparednessStatistics['notReadyDistricts'].length : 0) + ((Object.keys(preparednessStatistics).length !== 0) ? Object.keys(preparednessStatistics['readyDistricts']).length : 0)}</div>
                         </div>
                         <div className='grid grid-cols-2 mt-10 gap-30'>
                             <h5>No. of Districts ready</h5>
-                            <div>{((Object.keys(preparednessStatistics).length != 0) ? Object.keys(preparednessStatistics['readyDistricts']).length : 0)}</div>
+                            <div>{((Object.keys(preparednessStatistics).length !== 0) ? Object.keys(preparednessStatistics['readyDistricts']).length : 0)}</div>
                             <h5>No. of Districts pending</h5>
-                            <div>{((Object.keys(preparednessStatistics).length != 0) ? preparednessStatistics['notReadyDistricts'].length : 0)}</div>
+                            <div>{((Object.keys(preparednessStatistics).length !== 0) ? preparednessStatistics['notReadyDistricts'].length : 0)}</div>
                         </div>
                         <div className='mt-5 grid gap-2'>
                             <h5>Districts :</h5>
-                            {Object.keys(preparednessStatistics).length != 0 && Object.keys(preparednessStatistics['readyDistricts']).length != 0 && Object.keys(preparednessStatistics['readyDistricts']).map((val) => {
+                            {Object.keys(preparednessStatistics).length !== 0 && Object.keys(preparednessStatistics['readyDistricts']).length !== 0 && Object.keys(preparednessStatistics['readyDistricts']).map((val) => {
                                 return <div className='grid grid-cols-2 text-left'>
                                     <div>{val}</div>
                                     <div className='cursor-pointer text-black' style={{ fontSize: '19px' }} onClick={() => { getpreparednesscertificate(preparednessStatistics['readyDistricts'][val]) }} > <u> View</u></div>
                                 </div>
                             })}
 
-                            {Object.keys(preparednessStatistics).length != 0 && preparednessStatistics['notReadyDistricts'].length != 0 && preparednessStatistics['notReadyDistricts'].map((val) => {
+                            {Object.keys(preparednessStatistics).length !== 0 && preparednessStatistics['notReadyDistricts'].length !== 0 && preparednessStatistics['notReadyDistricts'].map((val) => {
                                 return <div className='grid grid-cols-2 text-left'>
                                     <div>{val}</div>
                                     <div className='cursor-pointer text-black' > Not Uploaded</div>

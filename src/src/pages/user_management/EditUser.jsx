@@ -1,21 +1,23 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom'
+// import { useNavigate } from 'react-router-dom'
 import { AiOutlineArrowLeft } from 'react-icons/ai'
 import { ReactComponent as Createuser } from "../../assets/CreateUser.svg";
 import "./styles/createuser.css";
-import styles from "./styles/createuser.css";
-import 'antd/dist/antd.css'
-import { Switch } from "antd"
-import {getKeyByValue} from '../../assets/helper/ObjectHelpers.js'
+// import styles from "./styles/createuser.css";
+import 'antd/dist/antd.min.css'
+// import { Switch } from "antd"
+// import {getKeyByValue} from '../../assets/helper/ObjectHelpers.js'
 import { getBase64 } from "../../assets/helper/FileHelpers";
 
 function EditUser(props) {
 
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
 
-  const [isTemporary, setIsTemporary] = useState(false);
-  const [userID, setUserID] = useState("");
+  // const [isTemporary, setIsTemporary] = useState(false);
+  const [isTemporary] = useState(false);
+  // const [userID, setUserID] = useState("");
+  const [userID] = useState("");
   const [photoFileName, setPhotoFileName] = useState("")
   const [photoFileData, setPhotoFileData] = useState("")
   const [details, setDetails] = useState({})
@@ -28,7 +30,7 @@ function EditUser(props) {
     return () => {
       
     }
-  }, [])
+  }, [props.userdata])
 
   const onFormSubmit = async (e) => {
     e.preventDefault();
@@ -36,24 +38,24 @@ function EditUser(props) {
     modUser(); // Perform API Call here
   };
 
-  const toggler = () => {
+  // const toggler = () => {
 
-    isTemporary ? setIsTemporary(false) : setIsTemporary(true);
-    document.getElementById("formUserEmail").value = '';
-    document.getElementById("formUserName").value = '';
-    document.getElementById("formUserMobileNumber").value = '';
-    document.getElementById("formUserAddress").value = '';
-    document.getElementById("formUserAltNumber1").value = '';
-    document.getElementById("formUserAltNumber2").value = '';
-    document.getElementById("formUserImage").value = '';
-    document.getElementById("input_Roles").value = '';
-    document.getElementById("input_PC").value = '';
-    document.getElementById("input_AC").value = '';
+  //   isTemporary ? setIsTemporary(false) : setIsTemporary(true);
+  //   document.getElementById("formUserEmail").value = '';
+  //   document.getElementById("formUserName").value = '';
+  //   document.getElementById("formUserMobileNumber").value = '';
+  //   document.getElementById("formUserAddress").value = '';
+  //   document.getElementById("formUserAltNumber1").value = '';
+  //   document.getElementById("formUserAltNumber2").value = '';
+  //   document.getElementById("formUserImage").value = '';
+  //   document.getElementById("input_Roles").value = '';
+  //   document.getElementById("input_PC").value = '';
+  //   document.getElementById("input_AC").value = '';
 
-  }
+  // }
 
   function ValidateEmail(mail) {
-    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)) {
+    if (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(mail)) {
       return (true)
     }
     alert("You have entered an invalid email address!")
@@ -73,59 +75,59 @@ function EditUser(props) {
     }
   }
 
-  async function getUser() {
-		try {
-      const response = await fetch(
-				`${process.env.REACT_APP_API_SERVER}/user/listAllUsers`,
-				{
-					method: "GET",
-					headers: {
-						"Content-Type": "application/json",
-						// 'Authorization': 'Bearer ' + access_token,
-					},
-          credentials: 'same-origin',
-					mode: "cors"
-				}
-			);
-		  const tmp = await response.json();
-      const data2 = tmp[0]
-		  // console.log(data2);
-		  if( data2["data"] ){
-			  // console.log("helo")
-				for(let i=0;i<data2["data"].length;i++){
-					// console.log(data2["data"][i][0])
-					if(data2["data"][i][0]==window.location.pathname.split("=")[1]){
-						setDetails(data2["data"][i]);
-            console.log(data2["data"][i])
-						break;
-					}
-				}
-		  }
-		} catch (err) {
-		  console.log(err);
-		}
-	  }
+  // async function getUser() {
+	// 	try {
+  //     const response = await fetch(
+	// 			`${process.env.REACT_APP_API_SERVER}/user/listAllUsers`,
+	// 			{
+	// 				method: "GET",
+	// 				headers: {
+	// 					"Content-Type": "application/json",
+	// 					// 'Authorization': 'Bearer ' + access_token,
+	// 				},
+  //         credentials: 'same-origin',
+	// 				mode: "cors"
+	// 			}
+	// 		);
+	// 	  const tmp = await response.json();
+  //     const data2 = tmp[0]
+	// 	  // console.log(data2);
+	// 	  if( data2["data"] ){
+	// 		  // console.log("helo")
+	// 			for(let i=0;i<data2["data"].length;i++){
+	// 				// console.log(data2["data"][i][0])
+	// 				if(data2["data"][i][0]==window.location.pathname.split("=")[1]){
+	// 					setDetails(data2["data"][i]);
+  //           console.log(data2["data"][i])
+	// 					break;
+	// 				}
+	// 			}
+	// 	  }
+	// 	} catch (err) {
+	// 	  console.log(err);
+	// 	}
+	//   }
 
   async function modUser() {
 
     // console.log("HELLOOOOOOo")
     console.log(userID)
-    if (ValidateEmail(document.getElementById("formUserEmail").value) == false) {
+    if (ValidateEmail(document.getElementById("formUserEmail").value) === false) {
       document.getElementById("formUserEmail").value = ''
       return;
     }
-    else if (validate_number(document.getElementById("formUserMobileNumber").value) == false) {
+    else if (validate_number(document.getElementById("formUserMobileNumber").value) === false) {
       document.getElementById("formUserMobileNumber").value = ''
       return;
     }
-    if (document.getElementById("formUserAltNumber1").value != '') {
+    if (document.getElementById("formUserAltNumber1").value !== '') {
       if (!validate_number(document.getElementById("formUserAltNumber1").value)) {
         document.getElementById("formUserAltNumber1").value = ''
         return;
       }
 
     }
-    if (document.getElementById("formUserAltNumber2").value != '') {
+    if (document.getElementById("formUserAltNumber2").value !== '') {
       if (!validate_number(document.getElementById("formUserAltNumber2").value)) {
         document.getElementById("formUserAltNumber2").value = ''
         return;
@@ -341,7 +343,7 @@ function EditUser(props) {
               placeholder="Choose Image (Upto 5 MB)"
               accept="image/*"
               onChange={async (e)=>{
-                setPhotoFileName(e.target.value.replace(/^.*[\\\/]/, ''))
+                setPhotoFileName(e.target.value.replace(/^.*[\\/]/, ''))
                 setPhotoFileData(await getBase64(e.target.files[0]))
               }}
             />

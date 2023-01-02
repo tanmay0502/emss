@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import scheduleStyles from './styles/ScheduleFlc.module.css'
-import { ReactComponent as SearchInputElement } from '../../assets/searchInputIcon.svg';
 import Modal from 'react-modal';
 import { getBase64 } from "../../assets/helper/FileHelpers";
 function FlcEdit() {
@@ -9,9 +8,9 @@ function FlcEdit() {
     const [modalIsOpen_Preparedness_Certificate, setIsOpen_Preparedness_Certificate] = React.useState(false);
     const [modalIsOpen_flcreport, setIsOpen_flc_report] = React.useState(false);
     const [modalIsOpen_Acknowledgment, setIsOpen_Acknowledgment] = React.useState(false);
-    const [modalIsOpen_Intimation_Letter, setIsOpen_Intimation_Letter] = React.useState(false);
+    const [modalIsOpen_Intimation_Letter] = React.useState(false);
     const [isenddateopen, setisenddateopen] = React.useState(0);
-    const [isLoading, setIsLoading] = useState(0);
+    const [setIsLoading] = useState(0);
 
 
     function openModal_Preparedness_Certificate() {
@@ -92,15 +91,12 @@ function FlcEdit() {
 
 
     const [edit, setEdit] = useState(false)
-    const [flc, setFlc] = useState([]);
+    const [setFlc] = useState([]);
     const [district, setdistrict] = useState('');
-    const [flcreportuploadedon, setflcreportuploadedon] = useState('');
     const [flcsupervisoremailid, setflcsupervisoremailid] = useState('');
     const [flcsupervisormobno, setflcsupervisormobno] = useState('');
     const [flcsupervisorname, setflcsupervisorname] = useState('');
     const [flcvenue, setflcvenue] = useState('');
-    const [listElections, setListElections] = useState([])
-    const [electionid, setelectionid] = useState(-1)
     const [manufacture, setmanufacture] = useState('')
     const [Manufacturer_State_Coordinator_Name, setManufacturer_State_Coordinator_Name] = useState('')
     const [Manufacturer_State_Coordinator_Email_ID, setManufacturer_State_Coordinator_Email_ID] = useState('')
@@ -116,26 +112,22 @@ function FlcEdit() {
     const [Tentative_month_of_election, setTentative_month_of_election] = useState('')
     const [Type_of_election, setType_of_election] = useState('');
     const [numengineers, setnumengineers] = useState('');
-    const [Type_of_election_sf, setType_of_election_sf] = useState('');
-    const [selectedDistricts, setSelectedDistricts] = useState([])
-    const [selectedDistrictssf, setSelectedDistrictssf] = useState([]);
+    const [setType_of_election_sf] = useState('');
     const User_ID = sessionStorage.getItem("sessionToken");
-    const [photoFileName, setPhotoFileName] = useState("")
     const [photoFileData, setPhotoFileData] = useState("")
     const [flcreport, setflcreport] = useState("")
-    const [flcreportname, setflcreportname] = useState("")
-    const [Acknowledgmentname, setAcknowledgmentname] = useState("")
+    const [setflcreportname] = useState("")
+    const [setAcknowledgmentname] = useState("")
     const [inputflcreport, setinputflcreport] = useState(-1)
     const [Acknowledgment, setAcknowledgment] = useState("")
     const [InputAcknowledgment, setInputAcknowledgment] = useState(-1)
     const [Intimation_Letter, setIntimation_Letter] = useState("")
-    const [Details, setDetails] = React.useState([]);
     const [ListFLC_Assembly_Warehouse, setListFLC_Assembly_Warehouse] = useState([]);
     const [ListDistrict_Strong_Room, setListDistrict_Strong_Room] = useState([]);
     const [ListDefective_Warehouse, setListDefective_Warehouse] = useState([]);
-    const [FLC_Assembly_Warehouse, setFLC_Assembly_Warehouse] = useState('');
-    const [District_Strong_Room, setDistrict_Strong_Room] = useState('');
-    const [Defective_Warehouse, setDefective_Warehouse] = useState('');
+    const [setFLC_Assembly_Warehouse] = useState('');
+    const [setDistrict_Strong_Room] = useState('');
+    const [setDefective_Warehouse] = useState('');
     const Role = User_ID.substring(8)
 
 
@@ -178,7 +170,7 @@ function FlcEdit() {
             };
         },
 
-        []
+        [setIsLoading]
     );
 
 
@@ -220,7 +212,7 @@ function FlcEdit() {
             };
         },
 
-        []
+        [setIsLoading]
     );
     async function getListK() {
 
@@ -257,97 +249,95 @@ function FlcEdit() {
             };
         },
 
-        []
+        [setIsLoading]
     );
 
 
-    async function getFLC() {
-        let id = issueId();
-        try {
-            const response = await fetch(
-                `${process.env.REACT_APP_API_SERVER}/unit/viewFLC`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    credentials: 'include',
-                    body: JSON.stringify(
-                        {
-                            flcId: id
-                        }
-                    )
-                }
-            );
 
-
-            const data = await response.json();
-            if (response.status == 200) {
-                if (data['data'].length) {
-                    setFlc((data['data'] != null) ? data['data'] : [])
-                    setdistrict((data['data'][0]['district'] != null) ? data['data'][0]['district'] : '')
-                    setmanufacture((data['data'][0]['manufacturer'] != null) ? data['data'][0]['manufacturer'] : '')
-                    setTentative_month_of_election((data['data'][0]['tentativemonth'] != null) ? data['data'][0]['tentativemonth'] : '')
-                    setTentative_Year_Of_Election((data['data'][0]['tentativeyear'] != null) ? data['data'][0]['tentativeyear'] : '')
-                    setManufacturer_State_Coordinator_Name((data['data'][0]['manufacturerstatecoordinatorname'] != null) ? data['data'][0]['manufacturerstatecoordinatorname'] : '')
-                    setManufacturer_State_Coordinator_Email_ID((data['data'][0]['manufacturerstatecoordinatoremailid'] != null) ? data['data'][0]['manufacturerstatecoordinatoremailid'] : '')
-                    setManufacturer_State_Coordinator_Mobile_No((data['data'][0]['manufacturerstatecoordinatormobno'] != null) ? data['data'][0]['manufacturerstatecoordinatormobno'] : '')
-                    setflcsupervisoremailid((data['data'][0]['flcsupervisoremailid'] != null) ? data['data'][0]['flcsupervisoremailid'] : '')
-                    setflcsupervisorname((data['data'][0]['flcsupervisorname'] != null) ? data['data'][0]['flcsupervisorname'] : '')
-                    setflcsupervisormobno((data['data'][0]['flcsupervisormobno'] != null) ? data['data'][0]['flcsupervisormobno'] : '')
-                    setflcvenue((data['data'][0]['flcvenue'] != null) ? data['data'][0]['flcvenue'] : '')
-                    setmanufacturerdistrictcoordinatoremailid((data['data'][0]['manufacturerdistrictcoordinatoremailid'] != null) ? data['data'][0]['manufacturerdistrictcoordinatoremailid'] : '')
-                    setmanufacturerdistrictcoordinatormobno((data['data'][0]['manufacturerdistrictcoordinatormobno'] != null) ? data['data'][0]['manufacturerdistrictcoordinatormobno'] : '')
-                    setmanufacturerdistrictcoordinatorname((data['data'][0]['manufacturerdistrictcoordinatorname'] != null) ? data['data'][0]['manufacturerdistrictcoordinatorname'] : '')
-                    setnumengineers((data['data'][0]['numengineers'] != null) ? data['data'][0]['numengineers'] : 0)
-
-
-                    if (data['data'][0]['startdate']) {
-                        let StartDate = data['data'][0]['startdate'].split('T')[0];
-                        setstartdate(StartDate.slice(6) + '-' + StartDate.slice(3, 5) + "-" + StartDate.slice(0, 2))
-                        // setstartdate(data['data'][0]['startdate'])
-                        setstartdateshow(data['data'][0]['startdate'])
-                    }
-                    if (data['data'][0]['enddate']) {
-                        let EndDate = data['data'][0]['enddate'].split('T')[0];
-                        setenddate(EndDate.slice(6) + '-' + EndDate.slice(3, 5) + "-" + EndDate.slice(0, 2))
-                        // setenddate(data['data'][0]['enddate'])
-                        setenddateshow(data['data'][0]['enddate'])
-                    }
-
-                    if (data['data'][0]['electiontype'] == 'GA') {
-                        setType_of_election('General Assembly')
-                        setType_of_election_sf('GA')
-                    }
-                    else if (data['data'][0]['electiontype'] == 'GP') {
-                        setType_of_election('General Parliamentary')
-                        setType_of_election_sf('GP')
-                    }
-                    else if (data['data'][0]['electiontype'] == 'BA') {
-                        setType_of_election('By-poll Assembly')
-                        setType_of_election_sf('BA')
-                    }
-                    else if (data['data'][0]['electiontype'] == 'BP') {
-                        setType_of_election('By-poll Parliamentary')
-                        setType_of_election_sf('BP')
-                    }
-
-                }
-            }
-
-
-
-        } catch (err) {
-            console.log({ err });
-        }
-    }
 
 
     useEffect(
         () => {
 
             setIsLoading(1);
+            async function getFLC() {
+                let id = issueId();
+                try {
+                    const response = await fetch(
+                        `${process.env.REACT_APP_API_SERVER}/unit/viewFLC`,
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            credentials: 'include',
+                            body: JSON.stringify(
+                                {
+                                    flcId: id
+                                }
+                            )
+                        }
+                    );
+        
+        
+                    const data = await response.json();
+                    if (response.status === 200) {
+                        if (data['data'].length) {
+                            setFlc((data['data'] !== null) ? data['data'] : [])
+                            setdistrict((data['data'][0]['district'] !== null) ? data['data'][0]['district'] : '')
+                            setmanufacture((data['data'][0]['manufacturer'] !== null) ? data['data'][0]['manufacturer'] : '')
+                            setTentative_month_of_election((data['data'][0]['tentativemonth'] !== null) ? data['data'][0]['tentativemonth'] : '')
+                            setTentative_Year_Of_Election((data['data'][0]['tentativeyear'] !== null) ? data['data'][0]['tentativeyear'] : '')
+                            setManufacturer_State_Coordinator_Name((data['data'][0]['manufacturerstatecoordinatorname'] !== null) ? data['data'][0]['manufacturerstatecoordinatorname'] : '')
+                            setManufacturer_State_Coordinator_Email_ID((data['data'][0]['manufacturerstatecoordinatoremailid'] !== null) ? data['data'][0]['manufacturerstatecoordinatoremailid'] : '')
+                            setManufacturer_State_Coordinator_Mobile_No((data['data'][0]['manufacturerstatecoordinatormobno'] !== null) ? data['data'][0]['manufacturerstatecoordinatormobno'] : '')
+                            setflcsupervisoremailid((data['data'][0]['flcsupervisoremailid'] !== null) ? data['data'][0]['flcsupervisoremailid'] : '')
+                            setflcsupervisorname((data['data'][0]['flcsupervisorname'] !== null) ? data['data'][0]['flcsupervisorname'] : '')
+                            setflcsupervisormobno((data['data'][0]['flcsupervisormobno'] !== null) ? data['data'][0]['flcsupervisormobno'] : '')
+                            setflcvenue((data['data'][0]['flcvenue'] !== null) ? data['data'][0]['flcvenue'] : '')
+                            setmanufacturerdistrictcoordinatoremailid((data['data'][0]['manufacturerdistrictcoordinatoremailid'] !== null) ? data['data'][0]['manufacturerdistrictcoordinatoremailid'] : '')
+                            setmanufacturerdistrictcoordinatormobno((data['data'][0]['manufacturerdistrictcoordinatormobno'] !== null) ? data['data'][0]['manufacturerdistrictcoordinatormobno'] : '')
+                            setmanufacturerdistrictcoordinatorname((data['data'][0]['manufacturerdistrictcoordinatorname'] !== null) ? data['data'][0]['manufacturerdistrictcoordinatorname'] : '')
+                            setnumengineers((data['data'][0]['numengineers'] !== null) ? data['data'][0]['numengineers'] : 0)
+        
+        
+                            if (data['data'][0]['startdate']) {
+                                let StartDate = data['data'][0]['startdate'].split('T')[0];
+                                setstartdate(StartDate.slice(6) + '-' + StartDate.slice(3, 5) + "-" + StartDate.slice(0, 2))
+                                // setstartdate(data['data'][0]['startdate'])
+                                setstartdateshow(data['data'][0]['startdate'])
+                            }
+                            if (data['data'][0]['enddate']) {
+                                let EndDate = data['data'][0]['enddate'].split('T')[0];
+                                setenddate(EndDate.slice(6) + '-' + EndDate.slice(3, 5) + "-" + EndDate.slice(0, 2))
+                                // setenddate(data['data'][0]['enddate'])
+                                setenddateshow(data['data'][0]['enddate'])
+                            }
+        
+                            if (data['data'][0]['electiontype'] === 'GA') {
+                                setType_of_election('General Assembly')
+                                setType_of_election_sf('GA')
+                            }
+                            else if (data['data'][0]['electiontype'] === 'GP') {
+                                setType_of_election('General Parliamentary')
+                                setType_of_election_sf('GP')
+                            }
+                            else if (data['data'][0]['electiontype'] === 'BA') {
+                                setType_of_election('By-poll Assembly')
+                                setType_of_election_sf('BA')
+                            }
+                            else if (data['data'][0]['electiontype'] === 'BP') {
+                                setType_of_election('By-poll Parliamentary')
+                                setType_of_election_sf('BP')
+                            }
+        
+                        }
+                    }
 
+                } catch (err) {
+                    console.log({ err });
+                }
+            }
             let timer1 = setTimeout(() => getFLC(), 1 * 1000);
 
             return () => {
@@ -355,44 +345,45 @@ function FlcEdit() {
             };
         },
 
-        []
+        [setIsLoading, setFlc, setType_of_election_sf]
     );
 
 
-    async function getpreparednesscertificate() {
-        let id = issueId();
-        try {
-            const response = await fetch(
-                `${process.env.REACT_APP_API_SERVER}/unit/getunitdocument`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    credentials: 'include',
-                    body: JSON.stringify(
-                        {
-                            "fileType": "preparednessCertificate",
-                            "flcID": Number(id)
-                        }
-                    )
-                }
-            );
 
-
-            const data = await response.json();
-            if (response.status == 200) {
-                setPhotoFileData(data['data'])
-            }
-
-        } catch (err) {
-            console.log({ err });
-        }
-    }
 
 
     useEffect(
         () => {
+            async function getpreparednesscertificate() {
+                let id = issueId();
+                try {
+                    const response = await fetch(
+                        `${process.env.REACT_APP_API_SERVER}/unit/getunitdocument`,
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            credentials: 'include',
+                            body: JSON.stringify(
+                                {
+                                    "fileType": "preparednessCertificate",
+                                    "flcID": Number(id)
+                                }
+                            )
+                        }
+                    );
+        
+        
+                    const data = await response.json();
+                    if (response.status === 200) {
+                        setPhotoFileData(data['data'])
+                    }
+        
+                } catch (err) {
+                    console.log({ err });
+                }
+            };
             let timer1 = setTimeout(() => getpreparednesscertificate(), 1 * 1000);
             return () => {
                 clearTimeout(timer1);
@@ -402,42 +393,43 @@ function FlcEdit() {
     );
 
 
-    async function getflcreport() {
-        let id = issueId();
-        try {
-            const response = await fetch(
-                `${process.env.REACT_APP_API_SERVER}/unit/getunitdocument`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    credentials: 'include',
-                    body: JSON.stringify(
-                        {
-                            "fileType": "flcReport",
-                            "flcID": Number(id)
-                        }
-                    )
-                }
-            );
 
-
-            const data = await response.json();
-
-            if (response.status == 200) {
-                setflcreport(data['data'])
-                setinputflcreport(1)
-            }
-
-        } catch (err) {
-            console.log({ err });
-        }
-    }
 
 
     useEffect(
         () => {
+            async function getflcreport() {
+                let id = issueId();
+                try {
+                    const response = await fetch(
+                        `${process.env.REACT_APP_API_SERVER}/unit/getunitdocument`,
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            credentials: 'include',
+                            body: JSON.stringify(
+                                {
+                                    "fileType": "flcReport",
+                                    "flcID": Number(id)
+                                }
+                            )
+                        }
+                    );
+        
+        
+                    const data = await response.json();
+        
+                    if (response.status === 200) {
+                        setflcreport(data['data'])
+                        setinputflcreport(1)
+                    }
+        
+                } catch (err) {
+                    console.log({ err });
+                }
+            }
             let timer1 = setTimeout(() => getflcreport(), 1 * 1000);
             return () => {
                 clearTimeout(timer1);
@@ -447,7 +439,10 @@ function FlcEdit() {
     );
 
 
-    async function getacknowledgement() {
+
+    useEffect(
+        () => {
+                async function getacknowledgement() {
         let id = issueId();
         try {
             const response = await fetch(
@@ -470,7 +465,7 @@ function FlcEdit() {
 
             const data = await response.json();
 
-            if (response.status == 200) {
+            if (response.status === 200) {
                 setAcknowledgment(data['data'])
                 setInputAcknowledgment(1);
             }
@@ -479,10 +474,6 @@ function FlcEdit() {
             console.log({ err });
         }
     }
-
-
-    useEffect(
-        () => {
             let timer1 = setTimeout(() => getacknowledgement(), 1 * 1000);
             return () => {
                 clearTimeout(timer1);
@@ -492,11 +483,6 @@ function FlcEdit() {
     );
 
 
-
-
-    let startD = '';
-    let endD = '';
-    let electionType = '';
 
     var currentdate = new Date();
     var hrs = currentdate.getHours();
@@ -514,11 +500,6 @@ function FlcEdit() {
         secs = "0" + secs;
     }
 
-    var time = hrs + ":"
-        + mins + ":"
-        + secs;
-
-    const flcid = issueId();
 
     async function postFlc() {
 
@@ -602,8 +583,8 @@ function FlcEdit() {
                 }
             );
 
-            const data = await response.json();
-            if (response.status == 200) {
+            // const data = await response.json();
+            if (response.status === 200) {
                 document.getElementById("form").reset();
                 alert("Successful");
                 window.location.pathname = "/session/unitmanagement/flc_list";
@@ -635,10 +616,11 @@ function FlcEdit() {
                 }
             );
 
-            const data = await response.json();
-            if (response.status == 200) {
+            // const data = await response.json()x;
+            if (response.status === 200) {
                 setisenddateopen(0);
             }
+            
         } catch (err) {
             console.log(err);
         }
@@ -651,7 +633,7 @@ function FlcEdit() {
         e.preventDefault();
         setenddate(date)
         setenddateshow(((date) ? date.slice(8) + '-' + date.slice(5, 7) + "-" + date.slice(0, 4) : ''))
-        if (isenddateopen == 1 || Role == 'CEO')
+        if (isenddateopen === 1 || Role === 'CEO')
             FinalSetEndDate(e.target.value);
     };
 
@@ -679,14 +661,14 @@ function FlcEdit() {
             );
 
             const data = await response.json();
-            // if (data["message"] === "Success") {
-            //     document.getElementById("form").reset();
-            //     alert("Successful");
-            //     window.location.pathname = "/session/unitmanagement/flc_list";
-            // } else {
-            //     alert("Edit Failed! ");
+            if (data["message"] === "Success") {
+                document.getElementById("form").reset();
+                alert("Successful");
+                window.location.pathname = "/session/unitmanagement/flc_list";
+            } else {
+                alert("Edit Failed! ");
 
-            // }
+            }
         } catch (err) {
             console.log(err);
         }
@@ -723,14 +705,13 @@ function FlcEdit() {
 
             const data = await response.json();
 
-            // if (data["message"] === "Success") {
-            //     document.getElementById("form").reset();
-            //     alert("Successful");
-            //     window.location.pathname = "/session/unitmanagement/flc_list";
-            // } else {
-            //     alert("Edit Failed! ");
-
-            // }
+            if (data["message"] === "Success") {
+                document.getElementById("form").reset();
+                alert("Successful");
+                window.location.pathname = "/session/unitmanagement/flc_list";
+            } else {
+                alert("Edit Failed! ");
+            }
         } catch (err) {
             console.log(err);
         }
@@ -746,9 +727,9 @@ function FlcEdit() {
     const onFormSubmit = async (e) => {
 
         e.preventDefault();
-        if (Role == 'CEO')
+        if (Role === 'CEO')
             postFlc();
-        else if (Role == "DEO") {
+        else if (Role === "DEO") {
             postFlcdistrict()
         }
 
@@ -757,7 +738,7 @@ function FlcEdit() {
 
     return (
         <>
-            {(Role == 'CEO') && edit == '' &&
+            {(Role === 'CEO') && edit === '' &&
                 <button className="text-white mb-4 flex"
                     onClick={() => { setEdit(Role) }}
                 >
@@ -857,9 +838,9 @@ function FlcEdit() {
                             }
                         </div>
 
-                        <div class={(Role == 'DEO' || isenddateopen == 1) ? scheduleStyles.div6_DEO : scheduleStyles.div6_CEO}>
+                        <div class={(Role === 'DEO' || isenddateopen === 1) ? scheduleStyles.div6_DEO : scheduleStyles.div6_CEO}>
                             <p>End date</p>
-                            {(isenddateopen == 1 || edit == 'CEO') ?
+                            {(isenddateopen === 1 || edit === 'CEO') ?
                                 <input
                                     class={scheduleStyles.dateInput}
                                     type="date"
@@ -885,7 +866,7 @@ function FlcEdit() {
                             }
                         </div>
 
-                        {isenddateopen == 0 && Role == 'DEO' &&
+                        {isenddateopen === 0 && Role === 'DEO' &&
                             <div class={scheduleStyles.enddatediv}>
                                 <div class={scheduleStyles.enddatebutton} onClick={(e) => { setisenddateopen(1) }}> Edit</div>
                             </div>
@@ -947,7 +928,7 @@ function FlcEdit() {
                             ></input>
                         </div>
 
-                        {Role == "DEO" && edit == '' &&
+                        {Role === "DEO" && edit === '' &&
 
                             <div class={scheduleStyles.div13}>
                                 <button className="text-white mb-4 flex"
@@ -964,7 +945,7 @@ function FlcEdit() {
                                 class={scheduleStyles.numberfield}
                                 type="number"
                                 id="7"
-                                disabled={edit === 'CEO' || edit == 'DEO' ? false : true}
+                                disabled={edit === 'CEO' || edit === 'DEO' ? false : true}
                                 placeholder='Number Of Engineer'
                                 value={numengineers}
                                 onChange={(e) => { setnumengineers(e.target.value) }}
@@ -978,7 +959,7 @@ function FlcEdit() {
                                 class={scheduleStyles.input}
                                 type="text"
                                 id="7"
-                                disabled={edit === 'CEO' || edit == 'DEO' ? false : true}
+                                disabled={edit === 'CEO' || edit === 'DEO' ? false : true}
                                 className="selectBox"
                                 placeholder='Flc Venue'
                                 value={flcvenue}
@@ -993,7 +974,7 @@ function FlcEdit() {
                                 class={scheduleStyles.input}
                                 type="text"
                                 id="7"
-                                disabled={edit === 'CEO' || edit == 'DEO' ? false : true}
+                                disabled={edit === 'CEO' || edit === 'DEO' ? false : true}
                                 className="selectBox"
                                 placeholder='Flc Supervisor Name'
                                 value={flcsupervisorname}
@@ -1008,7 +989,7 @@ function FlcEdit() {
                                 class={scheduleStyles.input}
                                 type="email"
                                 id="7"
-                                disabled={edit === 'CEO' || edit == 'DEO' ? false : true}
+                                disabled={edit === 'CEO' || edit === 'DEO' ? false : true}
                                 placeholder='Flc Supervisor Email ID'
                                 value={flcsupervisoremailid}
                                 onChange={(e) => { setflcsupervisoremailid(e.target.value) }}
@@ -1022,7 +1003,7 @@ function FlcEdit() {
                                 class={scheduleStyles.numberfield}
                                 type="number"
                                 id="7"
-                                disabled={edit === 'CEO' || edit == 'DEO' ? false : true}
+                                disabled={edit === 'CEO' || edit === 'DEO' ? false : true}
                                 placeholder='Flc Supervisor Mobile No.'
                                 value={flcsupervisormobno}
                                 onChange={(e) => { setflcsupervisormobno(e.target.value) }}
@@ -1037,7 +1018,7 @@ function FlcEdit() {
                                 class={scheduleStyles.input}
                                 type="text"
                                 id="7"
-                                disabled={edit === 'CEO' || edit == 'DEO' ? false : true}
+                                disabled={edit === 'CEO' || edit === 'DEO' ? false : true}
                                 className="selectBox"
                                 placeholder='Enter Full Name'
                                 value={manufacturerdistrictcoordinatorname}
@@ -1052,7 +1033,7 @@ function FlcEdit() {
                                 class={scheduleStyles.input}
                                 type="email"
                                 id="7"
-                                disabled={edit === 'CEO' || edit == 'DEO' ? false : true}
+                                disabled={edit === 'CEO' || edit === 'DEO' ? false : true}
                                 className="selectBox"
                                 placeholder='Enter Email ID'
                                 value={manufacturerdistrictcoordinatoremailid}
@@ -1066,7 +1047,7 @@ function FlcEdit() {
                                 class={scheduleStyles.numberfield}
                                 type="number"
                                 id="7"
-                                disabled={edit === 'CEO' || edit == 'DEO' ? false : true}
+                                disabled={edit === 'CEO' || edit === 'DEO' ? false : true}
                                 placeholder='Enter Mobile Number'
                                 value={manufacturerdistrictcoordinatormobno}
                                 onChange={(e) => { setmanufacturerdistrictcoordinatormobno(e.target.value) }}
@@ -1120,7 +1101,7 @@ function FlcEdit() {
                     </div>
 
                     <>
-                        {edit === 'CEO' || edit == 'DEO' ?
+                        {edit === 'CEO' || edit === 'DEO' ?
                             <button class={scheduleStyles.submitBtn} onClick={onFormSubmit}> Submit </button>
 
                             : " "}
@@ -1165,31 +1146,31 @@ function FlcEdit() {
                         </Modal>
 
                         <label htmlFor="" style={{ paddingTop: "11px", fontSize: "20px", marginRight: '65%' }}>  Acknowledgment: </label>
-                        {Acknowledgment != '' && InputAcknowledgment == 1 &&
+                        {Acknowledgment !== '' && InputAcknowledgment === 1 &&
                             <div onClick={openModal_Acknowledgment}
                                 style={{ marginRight: '70%', background: "white", color: "black", overflow: "hidden", display: 'flex', justifyContent: 'center', alignItems: 'center' }}
                             ><u>View Acknowledgment</u></div>
                         }
 
-                        {Acknowledgment == '' && Role != 'DEO' &&
+                        {Acknowledgment === '' && Role !== 'DEO' &&
                             <div
                                 style={{ marginRight: '79%', background: "white", color: "black", overflow: "hidden", display: 'flex', justifyContent: 'center', alignItems: 'center' }}
                             >  <u> Not Uploaded </u>  </div>
                         }
 
-                        {Acknowledgment == '' && InputAcknowledgment == -1 && Role == 'DEO' &&
+                        {Acknowledgment === '' && InputAcknowledgment === -1 && Role === 'DEO' &&
                             <input
                                 id="formUserImage"
                                 type="file"
                                 required
                                 onChange={async (e) => {
-                                    setAcknowledgmentname(e.target.value.replace(/^.*[\\\/]/, ''))
+                                    setAcknowledgmentname(e.target.value.replace(/^.*[\\/]/, ''))
                                     setAcknowledgment(await getBase64(e.target.files[0]))
                                 }}
                             />
                         }
 
-                        {Acknowledgment != '' && InputAcknowledgment == -1 && Role == 'DEO' &&
+                        {Acknowledgment !== '' && InputAcknowledgment === -1 && Role === 'DEO' &&
                             <button class={scheduleStyles.uploadBtn} onClick={UploadAcknowledgment}> Upload </button>
                         }
 
@@ -1209,31 +1190,31 @@ function FlcEdit() {
 
                         <label htmlFor="" style={{ paddingTop: "11px", fontSize: "20px", marginRight: '79%' }}>  Flc Report: </label>
 
-                        {flcreport != '' && inputflcreport == 1 &&
+                        {flcreport !== '' && inputflcreport === 1 &&
                             <div onClick={openModal_flcreport}
                                 style={{ marginRight: '79%', background: "white", color: "black", overflow: "hidden", display: 'flex', justifyContent: 'center', alignItems: 'center' }}
                             >  <u> View Flc Report </u>  </div>
                         }
 
-                        {flcreport == '' && Role != 'DEO' &&
+                        {flcreport === '' && Role !== 'DEO' &&
                             <div
                                 style={{ marginRight: '79%', background: "white", color: "black", overflow: "hidden", display: 'flex', justifyContent: 'center', alignItems: 'center' }}
                             >  <u> Not Uploaded </u>  </div>
                         }
 
-                        {flcreport == '' && inputflcreport == -1 && Role == 'DEO' &&
+                        {flcreport === '' && inputflcreport === -1 && Role === 'DEO' &&
                             <input
                                 id="formUserImage"
                                 type="file"
                                 required
                                 onChange={async (e) => {
-                                    setflcreportname(e.target.value.replace(/^.*[\\\/]/, ''))
+                                    setflcreportname(e.target.value.replace(/^.*[\\/]/, ''))
                                     setflcreport(await getBase64(e.target.files[0]))
                                 }}
                             />
                         }
 
-                        {flcreport != '' && inputflcreport == -1 && Role == 'DEO' &&
+                        {flcreport !== '' && inputflcreport === -1 && Role === 'DEO' &&
                             <button class={scheduleStyles.uploadBtn} onClick={UploadFlcReport}> Upload </button>
                         }
 

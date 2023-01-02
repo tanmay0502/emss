@@ -5,145 +5,155 @@ import { AiOutlineArrowLeft } from 'react-icons/ai'
 import { ReactComponent as Createuser } from "../../assets/CreateUser.svg";
 import "./styles/createuser.css";
 import styles from "./styles/createuser.css";
-import 'antd/dist/antd.css'
+import 'antd/dist/antd.min.css'
 import { Switch } from "antd"
 import { getKeyByValue } from '../../assets/helper/ObjectHelpers.js'
 import imageCompression from 'browser-image-compression';
 import { formatRealm, getRealm } from "../../components/utils";
 
-var sha256 = require("js-sha256");
-class Queue {
-  constructor() {
-    this.elements = {};
-    this.head = 0;
-    this.tail = 0;
-  }
-  enqueue(element) {
-    this.elements[this.tail] = element;
-    this.tail++;
-  }
-  dequeue() {
-    const item = this.elements[this.head];
-    delete this.elements[this.head];
-    this.head++;
-    return item;
-  }
-  peek() {
-    return this.elements[this.head];
-  }
-  get length() {
-    return this.tail - this.head;
-  }
-  get isEmpty() {
-    return this.length === 0;
-  }
-}
+// var sha256 = require("js-sha256");
+// class Queue {
+//   constructor() {
+//     this.elements = {};
+//     this.head = 0;
+//     this.tail = 0;
+//   }
+//   enqueue(element) {
+//     this.elements[this.tail] = element;
+//     this.tail++;
+//   }
+//   dequeue() {
+//     const item = this.elements[this.head];
+//     delete this.elements[this.head];
+//     this.head++;
+//     return item;
+//   }
+//   peek() {
+//     return this.elements[this.head];
+//   }
+//   get length() {
+//     return this.tail - this.head;
+//   }
+//   get isEmpty() {
+//     return this.length === 0;
+//   }
+// }
 // var SortedMap = require("collections/sorted-map");
 function CreateUser() {
 
   const navigate = useNavigate()
 
-  const lev5 = { "TU": null }
-  const lev4A = { DDEO: lev5, RO: null, "RO/ARO": null, WHM: lev5, TU: null };
-  const lev3A = { Nos: null, DEO: lev4A, "CEO-Office": null };
-  const lev3B = { "ECI-Users": lev5, "WHM-Mfr": lev5 };
-  const lev2 = { CEO: lev3A, "Mfr-Admin": lev3B };
-  const lev1 = {
-    "ECI-Admin": lev2,
-  };
+  // const lev5 = { "TU": null }
+  // const lev4A = { DDEO: lev5, RO: null, "RO/ARO": null, WHM: lev5, TU: null };
+  // const lev3A = { Nos: null, DEO: lev4A, "CEO-Office": null };
+  // const lev3B = { "ECI-Users": lev5, "WHM-Mfr": lev5 };
+  // const lev2 = { CEO: lev3A, "Mfr-Admin": lev3B };
+  // const lev1 = {
+  //   "ECI-Admin": lev2,
+  // };
   
   const [isTemporary, setIsTemporary] = useState(false);
   const [baseImage, setBaseImage ] = useState("");
   const [state, setState] = useState("");
-  const [states, setStates] = useState({});
-  const [statesCode, setStatesCode] = useState({});
-  const [Dists, setDists] = useState([]);
-  const [DistsCode, setDistsCode] = useState(["00"]);
-  const [ACs, setACs] = useState([]);
-  const [ACsCode, setACsCode] = useState(["00"]);
+  // const [states, setStates] = useState({});
+  const [states] = useState({});
+  // const [statesCode, setStatesCode] = useState({});
+  // const [Dists, setDists] = useState([]);
+  const [Dists] = useState([]);
+  // const [DistsCode, setDistsCode] = useState(["00"]);
+  const [DistsCode] = useState(["00"]);
+  // const [ACs, setACs] = useState([]);
+  const [ACs] = useState([]);
+  // const [ACsCode, setACsCode] = useState(["00"]);
+  const [ACsCode] = useState(["00"]);
   const [userID, setUserID] = useState("");
   const [Dist, setDist] = useState("");
   const [AC, setAC] = useState("");
   const [role, setRole] = useState("TU");
-  const [roles, setRoles] = useState([]);
-  const [rolesCode, setRolesCode] = useState([]);
-  const [photoFileName, setPhotoFileName] = useState("")
-  const [photoFileData, setPhotoFileData] = useState("")
+  // const [roles, setRoles] = useState([]);
+  const [roles] = useState([]);
+  // const [rolesCode, setRolesCode] = useState([]);
+  const [rolesCode] = useState([]);
+  // const [photoFileName, setPhotoFileName] = useState("")
+  // const [photoFileData, setPhotoFileData] = useState("")
 
-  const [stateDisable, setStateDisable] = useState(false);
-  const [DistDisable, setDistDisable] = useState(false);
-  const [acDisable, setAcDisable] = useState(false);
+  // const [stateDisable, setStateDisable] = useState(false);
+  const [setStateDisable] = useState(false);
+  // const [DistDisable, setDistDisable] = useState(false);
+  const [setDistDisable] = useState(false);
+  // const [acDisable, setAcDisable] = useState(false);
+  const [setAcDisable] = useState(false);
   const [realm, setRealm] = useState();
   const [realmData, setRealmData] = useState();
   const [imageName, setImageName] = useState();
 
 
-  function filterRoleList(
-    data2,
-    changeUserID = true,
-    filterStr = window.sessionStorage.getItem("sessionToken").substring(7)
-  ) {
-    if (["EC", "ME", "MB"].includes(
-      window.sessionStorage.getItem("sessionToken").substring(0, 2)
-    )) {
-      setRoles(data2["roleName"]);
-      setRolesCode(data2["roleCode"]);
-    }
-    else {
+  // function filterRoleList(
+  //   data2,
+  //   changeUserID = true,
+  //   filterStr = window.sessionStorage.getItem("sessionToken").substring(7)
+  // ) {
+  //   if (["EC", "ME", "MB"].includes(
+  //     window.sessionStorage.getItem("sessionToken").substring(0, 2)
+  //   )) {
+  //     setRoles(data2["roleName"]);
+  //     setRolesCode(data2["roleCode"]);
+  //   }
+  //   else {
 
-      let rcode = [];
-      var q = new Queue();
+  //     let rcode = [];
+  //     var q = new Queue();
 
-      if (filterStr in lev1) {
-        q.enqueue(lev1[filterStr]);
-      }
-      else if (filterStr in lev2) {
-        q.enqueue(lev2[filterStr]);
-      }
-      else if (filterStr in lev3A) {
-        q.enqueue(lev3A[filterStr]);
-      }
-      else if (filterStr in lev3B) {
-        q.enqueue(lev3B[filterStr]);
-      }
+  //     if (filterStr in lev1) {
+  //       q.enqueue(lev1[filterStr]);
+  //     }
+  //     else if (filterStr in lev2) {
+  //       q.enqueue(lev2[filterStr]);
+  //     }
+  //     else if (filterStr in lev3A) {
+  //       q.enqueue(lev3A[filterStr]);
+  //     }
+  //     else if (filterStr in lev3B) {
+  //       q.enqueue(lev3B[filterStr]);
+  //     }
 
-      else if (filterStr in lev4A) {
-        q.enqueue(lev4A[filterStr]);
-      }
-      else if (filterStr in lev5) {
-        q.enqueue(lev5[filterStr]);
-      }
+  //     else if (filterStr in lev4A) {
+  //       q.enqueue(lev4A[filterStr]);
+  //     }
+  //     else if (filterStr in lev5) {
+  //       q.enqueue(lev5[filterStr]);
+  //     }
 
 
-      while (!q.isEmpty) {
-        var f = q.peek();
-        q.dequeue();
-        if (f == null) continue;
-        for (let key in f) {
-          q.enqueue(f[key]);
-          if (key != filterStr) {
-            rcode.push(key);
-          }
-        }
+  //     while (!q.isEmpty) {
+  //       var f = q.peek();
+  //       q.dequeue();
+  //       if (f == null) continue;
+  //       for (let key in f) {
+  //         q.enqueue(f[key]);
+  //         if (key != filterStr) {
+  //           rcode.push(key);
+  //         }
+  //       }
 
-      }
-      rcode = [...new Set(rcode)];
-      // console.log(rcode);
-      let rc = [];
-      let rname = []
-      for (let i = 0; i < data2["roleCode"].length; i++) {
-        // console.log(data2["roleCode"][i]);
-        if (rcode.includes(data2["roleCode"][i])) {
-          // console.log("hh");
-          rc.push(data2["roleCode"][i]);
-          rname.push(data2["roleName"][i]);
-        }
-      }
-      // console.log(rname, rc)
-      setRoles(rname);
-      setRolesCode(rc);
-    }
-  }
+  //     }
+  //     rcode = [...new Set(rcode)];
+  //     // console.log(rcode);
+  //     let rc = [];
+  //     let rname = []
+  //     for (let i = 0; i < data2["roleCode"].length; i++) {
+  //       // console.log(data2["roleCode"][i]);
+  //       if (rcode.includes(data2["roleCode"][i])) {
+  //         // console.log("hh");
+  //         rc.push(data2["roleCode"][i]);
+  //         rname.push(data2["roleName"][i]);
+  //       }
+  //     }
+  //     // console.log(rname, rc)
+  //     setRoles(rname);
+  //     setRolesCode(rc);
+  //   }
+  // }
   useEffect(() => {
     if (window.sessionStorage.getItem("sessionToken") === null) {
       window.location.pathname = "/session/home";
@@ -161,7 +171,7 @@ function CreateUser() {
 
   useEffect(() => {
     // console.log(states)
-    if (states && states != {}) {
+    if (states && states !== {}) {
       if (window.sessionStorage.getItem("sessionToken")) {
         const statecode = window.sessionStorage.getItem("sessionToken").substring(0, 2);
 
@@ -170,13 +180,34 @@ function CreateUser() {
             // document.getElementById("input_state").value = "";
             document.getElementById("input_state").setAttribute('disabled', 'false')
         } else {
+          async function setStateFunc(st, changeUserID = true, filterStr = window.sessionStorage.getItem("sessionToken").substring(7)) {
+            if (st !== "Select:" && states !== {}) {
+              setState(states[st]);
+              // alert(states[st])
+              if (role === 'CEO' || role === 'CEO-Office') return;
+              if (
+                states[st] === "IN" ||
+                states[st] === "EL" ||
+                states[st] === "BL"
+              ) {
+              }
+              else {
+                
+              }
+              if (changeUserID) {
+                setUserID(
+                  states[st] + ("00" + Dist).slice(-2) + AC + role
+                );
+              }
+            }
+          }
           setStateFunc(getKeyByValue(states, statecode));
           setState(statecode)
 
-          var LoggedUserStateName = getKeyByValue(
-            states,
-            statecode
-          );
+          // var LoggedUserStateName = getKeyByValue(
+          //   states,
+          //   statecode
+          // );
 
           // console.log('State Name = "' + LoggedUserStateName + '"')
 
@@ -185,17 +216,33 @@ function CreateUser() {
         }
       }
     }
-  }, [states]);
+  }, [states,AC,Dist,role]);
 
   useEffect(() => {
     if (window.sessionStorage.getItem("sessionToken")) {
       const pwDistode = window.sessionStorage
         .getItem("sessionToken")
         .substring(2, 4);
-      if (getKeyByValue(Dists, pwDistode) != -1) {
+      if (getKeyByValue(Dists, pwDistode) !== -1) {
         if (1) {
           console.log("pp", pwDistode);
         }
+        async function setDistFunc(st, changeUserID = true, filterStr = window.sessionStorage.getItem("sessionToken").substring(7)) {
+          setDist(Dists[st]);
+      
+          if ((filterStr === 'CEO' && role === 'DEO') || (filterStr === 'CEO' && role === 'DDEO')) return;
+          if (state && state.trim() !== "" && state !== "Select:") {
+            if (state === "IN" || state === "EL" || state === "BL") {
+            } else {
+              console.log("State Val at setDistFunc: " + state)
+            }
+            if (changeUserID) {
+              setUserID(
+                state + ("00" + Dists[st]).slice(-2) + AC + role
+              );
+            }
+          }
+        }      
         setDistFunc(Dists[DistsCode.indexOf(pwDistode)]);
         // document.getElementById("input_state").setAttribute('disabled', 'true')
       }
@@ -204,7 +251,7 @@ function CreateUser() {
         document.getElementById("DistDropdown").value = "";
       document.getElementById("input_state").setAttribute('disabled', 'false')
     }
-  }, [Dists]);
+  }, [Dists, DistsCode, AC, role, state]);
 
   useEffect(() => {
     console.log(ACs, ACsCode)
@@ -222,6 +269,19 @@ function CreateUser() {
           // document.getElementById("acDropdown").value =
           //   ACs[ACsCode.indexOf(accode)];
         }
+        async function setACFunc(st, changeUserID = true,) {
+          setAC(ACs[st]);
+          // console.log(ACs[st]);
+      
+          if (changeUserID) {
+            setUserID(
+              state +
+              ("00" + Dist).slice(-2) +
+              ("000" + ACs[st]).slice(-3) +
+              role
+            );
+          }
+        }
         setACFunc(
           ACs[ACsCode.indexOf(accode)],
           false,
@@ -232,7 +292,7 @@ function CreateUser() {
           document.getElementById("acDropdown").value = "Select:";
       }
     }
-  }, [ACs]);
+  }, [ACs,ACsCode,Dist,role,state]);
 
   const onFormSubmit = async (e) => {
     e.preventDefault();
@@ -241,14 +301,14 @@ function CreateUser() {
   };
 
   async function setStateFunc(st, changeUserID = true, filterStr = window.sessionStorage.getItem("sessionToken").substring(7)) {
-    if (st !== "Select:" && states != {}) {
+    if (st !== "Select:" && states !== {}) {
       setState(states[st]);
       // alert(states[st])
-      if (role == 'CEO' || role == 'CEO-Office') return;
+      if (role === 'CEO' || role === 'CEO-Office') return;
       if (
-        states[st] == "IN" ||
-        states[st] == "EL" ||
-        states[st] == "BL"
+        states[st] === "IN" ||
+        states[st] === "EL" ||
+        states[st] === "BL"
       ) {
       }
       else {
@@ -282,9 +342,9 @@ function CreateUser() {
   async function setDistFunc(st, changeUserID = true, filterStr = window.sessionStorage.getItem("sessionToken").substring(7)) {
     setDist(Dists[st]);
 
-    if ((filterStr == 'CEO' && role == 'DEO') || (filterStr == 'CEO' && role == 'DDEO')) return;
-    if (state && state.trim() != "" && state !== "Select:") {
-      if (state == "IN" || state == "EL" || state == "BL") {
+    if ((filterStr === 'CEO' && role === 'DEO') || (filterStr === 'CEO' && role === 'DDEO')) return;
+    if (state && state.trim() !== "" && state !== "Select:") {
+      if (state === "IN" || state === "EL" || state === "BL") {
       } else {
         console.log("State Val at setDistFunc: " + state)
       }
@@ -324,13 +384,13 @@ function CreateUser() {
       setDistDisable(false);
       setAcDisable(false);
 
-      if ((filterStr == 'ECI-Admin') && (st == 'Chief Electoral Officer' || st == 'Chief Electoral Officer Office' || st == 'STATE NODAL OFFICER')) {
+      if ((filterStr === 'ECI-Admin') && (st === 'Chief Electoral Officer' || st === 'Chief Electoral Officer Office' || st === 'STATE NODAL OFFICER')) {
         setDist("00");
         setDistDisable(true);
         setAC("000");
         setAcDisable(true);
       }
-      else if ((filterStr == 'CEO' && st == "STATE NODAL OFFICER") || (filterStr == 'CEO' && st == "Chief Electoral Officer Office")) {
+      else if ((filterStr === 'CEO' && st === "STATE NODAL OFFICER") || (filterStr === 'CEO' && st === "Chief Electoral Officer Office")) {
         setStateDisable(true);
         setStateFunc(window.sessionStorage.getItem("sessionToken").substring(0, 2));
         setDist("00");
@@ -338,8 +398,8 @@ function CreateUser() {
         setAC("000");
         setAcDisable(true);
       }
-      else if ((filterStr == 'CEO' && st == 'District Election Officer') ||
-        (filterStr == 'CEO' && st == "Deputy District Election Officer")) {
+      else if ((filterStr === 'CEO' && st === 'District Election Officer') ||
+        (filterStr === 'CEO' && st === "Deputy District Election Officer")) {
         setStateDisable(true);
         setStateFunc(window.sessionStorage.getItem("sessionToken").substring(0, 2));
         setAC("000");
@@ -348,7 +408,7 @@ function CreateUser() {
 
       if (changeUserID) {
         setUserID(
-          state + (Dist != undefined ? ("00" + Dist).slice(-2) : '00') + AC + rolesCode[roles.indexOf(st)]
+          state + (Dist !== undefined ? ("00" + Dist).slice(-2) : '00') + AC + rolesCode[roles.indexOf(st)]
         );
       }
       console.log(userID);
@@ -357,12 +417,12 @@ function CreateUser() {
 
   useEffect(() => {
     setUserID(
-      state + (Dist != undefined ? ("00" + Dist).slice(-2) : '00') + AC + role
+      state + (Dist !== undefined ? ("00" + Dist).slice(-2) : '00') + AC + role
     );
   }, [state, AC, Dist, role])
 
   function ValidateEmail(mail) {
-    if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(mail)) {
+    if (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(mail)) {
       return (true)
     }
     alert("You have entered an invalid email address!")
@@ -388,17 +448,17 @@ function CreateUser() {
     // console.log(userID)
     const id = (isTemporary)? (document.getElementById("input_state").value + document.getElementById("input_Dist").value + document.getElementById("input_AC").value + "TMP"):(document.getElementById("input_state").value + document.getElementById("input_Dist").value + document.getElementById("input_AC").value + document.getElementById("input_Roles").value);
     console.log(id)
-    if (ValidateEmail(document.getElementById("formUserEmail").value) == false) {
+    if (ValidateEmail(document.getElementById("formUserEmail").value) === false) {
       console.log("Invalid Email")
       document.getElementById("formUserEmail").value = ''
       return;
     }
-    else if (validate_number(document.getElementById("formUserMobileNumber").value) == false) {
+    else if (validate_number(document.getElementById("formUserMobileNumber").value) === false) {
       console.log("Invalid Mobile Number")
       document.getElementById("formUserMobileNumber").value = ''
       return;
     }
-    if (document.getElementById("formUserAltNumber1").value != '') {
+    if (document.getElementById("formUserAltNumber1").value !== '') {
 
       if (!validate_number(document.getElementById("formUserAltNumber1").value)) {
         console.log("Invalid Mobile Number1")
@@ -407,7 +467,7 @@ function CreateUser() {
       }
 
     }
-    if (document.getElementById("formUserAltNumber2").value != '') {
+    if (document.getElementById("formUserAltNumber2").value !== '') {
 
       if (!validate_number(document.getElementById("formUserAltNumber2").value)) {
         console.log("Invalid Mobile Number2")
@@ -513,7 +573,7 @@ function CreateUser() {
 const [ update, setUpdate] = useState(0);
 useEffect(()=>{
   console.log(realm)
-},[update])
+},[update,realm])
 
 
   return (

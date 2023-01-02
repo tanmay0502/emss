@@ -11,13 +11,12 @@ export default function FLCList() {
 
     const navigate = useNavigate()
     const [sortOrder, setSortOrder] = useState("asc");
-    const [sortBy, setSortBy] = useState("None");
-    const [isDetail, setIsDetail] = useState(0);
+    const [setSortBy] = useState("None");
+    const [isDetail] = useState(0);
     const [tableFilter, setTableFilter] = useState("");
     const [tableData, setTableData] = useState([])
     const [flc, setFlc] = useState([])
-    const [flcValue, setFlcValue] = useState([])
-    const [isLoading, setIsLoading] = useState(0);
+    const [setIsLoading] = useState(0);
 
     async function getElectionList() {
         try {
@@ -48,15 +47,16 @@ export default function FLCList() {
                     return true;
                 }
                 else {
+                    return false;
                     // const filter = tableFilter.toLowerCase();
                     // return (elem["userid"].toLowerCase().includes(filter) || elem["name"].toLowerCase().includes(filter))
                 }
             }).map((val) => {
-                let st = ""
-                let ed = ""
+                // let st = ""
+                // let ed = ""
                 try {
-                    st = st + val['startdate'].slice(0, 10)
-                    ed = ed + val["enddate"].slice(0, 10)
+                    // st = st + val['startdate'].slice(0, 10)
+                    // ed = ed + val["enddate"].slice(0, 10)
                 } catch (err) {
                     // st = ""
                     console.log(err)
@@ -66,7 +66,7 @@ export default function FLCList() {
                     'FLC ID': val['flcid'],
                     'Manufacturer': val['manufacturer'],
                     'District': val['district'],
-                    'Election Type': ((val['electiontype'] == 'GA') ? "General Assembly" : (val['electiontype'] == 'GP') ? 'General Parliment' : (val['electiontype'] == 'BA') ? 'By-Poll Assembly' : 'By-Poll Parliment'),
+                    'Election Type': ((val['electiontype'] === 'GA') ? "General Assembly" : (val['electiontype'] === 'GP') ? 'General Parliment' : (val['electiontype'] === 'BA') ? 'By-Poll Assembly' : 'By-Poll Parliment'),
                     "FLC Period": (val['startdate'] && val['enddate']) ? val['startdate'].split('T')[0] + " - " + val['enddate'].split('T')[0] : ""
 
                 }
@@ -77,7 +77,7 @@ export default function FLCList() {
         return () => {
 
         }
-    }, [flc])
+    }, [flc,tableFilter])
 
 
     useEffect(
@@ -91,7 +91,7 @@ export default function FLCList() {
                 clearTimeout(timer1);
             };
         },
-        []
+        [setIsLoading]
     );
 
 
@@ -100,19 +100,19 @@ export default function FLCList() {
 
     return (
         <div className={`${styles.myWrapper1}`} style={{ position: "relative", height: "100%" }}>
-            {isDetail == 0 ? <div className='MainHeader pd-5 ' style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between", "alignItems": "center" }}>
+            {isDetail === 0 ? <div className='MainHeader pd-5 ' style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between", "alignItems": "center" }}>
                 <h4 className='text-white'>Scheduled FLC List</h4>
 
                 <div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center" }}>
 
-                    {sessionStorage.getItem("sessionToken").substring(8) == "CEO" &&
+                    {sessionStorage.getItem("sessionToken").substring(8) === "CEO" &&
                         <button className='createRequestBtn' onClick={() => {
                             window.location.pathname = "/session/unitmanagement/announce_flc";
                         }}>
                             Schedule FLC
                         </button>
                     }
-                    {sessionStorage.getItem("sessionToken").substring(8) == "DEO" &&
+                    {sessionStorage.getItem("sessionToken").substring(8) === "DEO" &&
                         <button className='createRequestBtn' onClick={() => {
                             window.location.pathname = "/session/unitmanagement/preparednesscertificate";
                         }}>
@@ -149,7 +149,7 @@ export default function FLCList() {
             {isDetail === 0 ?
                 <div class={styles.table}>
                     <DynamicDataTable
-                        rows={tableData.length != 0 ? tableData : [{"":"No FLC scheduled"}]}
+                        rows={tableData.length !== 0 ? tableData : [{"":"No FLC scheduled"}]}
                         fieldsToExclude={["FLC ID"]}
                         buttons={[]}
                         onClick={(event, row) => {

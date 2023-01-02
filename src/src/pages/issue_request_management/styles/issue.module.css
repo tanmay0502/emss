@@ -259,7 +259,7 @@ textarea {
 .myFlexBoxTop{
 	display: flex;
 	flex-direction: column;
-	justify-content: start !important;
+	justify-content: flex-start !important;
 	align-items: center;
 }
 .myFlexWrap{
