@@ -142,7 +142,7 @@ function App() {
 							element={<FirstRandomization />}
 						/>
 						<Route
-							path="/session/unitmanagement/secondrandomization"
+							path="/session/unitmanagement/secondrandomization/:id"
 							element={<SecondRandomization />}
 						/>
 						<Route

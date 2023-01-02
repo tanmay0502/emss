@@ -17,18 +17,16 @@ import { formatRealm2, getRealm } from "../../components/utils"
 
 const userID = sessionStorage.getItem("sessionToken");
 const baseUrl = `${process.env.REACT_APP_API_SERVER}/unit`;
-
-
+const URL = window.location.href;
+const arr = URL.split("/");
+const param = arr[arr.length - 1];
+const arr1 = param.split("=");
+const randomizationid = arr1[0];
 
 export default function FirstRandomization() {
 
-    const FirstRandomization_ID = () => {
-        const URL = window.location.href;
-        const arr = URL.split("/");
-        const param = arr[arr.length - 1];
-        const arr1 = param.split("=");
-        return arr1[0];
-    }
+
+
 
     const initialVisibilityValues = {
         firstRandomisationForm: true,
@@ -89,6 +87,7 @@ const FirstRandomisationForm = ({ isVisible = true }) => {
         const { name, value, dataset } = e.currentTarget;
         const update = [...assemblyData];
         update[dataset.id][name] = value;
+
         setIsSubmitted(false);
         setAssemblyData(update);
     };
@@ -142,6 +141,7 @@ const FirstRandomisationForm = ({ isVisible = true }) => {
                     credentials: 'include',
                     body: JSON.stringify({
                         units_requirement,
+                        randomizationid
                     }),
                 });
 
@@ -239,11 +239,15 @@ const FirstRandomisationForm = ({ isVisible = true }) => {
             setIsFetching(true);
             (async () => {
                 try {
-                    const response = await fetch(`${process.env.REACT_APP_API_SERVER}/unit/getDistrictACDetails`, {
-                        method: "POST",
-                        headers: { "Content-Type": "application/json" },
-                        credentials: "include"
-                    });
+                    const response = await fetch(`${process.env.REACT_APP_API_SERVER}/unit/getDistrictACDetails?` +
+                        new URLSearchParams({
+                            randomizationid: randomizationid,
+                        }),
+                        {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            credentials: "include"
+                        });
                     const data = await response.json();
                     if (response.status === 200) {
                         setAssemblyList(data["data"]);
@@ -523,14 +527,15 @@ const RandomisationOutput = ({
     const handleRadomisationSave = async () => {
         try {
             const response = await fetch(
-                `${baseUrl}/save_first_randomization?` +
-                new URLSearchParams({
-                    iteration_index: iterationIndex,
-                }),
+                `${baseUrl}/save_first_randomization`,
                 {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     credentials: "include",
+                    body: JSON.stringify({
+                        iteration_index: iterationIndex,
+                        randomizationid
+                    }),
                 }
             );
             const data = await response.json();

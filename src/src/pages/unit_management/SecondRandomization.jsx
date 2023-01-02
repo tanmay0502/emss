@@ -18,7 +18,11 @@ import { getAllocateUsers } from "../order_management/Utils";
 
 const userID = sessionStorage.getItem("sessionToken");
 const baseUrl = `${process.env.REACT_APP_API_SERVER}/unit`;
-
+const URL = window.location.href;
+const arr = URL.split("/");
+const param = arr[arr.length - 1];
+const arr1 = param.split("=");
+const randomizationid = arr1[0];
 
 
 export default function SecondRandomization() {
@@ -57,13 +61,16 @@ const SecondRandomisationForm = ({ isVisible }) => {
 
     const getACs = async () => {
         try {
-            const response = await fetch(`${baseUrl}/fetch-ac-pc`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                credentials: 'include',
-            });
+            const response = await fetch(`${baseUrl}/fetch-ac-pc?` +
+                new URLSearchParams({
+                    randomizationid: randomizationid,
+                }),
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: 'include',
+                });
             const data = await response.json();
-            console.log("ACs List", data);
             if (response.status === 200) {
                 setACList(data['data'])
                 // pass the data to child component & re-render
@@ -111,7 +118,8 @@ const SecondRandomisationForm = ({ isVisible }) => {
                     credentials: 'include',
                     body: JSON.stringify({
                         "units_requirement": units_requirement,
-                        "ac_no": ACCode
+                        "ac_no": ACCode,
+                        randomizationid
                     }),
                 });
                 const data = await response.json();
@@ -146,13 +154,14 @@ const SecondRandomisationForm = ({ isVisible }) => {
             (async () => {
 
                 try {
-                    const response = await fetch(`${baseUrl}/fetch-polling-stations?ac_no=${ACCode}`, {
+                    const response = await fetch(`${baseUrl}/fetch-polling-stations`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         credentials: "include",
-                        // body: JSON.stringify({
-                        //     'ac_no': ACCode
-                        // })
+                        body: JSON.stringify({
+                            ac_no: ACCode,
+                            randomizationid: randomizationid
+                        })
                     });
                     const data = await response.json();
                     console.log("----", data)
@@ -345,7 +354,7 @@ const SecondRandomisationOutput = ({
     const handleRadomisationSave = async () => {
         try {
             const response = await fetch(
-                `${baseUrl}/save-second-randomization?`,
+                `${baseUrl}/save-second-randomization`,
                 // new URLSearchParams({
                 //     iteration_index: iterationIndex,
                 // }),
@@ -355,7 +364,8 @@ const SecondRandomisationOutput = ({
                     credentials: "include",
                     body: JSON.stringify({
                         iteration_index: iterationIndex,
-                        ac_no: ACCode
+                        ac_no: ACCode,
+                        randomizationid
                     }),
                 }
             );

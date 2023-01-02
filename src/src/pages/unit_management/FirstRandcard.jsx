@@ -20,7 +20,7 @@ export default function FirstRandcard() {
   const [flcValue, setFlcValue] = useState([])
   const [isLoading, setIsLoading] = useState(0);
 
-  const firstrandomization_list = [{ 'ID': 2, 'Election': 'GA 2022', 'Start_Date': '02-01-2022', 'End_Date': '20-02-2022' }, { 'ID': 3, 'Election': 'GA 2022', 'Start_Date': '02-01-2022', 'End_Date': '20-02-2022' }, { 'ID': 4, 'Election': 'GA 2022', 'Start_Date': '02-01-2022', 'End_Date': '20-02-2022' }, { 'ID': 5, 'Election': 'GA 2022', 'Start_Date': '02-01-2022', 'End_Date': '20-02-2022' }, { 'ID': 6, 'Election': 'GA 2022', 'Start_Date': '02-01-2022', 'End_Date': '20-02-2022' }]
+  const firstrandomization_list = [{ 'ID': 6, 'Election': 'GA 2022', 'Start_Date': '02-01-2022', 'End_Date': '20-02-2022' }, { 'ID': 6, 'Election': 'GA 2022', 'Start_Date': '02-01-2022', 'End_Date': '20-02-2022' }, { 'ID': 6, 'Election': 'GA 2022', 'Start_Date': '02-01-2022', 'End_Date': '20-02-2022' }, { 'ID': 6, 'Election': 'GA 2022', 'Start_Date': '02-01-2022', 'End_Date': '20-02-2022' }]
 
   // async function getElectionList() {
   //   try {
@@ -69,16 +69,6 @@ export default function FirstRandcard() {
           // return (elem["userid"].toLowerCase().includes(filter) || elem["name"].toLowerCase().includes(filter))
         }
       }).map((val) => {
-        let st = ""
-        let ed = ""
-        try {
-          st = st + val['startdate'].slice(0, 10)
-          ed = ed + val["enddate"].slice(0, 10)
-        } catch (err) {
-          // st = ""
-          console.log(err)
-        }
-
         return {
           'ID': val['ID'],
           'Election': val['Election'],
@@ -92,11 +82,7 @@ export default function FirstRandcard() {
     return () => {
 
     }
-  }, [firstrandomization_list])
-
-  console.log(firstrandomization_list, 'firstrandomization_listfirstrandomization_list')
-
-
+  }, [])
 
   return (
     <>

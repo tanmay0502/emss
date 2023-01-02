@@ -8,7 +8,7 @@ import { getRealm, formatRealm, formatRealm2 } from '../../components/utils'
 function Second_Randomisation_Scheduling() {
     const [ceouserid, setceouserid] = useState('')
     const [deouserid, setdeouserid] = useState('')
-    const [electiontype, setelectiontype] = useState('')
+    const [electiontype, setelectiontype] = useState([])
     const [startdate, setstartdate] = useState('')
     const [enddate, setenddate] = useState('')
     const [stateCode, setStateCode] = useState('')
@@ -18,7 +18,8 @@ function Second_Randomisation_Scheduling() {
     const [districtList, setDistrictList] = useState([]);
     const [ACList, setACList] = useState([]);
 
-    const [realm, setRealm] = useState([])
+    const [realm, setRealm] = useState([]);
+    const randomizationid = 6;
 
     useEffect(() => {
         getRealmData();
@@ -50,6 +51,28 @@ function Second_Randomisation_Scheduling() {
     useEffect(() => {
         // console.log(ACList)
     }, [ACList])
+
+    useEffect(() => {
+        async function fetch_election_list() {
+            try {
+                const response = await fetch(`${process.env.REACT_APP_API_SERVER}/unit/listElections`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "include"
+                });
+                const data = await response.json();
+                if (response.status === 200) {
+                    setelectiontype(data);
+                    console.log(data)
+                }
+            } catch (err) {
+                alert('Error occured during scheduling');
+            }
+        }
+
+
+        fetch_election_list();
+    }, []);
 
     async function Submit_Second_randomization() {
         var currentdate = new Date();
@@ -84,9 +107,10 @@ function Second_Randomisation_Scheduling() {
                     body: JSON.stringify({
                         district: districtCode,
                         acs: [...ACCodes],
-                        electiontype: document.getElementById("electiontype") ? document.getElementById("electiontype").value : "",
+                        electionid: document.getElementById("electiontype") ? document.getElementById("electiontype").value : "",
                         startdate: document.getElementById("startdate") ? document.getElementById("startdate").value + " " + time : "",
                         enddate: document.getElementById("enddate") ? document.getElementById("enddate").value + " " + time : "",
+                        supplementary: document.getElementById("supplementary") ? document.getElementById("supplementary").value : "f",
                     }),
                 }
             );
@@ -113,10 +137,10 @@ function Second_Randomisation_Scheduling() {
     const onFormSubmit = async (e) => {
         e.preventDefault();
         // console.log(ACCodes)
-        if(ACCodes.size > 0){
+        if (ACCodes.size > 0) {
             Submit_Second_randomization();
         }
-        else{
+        else {
             alert('Please select atleast One Assembly Segment!')
         }
     };
@@ -155,16 +179,31 @@ function Second_Randomisation_Scheduling() {
                     </div>
 
                     <div class={styles.div2}>
-                        <p> Election Type</p>
-                        <select id="electiontype" onSelect={(e) => { setelectiontype(e) }}>
-                            <option value="" defaultChecked={true} disabled >Select:</option>
-                            <option value="GP">General Election - Parlimentary</option>
-                            <option value="GA">General Election - Assembly</option>
-                            <option value="BP">By Election - Parlimentary</option>
-                            <option value="BA">By Election - Assembly</option>
+                        <p> Election </p>
+                        <select id="electiontype"
+                            type="text"
+                            required
+                            placeholder='Select Election'
+                        >
+                            {
+                                electiontype.map((val) => {
+                                    return (
+                                        <option value={val['election_id']}>
+                                            {val['electiontype']}&nbsp;({val['startdate']})
+                                        </option>
+                                    )
+                                })
+                            }
                         </select>
                     </div>
 
+                    <div class={styles.div6}>
+                        <p> Supplementary? </p>
+                        <select id="electiontype" onSelect={(e) => { setelectiontype(e) }}>
+                            <option value="f">No</option>
+                            <option value="t">Yes</option>
+                        </select>
+                    </div>
                     <div class={styles.div3}>
                         <p>Start date</p>
                         <input
@@ -196,19 +235,19 @@ function Second_Randomisation_Scheduling() {
                             <DynamicDataTable
                                 renderCheckboxes={true}
                                 renderMasterCheckbox={false}
-                                isCheckboxChecked={({acCode}) => ACCodes.has(acCode)}
+                                isCheckboxChecked={({ acCode }) => ACCodes.has(acCode)}
                                 onMasterCheckboxChange={(_, rows) => {
                                     let all = true
-                            
+
                                     rows.forEach(({ id }) => {
-                                        if(!all){
+                                        if (!all) {
                                             return;
                                         }
-                                        if(!ACCodes.has(id)) {
+                                        if (!ACCodes.has(id)) {
                                             all = false
                                         }
                                     })
-                            
+
                                     rows.forEach(({ id }) => {
                                         var tmp = new Set(ACCodes)
                                         if (all) {

@@ -1,5 +1,5 @@
 import { DynamicDataTable } from '@langleyfoxall/react-dynamic-data-table'
-import React, { useState,useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import styles from './styles/first_Randomisation_Scheduling.module.css'
 import { TagsInput } from "react-tag-input-component";
 import { getRealm, formatRealm, formatRealm2 } from '../../components/utils'
@@ -8,7 +8,7 @@ function First_Randomisation_Scheduling() {
 
     const [districtList, setDistrictList] = useState([]);
     const [district, setdistrict] = useState('');
-    const [electiontype, setelectiontype] = useState('');
+    const [electiontype, setelectiontype] = useState([]);
     const [startdate, setstartdate] = useState('');
     const [enddate, setenddate] = useState('');
     const [realm, setRealm] = useState([])
@@ -21,6 +21,7 @@ function First_Randomisation_Scheduling() {
     const [currState, setCurrState] = useState([]);
     const [currDist, setCurrDist] = useState([])
     const [distCodes, setDistCodes] = useState(new Set());
+    const randomizationid = 6;
 
     useEffect(() => {
         getRealmData();
@@ -33,60 +34,82 @@ function First_Randomisation_Scheduling() {
 
 
     useEffect(() => {
-	async function fetch_district_list() {
-	    try {
-		const response = await fetch(`${process.env.REACT_APP_API_SERVER}/user/getRealm`, {
+        async function fetch_district_list() {
+            try {
+                const response = await fetch(`${process.env.REACT_APP_API_SERVER}/user/getRealm`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body:JSON.stringify({
+                    body: JSON.stringify({
                         "module_name": "Warehouse",
                         "operation": "CreateWarehouse"
-                      }),
+                    }),
                     credentials: "include"
-		});
-		const data = await response.json();
-		console.log(data, "datatatatatatatat")
-        setRealm(data);
-        console.log(data)
-		if (response.status === 200) {
+                });
+                const data = await response.json();
+                console.log(data, "datatatatatatatat")
+                setRealm(data);
+                console.log(data)
+                if (response.status === 200) {
                     console.log("inside if")
                     // if (data.hasOwnProperty('data')) {
-			// console.log("inside second if", data['data']['dist'])
-			// setRealm(data);
-            console.log(data)
-		    
-		}
-	    } catch (err) {
-		alert('Error occured during scheduling');
-	    }
-	}
-    
+                    // console.log("inside second if", data['data']['dist'])
+                    // setRealm(data);
+                    console.log(data)
 
-	// fetch_district_list();
-    },[]);
+                }
+            } catch (err) {
+                alert('Error occured during scheduling');
+            }
+        }
+
+
+        // fetch_district_list();
+    }, []);
     useEffect(() => {
-        if(realm && realm !== []){
-          setState2(formatRealm2(realm))
-          console.log(realm)
+        async function fetch_election_list() {
+            try {
+                const response = await fetch(`${process.env.REACT_APP_API_SERVER}/unit/listElections`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "include"
+                });
+                const data = await response.json();
+                if (response.status === 200) {
+                    setelectiontype(data);
+                    console.log(data)
+                }
+            } catch (err) {
+                alert('Error occured during scheduling');
+            }
+        }
+
+
+        fetch_election_list();
+    }, []);
+
+    useEffect(() => {
+        if (realm && realm !== []) {
+            setState2(formatRealm2(realm))
+            console.log(realm)
             console.log(state2)
 
-          try{
-            setCurrState(state2[0]["stCode"]);
-          }catch(err){
+            try {
+                setCurrState(state2[0]["stCode"]);
+            } catch (err) {
 
-          }
-          
+            }
+
         }
-       
-      }, [realm]);
-  
-      useEffect(() => {
-        if(currState && currState !== ""){
-          setDist(formatRealm2(realm, currState))
-          console.log(dist)
+
+    }, [realm]);
+
+    useEffect(() => {
+        if (currState && currState !== "") {
+            setDist(formatRealm2(realm, currState))
+            console.log(dist)
         }
-    
-      }, [currState,realm]);
+
+    }, [currState, realm]);
 
 
 
@@ -125,9 +148,10 @@ function First_Randomisation_Scheduling() {
                     credentials: 'include',
                     body: JSON.stringify({
                         districts: [...distCodes],
-                        electiontype: document.getElementById("electiontype") ? document.getElementById("electiontype").value : "",
+                        electionid: document.getElementById("electiontype") ? document.getElementById("electiontype").value : "",
                         startdate: document.getElementById("startdate") ? document.getElementById("startdate").value + " " + time : "",
                         enddate: document.getElementById("enddate") ? document.getElementById("enddate").value + " " + time : "",
+                        supplementary: document.getElementById("supplementary") ? document.getElementById("supplementary").value : "f"
                     }),
                 }
             );
@@ -167,58 +191,33 @@ function First_Randomisation_Scheduling() {
                 </div>
 
                 <div class={styles.parent}>
-                    {/* <div class={styles.div1}>
-                        <p> CEO User ID</p>
-                        <input
-                            id="ceouserid"
-                            type="text"
-                            required
-                            placeholder='Enter CEO User ID'
-                            onChange={(e) => { setceouserid(e) }}
-                        >
-                        </input>
-                    </div> */}
-
-
-                    {/* <div class={styles.div1}>
-                        <p> District</p>
-                        <select id="district"
-                            name="district"
-                        >
-                            <option hidden>Select:</option>
-			    {//districtList.map(item => (
-                            //    <option value={item.distId}>{item.distName}</option>
-				//))
-			    }
-                
-			    {dist && dist.map((item) => (
-
-                                <option value={item["dtCode"]}>{item["dtName"]}</option>
-                            ))}
-
-                        </select>
-                    </div> */}
 
                     <div class={styles.div1}>
-                        <p> Election Type</p>
-                        <select id="electiontype" onSelect={(e) => { setelectiontype(e)}}>
-                            <option value="" >Select:</option>
-                            <option value="GP">General Election - Parlimentary</option>
-                            <option value="GA">General Election - Assembly</option>
-                            <option value="BP">By Election - Parlimentary</option>
-                            <option value="BA">By Election - Assembly</option>
-                        </select>
-                        {/* <input
-                            id="electiontype"
+                        <p> Election </p>
+                        <select id="electiontype"
                             type="text"
                             required
-                            placeholder='Enter Election Type'
-                            onChange={(e) => { setelectiontype(e) }}
+                            placeholder='Select Election'
                         >
-                        </input> */}
+                            {
+                                electiontype.map((val) => {
+                                    return (
+                                        <option value={val['election_id']}>
+                                            {val['electiontype']}&nbsp;({val['startdate']})
+                                        </option>
+                                    )
+                                })
+                            }
+                        </select>
                     </div>
-
                     <div class={styles.div2}>
+                        <p> Supplementary? </p>
+                        <select id="supplementary" onSelect={(e) => { setelectiontype(e) }}>
+                            <option value="f">No</option>
+                            <option value="t">Yes</option>
+                        </select>
+                    </div>
+                    <div class={styles.div3}>
                         <p> Start date</p>
                         <input
                             id="startdate"
@@ -231,7 +230,7 @@ function First_Randomisation_Scheduling() {
                         ></input>
                     </div>
 
-                    <div class={styles.div3}>
+                    <div class={styles.div4}>
                         <p> End date</p>
                         <input
                             id="enddate"
@@ -242,69 +241,70 @@ function First_Randomisation_Scheduling() {
                             onChange={(e) => { setenddate(e) }}
                         ></input>
                     </div>
-                    </div>
-                    <div className='text-lg'>
-                        Select Districts
-                    </div>
+                </div>
+                <div className='text-lg'>
+                    Select Districts
+                </div>
 
-                    <div className={styles.div5}>
-                        
-                            <DynamicDataTable
-                                renderCheckboxes={true}
-                                renderMasterCheckbox={false}
-                                isCheckboxChecked={({dtCode}) => {
-                                    console.log(dtCode)    
-                                    distCodes.has(dtCode)
-                                }}
-                                // onMasterCheckboxChange={(_, rows) => {
-                                //     let all = true
-                            
-                                //     rows.forEach(({ id }) => {
-                                //         if(!all){
-                                //             return;
-                                //         }
-                                //         if(!distCodes.has(id)) {
-                                //             all = false
-                                //         }
-                                //     })
-                            
-                                //     rows.forEach(({ id }) => {
-                                //         var tmp = new Set(distCodes)
-                                //         if (all) {
-                                //             tmp.delete(id)
-                                //         } else if (!tmp.has(id)) {
-                                //             tmp.add(id)
-                                //         }
-                                //         setDistCodes(tmp)
-                                //     })
-                                // }}
-                                onCheckboxChange={(_, { dtCode }) => {
-                                    var tmp = new Set(distCodes)
-                                    if (distCodes.has(dtCode)) {
-                                        tmp.delete(dtCode)
-                                    } else {
-                                        tmp.add(dtCode)
-                                    }
-                                    setDistCodes(tmp)
-                                }}
+                <div className={styles.div5}>
 
-                                rows={dist}
-                                buttons={[]}
-                                fieldMap={
-                                    {
-                                        // 'acCode': 'AC Code',
-                                        // 'acName': 'AC Name'
-                                    }
-                                }
-                            />
-                        
-                    </div>
-                    
-                
+                    <DynamicDataTable
+                        renderCheckboxes={true}
+                        renderMasterCheckbox={false}
+                        isCheckboxChecked={({ dtCode }) => {
+                            console.log(dtCode)
+                            distCodes.has(dtCode)
+                        }}
+                        // onMasterCheckboxChange={(_, rows) => {
+                        //     let all = true
+
+                        //     rows.forEach(({ id }) => {
+                        //         if(!all){
+                        //             return;
+                        //         }
+                        //         if(!distCodes.has(id)) {
+                        //             all = false
+                        //         }
+                        //     })
+
+                        //     rows.forEach(({ id }) => {
+                        //         var tmp = new Set(distCodes)
+                        //         if (all) {
+                        //             tmp.delete(id)
+                        //         } else if (!tmp.has(id)) {
+                        //             tmp.add(id)
+                        //         }
+                        //         setDistCodes(tmp)
+                        //     })
+                        // }}
+                        onCheckboxChange={(_, { dtCode }) => {
+                            var tmp = new Set(distCodes)
+                            if (distCodes.has(dtCode)) {
+                                tmp.delete(dtCode)
+                            } else {
+                                tmp.add(dtCode)
+                            }
+                            setDistCodes(tmp)
+                        }}
+
+                        rows={dist}
+                        buttons={[]}
+                        fieldMap={
+                            {
+                                // 'acCode': 'AC Code',
+                                // 'acName': 'AC Name'
+                            }
+                        }
+                    />
+
+                </div>
+
+
 
             </div>
             <center><input type={"submit"} className={styles.mySubmit} ></input></center>
         </form>
+
     )
 }
 

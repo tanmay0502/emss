@@ -153,10 +153,10 @@ function Announce_Flc() {
                             body: JSON.stringify({
                             }),
                         })
-        
+
                     const data = await response.json();
                     setDetails(data["data"])
-        
+
                 } catch (error) {
                     console.log(error)
                 }
@@ -304,6 +304,10 @@ function Announce_Flc() {
         if (listElections[e.target.value]['electiontype'] === 'GP') {
             setType_of_election('General Parliamentary')
             setType_of_election_sf('GP')
+        }
+        else if (listElections[e.target.value]['electiontype'] === 'GA') {
+            setType_of_election('General Assembly')
+            setType_of_election_sf('GA')
         }
         else if (listElections[e.target.value]['electiontype'] === 'BA') {
             setType_of_election('By-Poll Assembly')
