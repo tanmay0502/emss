@@ -173,8 +173,14 @@ export const getRealm = async (module_name, operation) => {
   return [];
 };
 
-export const getTotalCounts = async (oprnd) => {
+export const getTotalCounts = async (oprnd, status) => {
   try {
+    let body = {
+      oprnd: oprnd,
+    };
+    if (status) {
+      body['status'] = status;
+    }
     const response = await fetch(
       process.env.REACT_APP_API_SERVER + "/unit/total_counts",
       {
@@ -183,13 +189,12 @@ export const getTotalCounts = async (oprnd) => {
           "Content-Type": "application/json",
         },
         credentials: "include",
-        body: JSON.stringify({
-          oprnd: oprnd,
-        }),
+        body: JSON.stringify(body),
       }
     );
     let data2 = await response.json();
     console.log("oprnd", oprnd);
+    console.log("status", status);
     console.log("/unit/total_counts", data2);
     // return data;
     if (data2) {

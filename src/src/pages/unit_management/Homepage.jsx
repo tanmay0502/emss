@@ -61,20 +61,7 @@ export default function HomePage() {
     });
     const navigate = useNavigate();
 
-    
-    const getDataTotal = async (oprnd) => {
-        const data2 = await getTotalCounts(oprnd)
-        let data = []
-        if (data2.data) {
-            data = data2.data;
-        }
-        if (data2.states) {
-            setStates(data2.states)
-        }
-        if (data2.districts) {
-            setDistricts(data2.districts)
-        }
-        console.log("total counts data", data);
+    const formatTotalCount = (data)=>{
         let temp = {
             B_M2: [0,0,0],
             B_M3: [0,0,0],
@@ -103,79 +90,26 @@ export default function HomePage() {
                 temp.E_M3[2] += val.VT;
             }
         })
-        setUnitCount(temp)
-        const tempStatusData = {}
-        const temp2 = {
-            B_M2: [0,0,0],
-            B_M3: [0,0,0],
-            E_M2: [0,0,0],
-            E_M3: [0,0,0]
-        }
-        data.map((val)=>{
-            if ( !tempStatusData[val.status] ) {
-                tempStatusData[val.status] = {
-                    B_M2: [0,0,0],
-                    B_M3: [0,0,0],
-                    E_M2: [0,0,0],
-                    E_M3: [0,0,0]
-                };
-            }
-            if (val.manufacturer==="B"&& val.model==="M2") {
-                tempStatusData[val.status].B_M2[0] += val.BU;
-                tempStatusData[val.status].B_M2[1] += val.CU;
-                tempStatusData[val.status].B_M2[2] += val.VT;
-            }
-            if (val.manufacturer==="B"&& val.model==="M3") {
-                tempStatusData[val.status].B_M3[0] += val.BU;
-                tempStatusData[val.status].B_M3[1] += val.CU;
-                tempStatusData[val.status].B_M3[2] += val.VT;
-            }
-            if (val.manufacturer==="E"&& val.model==="M2") {
-                tempStatusData[val.status].E_M2[0] += val.BU;
-                tempStatusData[val.status].E_M2[1] += val.CU;
-                tempStatusData[val.status].E_M2[2] += val.VT;
-            }
-            if (val.manufacturer==="E"&& val.model==="M3") {
-                tempStatusData[val.status].E_M3[0] += val.BU;
-                tempStatusData[val.status].E_M3[1] += val.CU;
-                tempStatusData[val.status].E_M3[2] += val.VT;
-            }
-        })
-        console.log("temp status data",tempStatusData)
-        setStatusData(tempStatusData);
+        return temp;
     }
-    useEffect(() => {
-        let oprnd = window.sessionStorage.getItem('sessionToken');
-        if (state!="IN") {
-            oprnd = state+oprnd.slice(2,8)
-            if (district!="ALL"){
-                oprnd = state+district+oprnd.slice(5,7)
-            }
-        } 
-        const fun = async ()=>{
-            const data2 = await getTotalCounts(oprnd, status1)
-            let data = data2.data
-            statusData1(data);
-            console.log("StatusData1", data2)
+
+    
+    const getDataTotal = async (oprnd) => {
+        const data2 = await getTotalCounts(oprnd)
+        let data = []
+        if (data2.data) {
+            data = data2.data;
         }
-        fun();
-    }, [status1])
-    useEffect(() => {
-        let oprnd = window.sessionStorage.getItem('sessionToken');
-        if (state!="IN") {
-            oprnd = state+oprnd.slice(2,8)
-            if (district!="ALL"){
-                oprnd = state+district+oprnd.slice(5,7)
-            }
-        } 
-        const fun = async ()=>{
-            const data2 = await getTotalCounts(oprnd, status2)
-            let data = data2.data
-            statusData2(data);
-            console.log("StatusData2", data2)
+        if (data2.states) {
+            setStates(data2.states)
         }
-        fun();
-    }, [status2])
+        if (data2.districts) {
+            setDistricts(data2.districts)
+        }
+        console.log("total counts data", data);
+        setUnitCount(formatTotalCount(data))        
+    }
+
     useEffect(()=>{
         let oprnd = window.sessionStorage.getItem('sessionToken');
         if (state!="IN") {
@@ -187,37 +121,12 @@ export default function HomePage() {
         getDataTotal(oprnd)
     },[state, district])
 
-    // useEffect(() => {
-    //     let getData = async () => {
-    //         try {
-    //             const response2 = await fetch(
-    //                 uri2,
-    //                 {
-    //                     method: "POST",
-    //                     headers: {
-    //                         "Content-Type": "application/json",
-    //                     },
-    //                     credentials: 'include'
-    //                 }
-    //             );
-    //         } catch (err) {
-    //             console.log(err);
-    //         }
-    //     }
-    //     console.log(getData());
-
-    // }, [data])
-
     const User_ID = sessionStorage.getItem("sessionToken");
     const Role = User_ID.substring(8)
     // const Role = "DEO"
-
-
-    const rightArrow = ">";
     
 	const [flc, setflc] = useState([]);
     async function getFLC() {
-
         try {
             const response = await fetch(
                 `${process.env.REACT_APP_API_SERVER}/unit/dashboard_cards`,
@@ -247,41 +156,52 @@ export default function HomePage() {
         }
     }
 
+    const [update, setUpdate] = useState(0);
     useEffect(() => {
-        console.log("statusData1",statusData1)
-    }, [statusData1]);
-
-    function DisplayMachineCountByModel({ val }) {
-        return <div>{val.count != "0" ? val.count + " " + val.model : "0"}</div>
+        // console.log("statusData1",statusData1)
+        console.log(update)
+    }, [update]);
+    
+    const getTotalStatusCount = async (oprnd, status1, setStatusData)=>{
+        const data2 = await getTotalCounts(oprnd, status1)
+        const data = data2.data
+        setStatusData(data);
+        console.log("StatusData1 inside use effetc", data)
     }
 
-    const countUnites = (data) => {
-        let sum = 0;
-        data.map((val) => {
-            val.model != "0" ? sum += val.count : sum += 0;
-        })
-        return sum;
-    }
+    useEffect(() => {
+        let oprnd = window.sessionStorage.getItem('sessionToken');
+        if (state!="IN") {
+            oprnd = state+oprnd.slice(2,8)
+            if (district!="ALL"){
+                oprnd = state+district+oprnd.slice(5,7)
+            }
+        } 
+        getTotalStatusCount(oprnd, status1, setStatusData1);
+    }, [status1, state, district])
+    useEffect(() => {
+        let oprnd = window.sessionStorage.getItem('sessionToken');
+        if (state!="IN") {
+            oprnd = state+oprnd.slice(2,8)
+            if (district!="ALL"){
+                oprnd = state+district+oprnd.slice(5,7)
+            }
+        } 
+        getTotalStatusCount(oprnd, status2, setStatusData2);
+    }, [status2, state, district])
+
+
 
     function CreateCard({status, setStatus, statusData}) {
         console.log(status)
-        console.log(statusData)
-        let data;
-        // if (Object.keys(statusData).length) {
-        //     data= statusData;
-        // } else {
-            data= {
-                B_M2: [0,0,0],
-                B_M3: [0,0,0],
-                E_M2: [0,0,0],
-                E_M3: [0,0,0]
-            }
-        // }
+        console.log("status data form card",statusData)
+        let data = formatTotalCount(statusData);
+        console.log(Object.keys(statusData).length)
         return ( !data?"":
             <div className={styles.myCardSample}>
                 <div className={styles.card_title}>
                     <div className={"flex align-middle"}>
-                        <select className={"bg-[#84587C] text-white"} onClick={(e)=>{
+                        <select className={"bg-[#84587C] text-white py-0"} onClick={(e)=>{
                             setStatus(e.target.value);
                         }}>
                             <option value={status}>{"Units > "+status}</option>
@@ -450,7 +370,7 @@ export default function HomePage() {
                             }
                         }}><AiOutlineArrowLeft/></div>:""}
                         {state!="IN"?<span className="ml-6">{`State: ${state}`}</span>:<><span className="ml-6">State: </span>
-                        <select onChange={(e)=>{
+                        <select className="py-0" onChange={(e)=>{
                             console.log(e.target.value)
                             setState(e.target.value);
                         }}>
@@ -463,7 +383,7 @@ export default function HomePage() {
                         </select></>}
                         
                         {state!="IN"?district!="ALL"?<><span className="px-4">{`District: ${district}`}</span></>:<> <br/><span>{"District: "}</span>
-                        <select onChange={(e)=>{
+                        <select className="py-0" onChange={(e)=>{
                             console.log(e.target.value)
                             setDistrict(e.target.value);
                         }}>
