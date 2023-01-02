@@ -68,6 +68,9 @@ export default function HomePage() {
             E_M2: [0,0,0],
             E_M3: [0,0,0]
         }
+        if (!data) {
+            return temp;
+        }
         data.map((val)=>{
             if (val.manufacturer==="B"&& val.model==="M2") {
                 temp.B_M2[0] += val.BU;
@@ -196,7 +199,6 @@ export default function HomePage() {
         console.log(status)
         console.log("status data form card",statusData)
         let data = formatTotalCount(statusData);
-        console.log(Object.keys(statusData).length)
         return ( !data?"":
             <div className={styles.myCardSample}>
                 <div className={styles.card_title}>
@@ -223,7 +225,7 @@ export default function HomePage() {
                                 <th className="w-32">Manufacture</th>
                                 <th className="w-14">Model</th>
                                 <th>BU</th>
-                                <th>VU</th>
+                                <th>CU</th>
                                 <th>VVPAT</th>
                             </tr>
                         </thead>
@@ -402,7 +404,7 @@ export default function HomePage() {
                                     <th className="">Manufacture</th>
                                     <th className="">Model</th>
                                     <th>BU</th>
-                                    <th>VU</th>
+                                    <th>CU</th>
                                     <th>VVPAT</th>
                                 </tr>
                             </thead>
