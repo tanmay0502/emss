@@ -73,7 +73,22 @@ export default function UnitList() {
     } catch (err) {
       console.log(err)
     }
+  }
 
+
+  useEffect(
+    () => {
+      let timer1 = setTimeout(() => getData(), 1 * 1000);
+      return () => {
+        clearTimeout(timer1);
+      };
+    },
+    []
+  );
+
+
+
+  const getData2 = async () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_SERVER}/unit/listUnits/`, {
         method: "POST",
@@ -96,37 +111,54 @@ export default function UnitList() {
     } catch (err) {
       console.log(err)
     }
-
-    try {
-      const response = await fetch(`${process.env.REACT_APP_API_SERVER}/unit/listUnits/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-        }),
-        credentials: "include",
-      });
-
-      let Input = await response.json();
-      if (response.status == 200) {
-        if (Input && Input["data"] && Input['data'].length) {
-          setData3(Input['data']);
-        }
-        else {
-          setData3([]);
-        }
-      }
-    } catch (err) {
-      console.log(err)
-    }
   }
 
 
-  useEffect(() => {
-    // if (isPageLoaded == 0) {
-    getData()
-    // setIsPageLoaded(1)
-    // }
-  }, [])
+
+  useEffect(
+    () => {
+      let timer1 = setTimeout(() => getData2(), 1 * 1000);
+      return () => {
+        clearTimeout(timer1);
+      };
+    },
+    []
+  );
+
+
+  // const getData3 = async () => {
+  //   try {
+  //     const response = await fetch(`${process.env.REACT_APP_API_SERVER}/unit/listUnits/`, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({
+  //       }),
+  //       credentials: "include",
+  //     });
+
+  //     let Input = await response.json();
+  //     if (response.status == 200) {
+  //       if (Input && Input["data"] && Input['data'].length) {
+  //         setData3(Input['data']);
+  //       }
+  //       else {
+  //         setData3([]);
+  //       }
+  //     }
+  //   } catch (err) {
+  //     console.log(err)
+  //   }
+  // }
+
+  // useEffect(
+  //   () => {
+  //     let timer1 = setTimeout(() => getData3(), 1 * 1000);
+  //     return () => {
+  //       clearTimeout(timer1);
+  //     };
+  //   },
+  //   []
+  // );
 
   const [flag, setflag] = useState([]);
   const [isPageLoadedAll, setIsPageLoadedAll] = useState(0)

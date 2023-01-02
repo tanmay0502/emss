@@ -69,6 +69,7 @@
     padding: 15px 30px;
     text-align: left !important;
     margin-top: 25px;
+    overflow: scroll;
 }
 
 .myCardSampleHome .card_title{
@@ -80,7 +81,7 @@
 
 .myCardSampleHome select{
     width: 372px;
-    height: 41px;
+    height: 50px;
     font-size: 16px;
     margin-left: auto;
     margin-right: auto;

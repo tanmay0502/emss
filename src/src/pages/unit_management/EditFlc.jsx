@@ -112,12 +112,12 @@ function FlcEdit() {
     const [Tentative_month_of_election, setTentative_month_of_election] = useState('')
     const [Type_of_election, setType_of_election] = useState('');
     const [numengineers, setnumengineers] = useState('');
-    const [setType_of_election_sf] = useState('');
+    const [Type_of_election_sf, setType_of_election_sf] = useState('');
     const User_ID = sessionStorage.getItem("sessionToken");
     const [photoFileData, setPhotoFileData] = useState("")
     const [flcreport, setflcreport] = useState("")
     const [flcreportname, setflcreportname] = useState("")
-    const [setAcknowledgmentname] = useState("")
+    const [Acknowledgmentname, setAcknowledgmentname] = useState("")
     const [inputflcreport, setinputflcreport] = useState(-1)
     const [Acknowledgment, setAcknowledgment] = useState("")
     const [InputAcknowledgment, setInputAcknowledgment] = useState(-1)
@@ -130,8 +130,6 @@ function FlcEdit() {
     const [Defective_Warehouse, setDefective_Warehouse] = useState('');
     const Role = User_ID.substring(8)
 
-
-    // NDK 
     async function getListN() {
 
         try {
@@ -170,7 +168,7 @@ function FlcEdit() {
             };
         },
 
-        [setIsLoading]
+        []
     );
 
 
@@ -212,7 +210,7 @@ function FlcEdit() {
             };
         },
 
-        [setIsLoading]
+        []
     );
     async function getListK() {
 
@@ -231,6 +229,7 @@ function FlcEdit() {
                 })
 
             const data = await response.json();
+            console.log(data, 'datak')
             setListDefective_Warehouse(data["data"])
         } catch (error) {
             console.log(error)
@@ -249,96 +248,97 @@ function FlcEdit() {
             };
         },
 
-        [setIsLoading]
+        []
     );
 
 
 
 
 
+    async function getFLC() {
+        let id = issueId();
+        try {
+            const response = await fetch(
+                `${process.env.REACT_APP_API_SERVER}/unit/viewFLC`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify(
+                        {
+                            flcId: id
+                        }
+                    )
+                }
+            );
+
+
+            const data = await response.json();
+            console.log(data, "viewflc")
+            if (response.status === 200) {
+                if (data['data'].length) {
+                    setFlc((data['data'] !== null) ? data['data'] : [])
+                    setdistrict((data['data'][0]['district'] !== null) ? data['data'][0]['district'] : '')
+                    setmanufacture((data['data'][0]['manufacturer'] !== null) ? data['data'][0]['manufacturer'] : '')
+                    setTentative_month_of_election((data['data'][0]['tentativemonth'] !== null) ? data['data'][0]['tentativemonth'] : '')
+                    setTentative_Year_Of_Election((data['data'][0]['tentativeyear'] !== null) ? data['data'][0]['tentativeyear'] : '')
+                    setManufacturer_State_Coordinator_Name((data['data'][0]['manufacturerstatecoordinatorname'] !== null) ? data['data'][0]['manufacturerstatecoordinatorname'] : '')
+                    setManufacturer_State_Coordinator_Email_ID((data['data'][0]['manufacturerstatecoordinatoremailid'] !== null) ? data['data'][0]['manufacturerstatecoordinatoremailid'] : '')
+                    setManufacturer_State_Coordinator_Mobile_No((data['data'][0]['manufacturerstatecoordinatormobno'] !== null) ? data['data'][0]['manufacturerstatecoordinatormobno'] : '')
+                    setflcsupervisoremailid((data['data'][0]['flcsupervisoremailid'] !== null) ? data['data'][0]['flcsupervisoremailid'] : '')
+                    setflcsupervisorname((data['data'][0]['flcsupervisorname'] !== null) ? data['data'][0]['flcsupervisorname'] : '')
+                    setflcsupervisormobno((data['data'][0]['flcsupervisormobno'] !== null) ? data['data'][0]['flcsupervisormobno'] : '')
+                    setflcvenue((data['data'][0]['flcvenue'] !== null) ? data['data'][0]['flcvenue'] : '')
+                    setmanufacturerdistrictcoordinatoremailid((data['data'][0]['manufacturerdistrictcoordinatoremailid'] !== null) ? data['data'][0]['manufacturerdistrictcoordinatoremailid'] : '')
+                    setmanufacturerdistrictcoordinatormobno((data['data'][0]['manufacturerdistrictcoordinatormobno'] !== null) ? data['data'][0]['manufacturerdistrictcoordinatormobno'] : '')
+                    setmanufacturerdistrictcoordinatorname((data['data'][0]['manufacturerdistrictcoordinatorname'] !== null) ? data['data'][0]['manufacturerdistrictcoordinatorname'] : '')
+                    setnumengineers((data['data'][0]['numengineers'] !== null) ? data['data'][0]['numengineers'] : 0)
+
+
+                    if (data['data'][0]['startdate']) {
+                        let StartDate = data['data'][0]['startdate'].split('T')[0];
+                        setstartdate(StartDate.slice(6) + '-' + StartDate.slice(3, 5) + "-" + StartDate.slice(0, 2))
+                        // setstartdate(data['data'][0]['startdate'])
+                        setstartdateshow(data['data'][0]['startdate'])
+                    }
+                    if (data['data'][0]['enddate']) {
+                        let EndDate = data['data'][0]['enddate'].split('T')[0];
+                        setenddate(EndDate.slice(6) + '-' + EndDate.slice(3, 5) + "-" + EndDate.slice(0, 2))
+                        // setenddate(data['data'][0]['enddate'])
+                        setenddateshow(data['data'][0]['enddate'])
+                    }
+
+                    if (data['data'][0]['electiontype'] === 'GA') {
+                        setType_of_election('General Assembly')
+                        setType_of_election_sf('GA')
+                    }
+                    else if (data['data'][0]['electiontype'] === 'GP') {
+                        setType_of_election('General Parliamentary')
+                        setType_of_election_sf('GP')
+                    }
+                    else if (data['data'][0]['electiontype'] === 'BA') {
+                        setType_of_election('By-poll Assembly')
+                        setType_of_election_sf('BA')
+                    }
+                    else if (data['data'][0]['electiontype'] === 'BP') {
+                        setType_of_election('By-poll Parliamentary')
+                        setType_of_election_sf('BP')
+                    }
+
+                }
+            }
+
+        } catch (err) {
+            console.log({ err });
+        }
+    }
+
     useEffect(
         () => {
 
             setIsLoading(1);
-            async function getFLC() {
-                let id = issueId();
-                try {
-                    const response = await fetch(
-                        `${process.env.REACT_APP_API_SERVER}/unit/viewFLC`,
-                        {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                            credentials: 'include',
-                            body: JSON.stringify(
-                                {
-                                    flcId: id
-                                }
-                            )
-                        }
-                    );
-
-
-                    const data = await response.json();
-                    console.log(data, "viewflc")
-                    if (response.status === 200) {
-                        if (data['data'].length) {
-                            setFlc((data['data'] !== null) ? data['data'] : [])
-                            setdistrict((data['data'][0]['district'] !== null) ? data['data'][0]['district'] : '')
-                            setmanufacture((data['data'][0]['manufacturer'] !== null) ? data['data'][0]['manufacturer'] : '')
-                            setTentative_month_of_election((data['data'][0]['tentativemonth'] !== null) ? data['data'][0]['tentativemonth'] : '')
-                            setTentative_Year_Of_Election((data['data'][0]['tentativeyear'] !== null) ? data['data'][0]['tentativeyear'] : '')
-                            setManufacturer_State_Coordinator_Name((data['data'][0]['manufacturerstatecoordinatorname'] !== null) ? data['data'][0]['manufacturerstatecoordinatorname'] : '')
-                            setManufacturer_State_Coordinator_Email_ID((data['data'][0]['manufacturerstatecoordinatoremailid'] !== null) ? data['data'][0]['manufacturerstatecoordinatoremailid'] : '')
-                            setManufacturer_State_Coordinator_Mobile_No((data['data'][0]['manufacturerstatecoordinatormobno'] !== null) ? data['data'][0]['manufacturerstatecoordinatormobno'] : '')
-                            setflcsupervisoremailid((data['data'][0]['flcsupervisoremailid'] !== null) ? data['data'][0]['flcsupervisoremailid'] : '')
-                            setflcsupervisorname((data['data'][0]['flcsupervisorname'] !== null) ? data['data'][0]['flcsupervisorname'] : '')
-                            setflcsupervisormobno((data['data'][0]['flcsupervisormobno'] !== null) ? data['data'][0]['flcsupervisormobno'] : '')
-                            setflcvenue((data['data'][0]['flcvenue'] !== null) ? data['data'][0]['flcvenue'] : '')
-                            setmanufacturerdistrictcoordinatoremailid((data['data'][0]['manufacturerdistrictcoordinatoremailid'] !== null) ? data['data'][0]['manufacturerdistrictcoordinatoremailid'] : '')
-                            setmanufacturerdistrictcoordinatormobno((data['data'][0]['manufacturerdistrictcoordinatormobno'] !== null) ? data['data'][0]['manufacturerdistrictcoordinatormobno'] : '')
-                            setmanufacturerdistrictcoordinatorname((data['data'][0]['manufacturerdistrictcoordinatorname'] !== null) ? data['data'][0]['manufacturerdistrictcoordinatorname'] : '')
-                            setnumengineers((data['data'][0]['numengineers'] !== null) ? data['data'][0]['numengineers'] : 0)
-
-
-                            if (data['data'][0]['startdate']) {
-                                let StartDate = data['data'][0]['startdate'].split('T')[0];
-                                setstartdate(StartDate.slice(6) + '-' + StartDate.slice(3, 5) + "-" + StartDate.slice(0, 2))
-                                // setstartdate(data['data'][0]['startdate'])
-                                setstartdateshow(data['data'][0]['startdate'])
-                            }
-                            if (data['data'][0]['enddate']) {
-                                let EndDate = data['data'][0]['enddate'].split('T')[0];
-                                setenddate(EndDate.slice(6) + '-' + EndDate.slice(3, 5) + "-" + EndDate.slice(0, 2))
-                                // setenddate(data['data'][0]['enddate'])
-                                setenddateshow(data['data'][0]['enddate'])
-                            }
-
-                            if (data['data'][0]['electiontype'] === 'GA') {
-                                setType_of_election('General Assembly')
-                                setType_of_election_sf('GA')
-                            }
-                            else if (data['data'][0]['electiontype'] === 'GP') {
-                                setType_of_election('General Parliamentary')
-                                setType_of_election_sf('GP')
-                            }
-                            else if (data['data'][0]['electiontype'] === 'BA') {
-                                setType_of_election('By-poll Assembly')
-                                setType_of_election_sf('BA')
-                            }
-                            else if (data['data'][0]['electiontype'] === 'BP') {
-                                setType_of_election('By-poll Parliamentary')
-                                setType_of_election_sf('BP')
-                            }
-
-                        }
-                    }
-
-                } catch (err) {
-                    console.log({ err });
-                }
-            }
             let timer1 = setTimeout(() => getFLC(), 1 * 1000);
 
             return () => {
@@ -346,45 +346,46 @@ function FlcEdit() {
             };
         },
 
-        [setIsLoading, setFlc, setType_of_election_sf]
+        []
     );
 
 
 
 
 
+    async function getpreparednesscertificate() {
+        let id = issueId();
+        try {
+            const response = await fetch(
+                `${process.env.REACT_APP_API_SERVER}/unit/getunitdocument`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify(
+                        {
+                            "fileType": "preparednessCertificate",
+                            "flcID": Number(id)
+                        }
+                    )
+                }
+            );
+
+
+            const data = await response.json();
+            if (response.status === 200) {
+                setPhotoFileData(data['data'])
+            }
+
+        } catch (err) {
+            console.log({ err });
+        }
+    };
+
     useEffect(
         () => {
-            async function getpreparednesscertificate() {
-                let id = issueId();
-                try {
-                    const response = await fetch(
-                        `${process.env.REACT_APP_API_SERVER}/unit/getunitdocument`,
-                        {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                            credentials: 'include',
-                            body: JSON.stringify(
-                                {
-                                    "fileType": "preparednessCertificate",
-                                    "flcID": Number(id)
-                                }
-                            )
-                        }
-                    );
-
-
-                    const data = await response.json();
-                    if (response.status === 200) {
-                        setPhotoFileData(data['data'])
-                    }
-
-                } catch (err) {
-                    console.log({ err });
-                }
-            };
             let timer1 = setTimeout(() => getpreparednesscertificate(), 1 * 1000);
             return () => {
                 clearTimeout(timer1);
@@ -397,40 +398,41 @@ function FlcEdit() {
 
 
 
+    async function getflcreport() {
+        let id = issueId();
+        try {
+            const response = await fetch(
+                `${process.env.REACT_APP_API_SERVER}/unit/getunitdocument`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify(
+                        {
+                            "fileType": "flcReport",
+                            "flcID": Number(id)
+                        }
+                    )
+                }
+            );
+
+
+            const data = await response.json();
+
+            if (response.status === 200) {
+                setflcreport(data['data'])
+                setinputflcreport(1)
+            }
+
+        } catch (err) {
+            console.log({ err });
+        }
+    }
+
     useEffect(
         () => {
-            async function getflcreport() {
-                let id = issueId();
-                try {
-                    const response = await fetch(
-                        `${process.env.REACT_APP_API_SERVER}/unit/getunitdocument`,
-                        {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                            credentials: 'include',
-                            body: JSON.stringify(
-                                {
-                                    "fileType": "flcReport",
-                                    "flcID": Number(id)
-                                }
-                            )
-                        }
-                    );
-
-
-                    const data = await response.json();
-
-                    if (response.status === 200) {
-                        setflcreport(data['data'])
-                        setinputflcreport(1)
-                    }
-
-                } catch (err) {
-                    console.log({ err });
-                }
-            }
             let timer1 = setTimeout(() => getflcreport(), 1 * 1000);
             return () => {
                 clearTimeout(timer1);
@@ -440,41 +442,41 @@ function FlcEdit() {
     );
 
 
+    async function getacknowledgement() {
+        let id = issueId();
+        try {
+            const response = await fetch(
+                `${process.env.REACT_APP_API_SERVER}/unit/getunitdocument`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify(
+                        {
+                            "fileType": "acknowledgement",
+                            "flcID": Number(id)
+                        }
+                    )
+                }
+            );
+
+
+            const data = await response.json();
+
+            if (response.status === 200) {
+                setAcknowledgment(data['data'])
+                setInputAcknowledgment(1);
+            }
+
+        } catch (err) {
+            console.log({ err });
+        }
+    }
 
     useEffect(
         () => {
-            async function getacknowledgement() {
-                let id = issueId();
-                try {
-                    const response = await fetch(
-                        `${process.env.REACT_APP_API_SERVER}/unit/getunitdocument`,
-                        {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                            credentials: 'include',
-                            body: JSON.stringify(
-                                {
-                                    "fileType": "acknowledgement",
-                                    "flcID": Number(id)
-                                }
-                            )
-                        }
-                    );
-
-
-                    const data = await response.json();
-
-                    if (response.status === 200) {
-                        setAcknowledgment(data['data'])
-                        setInputAcknowledgment(1);
-                    }
-
-                } catch (err) {
-                    console.log({ err });
-                }
-            }
             let timer1 = setTimeout(() => getacknowledgement(), 1 * 1000);
             return () => {
                 clearTimeout(timer1);

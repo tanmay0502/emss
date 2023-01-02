@@ -69,6 +69,15 @@ export default function SecondRandCard() {
           // return (elem["userid"].toLowerCase().includes(filter) || elem["name"].toLowerCase().includes(filter))
         }
       }).map((val) => {
+        let st = ""
+        let ed = ""
+        try {
+          // st = st + val['startdate'].slice(0, 10)
+          // ed = ed + val["enddate"].slice(0, 10)
+        } catch (err) {
+          // st = ""
+          console.log(err)
+        }
 
         return {
           'ID': val['ID'],
@@ -84,8 +93,6 @@ export default function SecondRandCard() {
 
     }
   }, [])
-
-
 
 
 
