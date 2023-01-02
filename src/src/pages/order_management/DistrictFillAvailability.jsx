@@ -13,6 +13,7 @@ import ToggleButton from '../../components/ToggleButton';
 import { ReactComponent as ChevronDown } from "../../assets/ChevronDown.svg";
 import { ReactComponent as SearchIcon } from "../../assets/search.svg";
 import { formatRealm, getRealm } from "../../components/utils";
+import { UnitCount } from "./Utils";
 
 
 export default function DistrictFillAvailability(props) {
@@ -30,6 +31,12 @@ export default function DistrictFillAvailability(props) {
         let data = await getRealm("Order", "FillCapacity")
         let districts = formatRealm(data, "CEO", sessionStorage.getItem("sessionToken").substring(0, 2), "", "");
         console.log(districts)
+        districts.map((dist)=>{
+            let timer = setTimeout(()=>getTUnits(sessionStorage.getItem("sessionToken").substring(0,2)+dist["dtCode"]+"000DEO",100));
+            return(()=>{
+                clearTimeout(timer)
+            })
+        })
         setDistricts(districts);
     }
 
@@ -472,7 +479,7 @@ export default function DistrictFillAvailability(props) {
             if (Object.keys(orderCount).length == 0)
                 setOrderCount(fillDemand);
         }
-        if (Object.keys(orderCount).length != 0 && fl == 0) {
+        if (Object.keys(orderCount).length != 0 && fl == 0 && orderCount[Object.keys(orderCount)[0]].length==0) {
             setFl(1);
             run();
         }
@@ -482,6 +489,29 @@ export default function DistrictFillAvailability(props) {
     useEffect(() => {
         console.log(orderCount)
 
+    }, [orderCount]);
+
+
+    useEffect(()=>{
+        if(Object.keys(orderCount).length==0){
+        let fillDemand = {}
+        Districts.map((val,id)=>{
+            fillDemand[id.toString()]={};
+        })
+        console.log(fillDemand)
+        if(Object.keys(orderCount).length==0)
+        setOrderCount(fillDemand);
+    }
+        if(Object.keys(orderCount).length!=0 && fl==0){
+            setFl(1);
+            run();
+        }
+       
+    },[Details,Districts,orderCount])
+
+    useEffect(() => {
+        console.log(orderCount)
+       
     }, [orderCount]);
 
 
@@ -584,6 +614,78 @@ export default function DistrictFillAvailability(props) {
 
     }
 
+    const [Units, setTUnits] = useState({});
+
+    async function getTUnits(oprnd){
+        let body ={
+            "oprnd": oprnd,
+            "status": "Available for Use"
+          }
+
+          let data = await UnitCount(body);
+          console.log(data)
+
+         setTUnits((prev)=>{
+            let ppp = {...prev};
+            let EM2CU = 0;
+            let EM3CU = 0;
+            let BM2CU = 0;
+            let BM3CU = 0;
+            let EM2BU = 0;
+            let EM3BU = 0;
+            let BM2BU = 0;
+            let BM3BU = 0;
+            let EM2VT = 0;
+            let EM3VT = 0;
+            let BM2VT = 0;
+            let BM3VT = 0;
+            data.map((val)=>{
+                let p = "";
+                p+=val["manufacturer"]+val["model"]+"BU";
+                if(val["model"]!="BU" && val["model"]!="CU"){
+                let pp = eval(p)+val["BU"];
+                eval(p +" = "+pp);
+                }
+                p = "";
+                p+=val["manufacturer"]+val["model"]+"CU";
+                if(val["model"]!="BU" && val["model"]!="CU"){
+                let pp = eval(p)+val["CU"];
+                eval(p +" = "+pp);
+                }
+                p = "";
+                p+=val["manufacturer"]+val["model"]+"VT";
+                if(val["model"]!="BU" && val["model"]!="CU"){
+                let pp = eval(p)+val["VT"];
+                eval(p +" = "+pp);
+                }
+            })
+            ppp[oprnd] = {
+                "EM2CU" : EM2CU,
+                "EM3CU" : EM3CU,
+                "BM2CU" : BM2CU,
+                "BM3CU" : BM3CU,
+                "EM2BU" : EM2BU,
+                "EM3BU" : EM3BU,
+                "BM2BU" : BM2BU,
+                "BM3BU" : BM3BU,
+                "EM2VVPAT" : EM2VT,
+                "EM3VVPAT" : EM3VT,
+                "BM2VVPAT" : BM2VT,
+                "BM3VVPAT" : BM3VT,
+            };
+            console.log(ppp)
+            return ppp;
+         })
+
+
+
+    }
+
+    useEffect(()=>{
+        console.log(Units);
+    },[Units])
+
+
 
 
     return (
@@ -640,33 +742,48 @@ export default function DistrictFillAvailability(props) {
 
                                     {Districts.length > 0 &&
                                         Districts.map((val, id) => (<>
-                                            <tr onClick={(e) => setBox(id)} className="flex justify-start ml-10 ">
-                                                <td className="text-black text-sm ">{id + 1}</td>
+                                             <tr onClick={(e) => setBox(id)} className="flex justify-start ml-10 ">
+                                                <td className="text-black text-sm ">{id+1}</td>
                                                 <td className="text-black text-sm- ml-10">{val["dtName"]}</td>
                                                 {/* <td className="text-black text-sm">{val["Warehouse Type"]}</td> */}
                                                 {/* <td className="text-black text-sm">{val['Status']}</td> */}
-                                            </tr>
-                                            {orderCount && <tr className="pb-10 ">
-                                                <td colSpan="20" className="">
-                                                    {orderCount && orderCount[id] && Object.keys(orderCount[id]).map((key) => (
-                                                        <div className="">
-
-                                                            {orderCount[id][key]["type"] != "select" && orderCount[id][key]["model"] != "select" && orderCount[id][key]["manufacturer"] != "select" && <div className="flex justify-between text-black p-3 h-6 text-sm pb-2 ">
-                                                                {/* <p>{orderCount[id][key]["type"]}</p><p>{"-->"}</p><p>{orderCount[id][key]["model"]}</p><p>{"-->"}</p><p>{orderCount[id][key]["manufacturer"]}</p><p>{"-->"}</p><p>{orderCount[id][key]["quantity"]}</p> */}
-                                                                <div className="w-full flex">
-                                                                    <div className="w-1/4">{orderCount[id][key]["type"]}</div>
-                                                                    <div className="w-1/4">{orderCount[id][key]["model"]}</div>
-                                                                    <div className="w-1/4">{orderCount[id][key]["manufacturer"]}</div>
-                                                                    <div className="w-1/4"><input type="number" placeholder="No of Unit" className="border " id={id.toString() + "_" + key.toString() + "_quantity"} onChange={(e) => calculate(id, key, "quantity", e.target.value)} value={orderCount[id][key]["quantity"]} required></input></div>
-                                                                </div>
-                                                            </div>}
+                                                </tr>
+                                                <tr>
+                                                    <td colSpan={20}>
+                                                        <div className="flex w-full">
+                                                            <div className="w-1/5">Type</div>
+                                                            <div className="w-1/5">Model</div>
+                                                            <div className="w-1/5">Manufacturer</div>
+                                                            <div className="w-1/5">Available Units</div>
+                                                            <div className="w-1/5">Filled Units</div>
                                                         </div>
-                                                    ))}
+                                                    </td>
+                                                </tr>
+                                                {orderCount && <tr className="pb-10 ">
+                                                
+                                            <td colSpan="20" className="">
+                                                {orderCount && orderCount[id] && Object.keys(orderCount[id]).map((key)=>(
+                                                    <div className="">
+                                                        
+                                                        {orderCount[id][key]["type"]!="select" && orderCount[id][key]["model"]!="select" && orderCount[id][key]["manufacturer"]!="select" && <div className="flex justify-between text-black p-3 h-6 text-sm pb-2 ">
+                                                            {/* <p>{orderCount[id][key]["type"]}</p><p>{"-->"}</p><p>{orderCount[id][key]["model"]}</p><p>{"-->"}</p><p>{orderCount[id][key]["manufacturer"]}</p><p>{"-->"}</p><p>{orderCount[id][key]["quantity"]}</p> */}
+                                                            <div className="w-full flex">
+                                                                <div className="w-1/5">{orderCount[id][key]["type"]}</div>
+                                                                <div className="w-1/5">{orderCount[id][key]["model"]}</div>
+                                                                <div className="w-1/5">{orderCount[id][key]["manufacturer"]}</div>
+                                                                <div className="w-1/5">
+                                                                    {Units && Units[sessionStorage.getItem("sessionToken").substring(0,2)+val["dtCode"]+"000DEO"] && Units[sessionStorage.getItem("sessionToken").substring(0,2)+val["dtCode"]+"000DEO"][orderCount[id][key]["manufacturer"].substring(0,1)+orderCount[id][key]["model"]+orderCount[id][key]["type"]]}
+                                                                </div>
+                                                                <div className="w-1/5"><input type="number" placeholder="No of Unit" className="border " id={id.toString() + "_" + key.toString() + "_quantity"} onChange={(e)=>calculate(id,key,"quantity",e.target.value)} value={orderCount[id][key]["quantity"]} required></input></div>
+                                                            </div>
+                                                        </div> }
+                                                    </div>
+                                                ))}
 
-                                                </td>
-                                            </tr>}
-
-                                            {/* { boxId.length==1 && boxId[0]==id && (
+                                            </td>
+                                        </tr>}
+                                       
+                                              {/* { boxId.length==1 && boxId[0]==id && (
                                                 <tr >
                                                     <td colSpan="10">
                                                     <div className="border rounded-md p-3">
@@ -746,7 +863,7 @@ export default function DistrictFillAvailability(props) {
                                                     </td>
                                                 </tr>
                                               )} */}
-                                            <tr className="">
+                                              <tr className="">
                                                 <td colSpan="20">
                                                     <hr className="border-1 border-black" />
                                                 </td>

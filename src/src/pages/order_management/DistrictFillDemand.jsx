@@ -23,26 +23,26 @@ export default function DistrictFillDemand(props) {
     const [Districts, setDistricts] = React.useState([]);
     const [warehouseMapping, setWarehouseMapping] = useState(null)
     const [Details, setDetails] = React.useState([]);
-    const [pageLoaded, setPageLoaded] = useState(0);
+    const [pageLoaded,setPageLoaded] =  useState(0);
 
     async function getDistricts() {
         let data = await getRealm("Order", "FillCapacity")
-        let districts = formatRealm(data, "CEO", sessionStorage.getItem("sessionToken").substring(0, 2), "", "");
+        let districts = formatRealm(data,"CEO",sessionStorage.getItem("sessionToken").substring(0,2),"","");
         console.log(districts)
         setDistricts(districts);
     }
-
-    useEffect(() => {
-        let time = setTimeout(() => getDistricts(), 0.3 * 1000);
-        return (() => {
+    
+    useEffect(()=>{
+        let time = setTimeout(()=>getDistricts(),0.3*1000);
+        return (()=>{
             clearTimeout(time);
         })
-    }, [])
+    },[])
 
 
     const units = [['CU', 50, 'M3'], ['CU', 50, 'M3'], ['CU', 50, 'M3'], ['CU', 50, 'M3'], ['CU', 50, 'M3'], ['CU', 50, 'M3']]
 
-    const models = ["M2", "M3"]
+    const models=["M2","M3"]
     const [showFill, setShowFill] = useState([]);
     const sortMapping = {
         "None": null,
@@ -51,141 +51,141 @@ export default function DistrictFillDemand(props) {
         "Room Type": "Room Type",
     }
 
+    
 
 
+    const  [total_BU_M2, settotal_BU_M2] = useState(0)
+    const  [filled_BU_M2, setfilled_BU_M2] = useState(0)
+    const  [leftout_BU_M2, setleftout_BU_M2] = useState(0)
+    const  [total_BU_M3, settotal_BU_M3] = useState(0)
+    const  [filled_BU_M3, setfilled_BU_M3] = useState(0)
+    const  [leftout_BU_M3, setleftout_BU_M3] = useState(0)
 
-    const [total_BU_M2, settotal_BU_M2] = useState(0)
-    const [filled_BU_M2, setfilled_BU_M2] = useState(0)
-    const [leftout_BU_M2, setleftout_BU_M2] = useState(0)
-    const [total_BU_M3, settotal_BU_M3] = useState(0)
-    const [filled_BU_M3, setfilled_BU_M3] = useState(0)
-    const [leftout_BU_M3, setleftout_BU_M3] = useState(0)
 
+    const  [total_CU_M2, settotal_CU_M2] = useState(0)
+    const  [filled_CU_M2, setfilled_CU_M2] = useState(0)
+    const  [leftout_CU_M2, setleftout_CU_M2] = useState(0)
+    const  [total_CU_M3, settotal_CU_M3] = useState(0)
+    const  [filled_CU_M3, setfilled_CU_M3] = useState(0)
+    const  [leftout_CU_M3, setleftout_CU_M3] = useState(0)
 
-    const [total_CU_M2, settotal_CU_M2] = useState(0)
-    const [filled_CU_M2, setfilled_CU_M2] = useState(0)
-    const [leftout_CU_M2, setleftout_CU_M2] = useState(0)
-    const [total_CU_M3, settotal_CU_M3] = useState(0)
-    const [filled_CU_M3, setfilled_CU_M3] = useState(0)
-    const [leftout_CU_M3, setleftout_CU_M3] = useState(0)
+    const  [total_VVPAT_M2, settotal_VVPAT_M2] = useState(0)
+    const  [filled_VVPAT_M2, setfilled_VVPAT_M2] = useState(0)
+    const  [leftout_VVPAT_M2, setleftout_VVPAT_M2] = useState(0)
+    const  [total_VVPAT_M3, settotal_VVPAT_M3] = useState(0)
+    const  [filled_VVPAT_M3, setfilled_VVPAT_M3] = useState(0)
+    const  [leftout_VVPAT_M3, setleftout_VVPAT_M3] = useState(0)
 
-    const [total_VVPAT_M2, settotal_VVPAT_M2] = useState(0)
-    const [filled_VVPAT_M2, setfilled_VVPAT_M2] = useState(0)
-    const [leftout_VVPAT_M2, setleftout_VVPAT_M2] = useState(0)
-    const [total_VVPAT_M3, settotal_VVPAT_M3] = useState(0)
-    const [filled_VVPAT_M3, setfilled_VVPAT_M3] = useState(0)
-    const [leftout_VVPAT_M3, setleftout_VVPAT_M3] = useState(0)
-
-    function setUnits() {
-        const stateCode = sessionStorage.getItem("sessionToken").substring(0, 2);
+    function setUnits(){
+        const stateCode = sessionStorage.getItem("sessionToken").substring(0,2);
         console.log(stateCode)
-        if (pageLoaded == 0) {
-            console.log(props.Order)
-            props.Order.map((order) => {
-                setPageLoaded(1);
-                if (order["destination"] == stateCode) {
-                    if (order["item"] == "CU" && order["itemmodel"] == "M2") {
-                        settotal_CU_M2(total_CU_M2 + Number(order["itemquantity"]));
-                        setleftout_CU_M2(total_CU_M2 + Number(order["itemquantity"]));
-                    }
-                    if (order["item"] == "CU" && order["itemmodel"] == "M3") {
-                        settotal_CU_M3(total_CU_M3 + Number(order["itemquantity"]));
-                        setleftout_CU_M3(total_CU_M3 + Number(order["itemquantity"]));
-                    }
-                    if (order["item"] == "BU" && order["itemmodel"] == "M2") {
-                        settotal_BU_M2(total_BU_M2 + Number(order["itemquantity"]));
-                        setleftout_BU_M2(total_BU_M2 + Number(order["itemquantity"]));
-                    }
-                    if (order["item"] == "BU" && order["itemmodel"] == "M3") {
-                        settotal_BU_M3(total_BU_M3 + Number(order["itemquantity"]));
-                        setleftout_BU_M3(total_BU_M3 + Number(order["itemquantity"]));
-                    }
-                    if (order["item"] == "VVPAT" && order["itemmodel"] == "M2") {
-                        settotal_VVPAT_M3(total_VVPAT_M2 + Number(order["itemquantity"]));
-                        setleftout_VVPAT_M3(total_VVPAT_M2 + Number(order["itemquantity"]));
-                    }
-                    if (order["item"] == "VVPAT" && order["itemmodel"] == "M3") {
-                        settotal_VVPAT_M3(total_VVPAT_M3 + Number(order["itemquantity"]));
-                        setleftout_VVPAT_M3(total_VVPAT_M3 + Number(order["itemquantity"]));
-                    }
+        if(pageLoaded==0){
+        console.log(props.Order)
+        props.Order.map((order)=>{
+            setPageLoaded(1);
+            if(order["destination"]==stateCode){
+                if(order["item"]=="CU" && order["itemmodel"]=="M2"){
+                    settotal_CU_M2(total_CU_M2+ Number(order["itemquantity"]));
+                    setleftout_CU_M2(total_CU_M2+ Number(order["itemquantity"]));
                 }
-            })
+                if(order["item"]=="CU" && order["itemmodel"]=="M3"){
+                    settotal_CU_M3(total_CU_M3+ Number(order["itemquantity"]));
+                    setleftout_CU_M3(total_CU_M3+ Number(order["itemquantity"]));
+                }
+                if(order["item"]=="BU" && order["itemmodel"]=="M2"){
+                    settotal_BU_M2(total_BU_M2+ Number(order["itemquantity"]));
+                    setleftout_BU_M2(total_BU_M2+ Number(order["itemquantity"]));
+                }
+                if(order["item"]=="BU" && order["itemmodel"]=="M3"){
+                    settotal_BU_M3(total_BU_M3+ Number(order["itemquantity"]));
+                    setleftout_BU_M3(total_BU_M3+ Number(order["itemquantity"]));
+                }
+                if(order["item"]=="VVPAT" && order["itemmodel"]=="M2"){
+                    settotal_VVPAT_M3(total_VVPAT_M2+ Number(order["itemquantity"]));
+                    setleftout_VVPAT_M3(total_VVPAT_M2+ Number(order["itemquantity"]));
+                }
+                if(order["item"]=="VVPAT" && order["itemmodel"]=="M3"){
+                    settotal_VVPAT_M3(total_VVPAT_M3+ Number(order["itemquantity"]));
+                    setleftout_VVPAT_M3(total_VVPAT_M3+ Number(order["itemquantity"]));
+                }
+            }
+        })
         }
-        console.log(total_BU_M2, total_BU_M3, total_CU_M3, total_CU_M2, total_VVPAT_M2, total_VVPAT_M3);
+        console.log(total_BU_M2,total_BU_M3,total_CU_M3,total_CU_M2,total_VVPAT_M2,total_VVPAT_M3);
     }
 
-    useEffect(() => {
+    useEffect(()=>{
         setUnits()
-    }, [pageLoaded])
+    },[pageLoaded])
 
-    useEffect(() => {
+    useEffect(()=>{
 
         console.log(Districts)
-    }, [Districts])
+    },[Districts])
 
 
-    const [orderCount, setOrderCount] = useState({});
+    const [orderCount,setOrderCount] = useState({});
 
-    function increaseOne(index, type = "select", model = "select", mnf = "select") {
-        let v3 = {
-            "type": type,
-            "quantity": "0",
-            "model": model,
-            "manufacturer": mnf
+    function increaseOne(index,type="select",model="select",mnf = "select") {
+        let v3={
+            "type":type,
+            "quantity":"0",
+            "model":model,
+            "manufacturer":mnf
         }
         let temp = orderCount;
-        if (temp[index] && Object.keys(temp[index]).length == 0) {
-
-            temp[index]["0"] = v3;
+        if(temp[index] && Object.keys(temp[index]).length==0) {
+           
+            temp[index]["0"]=v3;
         }
-        else if (temp[index]) {
+        else if(temp[index]){
             console.log((Object.keys(temp[index]).length - 1).toString())
-            if (temp[index][(parseInt(Object.keys(temp[index])[(Object.keys(temp[index]).length - 1).toString()])).toString()] != v3)
-                temp[index][(parseInt(Object.keys(temp[index])[(Object.keys(temp[index]).length - 1).toString()]) + 1).toString()] = v3
+            if(temp[index][(parseInt(Object.keys(temp[index])[(Object.keys(temp[index]).length - 1).toString()])).toString()]!=v3)
+            temp[index][(parseInt(Object.keys(temp[index])[(Object.keys(temp[index]).length - 1).toString()]) + 1).toString()]=v3
         }
-
+        
         console.log(temp)
         setOrderCount({ ...temp });
+    
+      }
+    
+      function calculate(id1 , id2, key, value ) {
+        
 
-    }
-
-    function calculate(id1, id2, key, value) {
-
-
-        let _total_BU_M2 = 0
-        let _total_BU_M3 = 0
-        let _total_CU_M2 = 0
-        let _total_CU_M3 = 0
-        let _total_VVPAT_M2 = 0
-        let _total_VVPAT_M3 = 0
-
+        let _total_BU_M2 =0
+        let _total_BU_M3 =0
+        let _total_CU_M2 =0
+        let _total_CU_M3 =0
+        let _total_VVPAT_M2 =0
+        let _total_VVPAT_M3 =0
+        
         console.log(orderCount)
-        console.log("calculate", id1, id2, key, value)
+        console.log("calculate",id1,id2,key, value)
         // console.log((filled_CU_M2),filled_BU_M3)
-        let dummy2 = orderCount;
-        if (key == "quantity")
-            dummy2[id1][id2][key] = Number(value).toString();
+        let dummy2 =orderCount;
+        if(key=="quantity")
+        dummy2[id1][id2][key]=Number(value).toString();
         else
-            dummy2[id1][id2][key] = value
+        dummy2[id1][id2][key]=value
         console.log(dummy2)
 
-        Object.keys(dummy2).map((key1) => {
-            Object.keys(dummy2[key1]).map((key2) => {
-                if (dummy2[key1][key2]["type"] != "select" && dummy2[key1][key2]["model"] != "select" && dummy2[key1][key2]["manufacturer"] != "select") {
-
-                    let temp = ""
+        Object.keys(dummy2).map((key1)=>{
+            Object.keys(dummy2[key1]).map((key2)=>{
+                if(dummy2[key1][key2]["type"]!="select" && dummy2[key1][key2]["model"]!="select" && dummy2[key1][key2]["manufacturer"]!="select"){
+                    
+                    let temp=""
                     temp += "_total_" + dummy2[key1][key2]["type"] + "_" + dummy2[key1][key2]["model"];
-                    let temp2 = eval(temp)
-                    temp2 += parseInt(dummy2[key1][key2]["quantity"])
+                    let temp2=eval(temp)
+                    temp2+=parseInt(dummy2[key1][key2]["quantity"])
                     eval(temp + " = " + temp2.toString());
                 }
             })
         })
 
-
-
-
-
+       
+      
+        
+    
         console.log(_total_CU_M2, _total_CU_M3, _total_BU_M2, _total_BU_M3, _total_VVPAT_M2, _total_VVPAT_M3)
         setfilled_BU_M2(_total_BU_M2)
         setfilled_BU_M3(_total_BU_M3)
@@ -199,12 +199,12 @@ export default function DistrictFillDemand(props) {
         setleftout_CU_M3(total_CU_M3 - _total_CU_M3)
         setleftout_VVPAT_M2(total_VVPAT_M2 - _total_VVPAT_M2)
         setleftout_VVPAT_M3(total_VVPAT_M3 - _total_VVPAT_M3)
-
-
-
+        
+        
+    
         console.log(dummy2)
-        setOrderCount({ ...dummy2 })
-    }
+        setOrderCount({...dummy2})
+      }
 
     const rightArrow = ">";
 
@@ -285,7 +285,7 @@ export default function DistrictFillDemand(props) {
             return {
                 "Warehouse ID": val["type"] == 'P' ? <Fragment><span style={{ display: 'flex', justifyContent: 'left', alignItems: 'left', marginLeft: "35%" }}><FaCircle size='0.8em' className='PermaWarehouse' /><span style={{ marginLeft: '10px', marginRight: '10px' }}>{val["warehouseid"]}</span>{val['doublelock'] ? <Fragment><FaKey className='keyColor' /><FaKey className='keyColor' /></Fragment> : <FaKey className='keyColor' />}</span></Fragment> : <Fragment><span style={{ display: 'flex', justifyContent: 'left', alignItems: 'left', marginLeft: "35%" }}><FaCircle size='0.8em' className='TempWarehouse' /><span style={{ marginLeft: '10px', marginRight: '10px' }}>{val["warehouseid"]}</span>{val['doublelock'] ? <Fragment><FaKey className='keyColor' /><FaKey className='keyColor' /></Fragment> : <FaKey className='keyColor' />}</span></Fragment>,
                 "Room Type": warehouseMapping ? warehouseMapping["data"][val[2]] : "",
-                "Warehouse Type": val["type"] == "P" ? "Parmanent" : "Temporary",
+                "Warehouse Type": val["type"]=="P" ?"Parmanent" : "Temporary",
                 "Status": <ToggleButton userID={val["warehouseid"]} checked={val[3] === 'A'} onToggle={(e) => {
                     if (val["status"] !== "A") {
                         ActivateWarehouse(e)
@@ -311,14 +311,14 @@ export default function DistrictFillDemand(props) {
             data.reverse();
         }
         console.log(data)
-
+        
         // setDistricts(data)
         return () => {
         }
     }, [Details, warehouseMapping])
 
-
-
+  
+   
 
 
     async function getList() {
@@ -332,20 +332,18 @@ export default function DistrictFillDemand(props) {
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({
-                    }),
                     credentials: 'include',
-
+                    
                 })
 
             const data = await response.json();
-            console.log("warehouse list", data)
-            let activedata = []
-
-            data["data"].map((warehouse) => {
-                activedata.push(warehouse)
+            console.log("warehouse list",data)
+            let activedata=[]
+           
+            data["data"].map((warehouse)=>{
+                    activedata.push(warehouse)
             })
-            console.log("Active data", activedata)
+            console.log("Active data",activedata)
             setDetails(activedata);
 
         } catch (error) {
@@ -358,51 +356,51 @@ export default function DistrictFillDemand(props) {
         getList();
     }, [])
 
-    function run() {
-        if (props.Order && Object.keys(orderCount).length != 0) {
+    function run(){
+        if(props.Order && Object.keys(orderCount).length!=0) {
             console.log(orderCount)
-
-            Districts.map((val, id) => {
-                props.Order.map((val2, id2) => {
-                    const type = val2["item"]
-                    const model = val2["itemmodel"]
-                    const mnf = val2["manufacturer"]
-                    increaseOne(id, type, model, mnf)
-                })
+        
+        Districts.map((val,id)=>{
+            props.Order.map((val2,id2)=>{
+                const type= val2["item"]
+                const model= val2["itemmodel"]
+                const mnf= val2["manufacturer"]
+                increaseOne(id,type,model,mnf)
             })
-        }
+        })
+    }
     }
 
     const [fl, setFl] = useState(0);
 
-    useEffect(() => {
-        if (Object.keys(orderCount).length == 0) {
-            let fillDemand = {}
-            Districts.map((val, id) => {
-                fillDemand[id.toString()] = {};
-            })
-            console.log(fillDemand)
-            if (Object.keys(orderCount).length == 0)
-                setOrderCount(fillDemand);
-        }
-        if (Object.keys(orderCount).length != 0 && fl == 0) {
+    useEffect(()=>{
+        if(Object.keys(orderCount).length==0){
+        let fillDemand = {}
+        Districts.map((val,id)=>{
+            fillDemand[id.toString()]={};
+        })
+        console.log(fillDemand)
+        if(Object.keys(orderCount).length==0)
+        setOrderCount(fillDemand);
+    }
+        if(Object.keys(orderCount).length!=0 && fl==0){
             setFl(1);
             run();
         }
-
-    }, [Details, Districts, orderCount])
+       
+    },[Details,Districts,orderCount])
 
 
     const [boxId, setBoxId] = useState([]);
 
-    function setBox(id) {
-        if (boxId.length == 1 && boxId[0] == id) {
+    function setBox(id){
+        if(boxId.length==1 && boxId[0]==id){
             setBoxId([])
         }
-        else {
+        else{
             setBoxId([id]);
         }
-
+        
     }
 
     const MapWarehouseTypes = async () => {
@@ -437,68 +435,68 @@ export default function DistrictFillDemand(props) {
     };
 
 
-    const handleSubmit = async (e) => {
-        let data = {
+    const  handleSubmit= async (e)=>{
+        let data={
             "orderid": props.OrderID,
             "flag": "D",
             "details": [
-
-            ]
-
+              
+                ]
+          
         }
 
         console.log(Details)
 
-        Object.keys(orderCount).map((order) => {
+        Object.keys(orderCount).map((order)=>{
             // console.log(Details[order])
             let detail = {
-                "district": Districts[order]["dtCode"],
+                "district":Districts[order]["dtCode"] ,
                 "unitDetails": [
-
+                  
                 ]
-            }
-            Object.keys(orderCount[order]).map((miniorder) => {
-                let temp = {
+              }
+              Object.keys(orderCount[order]).map((miniorder)=>{
+                let temp=  {
                     "item": orderCount[order][miniorder]["type"],
                     "itemmodel": orderCount[order][miniorder]["model"],
                     "itemquantity": orderCount[order][miniorder]["quantity"],
                     "manufacturer": orderCount[order][miniorder]["manufacturer"]
-                }
-                if (temp["item"] != "select" && temp["itemmodel"] != "select" && temp["manufacturer"] != "select" && temp["itemquantity"] != 0)
-                    detail["unitDetails"].push(temp);
-            })
-            if (detail["unitDetails"].length)
-                data["details"].push(detail);
+                  }
+                if(temp["item"]!="select" && temp["itemmodel"]!="select" && temp["manufacturer"]!="select" && temp["itemquantity"]!=0)
+                detail["unitDetails"].push(temp);
+              })
+              if(detail["unitDetails"].length)
+              data["details"].push(detail);
         })
         console.log(data)
 
         try {
             const response = await fetch(
-                `${process.env.REACT_APP_API_SERVER}/order/fillCapacityDistrict/`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    credentials: 'include',
-                    body: JSON.stringify(data),
-
-
-                }
+              `${process.env.REACT_APP_API_SERVER}/order/fillCapacityDistrict/`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                credentials: 'include',
+                body: JSON.stringify(data),
+      
+      
+              }
             );
             const data2 = await response.json();
-            console.log(response)
-            if (response["status"] == 200) {
+              console.log(response)
+              if (response["status"] == 200) {
                 alert("Fill demand done sucessfully");
-            }
-            if (response["status"] == 200) {
+              }
+              if (response["status"] == 200) {
                 window.location = '/session/ordermanagement'
-            }
-
-        } catch (err) {
+              }
+           
+          } catch (err) {
             console.log(err);
-        }
-
+          }
+      
     }
 
 
@@ -544,48 +542,48 @@ export default function DistrictFillDemand(props) {
                         <div className="p-2">
                             <table className="w-full mt-4 ">
                                 <thead className="HeadRow border-b-2">
-                                    <tr className="flex justify-start">
+                                    <tr  className="flex justify-start">
 
                                         <th style={{ color: "#f56a3f", padding: "20px" }}>Sl. No.</th>
                                         <th style={{ color: "#f56a3f", padding: "20px" }}>District Name</th>
                                         {/* <th style={{ color: "#f56a3f", padding: "20px" }}>WareHouse Type</th> */}
                                         {/* <th style={{ color: "#f56a3f", padding: "20px" }}>Usage Status</th> */}
                                     </tr>
-
+                                   
 
                                 </thead>
                                 <tbody>
 
                                     {Districts.length > 0 &&
                                         Districts.map((val, id) => (<>
-                                            <tr onClick={(e) => setBox(id)} className="flex justify-start ml-10 ">
-                                                <td className="text-black text-sm ">{id + 1}</td>
+                                             <tr onClick={(e) => setBox(id) } className="flex justify-start ml-10 ">
+                                                <td className="text-black text-sm ">{id+1}</td>
                                                 <td className="text-black text-sm ml-10">{val["dtName"]}</td>
                                                 {/* <td className="text-black text-sm">{val["Warehouse Type"]}</td> */}
                                                 {/* <td className="text-black text-sm">{val['Status']}</td> */}
-                                            </tr>
-                                            {orderCount && <tr className="pb-10 ">
-                                                <td colSpan="2" className="">
-                                                    {orderCount && orderCount[id] && Object.keys(orderCount[id]).map((key) => (
-                                                        <div className="">
+                                                </tr>
+                                                {orderCount && <tr className="pb-10 ">
+                                            <td colSpan="2" className="">
+                                                {orderCount && orderCount[id] && Object.keys(orderCount[id]).map((key)=>(
+                                                    <div className="">
+                                                        
+                                                        {orderCount[id][key]["type"]!="select" && orderCount[id][key]["model"]!="select" && orderCount[id][key]["manufacturer"]!="select" && <div className="flex justify-between p-3 h-6 text-sm pb-2 text-black">
+                                                            {/* <p>{orderCount[id][key]["type"]}</p><p>{"-->"}</p><p>{orderCount[id][key]["model"]}</p><p>{"-->"}</p><p>{orderCount[id][key]["manufacturer"]}</p><p>{"-->"}</p><p>{orderCount[id][key]["quantity"]}</p> */}
+                                                            <div className="w-full flex">
+                                                                <div className="w-1/4">{orderCount[id][key]["type"]}</div>
+                                                                <div className="w-1/4">{orderCount[id][key]["model"]}</div>
+                                                                <div className="w-1/4">{orderCount[id][key]["manufacturer"]}</div>
+                                                                <div className="w-1/4"><input type="number" placeholder="No of Unit" className="border " id={id.toString() + "_" + key.toString() + "_quantity"} onChange={(e)=>calculate(id,key,"quantity",e.target.value)} value={orderCount[id][key]["quantity"]} required></input>
+</div>
+                                                            </div>
+                                                        </div> }
+                                                    </div>
+                                                ))}
 
-                                                            {orderCount[id][key]["type"] != "select" && orderCount[id][key]["model"] != "select" && orderCount[id][key]["manufacturer"] != "select" && <div className="flex justify-between p-3 h-6 text-sm pb-2 text-black">
-                                                                {/* <p>{orderCount[id][key]["type"]}</p><p>{"-->"}</p><p>{orderCount[id][key]["model"]}</p><p>{"-->"}</p><p>{orderCount[id][key]["manufacturer"]}</p><p>{"-->"}</p><p>{orderCount[id][key]["quantity"]}</p> */}
-                                                                <div className="w-full flex">
-                                                                    <div className="w-1/4">{orderCount[id][key]["type"]}</div>
-                                                                    <div className="w-1/4">{orderCount[id][key]["model"]}</div>
-                                                                    <div className="w-1/4">{orderCount[id][key]["manufacturer"]}</div>
-                                                                    <div className="w-1/4"><input type="number" placeholder="No of Unit" className="border " id={id.toString() + "_" + key.toString() + "_quantity"} onChange={(e) => calculate(id, key, "quantity", e.target.value)} value={orderCount[id][key]["quantity"]} required></input>
-                                                                    </div>
-                                                                </div>
-                                                            </div>}
-                                                        </div>
-                                                    ))}
-
-                                                </td>
-                                            </tr>}
-
-                                            {/* { boxId.length==1 && boxId[0]==id && (
+                                            </td>
+                                        </tr>}
+                                       
+                                              {/* { boxId.length==1 && boxId[0]==id && (
                                                 <tr>
                                                     <td colSpan="5">
                                                     <div className="border rounded-md p-3">
@@ -654,13 +652,13 @@ export default function DistrictFillDemand(props) {
                                                     </td>
                                                 </tr>
                                               )} */}
-                                            <tr>
+                                              <tr>
                                                 <td colSpan="2">
-                                                    <hr className="border-1 border-black" />
+                                                    <hr className="border-1 border-black"/>
                                                 </td>
-                                            </tr>
-
-
+                                              </tr>
+                                              
+                                        
                                         </>
                                         ))}
                                 </tbody>
@@ -776,11 +774,11 @@ export default function DistrictFillDemand(props) {
                     </div>
                 </div>
             </div >
-            <center>
-                <button className="text-white mt-2" onClick={handleSubmit}>
-                    Submit
-                </button>
-            </center>
+           <center>
+            <button className="text-white mt-2" onClick={handleSubmit}>
+                Submit
+            </button>
+           </center>
         </div >
     );
 }

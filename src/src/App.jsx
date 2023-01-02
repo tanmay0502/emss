@@ -203,6 +203,10 @@ function App() {
 							element={<Schedule_List_CDP />}
 						/>
 						<Route
+							path="/session/unitmanagement/orders"
+							element={<Orders />}
+						/>
+						<Route
 							path="/session/warehousemanagement/"
 							element={<WarehouseManagement />}
 						/>
