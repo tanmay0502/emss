@@ -32,9 +32,11 @@ export default function HomePageCardBottom() {
 		});
 
 		const data = await response.json();
+		if (response.status == 200) {
 
-		if (Role == "CEO") {
-			navigate(`/session/unitmanagement/first_randomisation_scheduling`);
+			if (Role == "CEO") {
+				navigate(`/session/unitmanagement/first_randomisation_scheduling`);
+			}
 		}
 		// else if (Role == "DEO") {
 		// 	navigate(`/session/unitmanagement/firstrandomization`);

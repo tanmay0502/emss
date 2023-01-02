@@ -16,7 +16,7 @@ export default function FLCList() {
     const [tableFilter, setTableFilter] = useState("");
     const [tableData, setTableData] = useState([])
     const [flc, setFlc] = useState([])
-    const [setIsLoading] = useState(0);
+    const [IsLoading, setIsLoading] = useState(0);
 
     async function getElectionList() {
         try {
@@ -31,7 +31,7 @@ export default function FLCList() {
                 }
             );
             const data = await response.json();
-            console.log(data, "datat")
+            console.log(data, "listFLC")
             if (data.length) {
                 setFlc(data)
             }
@@ -39,6 +39,7 @@ export default function FLCList() {
             console.log({ err });
         }
     }
+
 
     useEffect(() => {
         if (flc) {
@@ -77,7 +78,7 @@ export default function FLCList() {
         return () => {
 
         }
-    }, [flc,tableFilter])
+    }, [flc, tableFilter])
 
 
     useEffect(
@@ -149,7 +150,7 @@ export default function FLCList() {
             {isDetail === 0 ?
                 <div class={styles.table}>
                     <DynamicDataTable
-                        rows={tableData.length !== 0 ? tableData : [{"":"No FLC scheduled"}]}
+                        rows={tableData.length !== 0 ? tableData : [{ "": "No FLC scheduled" }]}
                         fieldsToExclude={["FLC ID"]}
                         buttons={[]}
                         onClick={(event, row) => {

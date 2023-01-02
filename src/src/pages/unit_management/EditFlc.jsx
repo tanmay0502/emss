@@ -10,7 +10,7 @@ function FlcEdit() {
     const [modalIsOpen_Acknowledgment, setIsOpen_Acknowledgment] = React.useState(false);
     const [modalIsOpen_Intimation_Letter] = React.useState(false);
     const [isenddateopen, setisenddateopen] = React.useState(0);
-    const [setIsLoading] = useState(0);
+    const [IsLoading, setIsLoading] = useState(0);
 
 
     function openModal_Preparedness_Certificate() {
@@ -91,7 +91,7 @@ function FlcEdit() {
 
 
     const [edit, setEdit] = useState(false)
-    const [setFlc] = useState([]);
+    const [flc, setFlc] = useState([]);
     const [district, setdistrict] = useState('');
     const [flcsupervisoremailid, setflcsupervisoremailid] = useState('');
     const [flcsupervisormobno, setflcsupervisormobno] = useState('');
@@ -116,7 +116,7 @@ function FlcEdit() {
     const User_ID = sessionStorage.getItem("sessionToken");
     const [photoFileData, setPhotoFileData] = useState("")
     const [flcreport, setflcreport] = useState("")
-    const [setflcreportname] = useState("")
+    const [flcreportname, setflcreportname] = useState("")
     const [setAcknowledgmentname] = useState("")
     const [inputflcreport, setinputflcreport] = useState(-1)
     const [Acknowledgment, setAcknowledgment] = useState("")
@@ -125,9 +125,9 @@ function FlcEdit() {
     const [ListFLC_Assembly_Warehouse, setListFLC_Assembly_Warehouse] = useState([]);
     const [ListDistrict_Strong_Room, setListDistrict_Strong_Room] = useState([]);
     const [ListDefective_Warehouse, setListDefective_Warehouse] = useState([]);
-    const [setFLC_Assembly_Warehouse] = useState('');
-    const [setDistrict_Strong_Room] = useState('');
-    const [setDefective_Warehouse] = useState('');
+    const [FLC_Assembly_Warehouse, setFLC_Assembly_Warehouse] = useState('');
+    const [District_Strong_Room, setDistrict_Strong_Room] = useState('');
+    const [Defective_Warehouse, setDefective_Warehouse] = useState('');
     const Role = User_ID.substring(8)
 
 
@@ -278,9 +278,10 @@ function FlcEdit() {
                             )
                         }
                     );
-        
-        
+
+
                     const data = await response.json();
+                    console.log(data, "viewflc")
                     if (response.status === 200) {
                         if (data['data'].length) {
                             setFlc((data['data'] !== null) ? data['data'] : [])
@@ -299,8 +300,8 @@ function FlcEdit() {
                             setmanufacturerdistrictcoordinatormobno((data['data'][0]['manufacturerdistrictcoordinatormobno'] !== null) ? data['data'][0]['manufacturerdistrictcoordinatormobno'] : '')
                             setmanufacturerdistrictcoordinatorname((data['data'][0]['manufacturerdistrictcoordinatorname'] !== null) ? data['data'][0]['manufacturerdistrictcoordinatorname'] : '')
                             setnumengineers((data['data'][0]['numengineers'] !== null) ? data['data'][0]['numengineers'] : 0)
-        
-        
+
+
                             if (data['data'][0]['startdate']) {
                                 let StartDate = data['data'][0]['startdate'].split('T')[0];
                                 setstartdate(StartDate.slice(6) + '-' + StartDate.slice(3, 5) + "-" + StartDate.slice(0, 2))
@@ -313,7 +314,7 @@ function FlcEdit() {
                                 // setenddate(data['data'][0]['enddate'])
                                 setenddateshow(data['data'][0]['enddate'])
                             }
-        
+
                             if (data['data'][0]['electiontype'] === 'GA') {
                                 setType_of_election('General Assembly')
                                 setType_of_election_sf('GA')
@@ -330,7 +331,7 @@ function FlcEdit() {
                                 setType_of_election('By-poll Parliamentary')
                                 setType_of_election_sf('BP')
                             }
-        
+
                         }
                     }
 
@@ -373,13 +374,13 @@ function FlcEdit() {
                             )
                         }
                     );
-        
-        
+
+
                     const data = await response.json();
                     if (response.status === 200) {
                         setPhotoFileData(data['data'])
                     }
-        
+
                 } catch (err) {
                     console.log({ err });
                 }
@@ -417,15 +418,15 @@ function FlcEdit() {
                             )
                         }
                     );
-        
-        
+
+
                     const data = await response.json();
-        
+
                     if (response.status === 200) {
                         setflcreport(data['data'])
                         setinputflcreport(1)
                     }
-        
+
                 } catch (err) {
                     console.log({ err });
                 }
@@ -442,38 +443,38 @@ function FlcEdit() {
 
     useEffect(
         () => {
-                async function getacknowledgement() {
-        let id = issueId();
-        try {
-            const response = await fetch(
-                `${process.env.REACT_APP_API_SERVER}/unit/getunitdocument`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    credentials: 'include',
-                    body: JSON.stringify(
+            async function getacknowledgement() {
+                let id = issueId();
+                try {
+                    const response = await fetch(
+                        `${process.env.REACT_APP_API_SERVER}/unit/getunitdocument`,
                         {
-                            "fileType": "acknowledgement",
-                            "flcID": Number(id)
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            credentials: 'include',
+                            body: JSON.stringify(
+                                {
+                                    "fileType": "acknowledgement",
+                                    "flcID": Number(id)
+                                }
+                            )
                         }
-                    )
+                    );
+
+
+                    const data = await response.json();
+
+                    if (response.status === 200) {
+                        setAcknowledgment(data['data'])
+                        setInputAcknowledgment(1);
+                    }
+
+                } catch (err) {
+                    console.log({ err });
                 }
-            );
-
-
-            const data = await response.json();
-
-            if (response.status === 200) {
-                setAcknowledgment(data['data'])
-                setInputAcknowledgment(1);
             }
-
-        } catch (err) {
-            console.log({ err });
-        }
-    }
             let timer1 = setTimeout(() => getacknowledgement(), 1 * 1000);
             return () => {
                 clearTimeout(timer1);
@@ -620,7 +621,7 @@ function FlcEdit() {
             if (response.status === 200) {
                 setisenddateopen(0);
             }
-            
+
         } catch (err) {
             console.log(err);
         }
@@ -1233,10 +1234,10 @@ function FlcEdit() {
                         </Modal>
 
 
-                        
 
 
-                        
+
+
                     </div>
                 </div>
 
