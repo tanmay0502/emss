@@ -5,7 +5,7 @@ import "./styles/generateOrder.css";
 import Modal from 'react-modal';
 import UnitTraker from "./UnitTracker";
 import FillOrder from "./FillOrder";
-import { getRealm,formatRealm } from "../../components/utils";
+import { getRealm,formatRealm, formatRealm2 } from "../../components/utils";
 
 export default function GenarateOrderITRS() {
 
@@ -186,7 +186,7 @@ export default function GenarateOrderITRS() {
 
   async function getState() {
     let data = await getRealm("Order", "FillCapacity")
-    let stateList = formatRealm(data,"ADM","","","");
+    let stateList = formatRealm2(data,"","","","");
     console.log(stateList)
     setStates(stateList)
   }

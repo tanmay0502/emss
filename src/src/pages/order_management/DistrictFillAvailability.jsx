@@ -12,7 +12,7 @@ import {
 import ToggleButton from '../../components/ToggleButton';
 import { ReactComponent as ChevronDown } from "../../assets/ChevronDown.svg";
 import { ReactComponent as SearchIcon } from "../../assets/search.svg";
-import { formatRealm, getRealm } from "../../components/utils";
+import { formatformatRealm, formatRealm2, getRealm } from "../../components/utils";
 import { UnitCount } from "./Utils";
 
 
@@ -29,7 +29,7 @@ export default function DistrictFillAvailability(props) {
 
     async function getDistricts() {
         let data = await getRealm("Order", "FillCapacity")
-        let districts = formatRealm(data, "CEO", sessionStorage.getItem("sessionToken").substring(0, 2), "", "");
+        let districts = formatRealm2(data, sessionStorage.getItem("sessionToken").substring(0, 2),"", "", "");
         console.log(districts)
         districts.map((dist)=>{
             let timer = setTimeout(()=>getTUnits(sessionStorage.getItem("sessionToken").substring(0,2)+dist["dtCode"]+"000DEO",100));
@@ -453,8 +453,8 @@ export default function DistrictFillAvailability(props) {
     }, [])
 
     function run() {
-        if (props.Order && Object.keys(orderCount).length != 0) {
-            console.log(orderCount)
+        if (props.Order && Object.keys(orderCount).length != 0 ) {
+            console.log(orderCount,"ffffffffffffffffffffffffffffffffffffffffff")
 
             Districts.map((val, id) => {
                 props.Order.map((val2, id2) => {
@@ -479,7 +479,7 @@ export default function DistrictFillAvailability(props) {
             if (Object.keys(orderCount).length == 0)
                 setOrderCount(fillDemand);
         }
-        if (Object.keys(orderCount).length != 0 && fl == 0 && orderCount[Object.keys(orderCount)[0]].length==0) {
+        if (Object.keys(orderCount).length != 0 && fl == 0) {
             setFl(1);
             run();
         }
@@ -491,28 +491,6 @@ export default function DistrictFillAvailability(props) {
 
     }, [orderCount]);
 
-
-    useEffect(()=>{
-        if(Object.keys(orderCount).length==0){
-        let fillDemand = {}
-        Districts.map((val,id)=>{
-            fillDemand[id.toString()]={};
-        })
-        console.log(fillDemand)
-        if(Object.keys(orderCount).length==0)
-        setOrderCount(fillDemand);
-    }
-        if(Object.keys(orderCount).length!=0 && fl==0){
-            setFl(1);
-            run();
-        }
-       
-    },[Details,Districts,orderCount])
-
-    useEffect(() => {
-        console.log(orderCount)
-       
-    }, [orderCount]);
 
 
     const [boxId, setBoxId] = useState([]);

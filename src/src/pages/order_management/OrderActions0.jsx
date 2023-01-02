@@ -185,6 +185,7 @@ function OrderActions0(props) {
         else if (roles[ind] == 'recipient') {
             switch (actions(roles[ind])[actionIndex]) {
                 case 'Fill Demand':
+                    console.log("hello")
                     return <DistrictFillDemand Order={recipientOrder} OrderID={props.OrderID}/>
                 case 'Optimal Allocation':
                     return <AllocateOrder OrderID={props.OrderID} type={order.type}/>

@@ -12,7 +12,7 @@ import {
 import ToggleButton from '../../components/ToggleButton';
 import { ReactComponent as ChevronDown } from "../../assets/ChevronDown.svg";
 import { ReactComponent as SearchIcon } from "../../assets/search.svg";
-import { formatRealm, getRealm } from "../../components/utils";
+import { formatRealm, formatRealm2, getRealm } from "../../components/utils";
 
 
 export default function DistrictFillDemand(props) {
@@ -27,7 +27,8 @@ export default function DistrictFillDemand(props) {
 
     async function getDistricts() {
         let data = await getRealm("Order", "FillCapacity")
-        let districts = formatRealm(data,"CEO",sessionStorage.getItem("sessionToken").substring(0,2),"","");
+        console.log(data)
+        let districts = formatRealm2(data,sessionStorage.getItem("sessionToken").substring(0,2),"","","");
         console.log(districts)
         setDistricts(districts);
     }
@@ -374,7 +375,8 @@ export default function DistrictFillDemand(props) {
     const [fl, setFl] = useState(0);
 
     useEffect(()=>{
-        if(Object.keys(orderCount).length==0){
+
+        if(Object.keys(orderCount).length==0 && Districts.length!=0){
         let fillDemand = {}
         Districts.map((val,id)=>{
             fillDemand[id.toString()]={};
