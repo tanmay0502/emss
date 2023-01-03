@@ -54,6 +54,7 @@ export default function ViewOrderDetails() {
   const UserId = window.sessionStorage.getItem('sessionToken');
   const [flag, setFlag] = useState(0);
   const [flagD, setFlagD] = useState(0);
+  const [unitDetails,setUnitDetails] = useState([])
 
 
   async function ifDistrict() {
@@ -74,7 +75,8 @@ export default function ViewOrderDetails() {
       const data2 = await response.json();
       console.log("fetcjed", data2)
       if (data2["data"]) {
-        setFlagD(data2["data"])
+        setFlagD(data2["data"]["flag"])
+        setUnitDetails(data2["data"]["details"])
        
 
       }
@@ -186,7 +188,7 @@ export default function ViewOrderDetails() {
         <>
           {validallOrders && <UnitDescription Order={validallOrders} OrderID={newId=="0"?orderID:newId} isSubOrder={newId=="0"?0:1} /> }
           {validallOrders && flow==1 && sessionStorage.getItem("sessionToken").substring(8)!="DEO" &&<OrderActions0 Order={validallOrders} OrderID={newId=="0"?orderID:newId}/>}
-          {validallOrders && flow==1 && sessionStorage.getItem("sessionToken").substring(8)=="DEO" && flagD=="True" &&<OrderActions Order={validallOrders} OrderID={newId=="0"?orderID:newId}/>}
+          {validallOrders && flow==1 && sessionStorage.getItem("sessionToken").substring(8)=="DEO" && flagD=="True"  &&<OrderActions Order={validallOrders} OrderID={newId=="0"?orderID:newId} unitDetails = {unitDetails}/>}
           {validallOrders && flow==2 && <OrderActions2 Order={validallOrders} OrderID={newId=="0"?orderID:newId}/>}
         </>
       }

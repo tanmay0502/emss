@@ -454,7 +454,8 @@ export default function DistrictFillAvailability(props) {
 
     function run() {
         if (props.Order && Object.keys(orderCount).length != 0 ) {
-            console.log(orderCount,"ffffffffffffffffffffffffffffffffffffffffff")
+
+            console.log(orderCount)
 
             Districts.map((val, id) => {
                 props.Order.map((val2, id2) => {
@@ -489,6 +490,29 @@ export default function DistrictFillAvailability(props) {
     useEffect(() => {
         console.log(orderCount)
 
+    }, [orderCount]);
+
+
+    useEffect(()=>{
+        if(Object.keys(orderCount).length==0){
+        let fillDemand = {}
+        Districts.map((val,id)=>{
+            fillDemand[id.toString()]={};
+        })
+        console.log(fillDemand)
+        if(Object.keys(orderCount).length==0)
+        setOrderCount(fillDemand);
+    }
+        if(Object.keys(orderCount).length!=0 && fl==0){
+            setFl(1);
+            run();
+        }
+       
+    },[Details,Districts,orderCount])
+
+    useEffect(() => {
+        console.log(orderCount)
+       
     }, [orderCount]);
 
 
@@ -761,86 +785,7 @@ export default function DistrictFillAvailability(props) {
                                             </td>
                                         </tr>}
                                        
-                                              {/* { boxId.length==1 && boxId[0]==id && (
-                                                <tr >
-                                                    <td colSpan="10">
-                                                    <div className="border rounded-md p-3">
-                                                        <table className="w-full">
-                                                        <tr className="border-b-2 ">
-                                                            <th className="font-normal">Type</th>
-                                                            <th className="font-normal">Model</th>
-                                                            <th className="font-normal">Manufacturer</th>                                                            
-                                                            <th className="font-normal">Quantity</th>
-                                                            <th className="font-normal">Avialable units</th>
-                                                        
-                                                        </tr>
-                                                        <br />
-
-                                                        {
-                                                            Object.keys(orderCount[id]).map((v2) => (
-                                                            <tr className="">
-                                                                <td><select className="border p-2 mb-2 text-black"
-                                                                id={id.toString() + "_" + v2.toString() + "_type"}
-                                                                required
-                                                                onChange={(e)=>calculate(id,v2,"type",e.target.value)}
-                                                                value={orderCount[id][v2]["type"]}
-
-                                                                >
-                                                                <option value="select"
-                                                                >select</option>
-                                                                <option value="BU">BU</option>
-                                                                <option value="CU">CU</option>
-                                                                <option value="VVPAT">VVPAT</option>
-                                                                </select></td>
-                                                               
-                                                                <td>
-                                                                <select className="border p-2 mb-2 text-black"
-                                                                    id={id.toString() + "_" + v2.toString() + "_Model"}
-                                                                    required
-                                                                    onChange={(e)=>calculate(id,v2,"model",e.target.value)}
-                                                                    value={orderCount[id][v2]["model"]}
-
-                                                                >
-                                                                    <option value="select"
-                                                                    >select</option>
-                                                                    <option value="M2">M2</option>
-                                                                    <option value="M3">M3</option>
-                                                                </select>
-                                                                </td>
-                                                                <td>
-                                                                <select className="border p-2 mb-2 text-black"
-                                                                    id={id.toString() + "_" + v2.toString() + "_manufacturer"}
-                                                                    required
-                                                                    onChange={(e)=>calculate(id,v2,"manufacturer",e.target.value)}
-                                                                    value={orderCount[id][v2]["manufacturer"]}
-
-                                                                >
-                                                                    <option value="select"
-                                                                    >select</option>
-                                                                    <option value="ECIL">ECIL</option>
-                                                                    <option value="BEL">BEL</option>
-                                                                </select>
-                                                                </td>
-                                                                <td>
-                                                                <input disabled={!(orderCount[id][v2]["type"]!="select" && orderCount[id][v2]["model"]!="select" && orderCount[id][v2]["manufacturer"]!="select")} type="number" placeholder="No of Unit" className="Input border mb-2 text-black" id={id.toString() + "_" + v2.toString() + "_quantity"} onChange={(e)=>calculate(id,v2,"quantity",e.target.value)} value={orderCount[id][v2]["quantity"]} required></input>
-                                                                </td>
-                                                               <td>
-                                                                {(orderCount[id][v2]["type"]!="select" && orderCount[id][v2]["model"]!="select" && orderCount[id][v2]["manufacturer"]!="select")?(<>
-                                                                {WareHouse_List[id]["max"+orderCount[id][v2]["type"]+orderCount[id][v2]["model"]+orderCount[id][v2]["manufacturer"]]-WareHouse_List[id]["fill"+orderCount[id][v2]["type"]+orderCount[id][v2]["model"]+orderCount[id][v2]["manufacturer"]]}
-                                                                </>):(
-                                                                    <>Pending</>
-                                                                ) }
-                                                                </td>
-                                                               
-                                                            </tr>
-                                                            ))
-                                                        }
-                                                        </table>
-                                                        <div className="flex justify-end w-full mt-1"><button type="button" onClick={() => increaseOne(id)} className="bg-orange-600 text-white  p-2 text-sm   " >Add row</button></div>
-                                                    </div>
-                                                    </td>
-                                                </tr>
-                                              )} */}
+                                              
                                               <tr className="">
                                                 <td colSpan="20">
                                                     <hr className="border-1 border-black" />

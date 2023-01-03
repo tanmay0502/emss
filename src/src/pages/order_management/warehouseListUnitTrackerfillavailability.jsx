@@ -12,6 +12,7 @@ import {
 import ToggleButton from '../../components/ToggleButton';
 import { ReactComponent as ChevronDown } from "../../assets/ChevronDown.svg";
 import { ReactComponent as SearchIcon } from "../../assets/search.svg";
+import { UnitCount } from "./Utils";
 
 
 export default function WareHouseListUnitTrackerFillAvailability(props) {
@@ -90,6 +91,42 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
         getUnits()
     },[])
 
+    const [unitsDetails, setUnitsDetails] = useState({});
+
+    useEffect(()=>{
+        let ppp = { 
+        "EM2":{
+            "CU":[0,0],
+            "BU":[0,0],
+            "VVPAT":[0,0]
+        },
+        "EM3":{
+            "CU":[0,0],
+            "BU":[0,0],
+            "VVPAT":[0,0]
+        },
+        "BM2":{
+            "CU":[0,0],
+            "BU":[0,0],
+            "VVPAT":[0,0]
+        },
+        "BM3":{
+            "CU":[0,0],
+            "BU":[0,0],
+            "VVPAT":[0,0]
+        }
+       
+    }
+
+    props.unitDetails.map((val)=>{
+        let p = val[6].substring(0,1)+val[3];
+        ppp[p][val[2]][0]+=Number(val[4]);
+    })
+    console.log(ppp)
+    setUnitsDetails(ppp);
+
+    },[props.unitDetails])
+
     const countAvlUnits = (item, manufacturer, itemmodel)=>{
         let sum = 0;
         const dict = {
@@ -167,9 +204,13 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
             temp[index][(parseInt(Object.keys(temp[index])[(Object.keys(temp[index]).length - 1).toString()]) + 1).toString()]=v3
         }
         
+        console.log(temp)
         setOrderCount({ ...temp });
+       
+       
     
       }
+    
     
       function calculate(id1 , id2, key, value ) {
         
@@ -407,12 +448,16 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
 
             const data = await response.json();
             let activedata=[]
+
+            console.log(data["data"])
            
             data["data"].map((warehouse)=>{
                 
                     activedata.push(warehouse)
+
                 
             })
+           
 
             setDetails(activedata);
 
@@ -426,16 +471,10 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
         getList();
     }, [])
 
-    useEffect(()=>{
-        let fillDemand = {}
-        Details.map((val,id)=>{
-            fillDemand[id.toString()]={};
-        })
-        console.log(fillDemand)
-        setOrderCount(fillDemand);
-        if(props.Order) {
-            console.log(orderCount)
-        
+    
+
+
+    function run(){
         WareHouse_List.map((val,id)=>{
             props.Order.map((val2,id2)=>{
                 const type= val2["item"]
@@ -444,6 +483,26 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
                 increaseOne(id,type,model,mnf)
             })
         })
+    }
+    const [fl, setFl] = useState(0);
+
+    useEffect(()=>{
+        let fillDemand = {}
+        Details.map((val,id)=>{
+            fillDemand[id.toString()]={};
+        })
+        
+        console.log(fillDemand)
+        setOrderCount(fillDemand);
+        if(props.Order ) {
+           
+            console.log(orderCount)
+
+            if (Object.keys(orderCount).length != 0 && fl == 0) {
+                setFl(1);
+                run();
+            }
+            
     }
     },[Details])
 
@@ -545,6 +604,92 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
             console.log(err);
           }
       
+
+    }
+
+
+    
+    const [Units, setTUnits] = useState({});
+
+    useEffect(()=>{
+        console.log(Units)
+           let p = Object.keys(Units).length;
+           if(p<Details.length){
+                let timer2 = setTimeout(()=>getTUnits(Details[p]["warehouseid"]),100);
+    
+                return (()=>{
+                    clearTimeout(timer2);
+                })
+           }
+           
+        },[Details,Units])
+
+    async function getTUnits(oprnd){
+        let body ={
+            "oprnd": oprnd,
+            "status": "Available for Use"
+          }
+
+          let data = await UnitCount(body);
+          console.log(data)
+          if(!(oprnd in units)){
+         setTUnits((prev)=>{
+           
+            let ppp = {...prev};
+            let EM2CU = 0;
+            let EM3CU = 0;
+            let BM2CU = 0;
+            let BM3CU = 0;
+            let EM2BU = 0;
+            let EM3BU = 0;
+            let BM2BU = 0;
+            let BM3BU = 0;
+            let EM2VT = 0;
+            let EM3VT = 0;
+            let BM2VT = 0;
+            let BM3VT = 0;
+            data.map((val)=>{
+                let p = "";
+                p+=val["manufacturer"]+val["model"]+"BU";
+                if(val["model"]!="BU" && val["model"]!="CU"){
+                let pp = eval(p)+val["BU"];
+                eval(p +" = "+pp);
+                }
+                p = "";
+                p+=val["manufacturer"]+val["model"]+"CU";
+                if(val["model"]!="BU" && val["model"]!="CU"){
+                let pp = eval(p)+val["CU"];
+                eval(p +" = "+pp);
+                }
+                p = "";
+                p+=val["manufacturer"]+val["model"]+"VT";
+                if(val["model"]!="BU" && val["model"]!="CU"){
+                let pp = eval(p)+val["VT"];
+                eval(p +" = "+pp);
+                }
+            })
+            ppp[oprnd] = {
+                "EM2CU" : EM2CU,
+                "EM3CU" : EM3CU,
+                "BM2CU" : BM2CU,
+                "BM3CU" : BM3CU,
+                "EM2BU" : EM2BU,
+                "EM3BU" : EM3BU,
+                "BM2BU" : BM2BU,
+                "BM3BU" : BM3BU,
+                "EM2VVPAT" : EM2VT,
+                "EM3VVPAT" : EM3VT,
+                "BM2VVPAT" : BM2VT,
+                "BM3VVPAT" : BM3VT,
+            };
+            console.log(ppp)
+            return ppp;
+            
+         })
+        }
+
+
+
     }
 
 
@@ -589,7 +734,7 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
                         <div className="p-2">
                         <table className="w-full mt-4 ">
                                 <thead className="HeadRow border-b-2">
-                                    <tr className="flex justify-start">
+                                    <tr  className="flex justify-start">
 
                                         <th style={{ color: "#f56a3f", padding: "20px" }}>Sl. No.</th>
                                         <th style={{ color: "#f56a3f", padding: "20px" }}>WareHouse ID</th>
@@ -599,28 +744,79 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
                                    
 
                                 </thead>
-                                <tbody>
-
+                            </table>
+                        <div  className="overflow-x-scroll overflow-y-hidden  p-5" style={{height:"700px"}}>
+                           
+                        <table className="w-11/12 m-2">
+                                <tbody >
+                                
                                     {WareHouse_List.length > 0 &&
+                                    
                                         WareHouse_List.map((val, id) => (<>
-                                             <tr onClick={(e) => setBox(id)} className="flex justify-start ml-10 ">
-                                                <td className="text-black text-sm ">{id+1}</td>
+                                             <tr onClick={(e) => setBox(id) } className="flex justify-start ml-10 ">
+                                                <td className="text-black text-sm">{id+1}</td>
                                                 <td className="text-black text-sm">{val["Warehouse ID"]}</td>
                                                 {/* <td className="text-black text-sm">{val["Warehouse Type"]}</td> */}
                                                 {/* <td className="text-black text-sm">{val['Status']}</td> */}
                                                 </tr>
+                                                <tr>
+                                                    <td colSpan={20}>
+                                                        <div className="flex w-full">
+                                                            <div className="w-1/5">Type</div>
+                                                            <div className="w-1/5">Model</div>
+                                                            <div className="w-1/5">Manufacturer</div>
+                                                            <div className="w-1/5">Available Units</div>
+                                                            <div className="w-1/5">Filled Units</div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
                                                 {orderCount && <tr className="pb-10 ">
-                                            <td colSpan="20" className="">
+                                            <td colSpan="2" className="">
                                                 {Object.keys(orderCount[id]).map((key)=>(
                                                     <div className="">
                                                         
-                                                        {orderCount[id][key]["type"]!="select" && orderCount[id][key]["model"]!="select" && orderCount[id][key]["manufacturer"]!="select" && <div className="flex justify-between text-black p-3 h-6 text-sm pb-2 ">
+                                                        {orderCount[id][key]["type"]!="select" && orderCount[id][key]["model"]!="select" && orderCount[id][key]["manufacturer"]!="select" && <div className="flex justify-between p-3 h-6 text-sm pb-2 text-black">
                                                             {/* <p>{orderCount[id][key]["type"]}</p><p>{"-->"}</p><p>{orderCount[id][key]["model"]}</p><p>{"-->"}</p><p>{orderCount[id][key]["manufacturer"]}</p><p>{"-->"}</p><p>{orderCount[id][key]["quantity"]}</p> */}
                                                             <div className="w-full flex">
-                                                                <div className="w-1/4">{orderCount[id][key]["type"]}</div>
-                                                                <div className="w-1/4">{orderCount[id][key]["model"]}</div>
-                                                                <div className="w-1/4">{orderCount[id][key]["manufacturer"]}</div>
-                                                                <div className="w-1/4"><input type="number" placeholder="No of Unit" className="border " id={id.toString() + "_" + key.toString() + "_quantity"} onChange={(e)=>calculate(id,key,"quantity",e.target.value)} value={orderCount[id][key]["quantity"]} required></input></div>
+                                                                <div className="w-1/5">{orderCount[id][key]["type"]}</div>
+                                                                <div className="w-1/5">{orderCount[id][key]["model"]}</div>
+                                                                <div className="w-1/5">{orderCount[id][key]["manufacturer"]}</div>
+                                                                <div className="w-1/5">
+                                                                   
+                                                                   {Object.keys(Units).map((k1,ind)=>(
+                                                                    <>
+                                                                        {ind==id && ( <div className={`${Units[k1][orderCount[id][key]["manufacturer"].substring(0,1)+orderCount[id][key]["model"]+orderCount[id][key]["type"]] >= orderCount[id][key]["quantity"]?"text-green-500":"text-red-500"}`}> {Units[k1][orderCount[id][key]["manufacturer"].substring(0,1)+orderCount[id][key]["model"]+orderCount[id][key]["type"]]}</div>)}
+
+                                                                    </>
+                                                                   ))}
+                                                                  
+                                                                   </div>
+                                                                <div className="w-1/5"><input type="number" placeholder="No of Unit" className="border " value={orderCount[id][key]["quantity"]} onChange={(e)=>{
+                                                                    setOrderCount((prev)=>{
+                                                                        let ppp = {...prev}
+                                                                        let f=0
+                                                                        ppp[id][key]["quantity"]=e.target.value;
+                                                                        let kkk = {...unitsDetails}
+                                                                        Object.keys(ppp).map((k1,ind)=>{
+                                                                            Object.keys(ppp[k1]).map((k2)=>{
+                                                                                let p = ppp[k1][k2]["manufacturer"].substring(0,1)+ppp[k1][k2]["model"];
+                                                                                if(ind==0){
+                                                                                    kkk[p][ppp[k1][k2]["type"]][1]=Number(ppp[k1][k2]["quantity"])
+                                                                                }
+                                                                                else
+                                                                                kkk[p][ppp[k1][k2]["type"]][1]+=Number(ppp[k1][k2]["quantity"])
+                                                                                console.log(kkk[p][ppp[k1][k2]["type"]][1],kkk[p][ppp[k1][k2]["type"]][0])
+                                                                                if(kkk[p][ppp[k1][k2]["type"]][1]>kkk[p][ppp[k1][k2]["type"]][0]) f=1;
+                                                                            })
+                                                                        })
+
+                                                                        setUnitsDetails(kkk);
+                                                                       
+                                                                       
+                                                                        return ppp;
+                                                                    })
+
+                                                                }} required></input></div>
                                                             </div>
                                                         </div> }
                                                     </div>
@@ -628,89 +824,10 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
 
                                             </td>
                                         </tr>}
-{/*                                        
-                                              { boxId.length==1 && boxId[0]==id && (
-                                                <tr >
-                                                    <td colSpan="10">
-                                                    <div className="border rounded-md p-3">
-                                                        <table className="w-full">
-                                                        <tr className="border-b-2 ">
-                                                            <th className="font-normal">Type</th>
-                                                            <th className="font-normal">Model</th>
-                                                            <th className="font-normal">Manufacturer</th>                                                            
-                                                            <th className="font-normal">Quantity</th>
-                                                            <th className="font-normal">Avialable units</th>
-                                                        
-                                                        </tr>
-                                                        <br />
-
-                                                        {
-                                                            Object.keys(orderCount[id]).map((v2) => (
-                                                            <tr className="">
-                                                                <td><select className="border p-2 mb-2 text-black"
-                                                                id={id.toString() + "_" + v2.toString() + "_type"}
-                                                                required
-                                                                onChange={(e)=>calculate(id,v2,"type",e.target.value)}
-                                                                value={orderCount[id][v2]["type"]}
-
-                                                                >
-                                                                <option value="select"
-                                                                >select</option>
-                                                                <option value="BU">BU</option>
-                                                                <option value="CU">CU</option>
-                                                                <option value="VVPAT">VVPAT</option>
-                                                                </select></td>
-                                                               
-                                                                <td>
-                                                                <select className="border p-2 mb-2 text-black"
-                                                                    id={id.toString() + "_" + v2.toString() + "_Model"}
-                                                                    required
-                                                                    onChange={(e)=>calculate(id,v2,"model",e.target.value)}
-                                                                    value={orderCount[id][v2]["model"]}
-
-                                                                >
-                                                                    <option value="select"
-                                                                    >select</option>
-                                                                    <option value="M2">M2</option>
-                                                                    <option value="M3">M3</option>
-                                                                </select>
-                                                                </td>
-                                                                <td>
-                                                                <select className="border p-2 mb-2 text-black"
-                                                                    id={id.toString() + "_" + v2.toString() + "_manufacturer"}
-                                                                    required
-                                                                    onChange={(e)=>calculate(id,v2,"manufacturer",e.target.value)}
-                                                                    value={orderCount[id][v2]["manufacturer"]}
-
-                                                                >
-                                                                    <option value="select"
-                                                                    >select</option>
-                                                                    <option value="ECIL">ECIL</option>
-                                                                    <option value="BEL">BEL</option>
-                                                                </select>
-                                                                </td>
-                                                                <td>
-                                                                <input disabled={!(orderCount[id][v2]["type"]!="select" && orderCount[id][v2]["model"]!="select" && orderCount[id][v2]["manufacturer"]!="select")} type="number" placeholder="No of Unit" className="Input border mb-2 text-black" id={id.toString() + "_" + v2.toString() + "_quantity"} onChange={(e)=>calculate(id,v2,"quantity",e.target.value)} value={orderCount[id][v2]["quantity"]} required></input>
-                                                                </td>
-                                                               <td>
-                                                                {(orderCount[id][v2]["type"]!="select" && orderCount[id][v2]["model"]!="select" && orderCount[id][v2]["manufacturer"]!="select")?(<>
-                                                                {WareHouse_List[id]["max"+orderCount[id][v2]["type"]+orderCount[id][v2]["model"]+orderCount[id][v2]["manufacturer"]]-WareHouse_List[id]["fill"+orderCount[id][v2]["type"]+orderCount[id][v2]["model"]+orderCount[id][v2]["manufacturer"]]}
-                                                                </>):(
-                                                                    <>Pending</>
-                                                                ) }
-                                                                </td>
-                                                               
-                                                            </tr>
-                                                            ))
-                                                        }
-                                                        </table>
-                                                        <div className="flex justify-end w-full mt-1"><button type="button" onClick={() => increaseOne(id)} className="bg-orange-600 text-white  p-2 text-sm   " >Add row</button></div>
-                                                    </div>
-                                                    </td>
-                                                </tr>
-                                              )} */}
-                                              <tr className="">
-                                                <td colSpan="20">
+                                       
+                                            
+                                              <tr>
+                                                <td colSpan="2">
                                                     <hr className="border-1 border-black"/>
                                                 </td>
                                               </tr>
@@ -721,113 +838,39 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
                                 </tbody>
                             </table>
                         </div>
+                        </div>
                     </div>
                 </div>
-                <div className="w-2/5">
-                    <div className="bg-white p-6 rounded-lg shadow-lg mt-2 w-full m-4" style={{ width: "97%" }}>
-                        <p className="text-left font-semibold">Recent Orders <span className="text-gray-400">{rightArrow} Delhi</span></p>
-                        <div className="rounded-lg shadow-md mt-5 bg-white">
-                            <div
-                                className="rounded-t-lg p-2 text-left "
-                                style={{ backgroundColor: "#84587C" }}
-                            >
-                                <span className="text-white text-lg ml-5">Ballot Units</span>
-                            </div>
-                            <div className="p-2">
-                                <table className="w-full mt-4 ">
-                                    <tr className="text-red-400 border-b-2 ">
-                                        <td>Model</td>
-                                        <td>Total</td>
-                                        <td>Filled</td>
-                                        <td>LeftOut</td>
-                                    </tr>
-                                    <br />
-                                    <tr className=" border-b-2 ">
-                                        <td>M2</td>
-                                        <td>{total_BU_M2}</td>
-                                        <td>{filled_BU_M2}</td>
-                                        <td>{leftout_BU_M2}</td>
-                                    </tr>
-                                    <br />
-                                    <tr className=" border-b-2 ">
-                                        <td>M3</td>
-                                        <td>{total_BU_M3}</td>
-                                        <td>{filled_BU_M3}</td>
-                                        <td>{leftout_BU_M3}</td>
-                                    </tr>
-                                    <br />
-                                </table>
-                            </div>
+                <div className="w-2/5 m-3 " >
+                    <div className="w-full bg-white rounded-md p-4">
+                        <div className=" h-12 "><p className="text-orange-600 text-3xl text-left">Units Tracker</p></div>
+                        <div className="flex w-full h-16 text-orange-600">
+                            <div className="w-1/5">Manufacturer</div>
+                            <div className="w-1/5">Model</div>
+                            <div className="w-1/5">Total CU / Filled CU</div>
+                            <div className="w-1/5">Total BU / Filled BU</div>
+                            <div className="w-1/5">Total VVPAT / Filled VVPAT</div>
                         </div>
-
-                        <div className="rounded-lg shadow-md mt-5 bg-white">
-                            <div
-                                className="rounded-t-lg p-2 text-left "
-                                style={{ backgroundColor: "#84587C" }}
-                            >
-                                <span className="text-white text-lg ml-5">Control Units</span>
-                            </div>
-                            <div className="p-2">
-                                <table className="w-full mt-4 ">
-                                    <tr className="text-red-400 border-b-2 ">
-                                        <td>Model</td>
-                                        <td>Total</td>
-                                        <td>Filled</td>
-                                        <td>LeftOut</td>
-                                    </tr>
-                                    <br />
-                                    <tr className=" border-b-2 ">
-                                        <td>M2</td>
-                                        <td>{total_CU_M2}</td>
-                                        <td>{filled_CU_M2}</td>
-                                        <td>{leftout_CU_M2}</td>
-                                    </tr>
-                                    <br />
-                                    <tr className=" border-b-2 ">
-                                        <td>M3</td>
-                                        <td>{total_CU_M3}</td>
-                                        <td>{filled_CU_M3}</td>
-                                        <td>{leftout_CU_M3}</td>
-                                    </tr>
-                                    <br />
-
-                                </table>
-
-                            </div>
+                        <hr />
+                       
+                       { Object.keys(unitsDetails).map((key)=>(<>
+                        <div className="flex w-full h-14 pt-4">
+                            <div className="w-1/5">{key.substring(0,1)=="E"?"ECIL":"BEL"}</div>
+                            <div className="w-1/5">{key.substring(1,3)}</div>
+                            <div className={`w-1/5 ${unitsDetails[key]["CU"][0] > unitsDetails[key]["CU"][1] ? "text-red-400":"text-green-400"}`}>{unitsDetails[key]["CU"][0]+ "/" + unitsDetails[key]["CU"][1]}</div>
+                            <div className={`w-1/5 ${unitsDetails[key]["BU"][0] > unitsDetails[key]["BU"][1] ? "text-red-400":"text-green-400"}`}>{unitsDetails[key]["BU"][0]+ "/" + unitsDetails[key]["BU"][1]}</div>
+                            <div className={`w-1/5 ${unitsDetails[key]["VVPAT"][0] > unitsDetails[key]["VVPAT"][1] ? "text-red-400":"text-green-400"}`}>{unitsDetails[key]["VVPAT"][0]+ "/" + unitsDetails[key]["VVPAT"][1]}</div>
+                         
                         </div>
-                        <div className="rounded-lg shadow-md mt-5 bg-white">
-                            <div
-                                className="rounded-t-lg p-2 text-left "
-                                style={{ backgroundColor: "#84587C" }}
-                            >
-                                <span className="text-white text-lg ml-5">VVPAT</span>
-                            </div>
-                            <div className="p-2">
-                                <table className="w-full mt-4 ">
-                                    <tr className="text-red-400 border-b-2 ">
-                                        <td>Model</td>
-                                        <td>Total</td>
-                                        <td>Filled</td>
-                                        <td>LeftOut</td>
-                                    </tr>
-                                    <br />
-                                    <tr className=" border-b-2 ">
-                                        <td>M2</td>
-                                        <td>{total_VVPAT_M2}</td>
-                                        <td>{filled_VVPAT_M2}</td>
-                                        <td>{leftout_VVPAT_M2}</td>
-                                    </tr>
-                                    <br />
-                                    <tr className=" border-b-2 ">
-                                        <td>M3</td>
-                                        <td>{total_VVPAT_M3}</td>
-                                        <td>{filled_VVPAT_M3}</td>
-                                        <td>{leftout_VVPAT_M3}</td>
-                                    </tr>
-                                    <br />
-                                </table>
-                            </div>
-                        </div>
+                        <hr />
+                       </>))}
+                      
+                      
+                        
+                      
+                        
+                        
+                        
                     </div>
                 </div>
             </div >

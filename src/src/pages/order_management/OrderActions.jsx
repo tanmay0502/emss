@@ -179,7 +179,7 @@ function OrderActions(props) {
         if (roles[ind] == 'sender') {
             switch (actions(roles[ind])[actionIndex]) {
                 case 'Fill Availability':
-                    return <WareHouseListUnitTrackerFillAvailability Order={senderOrder} OrderID={props.OrderID} />
+                    return <WareHouseListUnitTrackerFillAvailability unitDetails = {props.unitDetails} Order={senderOrder} OrderID={props.OrderID} />
                 case 'Issue Order':
                     return <OrderFlowOne Order={senderOrder} OrderID={props.OrderID} isSender={1}/>
             }
@@ -187,7 +187,7 @@ function OrderActions(props) {
         else if (roles[ind] == 'recipient') {
             switch (actions(roles[ind])[actionIndex]) {
                 case 'Fill Demand':
-                    return <WareHouseListUnitTrackerFillDemand Order={recipientOrder} OrderID={props.OrderID}/>
+                    return <WareHouseListUnitTrackerFillDemand unitDetails = {props.unitDetails} Order={recipientOrder} OrderID={props.OrderID}/>
                 case 'Optimal Allocation':
                     return <AllocateOrder OrderID={props.OrderID} type={order.type}/>
                 case 'Vehicle Details':
@@ -197,9 +197,9 @@ function OrderActions(props) {
         else if (roles[ind] == 'both') {
             switch (actions(roles[ind])[actionIndex]) {
                 case 'Fill Demand':
-                    return <WareHouseListUnitTrackerFillDemand Order={recipientOrder} OrderID={props.OrderID}/>
+                    return <WareHouseListUnitTrackerFillDemand unitDetails = {props.unitDetails} Order={recipientOrder} OrderID={props.OrderID}/>
                 case 'Fill Availability':
-                    return <WareHouseListUnitTrackerFillAvailability Order={senderOrder} OrderID={props.OrderID}/>
+                    return <WareHouseListUnitTrackerFillAvailability unitDetails = {props.unitDetails} Order={senderOrder} OrderID={props.OrderID}/>
                 case 'Optimal Allocation':
                     return <AllocateOrder />
                 case 'Vehicle Details':

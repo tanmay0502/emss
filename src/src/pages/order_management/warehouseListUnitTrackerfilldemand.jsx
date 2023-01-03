@@ -1,6 +1,5 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import styles from './styles/warehouseListUnitTrackerfilldemand.css'
 import "../home/styles/Newversion.css";
 import { Fragment } from 'react';
 import { FaCircle } from 'react-icons/fa'
@@ -12,6 +11,7 @@ import {
 import ToggleButton from '../../components/ToggleButton';
 import { ReactComponent as ChevronDown } from "../../assets/ChevronDown.svg";
 import { ReactComponent as SearchIcon } from "../../assets/search.svg";
+import styles from '../unit_management/styles/Homepage.module.css';
 
 
 export default function WareHouseListUnitTrackerFillDemand(props) {
@@ -36,72 +36,44 @@ export default function WareHouseListUnitTrackerFillDemand(props) {
         "Room Type": "Room Type",
     }
 
-    
-
-
-    const  [total_BU_M2, settotal_BU_M2] = useState(0)
-    const  [filled_BU_M2, setfilled_BU_M2] = useState(0)
-    const  [leftout_BU_M2, setleftout_BU_M2] = useState(0)
-    const  [total_BU_M3, settotal_BU_M3] = useState(0)
-    const  [filled_BU_M3, setfilled_BU_M3] = useState(0)
-    const  [leftout_BU_M3, setleftout_BU_M3] = useState(0)
-
-
-    const  [total_CU_M2, settotal_CU_M2] = useState(0)
-    const  [filled_CU_M2, setfilled_CU_M2] = useState(0)
-    const  [leftout_CU_M2, setleftout_CU_M2] = useState(0)
-    const  [total_CU_M3, settotal_CU_M3] = useState(0)
-    const  [filled_CU_M3, setfilled_CU_M3] = useState(0)
-    const  [leftout_CU_M3, setleftout_CU_M3] = useState(0)
-
-    const  [total_VVPAT_M2, settotal_VVPAT_M2] = useState(0)
-    const  [filled_VVPAT_M2, setfilled_VVPAT_M2] = useState(0)
-    const  [leftout_VVPAT_M2, setleftout_VVPAT_M2] = useState(0)
-    const  [total_VVPAT_M3, settotal_VVPAT_M3] = useState(0)
-    const  [filled_VVPAT_M3, setfilled_VVPAT_M3] = useState(0)
-    const  [leftout_VVPAT_M3, setleftout_VVPAT_M3] = useState(0)
-
-    function setUnits(){
-        const stateCode = sessionStorage.getItem("sessionToken").substring(0,2);
-        console.log(stateCode)
-        if(pageLoaded==0){
-        console.log(props.Order)
-        props.Order.map((order)=>{
-            setPageLoaded(1);
-            if(order["destination"]==stateCode){
-                if(order["item"]=="CU" && order["itemmodel"]=="M2"){
-                    settotal_CU_M2(total_CU_M2+ Number(order["itemquantity"]));
-                    setleftout_CU_M2(total_CU_M2+ Number(order["itemquantity"]));
-                }
-                if(order["item"]=="CU" && order["itemmodel"]=="M3"){
-                    settotal_CU_M3(total_CU_M3+ Number(order["itemquantity"]));
-                    setleftout_CU_M3(total_CU_M3+ Number(order["itemquantity"]));
-                }
-                if(order["item"]=="BU" && order["itemmodel"]=="M2"){
-                    settotal_BU_M2(total_BU_M2+ Number(order["itemquantity"]));
-                    setleftout_BU_M2(total_BU_M2+ Number(order["itemquantity"]));
-                }
-                if(order["item"]=="BU" && order["itemmodel"]=="M3"){
-                    settotal_BU_M3(total_BU_M3+ Number(order["itemquantity"]));
-                    setleftout_BU_M3(total_BU_M3+ Number(order["itemquantity"]));
-                }
-                if(order["item"]=="VVPAT" && order["itemmodel"]=="M2"){
-                    settotal_VVPAT_M3(total_VVPAT_M2+ Number(order["itemquantity"]));
-                    setleftout_VVPAT_M3(total_VVPAT_M2+ Number(order["itemquantity"]));
-                }
-                if(order["item"]=="VVPAT" && order["itemmodel"]=="M3"){
-                    settotal_VVPAT_M3(total_VVPAT_M3+ Number(order["itemquantity"]));
-                    setleftout_VVPAT_M3(total_VVPAT_M3+ Number(order["itemquantity"]));
-                }
-            }
-        })
-        }
-        console.log(total_BU_M2,total_BU_M3,total_CU_M3,total_CU_M2,total_VVPAT_M2,total_VVPAT_M3);
-    }
+    const [unitsDetails, setUnitsDetails] = useState({});
 
     useEffect(()=>{
-        setUnits()
-    },[pageLoaded])
+        let ppp = { 
+        "EM2":{
+            "CU":[0,0],
+            "BU":[0,0],
+            "VVPAT":[0,0]
+        },
+        "EM3":{
+            "CU":[0,0],
+            "BU":[0,0],
+            "VVPAT":[0,0]
+        },
+        "BM2":{
+            "CU":[0,0],
+            "BU":[0,0],
+            "VVPAT":[0,0]
+        },
+        "BM3":{
+            "CU":[0,0],
+            "BU":[0,0],
+            "VVPAT":[0,0]
+        }
+       
+    }
+
+    props.unitDetails.map((val)=>{
+        let p = val[6].substring(0,1)+val[3];
+        ppp[p][val[2]][0]+=Number(val[4]);
+    })
+    console.log(ppp)
+    setUnitsDetails(ppp);
+
+    },[props.unitDetails])
+
+
+    
 
 
     const [orderCount,setOrderCount] = useState({});
@@ -125,65 +97,12 @@ export default function WareHouseListUnitTrackerFillDemand(props) {
         
         console.log(temp)
         setOrderCount({ ...temp });
-    
-      }
-    
-      function calculate(id1 , id2, key, value ) {
-        
-
-        let _total_BU_M2 =0
-        let _total_BU_M3 =0
-        let _total_CU_M2 =0
-        let _total_CU_M3 =0
-        let _total_VVPAT_M2 =0
-        let _total_VVPAT_M3 =0
-        
-        console.log(orderCount)
-        console.log("calculate",id1,id2,key, value)
-        // console.log((filled_CU_M2),filled_BU_M3)
-        let dummy2 =orderCount;
-        if(key=="quantity")
-        dummy2[id1][id2][key]=Number(value).toString();
-        else
-        dummy2[id1][id2][key]=value
-        console.log(dummy2)
-
-        Object.keys(dummy2).map((key1)=>{
-            Object.keys(dummy2[key1]).map((key2)=>{
-                if(dummy2[key1][key2]["type"]!="select" && dummy2[key1][key2]["model"]!="select" && dummy2[key1][key2]["manufacturer"]!="select"){
-                    
-                    let temp=""
-                    temp += "_total_" + dummy2[key1][key2]["type"] + "_" + dummy2[key1][key2]["model"];
-                    let temp2=eval(temp)
-                    temp2+=parseInt(dummy2[key1][key2]["quantity"])
-                    eval(temp + " = " + temp2.toString());
-                }
-            })
-        })
-
        
-      
-        
+       
     
-        console.log(_total_CU_M2, _total_CU_M3, _total_BU_M2, _total_BU_M3, _total_VVPAT_M2, _total_VVPAT_M3)
-        setfilled_BU_M2(_total_BU_M2)
-        setfilled_BU_M3(_total_BU_M3)
-        setfilled_CU_M2(_total_CU_M2)
-        setfilled_CU_M3(_total_CU_M3)
-        setfilled_VVPAT_M2(_total_VVPAT_M2)
-        setfilled_VVPAT_M3(_total_VVPAT_M3)
-        setleftout_BU_M2(total_BU_M2 - _total_BU_M2)
-        setleftout_BU_M3(total_BU_M3 - _total_BU_M3)
-        setleftout_CU_M2(total_CU_M2 - _total_CU_M2)
-        setleftout_CU_M3(total_CU_M3 - _total_CU_M3)
-        setleftout_VVPAT_M2(total_VVPAT_M2 - _total_VVPAT_M2)
-        setleftout_VVPAT_M3(total_VVPAT_M3 - _total_VVPAT_M3)
-        
-        
-    
-        console.log(dummy2)
-        setOrderCount({...dummy2})
       }
+    
+      
 
     const rightArrow = ">";
 
@@ -338,16 +257,7 @@ export default function WareHouseListUnitTrackerFillDemand(props) {
         getList();
     }, [])
 
-    useEffect(()=>{
-        let fillDemand = {}
-        Details.map((val,id)=>{
-            fillDemand[id.toString()]={};
-        })
-        
-        console.log(fillDemand)
-        setOrderCount(fillDemand);
-        if(props.Order) {
-            console.log(orderCount)
+    function run(){
         WareHouse_List.map((val,id)=>{
             props.Order.map((val2,id2)=>{
                 const type= val2["item"]
@@ -356,6 +266,26 @@ export default function WareHouseListUnitTrackerFillDemand(props) {
                 increaseOne(id,type,model,mnf)
             })
         })
+    }
+    const [fl, setFl] = useState(0);
+
+    useEffect(()=>{
+        let fillDemand = {}
+        Details.map((val,id)=>{
+            fillDemand[id.toString()]={};
+        })
+        
+        console.log(fillDemand)
+        setOrderCount(fillDemand);
+        if(props.Order ) {
+           
+            console.log(orderCount)
+
+            if (Object.keys(orderCount).length != 0 && fl == 0) {
+                setFl(1);
+                run();
+            }
+            
     }
     },[Details])
 
@@ -474,7 +404,7 @@ export default function WareHouseListUnitTrackerFillDemand(props) {
     return (
         <div>
             <div className="flex w-full">
-                <div className=" w-3/5">
+                <div className=" w-3/5" >
                     <div className="bg-white p-6 rounded-lg shadow-lg mt-2 w-full">
                         <div
                             className="rounded-t-lg p-2 text-left flex "
@@ -508,8 +438,7 @@ export default function WareHouseListUnitTrackerFillDemand(props) {
                                 </button>
                             </div>
                         </div>
-                        <div className="p-2">
-                            <table className="w-full mt-4 ">
+                        <table className="w-full mt-4 ">
                                 <thead className="HeadRow border-b-2">
                                     <tr  className="flex justify-start">
 
@@ -521,7 +450,11 @@ export default function WareHouseListUnitTrackerFillDemand(props) {
                                    
 
                                 </thead>
-                                <tbody>
+                            </table>
+                        <div  className="overflow-x-scroll p-2" style={{height:"700px"}}>
+                           
+                        <table className="w-11/12">
+                                <tbody >
 
                                     {WareHouse_List.length > 0 &&
                                         WareHouse_List.map((val, id) => (<>
@@ -542,7 +475,32 @@ export default function WareHouseListUnitTrackerFillDemand(props) {
                                                                 <div className="w-1/4">{orderCount[id][key]["type"]}</div>
                                                                 <div className="w-1/4">{orderCount[id][key]["model"]}</div>
                                                                 <div className="w-1/4">{orderCount[id][key]["manufacturer"]}</div>
-                                                                <div className="w-1/4"><input type="number" placeholder="No of Unit" className="border " id={id.toString() + "_" + key.toString() + "_quantity"} onChange={(e)=>calculate(id,key,"quantity",e.target.value)} value={orderCount[id][key]["quantity"]} required></input></div>
+                                                                <div className="w-1/4"><input type="number" placeholder="No of Unit" className="border " value={orderCount[id][key]["quantity"]} onChange={(e)=>{
+                                                                    setOrderCount((prev)=>{
+                                                                        let ppp = {...prev}
+                                                                        let f=0
+                                                                        ppp[id][key]["quantity"]=e.target.value;
+                                                                        let kkk = {...unitsDetails}
+                                                                        Object.keys(ppp).map((k1,ind)=>{
+                                                                            Object.keys(ppp[k1]).map((k2)=>{
+                                                                                let p = ppp[k1][k2]["manufacturer"].substring(0,1)+ppp[k1][k2]["model"];
+                                                                                if(ind==0){
+                                                                                    kkk[p][ppp[k1][k2]["type"]][1]=Number(ppp[k1][k2]["quantity"])
+                                                                                }
+                                                                                else
+                                                                                kkk[p][ppp[k1][k2]["type"]][1]+=Number(ppp[k1][k2]["quantity"])
+                                                                                console.log(kkk[p][ppp[k1][k2]["type"]][1],kkk[p][ppp[k1][k2]["type"]][0])
+                                                                                if(kkk[p][ppp[k1][k2]["type"]][1]>kkk[p][ppp[k1][k2]["type"]][0]) f=1;
+                                                                            })
+                                                                        })
+
+                                                                        setUnitsDetails(kkk);
+                                                                       
+                                                                       
+                                                                        return ppp;
+                                                                    })
+
+                                                                }} required></input></div>
                                                             </div>
                                                         </div> }
                                                     </div>
@@ -551,75 +509,7 @@ export default function WareHouseListUnitTrackerFillDemand(props) {
                                             </td>
                                         </tr>}
                                        
-                                              {/* { boxId.length==1 && boxId[0]==id && (
-                                                <tr>
-                                                    <td colSpan="5">
-                                                    <div className="border rounded-md p-3">
-                                                        <table className="w-full">
-                                                        <tr className="border-b-2 ">
-                                                            <th className="font-normal">Type</th>
-                                                            <th className="font-normal">Quantity</th>
-                                                            <th className="font-normal">Model</th>
-                                                            <th className="font-normal">Manufacturer</th>
-                                                        </tr>
-                                                        <br />
-
-                                                        {
-                                                            Object.keys(orderCount[id]).map((v2) => (
-                                                            <tr className="">
-                                                                <td><select className="border p-2 mb-2 text-black"
-                                                                id={id.toString() + "_" + v2.toString() + "_type"}
-                                                                required
-                                                                onChange={(e)=>calculate(id,v2,"type",e.target.value)}
-                                                                value={orderCount[id][v2]["type"]}
-
-                                                                >
-                                                                <option value="select"
-                                                                >select</option>
-                                                                <option value="BU">BU</option>
-                                                                <option value="CU">CU</option>
-                                                                <option value="VVPAT">VVPAT</option>
-                                                                </select></td>
-                                                                <td>
-                                                                <input type="number" placeholder="No of Unit" className="Input border mb-2 text-black" id={id.toString() + "_" + v2.toString() + "_quantity"} onChange={(e)=>calculate(id,v2,"quantity",e.target.value)} value={orderCount[id][v2]["quantity"]} required></input>
-                                                                </td>
-                                                                <td>
-                                                                <select className="border p-2 mb-2 text-black"
-                                                                    id={id.toString() + "_" + v2.toString() + "_Model"}
-                                                                    required
-                                                                    onChange={(e)=>calculate(id,v2,"model",e.target.value)}
-                                                                    value={orderCount[id][v2]["model"]}
-
-                                                                >
-                                                                    <option value="select"
-                                                                    >select</option>
-                                                                    <option value="M2">M2</option>
-                                                                    <option value="M3">M3</option>
-                                                                </select>
-                                                                </td>
-                                                                <td>
-                                                                <select className="border p-2 mb-2 text-black"
-                                                                    id={id.toString() + "_" + v2.toString() + "_manufacturer"}
-                                                                    required
-                                                                    onChange={(e)=>calculate(id,v2,"manufacturer",e.target.value)}
-                                                                    value={orderCount[id][v2]["manufacturer"]}
-
-                                                                >
-                                                                    <option value="select"
-                                                                    >select</option>
-                                                                    <option value="ECIL">ECIL</option>
-                                                                    <option value="BEL">BEL</option>
-                                                                </select>
-                                                                </td>
-                                                            </tr>
-                                                            ))
-                                                        }
-                                                        </table>
-                                                        <div className="flex justify-end w-full mt-1"><button type="button" onClick={() => increaseOne(id)} className="bg-orange-600 text-white  p-2 text-sm   " >Add row</button></div>
-                                                    </div>
-                                                    </td>
-                                                </tr>
-                                              )} */}
+                                            
                                               <tr>
                                                 <td colSpan="2">
                                                     <hr className="border-1 border-black"/>
@@ -634,111 +524,36 @@ export default function WareHouseListUnitTrackerFillDemand(props) {
                         </div>
                     </div>
                 </div>
-                <div className="w-2/5">
-                    <div className="bg-white p-6 rounded-lg shadow-lg mt-2 w-full m-4" style={{ width: "97%" }}>
-                        <p className="text-left font-semibold">Recent Orders <span className="text-gray-400">{rightArrow} Delhi</span></p>
-                        <div className="rounded-lg shadow-md mt-5 bg-white">
-                            <div
-                                className="rounded-t-lg p-2 text-left "
-                                style={{ backgroundColor: "#84587C" }}
-                            >
-                                <span className="text-white text-lg ml-5">Ballot Units</span>
-                            </div>
-                            <div className="p-2">
-                                <table className="w-full mt-4 ">
-                                    <tr className="text-red-400 border-b-2 ">
-                                        <td>Model</td>
-                                        <td>Total</td>
-                                        <td>Filled</td>
-                                        <td>LeftOut</td>
-                                    </tr>
-                                    <br />
-                                    <tr className=" border-b-2 ">
-                                        <td>M2</td>
-                                        <td>{total_BU_M2}</td>
-                                        <td>{filled_BU_M2}</td>
-                                        <td>{leftout_BU_M2}</td>
-                                    </tr>
-                                    <br />
-                                    <tr className=" border-b-2 ">
-                                        <td>M3</td>
-                                        <td>{total_BU_M3}</td>
-                                        <td>{filled_BU_M3}</td>
-                                        <td>{leftout_BU_M3}</td>
-                                    </tr>
-                                    <br />
-                                </table>
-                            </div>
+                <div className="w-2/5 m-3 " >
+                    <div className="w-full bg-white rounded-md p-4">
+                        <div className=" h-12 "><p className="text-orange-600 text-3xl text-left">Units Tracker</p></div>
+                        <div className="flex w-full h-16 text-orange-600">
+                            <div className="w-1/5">Manufacturer</div>
+                            <div className="w-1/5">Model</div>
+                            <div className="w-1/5">Total CU / Filled CU</div>
+                            <div className="w-1/5">Total BU / Filled BU</div>
+                            <div className="w-1/5">Total VVPAT / Filled VVPAT</div>
                         </div>
-
-                        <div className="rounded-lg shadow-md mt-5 bg-white">
-                            <div
-                                className="rounded-t-lg p-2 text-left "
-                                style={{ backgroundColor: "#84587C" }}
-                            >
-                                <span className="text-white text-lg ml-5">Control Units</span>
-                            </div>
-                            <div className="p-2">
-                                <table className="w-full mt-4 ">
-                                    <tr className="text-red-400 border-b-2 ">
-                                        <td>Model</td>
-                                        <td>Total</td>
-                                        <td>Filled</td>
-                                        <td>LeftOut</td>
-                                    </tr>
-                                    <br />
-                                    <tr className=" border-b-2 ">
-                                        <td>M2</td>
-                                        <td>{total_CU_M2}</td>
-                                        <td>{filled_CU_M2}</td>
-                                        <td>{leftout_CU_M2}</td>
-                                    </tr>
-                                    <br />
-                                    <tr className=" border-b-2 ">
-                                        <td>M3</td>
-                                        <td>{total_CU_M3}</td>
-                                        <td>{filled_CU_M3}</td>
-                                        <td>{leftout_CU_M3}</td>
-                                    </tr>
-                                    <br />
-
-                                </table>
-
-                            </div>
+                        <hr />
+                       
+                       { Object.keys(unitsDetails).map((key)=>(<>
+                        <div className="flex w-full h-14 pt-4">
+                            <div className="w-1/5">{key.substring(0,1)=="E"?"ECIL":"BEL"}</div>
+                            <div className="w-1/5">{key.substring(1,3)}</div>
+                            <div className={`w-1/5 ${unitsDetails[key]["CU"][0] < unitsDetails[key]["CU"][1] ? "text-red-400":"text-green-400"}`}>{unitsDetails[key]["CU"][0]+ "/" + unitsDetails[key]["CU"][1]}</div>
+                            <div className={`w-1/5 ${unitsDetails[key]["BU"][0] < unitsDetails[key]["BU"][1] ? "text-red-400":"text-green-400"}`}>{unitsDetails[key]["BU"][0]+ "/" + unitsDetails[key]["BU"][1]}</div>
+                            <div className={`w-1/5 ${unitsDetails[key]["VVPAT"][0] < unitsDetails[key]["VVPAT"][1] ? "text-red-400":"text-green-400"}`}>{unitsDetails[key]["VVPAT"][0]+ "/" + unitsDetails[key]["VVPAT"][1]}</div>
+                         
                         </div>
-                        <div className="rounded-lg shadow-md mt-5 bg-white">
-                            <div
-                                className="rounded-t-lg p-2 text-left "
-                                style={{ backgroundColor: "#84587C" }}
-                            >
-                                <span className="text-white text-lg ml-5">VVPAT</span>
-                            </div>
-                            <div className="p-2">
-                                <table className="w-full mt-4 ">
-                                    <tr className="text-red-400 border-b-2 ">
-                                        <td>Model</td>
-                                        <td>Total</td>
-                                        <td>Filled</td>
-                                        <td>LeftOut</td>
-                                    </tr>
-                                    <br />
-                                    <tr className=" border-b-2 ">
-                                        <td>M2</td>
-                                        <td>{total_VVPAT_M2}</td>
-                                        <td>{filled_VVPAT_M2}</td>
-                                        <td>{leftout_VVPAT_M2}</td>
-                                    </tr>
-                                    <br />
-                                    <tr className=" border-b-2 ">
-                                        <td>M3</td>
-                                        <td>{total_VVPAT_M3}</td>
-                                        <td>{filled_VVPAT_M3}</td>
-                                        <td>{leftout_VVPAT_M3}</td>
-                                    </tr>
-                                    <br />
-                                </table>
-                            </div>
-                        </div>
+                        <hr />
+                       </>))}
+                      
+                      
+                        
+                      
+                        
+                        
+                        
                     </div>
                 </div>
             </div >

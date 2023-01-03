@@ -3,7 +3,7 @@ import { UnitCount } from './Utils';
 
 export default function FillOrder({Order,setOrder,sources,sname,scode,destinations,dname,dcode}){
    
-    console.log(sources)
+    console.log(sources,destinations)
     const Template = {
         "manufacturer":"select",
         "model":"select",

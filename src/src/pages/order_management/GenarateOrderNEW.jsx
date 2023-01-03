@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { ReactComponent as CreateIssueIcon } from "../../assets/create_issue_request.svg";
 import { useParams } from "react-router-dom";
+import "./styles/generateOrder.css";
 import Modal from 'react-modal';
-import { formatRealm2, getRealm } from "../../components/utils";
+import UnitTraker from "./UnitTracker";
+import FillOrder from "./FillOrder";
+import { getRealm,formatRealm, formatRealm2 } from "../../components/utils";
 
 export default function GenarateOrderNEW() {
 
@@ -17,128 +20,115 @@ export default function GenarateOrderNEW() {
   const [total_VVPAT_M3, setTotal_VVPAT_M3] = useState(0)
   const [photoFileName, setPhotoFileName] = useState("")
   const [photoFileData, setPhotoFileData] = useState("")
+  const [availableUnits, setAvailableUnits] = useState([])
   const [flag, setflag] = useState(0);
   const [modalIsOpen, setIsOpen] = React.useState(false);
-  const [availableUnits, setAvailableUnits] = useState([])
+  
 
   function openModal() {
     setIsOpen(true);
-}
+  }
 
-function afterOpenModal() {
+  function afterOpenModal() {
     // references are now sync'd and can be accessed.
     //   subtitle.style.color = '#f00';
-}
+  }
 
-function closeModal() {
+  function closeModal() {
     setIsOpen(false);
-}
+  }
 
-const customStyles = {
+  const customStyles = {
     content: {
-        top: '50%',
-        left: '50%',
-        right: 'auto',
-        bottom: 'auto',
-        marginRight: '-50%',
-        transform: 'translate(-50%, -50%)',
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
     },
-};
+  };
 
-async function getcertificate(val) {
-  setflag(1)
-  console.log(val);
-  try {
-      const response = await fetch(
-          `${process.env.REACT_APP_API_SERVER}/order/getOrderPdf/`,
-          {
-              method: "POST",
-              headers: {
-                  "Content-Type": "application/json",
-              },
-              body: JSON.stringify(val),
-              credentials: 'include'
-          }
-      );
-      const data = await response.json();
-      console.log(data);
-      if (response.status == 200) {
-          setPhotoFileData(data)
-      }
-
-  } catch (err) {
-      console.log({ err });
-  }
-}
-
-if (flag == 0) {
-  if (photoFileName) {
-      getcertificate();
-  }
-}
-
-
-useEffect(()=>{
-  const getUnits = async ()=>{
+  async function getcertificate(val) {
+    setflag(1)
+    console.log(val);
     try {
-      const ID = window.sessionStorage.getItem('sessionToken');
-      console.log(ID)
       const response = await fetch(
-        `${process.env.REACT_APP_API_SERVER}/unit/available_units/`,
+        `${process.env.REACT_APP_API_SERVER}/order/getOrderPdf/`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          credentials: 'include',
-          body:JSON.stringify({
-            "oprnd":ID
-          })
+          body: JSON.stringify(val),
+          credentials: 'include'
         }
       );
       const data = await response.json();
-      console.log("/unit/available_units/",data);
-      if (data.data.length) {
-        setAvailableUnits(data.data);
+      console.log(data);
+      if (response.status == 200) {
+        setPhotoFileData(data)
       }
+
     } catch (err) {
       console.log({ err });
     }
   }
-  getUnits()
-},[])
+  
+  if (flag == 0) {
+    if (photoFileName) {
+      getcertificate();
+    }
+  }
+  
+  useEffect(()=>{
+    const getUnits = async ()=>{
+      try {
+        const ID = window.sessionStorage.getItem('sessionToken');
+        console.log(ID)
+        const response = await fetch(
+          `${process.env.REACT_APP_API_SERVER}/unit/available_units/`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: 'include',
+            body:JSON.stringify({
+              "oprnd":ID
+            })
+          }
+        );
+        const data = await response.json();
+        console.log("/unit/available_units/",data);
+        if (data.data.length) {
+          setAvailableUnits(data.data);
+        }
+      } catch (err) {
+        console.log({ err });
+      }
+    }
+    getUnits()
+  },[])
 
   const sampleBody = {
     "type": orderType,
     "details": [
-      {
-        "source": "string",
-        "destination": "string",
-        "unitDetails": [
-          {
-            "item": "string",
-            "itemmodel": "string",
-            "manufacturer": "string",
-            "itemquantity": 0
-          }
-        ]
-      }
+      
     ]
   }
-
-  const man = {"ECIL":"ME", "BEL":"MB"}
-  const manr = {"ME":"ECIL", "MB":"BEL","string":"pending"}
   const [body, setBody] = useState(sampleBody)
+
 
   const submmit = async () => {
     console.log("Submitted")
     console.log(body);
-    body.details.map(function(val){
+    body.details.map(function (val) {
       let b = [];
-      val.unitDetails.map(function(v){
-        b.push(v.item+v.itemmodel+v.manufacturer);
+      val.unitDetails.map(function (v) {
+        b.push(v.item + v.itemmodel + v.manufacturer);
       });
-      if((new Set(b)).size !== b.length) {
+      if ((new Set(b)).size !== b.length) {
         alert("Error : Identical Entries");
         window.location.reload(false);
       }
@@ -160,13 +150,18 @@ useEffect(()=>{
       console.log(data2["OrderIDs List"]);
 
       let t = [];
-      data2['OrderIDs List'].map(function(val){
+      data2['OrderIDs List'].map(function (val) {
         t.push({
           "orderid": val
         });
       });
       let p = {
         "listofOrders": t
+      }
+      if (response["status"] == 200) {
+        alert("Order Generated Successfully");
+        getcertificate(p);
+        openModal();
       }
       if (response["status"] == 200) {
         // alert("Order Generated Successfully");
@@ -181,33 +176,45 @@ useEffect(()=>{
     }
 
 
-
+    console.log("body", body)
   };
+
+  useEffect(() => {
+    console.log("use stater",body);
+  }, [body])
 
 
   async function getState() {
-    const id = window.sessionStorage.getItem("sessionToken")
-    const data = await getRealm( "User", "CreateUser")
-    setStates(formatRealm2(data, "", "", "", ""));
+    let data = await getRealm("Order", "FillCapacity")
+    let stateList = formatRealm2(data,"","","","");
+    console.log(stateList)
+    setStates(stateList)
   }
+
+  const [manufacturers, setManufacturers] = useState( [
+    {
+      "mfName":"ECIL",
+      "mfCode":"ME"
+    },
+    {
+      "mfName":"BEL",
+      "mfCode":"MB"
+    }
+    
+  ])
 
   useEffect(() => {
-    if (isPageLoaded == 0) {
-      getState();
-      setIsPageLoaded(1);
-    }
-  })
+   
+    console.log("fetching")
+    let timer = setTimeout(()=>getState(),500);
+      
+    return (()=>{
+      clearTimeout(timer);
+    })
+     
 
-
-  const[manufacturer, setManufacturer] = useState("select");
-
-  function kk(){
-    console.log("kdkd")
-  }
-
-  useEffect(()=>{
-    console.log("manu",manufacturer)
-  },[manufacturer])
+    
+  },[])
 
   const [update, setUpdate] = useState(0);
   useEffect(() => {
@@ -243,6 +250,60 @@ useEffect(()=>{
     }
   },[update])
 
+  const [Order, setOrder] = useState([{
+    "source":"select",
+    "destination":"select",
+    "details":[]
+}]);
+
+
+useEffect(()=>{
+  let tempBody={...sampleBody}
+  Order.map((val,id)=>{
+    if(val["source"]!="select" && val["destination"]!="select"){
+      console.log("both filled")
+    tempBody["details"].push({
+      "source": val["source"],
+      "destination": val["destination"],
+      "unitDetails": [
+        
+      ]
+    })
+    val["details"].map((val2)=>{
+      if(val2["model"]!="select" && val2["manufacturer"]!="select"){
+            if(val2["filledCU"]>0){
+            tempBody["details"][id]["unitDetails"].push({
+              "item": "CU",
+              "itemmodel": val2["model"],
+              "manufacturer": val2["manufacturer"],
+              "itemquantity": val2["filledCU"]
+            })
+          }
+          if(val2["filledBU"]>0){
+            tempBody["details"][id]["unitDetails"].push({
+              "item": "BU",
+              "itemmodel": val2["model"],
+              "manufacturer": val2["manufacturer"],
+              "itemquantity": val2["filledBU"]
+            })
+          }
+          if(val2["filledVVPAT"]>0){
+            tempBody["details"][id]["unitDetails"].push({
+              "item": "VVPAT",
+              "itemmodel": val2["model"],
+              "manufacturer": val2["manufacturer"],
+              "itemquantity": val2["filledVVPAT"]
+            })
+          }
+        }
+     
+    })
+  }
+  })
+  console.log(tempBody)
+  setBody(tempBody)
+},[Order])
+
   return (
     <div className="p-3">
       <Modal
@@ -268,241 +329,10 @@ useEffect(()=>{
         Request ID : {body.type}
       </p>
       <div className="flex w-full">
-        <div className=" w-3/5">
-          {body.details.map((val, ind) => (
+        <div className=" w-3/5 pt-10">
+          
+          <FillOrder Order={Order} setOrder={setOrder} sources={manufacturers} sname={"mfName"} scode={"mfCode"} destinations={states} dname={"stName"} dcode={"stCode"}/>
 
-
-            <div className="bg-white p-6 rounded-lg shadow-lg mt-2 w-full">
-              <div className="flex justify-between">
-                <div className="w-full">
-                  <label className="flex  w-full mb-2">Source<span className="text-red-600">*</span></label>
-
-                  <div className="flex">
-                    <select
-                      className="w-5/6 h-10 p-2 border rounded-md "
-                      placeholder="Type"
-                      required
-                      onChange={(e) => {
-                        setBody((prevBody) => {
-                          prevBody.details[ind].source = e.target.value;
-                          return (prevBody);
-                        })
-                        setUpdate((prev)=>{return (prev+1)%10});
-                      }}
-                    >
-                      <option>Select</option>
-                      {["ME", "MB"].map((val) => (
-                          <option value={val} className="text-black">
-                            {val}
-                          </option>
-                        ))}
-                    </select>
-                  </div>
-                </div>
-                <div className="flex w-full justify-end" >
-                  <div className="w-5/6">
-                    <label className="flex  w-full mb-2">Destination<span className="text-red-600">*</span></label>
-
-                    <div className="flex w-full">
-                      <select
-                        className="h-10 p-2 border rounded-md"
-                        placeholder="Type"
-                        required
-                        onChange={(e) => {
-                          setBody((prevBody) => {
-                            prevBody.details[ind].destination = e.target.value;
-                            return (prevBody);
-                          })
-                        }}
-                      >
-                        {" "}
-                        <option>Select</option>
-                        {states &&
-                          states.map((val) => (
-                            <option value={val.stCode} className="text-black">
-                              {`${val.stCode} (${val.stName})`}
-                            </option>
-                          ))}
-                        {states === [] && (<option value="0" className="text-black">
-                          Select:
-                        </option>)}
-                      </select>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <p className="text-left font-bold mt-2 text-lg mb-4" >
-                Units Description
-              </p>
-              <div className="border rounded-md p-3">
-                <table className="w-full">
-                  <tr>
-                    <th className="font-normal w-1/5">Type</th>
-                    <th className="font-normal w-1/5">Model</th>
-                    <th className="font-normal w-1/5">Manufacturer</th>
-                    <th className="font-normal w-1/5">Quantity</th>
-                    <th className="font-normal w-1/5">Available</th>
-                  </tr>
-                  <br />
-
-                  {
-                    body.details[ind].unitDetails.map((val, ind2) => (
-                      <tr className="border-b-2 ">
-                        <td><select className="border p-2 mb-2"
-                          required
-                          onChange={(e) => {
-                            setBody((prevBody) => {
-                              prevBody.details[ind].unitDetails[ind2].item = e.target.value;
-                              return (prevBody);
-                            })
-                            setUpdate((prev)=>{return (prev+1)%10});
-                          }}
-                        >
-                          <option
-                          >select</option>
-                          <option value="BU">BU</option>
-                          <option value="CU">CU</option>
-                          <option value="VVPAT">VVPAT</option>
-                        </select></td>
-                        <td>
-                          <select className="border p-2 mb-2"
-                            required
-                            onChange={(e) => {
-                              setBody((prev)=>{
-                                prev.details[ind].unitDetails[ind2].itemmodel = e.target.value;
-                                return prev;
-                              })
-                              setUpdate((prev)=>{return (prev+1)%10});
-                            }}
-
-                          >
-                            <option
-                            >select</option>
-                            <option value="M2">M2</option>
-                            <option value="M3">M3</option>
-                          </select>
-                        </td>
-                        <td>
-                          <select className="border p-2 mb-2"
-                            required
-                            onChange={(e) => {
-                              setBody((prev)=>{
-                                prev.details[ind].unitDetails[ind2].manufacturer = manr[e.target.value];
-                                return prev;
-                              })
-                              setUpdate((prev)=>{return (prev+1)%10});
-                            }}
-                          >
-                            <option>{manr[body.details[ind].source]}</option>
-                          </select>
-                        </td>
-                        <td>
-                          <input type="number" placeholder="No of Unit" className="w-2/3 p-2 rounded-lg border mb-2"
-                            onChange={(e) => {
-                              setBody((prev)=>{
-                                prev.details[ind].unitDetails[ind2].itemquantity = e.target.value;
-                                prev.details[ind].unitDetails[ind2].manufacturer = manr[prev.details[ind].source];
-                                return prev;
-                              })
-                              setUpdate((prev)=>{return (prev+1)%10});
-                            }} required></input>
-                        </td>
-                        <td>
-                          {[0].map(()=>{
-                            let sum = 0;
-                            const dict = {
-                              "B": "BEL",
-                              "E": "ECIL",
-                              "BU": "BU",
-                              "CU": "CU",
-                              "VT": "VVPAT",
-                            }
-                            for (let i = 0; i < availableUnits.length; i++) {
-                              const e = availableUnits[i];
-                              if (dict[e.unit_type] === val.item && dict[e.manufacturer] === val.manufacturer && e.model === val.itemmodel) {
-                                sum+=e.count;
-                              }
-                            }
-                            if(parseInt(val.itemquantity)){
-                              sum-=parseInt(val.itemquantity)
-                            }
-                            return <div>{sum}</div>;
-                          })}
-                        </td>
-                        <div className='mt-2'><button type="button" className="text-white bg-red-600 p-1 text-2xl w-8 h-8 -mt-5 " style={{ borderRadius: "50%" }}
-                        onClick={()=>{
-                            setBody((prev)=>{
-                                let temp = prev.details[ind].unitDetails.filter((e)=>e!=val);
-                                prev.details[ind].unitDetails = temp;
-                                return prev;
-                            })
-                            setUpdate((prev)=>{return (prev+1)%10});
-                        }}
-                        > -</button></div>
-                      </tr>
-                    ))
-                  }
-                </table>
-                <div className="flex justify-end w-full mt-1"><button type="button" onClick={() => {
-                  setBody((prev) => {
-                    let temp = {
-                      "item": "",
-                      "itemmodel": "",
-                      "manufacturer": "",
-                      "itemquantity": 0
-                    }
-                    let n = prev.details[ind].unitDetails.length;
-                    if (n) {
-                      if(prev.details[ind].unitDetails[n-1].itemquantity){
-                        prev.details[ind].unitDetails.push(temp)
-                      }
-                    } else {
-                      prev.details[ind].unitDetails.push(temp)
-                    }
-                    return prev;
-                  })
-                  setUpdate((prev)=>{return (prev+1)%10});
-                }} className="bg-orange-600 text-white  p-3  " >Add row</button></div>
-              </div>
-              <div className='flex justify-end mt-1'>
-                    <button type="button" className="text-white bg-red-600 p-1 text-2xl w-10 h-10 -mt-5 " style={{ borderRadius: "50%" }}onClick={()=>{
-                    setBody((prev)=>{
-                        prev.details = prev.details.filter((ele)=>ele!=val);
-                        return prev;
-                    })
-                    setUpdate((prev)=>{return (prev+1)%10});
-                }}> -</button>
-                </div>
-            </div>
-          ))}
-
-            <div className="flex justify-end">
-            <button onClick={() => {
-            setBody((prev) => {
-              let temp = {
-                "source": "",
-                "destination": "",
-                "unitDetails": [
-                  {
-                    "item": "",
-                    "itemmodel": "",
-                    "manufacturer": "",
-                    "itemquantity": 0
-                  }
-                ]
-              }
-              let n = prev.details.length;
-              if (n) {
-                if(prev.details[n-1].source&&prev.details[n-1].destination){
-                  prev.details.push(temp)
-                }
-              } else {
-                prev.details.push(temp)
-              }
-              return prev;
-            })
-            setUpdate((prev)=>{return (prev+1)%10});
-          }} type="button" className="text-white bg-orange-600 p-1 text-2xl w-10 h-10 -mt-5 " style={{ borderRadius: "50%" }}> +</button></div>
         </div>
         <div className="w-2/5">
           <div className="bg-white p-6 rounded-lg shadow-lg mt-2 w-full m-4 ">
@@ -611,11 +441,19 @@ useEffect(()=>{
             </table>
           </div>
         </div>
+        
+
       </div>
         </div>
       </div>
+
       <button className="text-white bg-orange-600" onClick={() => submmit()}>Submit</button>
+
+      
     </div>
-    );
-  }
-  
+  );
+}
+
+
+
+
