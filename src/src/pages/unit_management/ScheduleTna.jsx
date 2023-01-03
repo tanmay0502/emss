@@ -6,54 +6,35 @@ import { TagsInput } from "react-tag-input-component";
 function ScheduleTna() {
 
     const [tags, setTags] = React.useState([]);
-
-    // var currentdate = new Date(); 
-    // var hrs = currentdate.getHours();
-    // var mins = currentdate.getMinutes();
-    // var secs = currentdate.getSeconds();
-
-    // if (hrs <10){
-    //     hrs = "0" + hrs;
-
-    // }
-    // if(mins<10){
-    //     mins = "0" + mins;
-    // }
-    // if(secs<10){
-    //     secs = "0" + secs;
-    // }
-
-    // var time =  hrs + ":"  
-    //             + mins + ":" 
-    //             + secs;
-
-    // console.log(time)
     const [details, setDetails] = useState([])
     const [polling, setPolling] = useState([])
 
-    const [perc, setPerc] = useState("")
-    const [count, setCount] = useState("")
-    const [percNew, setPercNew] = useState("")
-    const [countNew, setCountNew] = useState("")
-    const [percDef, setPercDef] = useState("")
     const [countDef, setCountDef] = useState("")
+    const [percDef, setPercDef] = useState("")
     const poll = 200
     
 
 
+    const checkCount = () => {
+        setCountDef(Math.ceil(polling/10))
+    }
+
 
     const checkPerc = () => {
-        // alert(perc)
-        setPercDef(10)
-        setCountDef(poll/10)
-
-        // setPercNew((countNew/poll)*100)
-        // setCountNew(poll/10)
-
+        setPercDef((countDef/polling)*100)
     }
+
+    useEffect(() => {
+		checkCount();
+	}, [polling])
+    
     useEffect(() => {
 		checkPerc();
-	}, [perc, count])
+	}, [countDef])
+
+    useEffect(() => {
+		setCountDef(Math.ceil((percDef*polling)/100));
+	}, [percDef])
 
 	async function getList() {
 
@@ -96,7 +77,7 @@ function ScheduleTna() {
 
 			const data = await response.json();
 			console.log(data);
-			setPolling(data["data"])
+			setPolling(data["data"][0])
 			console.log(data["data"], "data")
 		} catch (error) {
 			console.log(error)
@@ -116,7 +97,7 @@ function ScheduleTna() {
 
         try {
             const response = await fetch(
-                `${process.env.REACT_APP_API_SERVER}/unit/trainingAwarnessSchedule`,
+                `${process.env.REACT_APP_API_SERVER}/unit/trainingAwarenessSchedule`,
                 {
                     method: "POST",
                     headers: {
@@ -158,28 +139,8 @@ function ScheduleTna() {
     const onFormSubmit = async (e) => {
         e.preventDefault();
         console.log("submit button clicked")
-        
-        // try{
-
-        
-        // let submittingData = []
-        // // const i = 3;
-        // // submittingData.push(document.getElementById(i).value)
-        // var i = 1;
-        // while(i<12){
-        //     // console.log(i)
-        //     submittingData.push(document.getElementById(i).value);
-        //     i = i +1;
-        // }
-        // console.log({submittingData})
-        // }catch{
-            
-        // }
-
-
         postTna();
-        // console.log("date: " +document.getElementById("10").value)
-        // console.log("times: " + Date.now().getHours())
+
     };
 
     return(
@@ -206,7 +167,7 @@ function ScheduleTna() {
                         <option value="" disabled selected>
                             Select Source Strong Room
                         </option>
-                            {details.map(item => (
+                            {details && details.map(item => (
                                         <option value={item.warehouseid}>{item.warehouseid}</option>
                             )) }
                     </select>
@@ -226,7 +187,7 @@ function ScheduleTna() {
                         <option value="" disabled selected>
                         Select Destination Strong Room
                         </option>
-                        {details.map(item => (
+                        {details && details.map(item => (
                                         <option value={item.warehouseid}>{item.warehouseid}</option>
                             )) }
                     </select>
@@ -239,7 +200,7 @@ function ScheduleTna() {
                     class={styles.input}
                     type="number"
                     disabled= {true}
-                    value={poll}
+                    value={polling}
                     // id="3"
                     className="selectBox"
                     placeholder='Fetching Number of Polling Stations'
@@ -256,12 +217,12 @@ function ScheduleTna() {
                 <div class={styles.div5}>
                     <input  
                     class={styles.input}
-                    type="text"
+                    type="number"
                     id="x"
                     className="selectBox"
-                    value={percNew === "" ? percDef : percNew}
+                    value={percDef}
                     placeholder='Awareness Units in Percentage'
-                    onChange={(e) => setPerc(e.target.value)}
+                    onChange={(e) => setPercDef(e.target.value)}
                     ></input>
                     <h5 className='pl-2 pt-2 flex items-center' >(%)</h5>
                 </div>
@@ -271,12 +232,12 @@ function ScheduleTna() {
                     
                     <input  
                     class={styles.input}
-                    type="text"
+                    type="number"
                     id="3"
                     className="selectBox"
-                    value={countNew === "" ? countDef : countNew}
+                    value={countDef} 
                     placeholder='Number of Awareness Units'
-                    onChange={(e) => setCount(e.target.value)}
+                    onChange={(e) => setCountDef(e.target.value)}
                     ></input>
                     <h5 className='pl-2 pt-2 flex items-center' >(Count)</h5>
                 </div>
@@ -371,7 +332,7 @@ function ScheduleTna() {
             </div>
             
         </div>
-            <button class={styles.submitBtn} type='submit' > Submit </button>
+            <button class={styles.submitBtn} type='submit'> Submit </button>
         </form>
         </>
     )

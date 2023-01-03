@@ -40,9 +40,20 @@ function UserList() {
 	const [noOfActiveUsers, setNoOfActiveUsers] = useState(0);
 	const [noOfInActiveUsers, setNoOfInActiveUsers] = useState(0);
 	const [noOfTotalUsers, setNoOfTotalUsers] = useState(0);
-	const [currImage, setCurrImage] = useState("");
-
+	const [pUsers, setPerUsers] = useState(0);
+	const [tUsers, setTempUsers] = useState(0);
 	const [isTemporary, setIsTemporary] = useState(false);
+
+	const [ceo, setCeo] = useState(0);
+	const [deo, setDeo] = useState(0);
+	const [whm, setWhm] = useState(0);
+
+	const [aPUsers, setAPUsers] = useState(0);
+	const [aTUsers, setATUsers] = useState(0);
+	const [iPUsers, setIPUsers] = useState(0);
+	const [iTUsers, setITUsers] = useState(0);
+
+	const [roles, setRoles]= useState({}) 
 
 	const sortMapping = {
 		"None": "status",
@@ -168,6 +179,75 @@ function UserList() {
 				setNoOfInActiveUsers(tmp["data"]["inactive_users"]);
 				setNoOfTotalUsers(tmp["data"]["total_users"]);
 				setUsers(tmp["data"]["users"]);
+
+				 
+				let tUsers = 0;
+				let pUsers = 0;
+				let ceo = 0; 
+				let deo = 0;
+				let whm = 0;
+				let aPUsers = 0;
+				let aTUsers = 0;
+				let iPUsers = 0;
+				let iTUsers = 0;
+
+				let currRoles = {}
+
+				for( const i in tmp["data"]["users"]){
+					let currId = tmp["data"]["users"][i]["userid"]
+					let active = tmp["data"]["users"][i]["active"]
+					let check = currId.substring(8)
+					console.log(check)
+					if(check === "TMP"){
+						tUsers = tUsers + 1
+						if(active === "A"){
+							aTUsers = aTUsers +1;
+						}else{
+							iTUsers = iTUsers +1;
+						}
+					}else{
+						pUsers = pUsers + 1
+						if(check === "CEO"){
+							ceo = ceo +1;
+						}else if( check === "DEO"){
+							deo = deo +1;
+						}else if(check === "WHM"){
+							whm = whm +1;
+						}
+
+						if(active === "A"){
+							aPUsers = aPUsers +1;
+						}else{
+							iPUsers = iPUsers +1;
+						}
+						if (currRoles[check] === undefined){
+							currRoles[check]= [0, 0]
+							if(active === "A"){
+								currRoles[check]= [1, 0]
+							}else{
+								currRoles[check]= [0, 1]
+							}
+						}else{
+							if(active === "A"){
+							currRoles[check][0] = currRoles[check][0]+ 1
+							}else{
+							currRoles[check][1] = currRoles[check][1]+ 1		
+						 	}
+						}
+						
+					}
+				}
+				console.log(currRoles)
+				setTempUsers(tUsers)
+				setPerUsers(pUsers)
+				setCeo(ceo)
+				setDeo(deo)
+				setWhm(whm)
+				setAPUsers(aPUsers)
+				setATUsers(aTUsers)
+				setIPUsers(iPUsers)
+				setITUsers(iTUsers)
+				setRoles(currRoles)
 			}
 
 
@@ -331,7 +411,7 @@ function UserList() {
 
 				}
 			</div>
-			<div className='myWrapper' style={{ "gridArea": "1 / 2 / 3 / 3", display: "flex", flexDirection: "column", "alignItems": "center", "justifyContent": "center" }}>
+			<div className='myWrapper overflow-scroll' style={{ "gridArea": "1 / 2 / 3 / 3", display: "flex", flexDirection: "column", "alignItems": "center", "justifyContent": "center" }}>
 				<ul className='userStats p-2'>
 					<li>
 						<div className="icon">
@@ -377,60 +457,67 @@ function UserList() {
 					</li>
 				</ul>
 			</div>
-			<div className='myWrapper' style={{ "gridArea": "3 / 2 / 6 / 3" }}>
-				<h4>Notifications</h4>
-				<ul className='li_noti hide-scroll-bar'>
-					<li>
-						<span>
-							<span>
-								First Randomisation completed in districts- Bhind, Gwalior, Indore, Bhopal
-							</span>
-							<span>3hrs ago</span>
-						</span>
-					</li>
-					<li>
-						<span>
-							<span>
-								<span></span>
-								Request Ticket raised by DEO Gwalior regarding movement of units.
-							</span>
-							<span>3hrs ago</span>
-						</span>
-					</li>
-					<li>
-						<span>
-							<span>
-								<span></span>
-								Request Ticket raised by DEO Gwalior regarding movement of units.
-							</span>
-							<span>3hrs ago</span>
-						</span>
-					</li>
-					<li>
-						<span>
-							<span>
-								First Randomisation completed in districts- Bhind, Gwalior, Indore, Bhopal
-							</span>
-							<span>3hrs ago</span>
-						</span>
-					</li>
-					<li>
-						<span>
-							<span>
-								First Randomisation completed in districts- Bhind, Gwalior, Indore, Bhopal
-							</span>
-							<span>3hrs ago</span>
-						</span>
-					</li>
-					<li>
-						<span>
-							<span>
-								First Randomisation completed in districts- Bhind, Gwalior, Indore, Bhopal
-							</span>
-							<span>3hrs ago</span>
-						</span>
-					</li>
-				</ul>
+			<div className="myWrapperDetail overflow-y-scroll !pb-0 !mb-0 !px-8" style={{ "gridArea": "3 / 2 / 4 / 3" }}>
+			<div className=''>
+						<div className='myparent'>
+							<div className='mydiv1'>
+								<h5>Users</h5>
+							</div>
+							<div className='mydiv2'>
+								<div className='text-green-700 font-semibold'>Active</div>
+							</div>
+							<div className='mydiv3'>
+							<div className='text-red-700 font-semibold'>Inactive</div>
+							</div>
+							<div className='mydiv4'>
+								<h5>Permanent</h5>
+							</div>
+							<div className='mydiv5'>
+								<div className='text-lg text-green-700'>{aPUsers}</div>
+							</div>
+							<div className='mydiv6'>
+							<div className='text-lg text-red-700'>{iPUsers}</div>
+							</div>
+							<div className='mydiv7'>
+								<h5>Temporary</h5> 
+							</div>
+							<div className='mydiv8'>
+							<div className='text-lg text-green-700'>{aTUsers}</div>
+							</div>
+							<div className='mydiv9'>
+							<div className='text-lg text-red-700'>{iTUsers}</div>
+							</div>
+								
+
+						</div>
+						</div>
+						</div>
+						<div className="myWrapperDetail overflow-y-scroll !pb-0 !mb-0 !px-8" style={{ "gridArea": "4 / 2 / 6 / 3" }}>
+
+						<div className='!flex pt-2 pb-4'>
+						{/* <div className="icon">
+							<TotalUsers />
+						</div> */}
+							<h4 className='flex items-center'>Role-wise Counts:</h4>
+						</div>
+
+						<div className='grid grid-cols-3'> 
+							<div></div>
+							<div className='text-green-700 font-semibold'>Active</div>
+							<div className='text-red-700 font-semibold'>Inactive</div>
+						</div>
+							{Object.keys(roles).map((keyName,i)=> {return(
+								<div className=''>
+									<div className='grid grid-cols-3'>
+									<div className=''><h5>{keyName} </h5></div>
+									<div className='flex justify-center text-green-700 text-lg'>{roles[keyName][0]}</div>
+									<div className='flex justify-center text-red-700 text-lg'>{roles[keyName][1]}</div>
+									</div>
+
+								</div>
+							)})}
+				
+			
 			</div>
 		</div>
 

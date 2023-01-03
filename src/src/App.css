@@ -313,4 +313,15 @@ main {
 .SampleText{
   color:var(--foreground-primary) !important;
 }
+.myWrapperDetail{
+  position: relative;
+  background-color: var(--background-secondary) !important;
+  border-radius: 15px;
+  box-shadow: 0px 10px 60px rgba(226, 236, 249, 0.5) !important;
+  padding-top: 4%;
+  padding-left: 4%;
+  max-height: 100%;
+  overflow: scroll;
+  color: var(--foreground-primary) !important;
+}
 /* Code by Rohit end*/

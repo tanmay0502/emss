@@ -16,7 +16,6 @@ import SecondRandCard from "./SecondRandCard";
 import ElecSchedulingCard from "./ElecSchedulingCard";
 import TnASchdulingCard from "./TnASchdulingCard";
 import PhysVerificationCard from "./PhysVerificationCard";
-import HomePageCardBottom from "./HomePageCardBottom";
 
 const uri = process.env.REACT_APP_API_SERVER + "/unit/total_counts"
 const uri2 = process.env.REACT_APP_API_SERVER + "/unit/fetch-first-randomization-schedule"
@@ -62,7 +61,20 @@ export default function HomePage() {
     });
     const navigate = useNavigate();
 
-    const formatTotalCount = (data)=>{
+    
+    const getDataTotal = async (oprnd) => {
+        const data2 = await getTotalCounts(oprnd)
+        let data = []
+        if (data2.data) {
+            data = data2.data;
+        }
+        if (data2.states) {
+            setStates(data2.states)
+        }
+        if (data2.districts) {
+            setDistricts(data2.districts)
+        }
+        console.log("total counts data", data);
         let temp = {
             B_M2: [0,0,0],
             B_M3: [0,0,0],
@@ -96,24 +108,38 @@ export default function HomePage() {
         })
         return temp;
     }
-
-    
-    const getDataTotal = async (oprnd) => {
-        const data2 = await getTotalCounts(oprnd)
-        let data = []
-        if (data2.data) {
-            data = data2.data;
+    useEffect(() => {
+        let oprnd = window.sessionStorage.getItem('sessionToken');
+        if (state!="IN") {
+            oprnd = state+oprnd.slice(2,8)
+            if (district!="ALL"){
+                oprnd = state+district+oprnd.slice(5,7)
+            }
+        } 
+        const fun = async ()=>{
+            const data2 = await getTotalCounts(oprnd, status1)
+            let data = data2.data
+            statusData1(data);
+            console.log("StatusData1", data2)
         }
-        if (data2.states) {
-            setStates(data2.states)
+        fun();
+    }, [status1])
+    useEffect(() => {
+        let oprnd = window.sessionStorage.getItem('sessionToken');
+        if (state!="IN") {
+            oprnd = state+oprnd.slice(2,8)
+            if (district!="ALL"){
+                oprnd = state+district+oprnd.slice(5,7)
+            }
+        } 
+        const fun = async ()=>{
+            const data2 = await getTotalCounts(oprnd, status2)
+            let data = data2.data
+            statusData2(data);
+            console.log("StatusData2", data2)
         }
-        if (data2.districts) {
-            setDistricts(data2.districts)
-        }
-        console.log("total counts data", data);
-        setUnitCount(formatTotalCount(data))        
-    }
-
+        fun();
+    }, [status2])
     useEffect(()=>{
         let oprnd = window.sessionStorage.getItem('sessionToken');
         if (state!="IN") {
@@ -125,12 +151,69 @@ export default function HomePage() {
         getDataTotal(oprnd)
     },[state, district])
 
+    // useEffect(() => {
+    //     let getData = async () => {
+    //         try {
+    //             const response2 = await fetch(
+    //                 uri2,
+    //                 {
+    //                     method: "POST",
+    //                     headers: {
+    //                         "Content-Type": "application/json",
+    //                     },
+    //                     credentials: 'include'
+    //                 }
+    //             );
+    //         } catch (err) {
+    //             console.log(err);
+    //         }
+    //     }
+    //     console.log(getData());
+
+    // }, [data])
+
     const User_ID = sessionStorage.getItem("sessionToken");
     const Role = User_ID.substring(8)
     // const Role = "DEO"
 
 
     const rightArrow = ">";
+    
+	const [flc, setflc] = useState([]);
+    async function getFLC() {
+
+        try {
+            const response = await fetch(
+                `${process.env.REACT_APP_API_SERVER}/unit/dashboard_cards`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: 'include',
+					body: JSON.stringify({
+						"stateFilter": "TS",
+						"distFilter": "BDK"
+					}),
+                }
+            );
+            const data = await response.json()
+			console.log('mydata');
+			console.log(data);
+
+            if (data["data"].length !== 0) {
+				setflc({...data["data"]["flc"]})
+				console.log(flc);
+            }
+
+        } catch (err) {
+            console.log({ err });
+        }
+    }
+
+    useEffect(() => {
+        console.log("statusData1",statusData1)
+    }, [statusData1]);
 
     const [update, setUpdate] = useState(0);
     useEffect(() => {
@@ -145,33 +228,28 @@ export default function HomePage() {
         console.log("StatusData1 inside use effetc", data)
     }
 
-    useEffect(() => {
-        let oprnd = window.sessionStorage.getItem('sessionToken');
-        if (state!="IN") {
-            oprnd = state+oprnd.slice(2,8)
-            if (district!="ALL"){
-                oprnd = state+district+oprnd.slice(5,7)
-            }
-        } 
-        getTotalStatusCount(oprnd, status1, setStatusData1);
-    }, [status1, state, district])
-    useEffect(() => {
-        let oprnd = window.sessionStorage.getItem('sessionToken');
-        if (state!="IN") {
-            oprnd = state+oprnd.slice(2,8)
-            if (district!="ALL"){
-                oprnd = state+district+oprnd.slice(5,7)
-            }
-        } 
-        getTotalStatusCount(oprnd, status2, setStatusData2);
-    }, [status2, state, district])
-
-
+    const countUnites = (data) => {
+        let sum = 0;
+        data.map((val) => {
+            val.model != "0" ? sum += val.count : sum += 0;
+        })
+        return sum;
+    }
 
     function CreateCard({status, setStatus, statusData}) {
         console.log(status)
-        console.log("status data form card",statusData)
-        let data = formatTotalCount(statusData);
+        console.log(statusData)
+        let data;
+        // if (Object.keys(statusData).length) {
+        //     data= statusData;
+        // } else {
+            data= {
+                B_M2: [0,0,0],
+                B_M3: [0,0,0],
+                E_M2: [0,0,0],
+                E_M3: [0,0,0]
+            }
+        // }
         return ( !data?"":
             <div className={styles.myCardSample}>
                 <div className={styles.card_title}>
@@ -415,8 +493,50 @@ export default function HomePage() {
                     </div>
                 </div>
 
-                <HomePageCardBottom state={state} dist={district}/>
-                <HomePageCardBottom state={state} dist={district}/>
+                <div className={styles.myCardSampleHover}>
+					
+					<div className="flex justify-center">
+						<select className={styles.Box123} style={{fontSize: "20px", display: "flex", margin: "auto", width: "88%"}} value={cardVal}
+							onChange={(e)=>{
+									setcardVal(e.target.value)
+								}
+							}
+						>
+							<option className="bg-white text-black" value="FLC Scheduling">FLC Scheduling</option>
+							<option className="bg-white text-black" value="1st Randomisation Scheduling">1st Randomisation Scheduling</option>
+							<option className="bg-white text-black" value="2nd Randomisation Scheduling">2nd Randomisation Scheduling</option>
+							<option className="bg-white text-black" value="Election Scheduling">Election Scheduling</option>
+							<option className="bg-white text-black" value="TnA Scheduling">TnA Scheduling</option>
+							<option className="bg-white text-black" value="Physical Verification">Physical Verification</option>
+						</select>
+
+						<img src={RightArrow} alt="" style={{ display: "flex", margin: "auto", height: "100%"}} onClick={cardRedirect} />
+					</div>
+					{
+						(() =>{
+
+							if(cardVal === "FLC Scheduling"){
+								return <FLCSchedulecard data={flc["flc"]} />
+							}
+							else if(cardVal === "1st Randomisation Scheduling"){
+								return <FirstRandcard/>
+							}
+							else if(cardVal === "2nd Randomisation Scheduling"){
+								return <SecondRandCard/>
+							}
+							else if(cardVal === "Election Scheduling"){
+								return <ElecSchedulingCard/>
+							}
+							else if(cardVal === "TnA Scheduling"){
+								return <TnASchdulingCard/>
+							}
+							else if(cardVal === "Physical Verification"){
+								return <PhysVerificationCard/>
+							}
+						})()
+					}
+               
+            	</div>
 			</div>
 
             <div className={styles.parent2} >

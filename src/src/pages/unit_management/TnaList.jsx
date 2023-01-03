@@ -77,7 +77,8 @@ export default function ScheduleList() {
                 'Destination Strong Room': props[i]['destinationstrongroom'],
                 "Number of Awareness Unit": props[i]['awarnessunits'],
                 "Handler": props[i]['personhandedovertoname'],
-                "Training and Awareness Period (Start - End Date)": props[i]['startdate'] + " to " + props[i]['enddate'] 
+                "Training and Awareness Period (Start - End Date)": props[i]['startdate'] + " to " + props[i]['enddate'] ,
+                "ID": props[i]['tnaid'] 
             }  
             console.log({row})
             eList.push(row);
@@ -196,7 +197,12 @@ export default function ScheduleList() {
                 buttons={[]} 
                 fieldsToExclude={["ID"]}
                 onClick={(event, row) => {
-                    navigate(`/session/unitmanagement/edit_tna/${row["ID"]}`)
+                    if (post === "DEO"){
+                        navigate(`/session/unitmanagement/edit_tna/${row["ID"]}`)
+                    }else{
+                        alert("Only DEOs can edit Training and Awareness")
+                    }
+                    
                 }}
                 
                 />

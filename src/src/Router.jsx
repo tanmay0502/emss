@@ -214,7 +214,9 @@ function Routed(props) {
 	}, [])
 
 	const [currImage, setCurrImage] = useState(0)
+	const [isLoading,setIsLoading] = useState(0);
     async function getCurrImage(id) {
+		setIsLoading(1);
         try {
             const response = await fetch(
                 `${process.env.REACT_APP_API_SERVER}/user/getProfilePicture`,
@@ -247,8 +249,13 @@ function Routed(props) {
     }
 	useEffect(() => {
 		if(userData["userId"] !== ""){
-			console.log(userData["userId"])
-			getCurrImage(userData["userId"])
+			setIsLoading(1);
+			let timer1 = setTimeout(() => getCurrImage(userData["userId"]), 1 * 1000);
+	
+			return () => {
+			  clearTimeout(timer1);
+			};
+			
 		}
 	}, [userData])
 	//Profile Image End

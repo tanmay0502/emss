@@ -13,6 +13,40 @@ function EditTna() {
     const [tna,setTna] = useState([])
     const [polling, setPolling] = useState([])
 
+    const [countDef, setCountDef] = useState("")
+    const [percDef, setPercDef] = useState("")
+    const poll = 200
+    
+
+
+    const checkCount = () => {
+        // console.log(tna[0].awarnessunits)
+        try{
+            setCountDef(tna[0].awarnessunits)
+        }catch(err){
+            console.log(err)
+        }
+        
+    }
+
+
+    const checkPerc = () => {
+        setPercDef((countDef/polling)*100)
+    }
+
+    useEffect(() => {
+		checkCount();
+	}, [tna])
+    
+    useEffect(() => {
+		checkPerc();
+	}, [countDef])
+
+    useEffect(() => {
+		setCountDef(Math.ceil((percDef*polling)/100));
+	}, [percDef])
+
+
     const issueId = () => {
         const URL = window.location.href;
         const arr = URL.split("/");
@@ -23,30 +57,34 @@ function EditTna() {
         
       }
     async function getTna() {
+        setIsLoading(1);
         let id = issueId();
         try {
             const response = await fetch(
-                `${process.env.REACT_APP_API_SERVER}/unit/viewTNA/${id}`,
+                `${process.env.REACT_APP_API_SERVER}/unit/viewTNA`,
                 {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
+                    body: JSON.stringify({
+                        tnaId: id
+                    }),
                     credentials: 'same-origin',
                 }
             );
             const data = await response.json();
             console.log(data)
-            if(data["data"]!=404){
-                setTna(data);       
-            }
+            setIsLoading(0);
+            setTna(data["data"]);       
             
         } catch (err) {
             console.log({err});
         }
     }
-    
+    const [isLoading,setIsLoading] = useState(0);
     async function getList() {
+       
                     try {
                         const response = await fetch(
                             `${process.env.REACT_APP_API_SERVER}/warehouse/listWarehouses`,
@@ -64,6 +102,7 @@ function EditTna() {
                         console.log(data);
                         setDetails(data["data"])
                         console.log(data["data"], "data")
+                        
                     } catch (error) {
                         console.log(error)
                     }
@@ -86,7 +125,7 @@ function EditTna() {
 
                         const data = await response.json();
                         console.log(data);
-                        setPolling(data["data"])
+                        setPolling(data["data"][0])
                         console.log(data["data"], "data")
                     } catch (error) {
                         console.log(error)
@@ -97,30 +136,58 @@ function EditTna() {
                 useEffect(() => {
                     getList();
                     getPoll();
-                    getTna(); 
+                     
+                    setIsLoading(1);
+                    let timer1 = setTimeout(() => getTna(), 1 * 1000);
+            
+                    return () => {
+                      clearTimeout(timer1);
+                    };
+
+
                 }, [])
 
-    const [currStrong,setCurrStrong] = useState("")
-    const [currNum,setCurrNum] = useState()
-    const [currType,setCurrType] = useState("")
     const [currTags,setCurrTags] = useState([])
+    const [currTna,setCurrTna] = useState([])
 
     useEffect(() => {
         try{
             if(tna !== undefined){
-                // setCurrStrong(elections[id][0]);
-                setCurrStrong("AA1122");
-                setCurrNum(23);
-                setCurrType("CU");
-                setCurrTags(["SSSPPPAARRR", "AAAGGSOOOSO"]);
-                setTags(currTags)
-            }
+                console.log(tna)
+                // setCurrTags(tna["temporaryUsers"]);
+                // setTags(currTags)
+
+                
+                setCurrTna(Object.values(tna[0]))
+                // console.log(currTna)
+                // console.log(currTna[16][0][0])
+
+      
+            }   
 
         }catch{
             console.log("err")
         }
 
     },[tna])
+
+
+    useEffect(() => {
+        try{
+        let tagArray = []
+        for(let i =0; i<currTna[16].length; i++){
+            tagArray.push(currTna[16][i][0]);
+        }
+        setCurrTags(tagArray)
+        setTags(currTags)
+        }catch(err){
+            console.log(err)
+        }
+    },[currTna])
+
+
+
+    
     const row21 = {
         'User_ID': 'MH00000CEO',
         "": <div style={{ display: "flex", flexDirection: "row", alignItems: "right", justifyContent: "flex-start", paddingLeft: "40px" }}><img src={UserImageTest} /></div>,
@@ -137,7 +204,10 @@ function EditTna() {
 
     }
     const data2 = [row21, row22];
+
+
     const [tableFilter, setTableFilter] = useState("");
+
     const [rows_Temporary_Users, setRows_Temporary_Users] = useState([...data2]);
     const [isEdit_Temporary_Users, setEdit_Temporary_Users] = React.useState(-1);
 
@@ -182,6 +252,7 @@ function EditTna() {
     };
 
     async function postEditTna() {
+        let id = issueId();
         try {
             const response = await fetch(
                 `${process.env.REACT_APP_API_SERVER}/unit/edit_tna_schedule`,
@@ -192,14 +263,17 @@ function EditTna() {
                     },
                     credentials: 'same-origin',
                     body: JSON.stringify({
-                        // Severity: document.getElementById("formSeverity").value.slice(-1),
-                        tnaid: 1,
-                        StrongRoom: "string",
-                        NumAwarenessUnit: "string",
-                        UnitType: "string",
-                        tempUsers: [
-                          "string"
-                        ]
+                        tnaid: id,
+                        sourceStrongRoom: document.getElementById("1").value,
+                        destinationStrongRoom: document.getElementById("2").value,
+                        awarnessUnits: document.getElementById("3").value,
+                        personHandedOverToName: document.getElementById("4").value,
+                        personHandedOverToMobNo: document.getElementById("5").value,
+                        personHandedOverToDesignation: document.getElementById("6").value,
+                        startDate: document.getElementById("7").value,
+                        endDate: document.getElementById("8").value,
+                        tempUsers: tags,
+
                     }),
                 }
             );
@@ -228,7 +302,7 @@ function EditTna() {
 
     return(
         <>
-
+        {console.log(currTna)}
         {edit === false ? 
         <button className={styles.editBtn} 
             onClick = {() => {setEdit(true)}}
@@ -248,46 +322,76 @@ function EditTna() {
 
                     <div class={styles.div1}>
                         <p>Source Strong Room</p>
+                        {edit === false ?
+                            <input 
+                            class={styles.input}
+                            disabled = {true}
+                            defaultValue={currTna && currTna[3]}
+                            type = "text"
+                            className=" selectBox"
+                            
+                            ></input>:
                         <select
                             //   required={!isTemporary}
                             required
                             name=""
                             id="1"
+                            defaultValue={currTna && currTna[3]}
                             className=" selectBox"
                         //   onChange={(e) => setRoleFunc(e.target.value)}
                         >
                             <option value="" disabled selected>
                                 Select Source Strong Room
                             </option>
-                                {details.map(item => (
+                                {details && details.map(item => (
                                             <option value={item.warehouseid}>{item.warehouseid}</option>
                                 )) }
                         </select>
-
+                        }
                     </div>
 
                     <div class={styles.div3}> 
                     <p>Destination Strong Room</p>
+                    {edit === false ?
+                            <input 
+                            class={styles.input}
+                            disabled = {true}
+                            defaultValue={currTna && currTna[4]}
+                            type = "text"
+                            className=" selectBox"
+                            
+                            ></input>:
                         <select
                             //   required={!isTemporary}
                             required
                             name=""
                             id="2"
+                            defaultValue={currTna && currTna[4]}
                             className=" selectBox"
                         //   onChange={(e) => setRoleFunc(e.target.value)}
                         >
                             <option value="" disabled selected>
                             Select Destination Strong Room
                             </option>
-                            {details.map(item => (
+                            {details && details.map(item => (
                                             <option value={item.warehouseid}>{item.warehouseid}</option>
                                 )) }
                         </select>
+                        }
 
                     </div>
 
                     <div class={styles.div2}>
                     <p> Number of Polling Stations:</p>
+                    {edit === false ?
+                            <input 
+                            class={styles.input}
+                            disabled = {true}
+                            defaultValue={polling && polling}
+                            type = "text"
+                            className=" selectBox"
+                            
+                            ></input>:
                         <input  
                         class={styles.input}
                         type="number"
@@ -296,7 +400,7 @@ function EditTna() {
                         className="selectBox"
                         placeholder='Fetching Number of Polling Stations'
                         ></input>
-
+                    }
                     </div>
 
 
@@ -307,26 +411,49 @@ function EditTna() {
 
 
                     <div class={styles.div5}>
+                        {edit === false ?
+                            <input 
+                            class={styles.input}
+                            disabled = {true}
+                            defaultValue={percDef}
+                            type = "text"
+                            className=" selectBox"
+                            
+                            ></input>:
                         <input  
                         class={styles.input}
                         type="text"
                         id="1"
                         className="selectBox"
+                        value={percDef}
                         placeholder='Awareness Units in Percentage'
+                        onChange={(e) => setPercDef(e.target.value)}
                         ></input>
+                                                }
                         <h5 className='pl-2 pt-2 flex items-center' >(%)</h5>
                     </div>
 
 
                     <div class={styles.div6}>
-                        
+                    {edit === false ?
+                            <input 
+                            class={styles.input}
+                            disabled = {true}
+                            defaultValue={countDef}
+                            type = "text"
+                            className=" selectBox"
+                            
+                            ></input>:
                         <input  
                         class={styles.input}
                         type="text"
                         id="3"
                         className="selectBox"
+                        value={countDef} 
                         placeholder='Number of Awareness Units'
+                        onChange={(e) => setCountDef(e.target.value)}
                         ></input>
+                    }
                         <h5 className='pl-2 pt-2 flex items-center' >(Count)</h5>
                     </div>
 
@@ -335,10 +462,17 @@ function EditTna() {
                         <h4 className='pt-12'> Person Handed over to: </h4>
 
                     </div>
-
-
                     <div class={styles.div13}>
                         <p>Name</p>
+                        {edit === false ?
+                            <input 
+                            class={styles.input}
+                            disabled = {true}
+                            defaultValue={currTna && currTna[9]}
+                            type = "text"
+                            className=" selectBox"
+                            
+                            ></input>:
                         <input  
                         class={styles.input}
                         type="text"
@@ -346,12 +480,21 @@ function EditTna() {
                         className="selectBox"
                         placeholder='Enter Name'
                         ></input>
-
+                        }
                     </div>
 
 
                     <div class={styles.div14}>
                         <p>Mobile Number</p>
+                        {edit === false ?
+                            <input 
+                            class={styles.input}
+                            disabled = {true}
+                            defaultValue={currTna && currTna[10]}
+                            type = "text"
+                            className=" selectBox"
+                            
+                            ></input>:
                         <input  
                         class={styles.input}
                         type="number"
@@ -359,12 +502,21 @@ function EditTna() {
                         className="selectBox"
                         placeholder='Enter Mobile Number'
                         ></input>
-
+                        }
                     </div>
 
 
                     <div class={styles.div15}>
                         <p>Designation</p>
+                        {edit === false ?
+                            <input 
+                            class={styles.input}
+                            disabled = {true}
+                            defaultValue={currTna && currTna[11]}
+                            type = "text"
+                            className=" selectBox"
+                            
+                            ></input>:
                         <input  
                         class={styles.input}
                         type="text"
@@ -372,50 +524,81 @@ function EditTna() {
                         className="selectBox"
                         placeholder='Enter Designation'
                         ></input>
-
+                        }
                     </div>
 
 
                     <div class={styles.div16}>
                     <p>Start Date</p>
+                    {edit === false ?
+                            <input 
+                            class={styles.input}
+                            disabled = {true}
+                            defaultValue={currTna && currTna[12]}
+                            type = "text"
+                            className=" selectBox"
+                            
+                            ></input>:
+                    
                         <input  
                             class={styles.dateInput}
+                            defaultValue={currTna && currTna[12]}
                             type="date"
                             id="7"
                             className=" selectBox"
                         ></input>
 
-
+                    }
                     </div>
 
 
                     <div class={styles.div18}>
                     <p>End Date</p>
+                    {edit === false ?
+                            <input 
+                            class={styles.input}
+                            disabled = {true}
+                            defaultValue={currTna && currTna[13]}
+                            type = "text"
+                            className=" selectBox"
+                            
+                            ></input>:
                             <input  
                                 class={styles.dateInput}
+                                defaultValue={currTna && currTna[13]}
                                 type="date"
                                 id="8"
                                 className=" selectBox"
                             ></input>
-
+                    }
                     </div>
 
-
-                    {/* <div class={styles.div19}>
-                        <h5> Temporary Users:</h5>
-                    </div> */}
                     <div class={styles.div17}>
-                        <p>Temporary Users</p>
-
+                    <p>Temporary Users</p>
+                {edit === false ?
                     <TagsInput
                         className='li_noti hide-scroll-bar tagInput'
                         value={tags}
-                        id="formTags"
+                        onlyUnique={true}
+                        disabled={!edit}
+                        // id="formTags"
                         onChange={setTags}
                         placeHolder="SSPPAAARRR, SSPPAAARRR"
                         />
+                        :
+                        <TagsInput
+                        className='li_noti hide-scroll-bar tagInput'
+                        value={tags && tags}
+                        onlyUnique={true}
+                        // id="formTags"
+                        onChange={setTags}
+                        placeHolder="SSPPAAARRR, SSPPAAARRR"
+                        />
+                }
+                
 
-                    </div>
+
+                </div>
 
                     </div>
             
@@ -424,7 +607,7 @@ function EditTna() {
             
         </div>
 
-        <div class={defStyles.Schedule_container2}>
+        {/* <div class={defStyles.Schedule_container2}>
                     <div class={defStyles.Schedule_header2}>
                         <h4>
                             Temporary Users
@@ -435,7 +618,7 @@ function EditTna() {
                         </div>
                     </div>
                     <div class={defStyles.Schedule_CDP_table}>
-                        {/* <DynamicDataTable rows={data2} buttons={[]} /> */}
+                        
                         <table >
                             <thead >
                                 <tr>
@@ -490,7 +673,7 @@ function EditTna() {
                     {edit === true ?
                     <button type="button" className="text-white bg-orange-600 p-1 text-2xl w-8 h-8 -mt-4 " style={{ borderRadius: "50%", marginLeft: "85%", marginTop: "1%" }} onClick={() => { handleAdd_Temporary_Users() }}>+</button>
                     : " "}
-                </div>
+                </div> */}
             </div>
 
             {edit === true ?
