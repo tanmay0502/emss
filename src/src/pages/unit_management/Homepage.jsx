@@ -17,6 +17,7 @@ import ElecSchedulingCard from "./ElecSchedulingCard";
 import TnASchdulingCard from "./TnASchdulingCard";
 import PhysVerificationCard from "./PhysVerificationCard";
 import HomePageCardBottom from "./HomePageCardBottom";
+import { ReactComponent as SearchInputElement } from '../../assets/searchInputIcon.svg';
 
 const uri = process.env.REACT_APP_API_SERVER + "/unit/total_counts"
 const uri2 = process.env.REACT_APP_API_SERVER + "/unit/fetch-first-randomization-schedule"
@@ -53,6 +54,8 @@ export default function HomePage() {
     const [states, setStates] = useState([]);
     const [state, setState] = useState(ID.slice(0,2));
     const [districts, setDistricts] = useState([]);
+    const [unitId, setunitId] = useState("");
+    const [inputunitId, setinputunitId] = useState("");
     const [district, setDistrict] = useState(ID.slice(2,5));
     const [unitCount, setUnitCount] = useState({
         B_M2: [0,0,0],
@@ -395,6 +398,36 @@ export default function HomePage() {
             navigate(`/session/unitmanagement/secondrandomization`)
         }
     };
+
+    const onFormSubmit = async (e) => {
+        e.preventDefault()
+        const response = await fetch(
+        `${process.env.REACT_APP_API_SERVER}/unit/viewUnit`,
+        {
+            method: "POST",
+            headers: {
+            "Content-Type": "application/json",
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+                unitid : unitId
+            }
+            ),
+        }
+        );
+        const data = await response.json();
+        if (data.message === 'Success') {
+            navigate(`/session/unitmanagement/viewunit/${unitId}`)
+        }
+        else {
+            alert(data.message)
+        }
+        };
+    
+
+
+
+
     const [upVisible, setUpVisible] = useState(false);
     useEffect(()=>{
         if (state === ID.slice(0,2)) {
@@ -499,6 +532,16 @@ export default function HomePage() {
 			</div>
 
             <div className={styles.parent2} >
+                <form
+                    onSubmit={(e)=>onFormSubmit(e)}
+                >
+                <div style={{ width: "90%", display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center", background: "var(--lightGrayBG )", borderRadius: "10px", padding: "7.5px 15px 7.5px 0", fontSize: "0.8em" }}>
+                    <SearchInputElement style={{ margin: "4px 8px", width: "20%" }} />
+                    <input type={'search'} defaultValue={unitId} onChange={(e) => {setunitId(e.target.value)}} placeholder='View Unit' style={{ outline: "none", background: "transparent",width:"80%" }} />
+                    <button className='viewunitButton' type="submit" style={{background:"orange"}} >
+                </button>
+                </div>
+                </form>
                 <CreateCard status={status1} setStatus={setStatus1} statusData={statusData1}/>
                 <CreateCard status={status2} setStatus={setStatus2} statusData={statusData2}/>
             </div>

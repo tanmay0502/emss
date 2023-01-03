@@ -34,7 +34,7 @@ const Password = (props) => {
         }}
       ></input>
       <div  onClick={togglePassword} style={{width : "11%", scale: '2', justifyContent:"center", display:"flex", alignItems:"center",position:"relative",right:'-88%',top:"-60%"}}>
-        {passwordType=="password"?<AiFillEyeInvisible/>:<AiOutlineEye/>}
+        {passwordType=="password"?<AiOutlineEye/>:<AiFillEyeInvisible/>}
       </div>
       </div>
       {props.invalidPassword != "" && (

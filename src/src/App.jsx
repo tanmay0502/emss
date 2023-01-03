@@ -57,6 +57,7 @@ import ViewPermission from './components/ViewPermission';
 import SetRoles from './components/SetRoles';
 import LocationDetails from './pages/order_management/LocationDetails';
 import AdminUtilities from './components/AdminUtilities';
+import Viewunit from './pages/unit_management/ViewUnit';
 
 import FetchFile from './pages/issue_request_management/FetchFile';
 import Orders from './pages/unit_management/Orders';
@@ -132,6 +133,10 @@ function App() {
 						<Route
 							path="/session/unitmanagement/first_randomisation_scheduling"
 							element={<First_Randomisation_Scheduling />}
+						/>
+						<Route
+							path="/session/unitmanagement/viewunit/:unitId"
+							element={<Viewunit/>}
 						/>
 						<Route
 							path="/session/unitmanagement/second_randomisation_scheduling"

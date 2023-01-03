@@ -139,6 +139,12 @@ function Routed(props) {
 				<span>Unit Management</span>
 			</>);
 		}
+		if (location.pathname === `/session/unimanagement/viewUnit/`) {
+			return (<>
+				<UnitManagementIcon />
+				<span>View Unit</span>
+			</>);
+		}
 		if (location.pathname === '/session/unitmanagement/election_scheduling' || location.pathname === '/session/unitmanagement/schedule_list' || location.pathname.startsWith('/session/unitmanagement/edit_election')) {
 			return (<>
 				<UnitManagementIcon />
