@@ -306,14 +306,14 @@ function Home1() {
 					</div>
 				</div>}
 				{/* {console.log({statusData})} */}
-				{data.length && data.map(val => (
+				{/* {data.length && data.map(val => (
 
 					<UnitCard title={val} statusData={statusData} />
 
-				))}
+				))} */}
 
 
-				{otherElements.includes('Warehouse') && <div
+				{/* {otherElements.includes('Warehouse') && <div
 					className="myCardSample hover:cursor-pointer transition delay-50 hover:scale-105"
 					onClick={() => {
 						navigate("/session/warehousemanagement")
@@ -326,7 +326,6 @@ function Home1() {
 					<div className="cardSampleBody">
 						<center>
 							<select name="" id="">
-								{/* <option value="">National Reserve Warehouse</option> */}
 							</select>
 						</center>
 
@@ -352,13 +351,13 @@ function Home1() {
 						</div>
 					</div>
 
-				</div>}
+				</div>} */}
 
 				{otherElements.includes("Notifications") && <div className="myCardSample " >
 
 					<div className="card_header_noti ">
 						<div className="heading">Notifications</div>
-						<div className='hBox'>
+						<div className='hBox overflow-x-clip overflow-y-scroll max-h-[350px]' >
 							<ul className='li_noti '>
 								<li>
 									<span>
@@ -417,7 +416,45 @@ function Home1() {
 				</div>}
 
 
-				{otherElements.includes("Order Status") &&
+				
+
+				{otherElements.includes("Recent Issues") &&
+
+					<div
+						className="myCardSample hover:cursor-pointer transition delay-100 hover:scale-105 !h-auto"
+						onClick={() => {
+							navigate("/session/issuemanagement")
+						}}
+					>
+
+						<div
+
+							className="card_header_noti">
+							<div className="heading">Issues and Resolutions</div>
+							<div className='hBox overflow-x-clip overflow-y-scroll max-h-[350px] h-[350px]'>
+								<ul className='li_noti '>
+									{
+										issues.map((val) => {
+											return (
+												<li>
+													<span>
+														<span>
+															{val['severity'] == 'H' ? <span></span> : <></>}
+															{val['subject']}
+														</span>
+														<span>{timeSince(new Date(val['createdon']))}</span>
+													</span>
+												</li>
+											)
+										})
+									}
+								</ul>
+							</div>
+						</div>
+
+					</div>}
+
+					{otherElements.includes("Order Status") &&
 					<div
 						className="myCardSample transCard hover:cursor-pointer transition delay-50 hover:scale-105"
 						onClick={() => {
@@ -575,42 +612,6 @@ function Home1() {
 							</div>
 
 						</div>
-					</div>}
-
-				{otherElements.includes("Recent Issues") &&
-
-					<div
-						className="myCardSample hover:cursor-pointer transition delay-100 hover:scale-105"
-						onClick={() => {
-							navigate("/session/issuemanagement")
-						}}
-					>
-
-						<div
-
-							className="card_header_noti">
-							<div className="heading">Recent Issues</div>
-							<div className='hBox'>
-								<ul className='li_noti '>
-									{
-										issues.map((val) => {
-											return (
-												<li>
-													<span>
-														<span>
-															{val['severity'] == 'H' ? <span></span> : <></>}
-															{val['subject']}
-														</span>
-														<span>{timeSince(new Date(val['createdon']))}</span>
-													</span>
-												</li>
-											)
-										})
-									}
-								</ul>
-							</div>
-						</div>
-
 					</div>}
 			</div>
 		</div>

@@ -159,12 +159,12 @@ table tbody td{
 }
 .myCardSample select{
     width: 372px;
-height: 41px;
-font-size: 16px;
-margin-left: auto;
-margin-right: auto;
-margin-top: 10px;
-border: 1px solid rgba(0, 0, 0, 0.28);
+	height: 50px;
+	font-size: 16px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 10px;
+	border: 1px solid rgba(0, 0, 0, 0.28);
 }
 .ballot_unit{
     background-color: #165BAA !important;
