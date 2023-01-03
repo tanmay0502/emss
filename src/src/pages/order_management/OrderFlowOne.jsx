@@ -124,6 +124,9 @@ export default function OrderFlowOne({OrderID,isSender}) {
             getSubOrder(data2['data']);
             setAllOrders(data2["data"]);
         }
+        else{
+          alert(data2.message)
+        }
       } catch (err) {
         console.log(err);
       }
@@ -152,6 +155,9 @@ export default function OrderFlowOne({OrderID,isSender}) {
       if(data2) {
           alert("Order Issued Successfully");
           window.location = '/session/ordermanagement'
+      }
+      else{
+        alert(data2.message)
       }
     } catch (err) {
       console.log(err);

@@ -391,6 +391,9 @@ export default function WareHouseListUnitTrackerFillDemand(props) {
               if (response["status"] == 200) {
                 window.location = '/session/ordermanagement'
               }
+              else{
+                alert(data2.message)
+              }
            
           } catch (err) {
             console.log(err);

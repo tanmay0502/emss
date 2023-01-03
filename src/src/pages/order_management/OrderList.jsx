@@ -80,6 +80,9 @@ export default function OrderList() {
         if (response.status == 200) {
             setPhotoFileData(data)
         }
+        else{
+            alert(data.message)
+          }
 
     } catch (err) {
         console.log({ err });
@@ -128,6 +131,9 @@ export default function OrderList() {
                 console.log(data2)
                 if (data2["status"] != 404 && data2["data"])
                     setData(data2["data"])
+                    else{
+                        alert(data2.message)
+                      }
             } catch (err) {
                 console.log(err);
             }

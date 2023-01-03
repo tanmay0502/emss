@@ -69,6 +69,9 @@ export default function GenarateOrderNEW() {
       if (response.status == 200) {
         setPhotoFileData(data)
       }
+      else{
+        alert(data.message)
+      }
 
     } catch (err) {
       console.log({ err });
@@ -167,6 +170,9 @@ export default function GenarateOrderNEW() {
         // alert("Order Generated Successfully");
         getcertificate(p);
         openModal();
+      }
+      else{
+        alert(data2.message)
       }
       // if (response["status"] == 200) {
       //   window.location = '/session/ordermanagement'

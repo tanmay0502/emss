@@ -52,14 +52,22 @@ function AllocateOrder({OrderID, type}) {
 				);
 				const data2 = await response.json();
 				console.log("getoptimalallocation",data2.allocation)
-				setBody(prev=>{
-					prev.details=data2.allocation;
-					return prev;
-				})
-				setWearhouse(data2);
-				
 
-				setUpdate(prev=>(prev+1)%10)
+				if(response.status==200){
+					setBody(prev=>{
+						prev.details=data2.allocation;
+						return prev;
+					})
+					setWearhouse(data2);
+					
+	
+					setUpdate(prev=>(prev+1)%10)
+	
+				}
+				else{
+					alert(data2["message"]);
+				}
+				
 			} catch (err) {
 					console.log(err);
 				}
@@ -133,6 +141,10 @@ function AllocateOrder({OrderID, type}) {
 			alert("Order allocated Successfully");
 			window.location = '/session/ordermanagement'
 		  }
+		 
+		else{
+			alert(data2["message"]);
+		}
 		  
 		  
 		} catch (err) {
@@ -158,7 +170,13 @@ function AllocateOrder({OrderID, type}) {
 			);
 			const data2 = await response.json();
 			console.log("wearhouse received",data2)
-			setWearhouse(data2);
+			if(response.status==200){
+				setWearhouse(data2);
+
+			}
+			else{
+				alert(data2["message"]);
+			}
 		//   setWearhouse(data2);
 			} catch (err) {
 				console.log(err);

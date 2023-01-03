@@ -80,6 +80,9 @@ export default function ViewOrderDetails() {
        
 
       }
+      else{
+        alert(data2.message)
+      }
     } catch (err) {
       console.log(err);
     }
@@ -106,6 +109,10 @@ export default function ViewOrderDetails() {
         setAllOrders(data2["data"])
        
 
+      }
+
+      else{
+        alert(data2.message)
       }
     } catch (err) {
       console.log(err);

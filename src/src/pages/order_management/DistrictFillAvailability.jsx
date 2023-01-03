@@ -103,9 +103,14 @@ export default function DistrictFillAvailability(props) {
                 );
                 const data = await response.json();
                 console.log("/unit/available_units/", data);
-                if (data.data.length) {
-                    setAvailableUnits(data.data);
-                }
+                if(response.status==200){
+					if (data.data.length) {
+                        setAvailableUnits(data.data);
+                    }
+	
+				}
+				
+                
             } catch (err) {
                 console.log({ err });
             }
@@ -296,15 +301,13 @@ export default function DistrictFillAvailability(props) {
                     }
                 )
 
-                const status = response;
-                if (status.status == 200) {
+                const data = await response.json();
+                if (data.status == 200) {
                     alert("Warehouse Activated Successfully");
                     // navigate('/session/warehousemanagement');
                     getList();
                 }
-                else {
-                    alert("Deactivation Failed");
-                }
+               
 
             } catch (error) {
                 console.log(error);
@@ -432,6 +435,8 @@ export default function DistrictFillAvailability(props) {
                 })
 
             const data = await response.json();
+
+            if(response.status==200){
             let activedata = []
 
             data["data"].map((warehouse) => {
@@ -441,6 +446,8 @@ export default function DistrictFillAvailability(props) {
             })
 
             setDetails(activedata);
+        }
+      
 
         } catch (error) {
             console.log(error);
@@ -493,28 +500,6 @@ export default function DistrictFillAvailability(props) {
     }, [orderCount]);
 
 
-    useEffect(()=>{
-        if(Object.keys(orderCount).length==0){
-        let fillDemand = {}
-        Districts.map((val,id)=>{
-            fillDemand[id.toString()]={};
-        })
-        console.log(fillDemand)
-        if(Object.keys(orderCount).length==0)
-        setOrderCount(fillDemand);
-    }
-        if(Object.keys(orderCount).length!=0 && fl==0){
-            setFl(1);
-            run();
-        }
-       
-    },[Details,Districts,orderCount])
-
-    useEffect(() => {
-        console.log(orderCount)
-       
-    }, [orderCount]);
-
 
 
     const [boxId, setBoxId] = useState([]);
@@ -541,7 +526,11 @@ export default function DistrictFillAvailability(props) {
                 }
             )
             const types = await response.json();
-            setWarehouseMapping(types);
+            if(response.status==200){
+                setWarehouseMapping(types);
+            }
+          
+            
         } catch (error) {
             console.log(error);
         }
@@ -608,6 +597,9 @@ export default function DistrictFillAvailability(props) {
             }
             if (response["status"] == 200) {
                 window.location = '/session/ordermanagement'
+            }
+            else{
+                alert(data2.message);
             }
 
         } catch (err) {

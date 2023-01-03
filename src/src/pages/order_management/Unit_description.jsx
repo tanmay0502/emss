@@ -63,6 +63,9 @@ export default function UnitDescription(props) {
         if (response.status == 200) {
             setPhotoFileData(data)
         }
+        else{
+            alert(data.message)
+          }
 
     } catch (err) {
         console.log({ err });

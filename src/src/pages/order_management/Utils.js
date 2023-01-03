@@ -21,7 +21,9 @@ export const  setVehicleDetails = async (body) => {
             alert("Vehicle details Submitted")
             window.location.reload();
 
-        }
+        }else{
+            alert(data2.message)
+          }
 
    }catch(err){
     console.log(err)
@@ -47,6 +49,9 @@ export const  getVehicleDetails = async (body) => {
             return data2["data"];
         }
         else{
+            
+                alert(data2.message)
+              
             return 0;
         }
 
@@ -76,7 +81,9 @@ export const  fillAllocateUsers = async (body) => {
             alert("User allocated")
             window.location.reload();
 
-        }
+        }else{
+            alert(data2.message)
+          }
 
    }catch(err){
     console.log(err)
@@ -103,6 +110,9 @@ export const  getAllocateUsers = async (body) => {
             return data2["data"];
         }
         else{
+           
+                alert(data2.message)
+              
             return 0;
         }
 

@@ -105,7 +105,14 @@ export default function FillOrder({Order,setOrder,sources,sname,scode,destinatio
                             setOrder((prev)=>{
                                 let ppp = [...prev];
                                 ppp[id1]["source"]=e.target.value;
-                                let oprnd = e.target.value+"000000CEO"
+                                let oprnd;
+                                if(scode=="dtCode"){
+                                    oprnd = sessionStorage.getItem("sessionToken").substring(0,2)+e.target.value+"000DEO"
+                                }
+                                else{
+                                    oprnd = e.target.value+"000000CEO"
+                                }
+                               
                                 getUnits(oprnd)
                                 return ppp;
                             })
@@ -190,15 +197,15 @@ export default function FillOrder({Order,setOrder,sources,sname,scode,destinatio
                       </select>
                     </div>
                     <div className="w-1/8 m-2"><input type="text" className="border-1 border-black "
-                    value={(Units[val1["source"]+"000000CEO"] && val2["model"]!="select" && val2["manufacturer"]) ?Units[val1["source"]+"000000CEO"][val2["manufacturer"].substring(0,1)+val2["model"]+"CU"]:"calculating"}
+                    value={((scode=="dtCode"? Units[ sessionStorage.getItem("sessionToken").substring(0,2)+val1["source"]+"000DEO"]:Units[val1["source"]+"000000CEO"] ) && val2["model"]!="select" && val2["manufacturer"]) ?(scode=="dtCode"? Units[ sessionStorage.getItem("sessionToken").substring(0,2)+val1["source"]+"000DEO"]:Units[val1["source"]+"000000CEO"] )[val2["manufacturer"].substring(0,1)+val2["model"]+"CU"]:"calculating"}
                     ></input></div>
                     <div className="w-1/8 m-2"><input type="text" className="border-1 border-black "
                     value={Order[id1]["details"][id2]["filledCU"]}
                     onChange={(e)=>{
-                        if(Units[val1["source"]+"000000CEO"] && val2["model"]!="select" && val2["manufacturer"]) {
+                        if((scode=="dtCode"? Units[ sessionStorage.getItem("sessionToken").substring(0,2)+val1["source"]+"000DEO"]:Units[val1["source"]+"000000CEO"] ) && val2["model"]!="select" && val2["manufacturer"]) {
                         setOrder((prev)=>{
                             let ppp=[...prev]
-                            if(e.target.value<=Units[val1["source"]+"000000CEO"][val2["manufacturer"].substring(0,1)+val2["model"]+"CU"]){
+                            if(e.target.value<=(scode=="dtCode"? Units[ sessionStorage.getItem("sessionToken").substring(0,2)+val1["source"]+"000DEO"]:Units[val1["source"]+"000000CEO"] )[val2["manufacturer"].substring(0,1)+val2["model"]+"CU"]){
                             ppp[id1]["details"][id2]["filledCU"]=e.target.value;}
                             console.log(ppp)
                             return ppp;
@@ -207,15 +214,15 @@ export default function FillOrder({Order,setOrder,sources,sname,scode,destinatio
                     }}
                     ></input></div>
                     <div className="w-1/8 m-2"><input type="text" className="border-1 border-black "
-                    value={(Units[val1["source"]+"000000CEO"] && val2["model"]!="select" && val2["manufacturer"]) ?Units[val1["source"]+"000000CEO"][val2["manufacturer"].substring(0,1)+val2["model"]+"BU"]:"calculating"}
+                    value={((scode=="dtCode"? Units[ sessionStorage.getItem("sessionToken").substring(0,2)+val1["source"]+"000DEO"]:Units[val1["source"]+"000000CEO"] ) && val2["model"]!="select" && val2["manufacturer"]) ?(scode=="dtCode"? Units[ sessionStorage.getItem("sessionToken").substring(0,2)+val1["source"]+"000DEO"]:Units[val1["source"]+"000000CEO"] )[val2["manufacturer"].substring(0,1)+val2["model"]+"BU"]:"calculating"}
                     ></input></div>
                     <div className="w-1/8 m-2"><input type="text" className="border-1 border-black "
                     value={Order[id1]["details"][id2]["filledBU"]}
                      onChange={(e)=>{
-                        if(Units[val1["source"]+"000000CEO"] && val2["model"]!="select" && val2["manufacturer"]) {
+                        if((scode=="dtCode"? Units[ sessionStorage.getItem("sessionToken").substring(0,2)+val1["source"]+"000DEO"]:Units[val1["source"]+"000000CEO"] ) && val2["model"]!="select" && val2["manufacturer"]) {
                         setOrder((prev)=>{
                             let ppp=[...prev]
-                            if(e.target.value<=Units[val1["source"]+"000000CEO"][val2["manufacturer"].substring(0,1)+val2["model"]+"BU"]){
+                            if(e.target.value<=(scode=="dtCode"? Units[ sessionStorage.getItem("sessionToken").substring(0,2)+val1["source"]+"000DEO"]:Units[val1["source"]+"000000CEO"] )[val2["manufacturer"].substring(0,1)+val2["model"]+"BU"]){
                             ppp[id1]["details"][id2]["filledBU"]=e.target.value;}
                             console.log(ppp)
                             return ppp;
@@ -223,15 +230,15 @@ export default function FillOrder({Order,setOrder,sources,sname,scode,destinatio
                     }
                     }}></input></div>
                     <div className="w-1/8 m-2"><input type="text" className="border-1 border-black "
-                    value={(Units[val1["source"]+"000000CEO"] && val2["model"]!="select" && val2["manufacturer"]) ?Units[val1["source"]+"000000CEO"][val2["manufacturer"].substring(0,1)+val2["model"]+"VVPAT"]:"calculating"}
+                    value={((scode=="dtCode"? Units[ sessionStorage.getItem("sessionToken").substring(0,2)+val1["source"]+"000DEO"]:Units[val1["source"]+"000000CEO"] ) && val2["model"]!="select" && val2["manufacturer"]) ?(scode=="dtCode"? Units[ sessionStorage.getItem("sessionToken").substring(0,2)+val1["source"]+"000DEO"]:Units[val1["source"]+"000000CEO"] )[val2["manufacturer"].substring(0,1)+val2["model"]+"VVPAT"]:"calculating"}
                     ></input></div>
                     <div className="w-1/8 m-2"><input type="text" className="border-1 border-black "
                     value={Order[id1]["details"][id2]["filledVVPAT"]}
                      onChange={(e)=>{
-                        if(Units[val1["source"]+"000000CEO"] && val2["model"]!="select" && val2["manufacturer"]) {
+                        if((scode=="dtCode"? Units[ sessionStorage.getItem("sessionToken").substring(0,2)+val1["source"]+"000DEO"]:Units[val1["source"]+"000000CEO"] ) && val2["model"]!="select" && val2["manufacturer"]) {
                         setOrder((prev)=>{
                             let ppp=[...prev]
-                            if(e.target.value<=Units[val1["source"]+"000000CEO"][val2["manufacturer"].substring(0,1)+val2["model"]+"VVPAT"]){
+                            if(e.target.value<=(scode=="dtCode"? Units[ sessionStorage.getItem("sessionToken").substring(0,2)+val1["source"]+"000DEO"]:Units[val1["source"]+"000000CEO"] )[val2["manufacturer"].substring(0,1)+val2["model"]+"VVPAT"]){
                             ppp[id1]["details"][id2]["filledVVPAT"]=e.target.value;}
                             console.log(ppp)
                             return ppp;

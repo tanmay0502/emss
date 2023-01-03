@@ -104,6 +104,9 @@ export default function OrderFlowTwoSender({OrderID}) {
         const data2 = await response.json();
         if(data2['data'])
             setAllOrders(data2["data"])
+            else{
+                alert(data2.message)
+              }
       } catch (err) {
         console.log(err);
       }

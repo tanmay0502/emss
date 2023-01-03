@@ -339,13 +339,17 @@ export default function DistrictFillDemand(props) {
 
             const data = await response.json();
             console.log("warehouse list",data)
-            let activedata=[]
+            if(response.status==200){
+                let activedata=[]
            
-            data["data"].map((warehouse)=>{
-                    activedata.push(warehouse)
-            })
-            console.log("Active data",activedata)
-            setDetails(activedata);
+                data["data"].map((warehouse)=>{
+                        activedata.push(warehouse)
+                })
+                console.log("Active data",activedata)
+                setDetails(activedata);
+            }
+           
+           
 
         } catch (error) {
             console.log(error);
@@ -417,11 +421,13 @@ export default function DistrictFillDemand(props) {
                 }
             )
             const types = await response.json();
+            if(response.status==200)
+            setWarehouseMapping(types);
+           
             // data.map(arr => {
             // 	arr = {...arr, "warehousebuildingtype": }
             // })
             // console.log(data);
-            setWarehouseMapping(types);
         } catch (error) {
             console.log(error);
         }
@@ -493,6 +499,9 @@ export default function DistrictFillDemand(props) {
               }
               if (response["status"] == 200) {
                 window.location = '/session/ordermanagement'
+              }
+              else{
+                alert(data2["message"])
               }
            
           } catch (err) {
