@@ -16,6 +16,7 @@ import SecondRandCard from "./SecondRandCard";
 import ElecSchedulingCard from "./ElecSchedulingCard";
 import TnASchdulingCard from "./TnASchdulingCard";
 import PhysVerificationCard from "./PhysVerificationCard";
+import HomePageCardBottom from "./HomePageCardBottom";
 
 const uri = process.env.REACT_APP_API_SERVER + "/unit/total_counts"
 const uri2 = process.env.REACT_APP_API_SERVER + "/unit/fetch-first-randomization-schedule"
@@ -493,50 +494,8 @@ export default function HomePage() {
                     </div>
                 </div>
 
-                <div className={styles.myCardSampleHover}>
-					
-					<div className="flex justify-center">
-						<select className={styles.Box123} style={{fontSize: "20px", display: "flex", margin: "auto", width: "88%"}} value={cardVal}
-							onChange={(e)=>{
-									setcardVal(e.target.value)
-								}
-							}
-						>
-							<option className="bg-white text-black" value="FLC Scheduling">FLC Scheduling</option>
-							<option className="bg-white text-black" value="1st Randomisation Scheduling">1st Randomisation Scheduling</option>
-							<option className="bg-white text-black" value="2nd Randomisation Scheduling">2nd Randomisation Scheduling</option>
-							<option className="bg-white text-black" value="Election Scheduling">Election Scheduling</option>
-							<option className="bg-white text-black" value="TnA Scheduling">TnA Scheduling</option>
-							<option className="bg-white text-black" value="Physical Verification">Physical Verification</option>
-						</select>
-
-						<img src={RightArrow} alt="" style={{ display: "flex", margin: "auto", height: "100%"}} onClick={cardRedirect} />
-					</div>
-					{
-						(() =>{
-
-							if(cardVal === "FLC Scheduling"){
-								return <FLCSchedulecard data={flc["flc"]} />
-							}
-							else if(cardVal === "1st Randomisation Scheduling"){
-								return <FirstRandcard/>
-							}
-							else if(cardVal === "2nd Randomisation Scheduling"){
-								return <SecondRandCard/>
-							}
-							else if(cardVal === "Election Scheduling"){
-								return <ElecSchedulingCard/>
-							}
-							else if(cardVal === "TnA Scheduling"){
-								return <TnASchdulingCard/>
-							}
-							else if(cardVal === "Physical Verification"){
-								return <PhysVerificationCard/>
-							}
-						})()
-					}
-               
-            	</div>
+				<HomePageCardBottom state={state} dist={district}/>
+				<HomePageCardBottom state={state} dist={district}/>
 			</div>
 
             <div className={styles.parent2} >
