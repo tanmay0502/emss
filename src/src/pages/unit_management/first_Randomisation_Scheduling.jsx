@@ -21,7 +21,7 @@ function First_Randomisation_Scheduling() {
     const [currState, setCurrState] = useState([]);
     const [currDist, setCurrDist] = useState([])
     const [distCodes, setDistCodes] = useState(new Set());
-    const randomizationid = 6;
+    const [IsLoading, setIsLoading] = useState(0);
 
     useEffect(() => {
         getRealmData();
@@ -63,27 +63,38 @@ function First_Randomisation_Scheduling() {
 
         // fetch_district_list();
     }, []);
-    useEffect(() => {
-        async function fetch_election_list() {
-            try {
-                const response = await fetch(`${process.env.REACT_APP_API_SERVER}/unit/listElections`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    credentials: "include"
-                });
-                const data = await response.json();
-                if (response.status === 200) {
-                    setelectiontype(data);
-                    console.log(data)
-                }
-            } catch (err) {
-                alert('Error occured during scheduling');
+
+
+    async function fetch_election_list() {
+        try {
+            const response = await fetch(`${process.env.REACT_APP_API_SERVER}/unit/listElections`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include"
+            });
+            const data = await response.json();
+            if (response.status === 200) {
+                setelectiontype(data);
+                console.log(data)
             }
+        } catch (err) {
+            alert('Error occured during scheduling');
         }
+    }
 
 
-        fetch_election_list();
-    }, []);
+    useEffect(
+        () => {
+
+            setIsLoading(1);
+            let timer1 = setTimeout(() => fetch_election_list(), 1 * 1000);
+
+            return () => {
+                clearTimeout(timer1);
+            };
+        },
+        [setIsLoading]
+    );
 
     useEffect(() => {
         if (realm && realm !== []) {
@@ -197,6 +208,8 @@ function First_Randomisation_Scheduling() {
                             required
                             placeholder='Select Election'
                         >
+                            {''}
+                            <option hidden>select</option>
                             {
                                 electiontype.map((val) => {
                                     return (

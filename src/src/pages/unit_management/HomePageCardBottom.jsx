@@ -10,10 +10,11 @@ import TnASchdulingCard from "./TnASchdulingCard";
 import PhysVerificationCard from "./PhysVerificationCard";
 import { useNavigate } from "react-router-dom";
 
-export default function HomePageCardBottom({state, dist}) {
+export default function HomePageCardBottom({ state, dist }) {
 	const navigate = useNavigate()
 	const User_ID = sessionStorage.getItem("sessionToken");
 	const Role = User_ID.substring(8);
+
 	const First_Randomisation_call = async (e) => {
 		const response = await fetch(`${process.env.REACT_APP_API_SERVER}/user/validate_permissionAPI`, {
 			method: "POST",
@@ -33,23 +34,33 @@ export default function HomePageCardBottom({state, dist}) {
 
 		const data = await response.json();
 		if (response.status == 200) {
-
-			if (Role == "CEO") {
-				navigate(`/session/unitmanagement/first_randomisation_scheduling`);
-			}
+			navigate(`/session/unitmanagement/first_randomisation_scheduling`);
 		}
-		// else if (Role == "DEO") {
-		// 	navigate(`/session/unitmanagement/firstrandomization`);
-		// }
 	};
 
-	const Second_Randomisation_call = (e) => {
-		if (Role == "DEO") {
+	const Second_Randomisation_call = async (e) => {
+		const response = await fetch(`${process.env.REACT_APP_API_SERVER}/user/validate_permissionAPI`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			credentials: "include",
+			body: JSON.stringify({
+				moduleName: "Unit",
+				operation: "ScheduleFirstRandomization",
+				operandState: User_ID.substring(0, 2),
+				operandDist: User_ID.substring(2, 5),
+				operandAC: User_ID.substring(5, 8),
+				operandRole: "-",
+			}),
+		});
+
+		const data = await response.json();
+		if (response.status == 200) {
 			navigate(`/session/unitmanagement/second_randomisation_scheduling`);
-		} else if (Role == "RO") {
-			navigate(`/session/unitmanagement/secondrandomization`);
 		}
 	};
+
 	const [cardVal, setcardVal] = useState("FLC Scheduling");
 
 	const cardRedirect = (e) => {
@@ -104,15 +115,15 @@ export default function HomePageCardBottom({state, dist}) {
 			</div>
 			{(() => {
 				if (cardVal === "FLC Scheduling") {
-					return <FLCSchedulecard state={state} dist={dist}/>;
+					return <FLCSchedulecard state={state} dist={dist} />;
 				} else if (cardVal === "1st Randomisation Scheduling") {
 					return <FirstRandcard state={state} dist={dist} />;
 				} else if (cardVal === "2nd Randomisation Scheduling") {
-					return <SecondRandCard state={state} dist={dist}/>;
+					return <SecondRandCard state={state} dist={dist} />;
 				} else if (cardVal === "Election Scheduling") {
 					return <ElecSchedulingCard />;
 				} else if (cardVal === "TnA Scheduling") {
-					return <TnASchdulingCard state={state} dist={dist}/>;
+					return <TnASchdulingCard state={state} dist={dist} />;
 				} else if (cardVal === "Physical Verification") {
 					return <PhysVerificationCard />;
 				}

@@ -195,7 +195,7 @@ function App() {
 							element={<ScheduleCDP />}
 						/>
 						<Route
-							path="/session/unitmanagement/ScheduleCDP_edit"
+							path="/session/unitmanagement/editcdp/:id"
 							element={<ScheduleCDP_edit />}
 						/>
 						<Route

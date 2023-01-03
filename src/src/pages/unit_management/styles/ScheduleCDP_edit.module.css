@@ -76,12 +76,13 @@
 
 .parent2 {
   display: grid;
-  grid-template-columns: 1.7fr 1fr;
+  grid-template-columns:  1fr;
   grid-template-rows: 1fr;
   grid-column-gap: 90px;
   grid-row-gap: 0px;
-  width: 100%;
+  width: 50%;
   padding-top: 50px;
+  margin-left: 25%;
 }
 
 .div1 {
@@ -123,6 +124,16 @@
   grid-area: 3 / 2 / 4 / 3;
   margin: 5% 15%;
 }
+.div9 {
+  grid-area: 3 / 3 / 4 / 4;
+  margin: 5% 15%;
+}
+.div10 {
+  grid-area: 4 / 1 / 5 / 2;
+  margin: 5% 15%;
+}
+
+
 
 .submitBtn1 {
   margin-top: 30px;
@@ -167,6 +178,16 @@
 }
 
 .parent input[type="number"] {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 12.5px 10px;
+  border-radius: var(--border-radius);
+  border: 2px solid #84587c;
+  font-family: "Nunito Sans";
+  outline: none;
+}
+
+.numberdiv{
   box-sizing: border-box;
   width: 100%;
   padding: 12.5px 10px;

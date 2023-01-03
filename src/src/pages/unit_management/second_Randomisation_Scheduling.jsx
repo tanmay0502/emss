@@ -17,7 +17,7 @@ function Second_Randomisation_Scheduling() {
 
     const [districtList, setDistrictList] = useState([]);
     const [ACList, setACList] = useState([]);
-
+    const [IsLoading, setIsLoading] = useState(0);
     const [realm, setRealm] = useState([]);
     const randomizationid = 6;
 
@@ -29,6 +29,7 @@ function Second_Randomisation_Scheduling() {
         setRealm(await getRealm('Unit', 'ScheduleSecondRandomization'));
     }
 
+    console.log(districtList, "districtlist")
     useEffect(() => {
         if (realm && realm !== []) {
             // console.log(formatRealm2(realm)[0])
@@ -49,30 +50,41 @@ function Second_Randomisation_Scheduling() {
     }, [districtCode])
 
     useEffect(() => {
-        // console.log(ACList)
+        console.log(ACList, 'AClist')
     }, [ACList])
 
-    useEffect(() => {
-        async function fetch_election_list() {
-            try {
-                const response = await fetch(`${process.env.REACT_APP_API_SERVER}/unit/listElections`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    credentials: "include"
-                });
-                const data = await response.json();
-                if (response.status === 200) {
-                    setelectiontype(data);
-                    console.log(data)
-                }
-            } catch (err) {
-                alert('Error occured during scheduling');
+
+    async function fetch_election_list() {
+        try {
+            const response = await fetch(`${process.env.REACT_APP_API_SERVER}/unit/listElections`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include"
+            });
+            const data = await response.json();
+            if (response.status === 200) {
+                setelectiontype(data, 'electiontype');
+                console.log(data)
             }
+        } catch (err) {
+            alert('Error occured during scheduling');
         }
+    }
 
 
-        fetch_election_list();
-    }, []);
+    useEffect(
+        () => {
+
+            setIsLoading(1);
+
+            let timer1 = setTimeout(() => fetch_election_list(), 1 * 1000);
+
+            return () => {
+                clearTimeout(timer1);
+            };
+        },
+        [setIsLoading]
+    );
 
     async function Submit_Second_randomization() {
         var currentdate = new Date();
@@ -95,7 +107,7 @@ function Second_Randomisation_Scheduling() {
             + mins + ":"
             + secs;
 
-        console.log(time, document.getElementById("enddate") ? document.getElementById("enddate").value + " " + time : "")
+        console.log(document.getElementById("electiontype").value, 'document.getElementById("electiontype").value', document.getElementById("supplementary").value)
         try {
             const response = await fetch(
                 `${process.env.REACT_APP_API_SERVER}/unit/schedule-second-randomization`,
@@ -166,6 +178,8 @@ function Second_Randomisation_Scheduling() {
                             value={districtCode}
                             onChange={(e) => { setDistrictCode(e.target.value) }}
                         >
+                            {''}
+                            <option hidden>select</option>
                             {
                                 districtList.map((val) => {
                                     return (
@@ -185,6 +199,8 @@ function Second_Randomisation_Scheduling() {
                             required
                             placeholder='Select Election'
                         >
+                            {''}
+                            <option hidden>select</option>
                             {
                                 electiontype.map((val) => {
                                     return (
@@ -199,7 +215,7 @@ function Second_Randomisation_Scheduling() {
 
                     <div class={styles.div6}>
                         <p> Supplementary? </p>
-                        <select id="electiontype" onSelect={(e) => { setelectiontype(e) }}>
+                        <select id="supplementary">
                             <option value="f">No</option>
                             <option value="t">Yes</option>
                         </select>

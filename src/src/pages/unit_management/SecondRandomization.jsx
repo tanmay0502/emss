@@ -71,6 +71,7 @@ const SecondRandomisationForm = ({ isVisible }) => {
                     credentials: 'include',
                 });
             const data = await response.json();
+            console.log(data, "fetch-ac-pc")
             if (response.status === 200) {
                 setACList(data['data'])
                 // pass the data to child component & re-render
@@ -383,7 +384,10 @@ const SecondRandomisationOutput = ({
     const handleGenerateReport = async () => {
         try {
             const response = await fetch(
-                `${baseUrl}/generate-second-randomization-report`,
+                `${baseUrl}/generate-second-randomization-report` +
+                new URLSearchParams({
+                    ac_no: ACCode,
+                }),
                 {
                     method: "POST",
                     credentials: "include",
@@ -393,6 +397,8 @@ const SecondRandomisationOutput = ({
                 .get("content-type")
                 ?.includes("application/pdf");
             const data = isPDF ? await response.blob() : null;
+
+            console.log(isPDF, "PDF")
             if (response.status === 200 && isPDF) {
                 let file = window.URL.createObjectURL(data);
                 window.open(file, "Randomisation Report");

@@ -88,6 +88,12 @@ const FirstRandomisationForm = ({ isVisible = true }) => {
         const update = [...assemblyData];
         update[dataset.id][name] = value;
 
+        if (name === 'ac_no') {
+            const tmp = assemblyPSData.find(obj => obj['ac_no'] == value);
+            update[dataset.id]['ps_no'] = tmp['ps_no'];
+            update[dataset.id]['unit_no'] = tmp['unit_no'];
+        }
+
         setIsSubmitted(false);
         setAssemblyData(update);
     };
@@ -152,7 +158,7 @@ const FirstRandomisationForm = ({ isVisible = true }) => {
 
                     setRandomisedData(data);
                     setIterationIndex(data.length);
-                    setAssemblyData(units_requirement);
+                    // setAssemblyData(units_requirement);
                     setIsSubmitted(true);
                     // pass the data to child component & re-render
                 } else {
@@ -233,6 +239,8 @@ const FirstRandomisationForm = ({ isVisible = true }) => {
         }
     };
 
+
+
     useEffect(() => {
         // Initial fetching of any previous available user inputs
         if (isVisible) {
@@ -249,6 +257,7 @@ const FirstRandomisationForm = ({ isVisible = true }) => {
                             credentials: "include"
                         });
                     const data = await response.json();
+                    console.log(data, 'getDistrictACDetails*')
                     if (response.status === 200) {
                         setAssemblyList(data["data"]);
                         console.log(data["data"])
@@ -292,6 +301,7 @@ const FirstRandomisationForm = ({ isVisible = true }) => {
                     alert(`Error occured: ${err}`);
                 }
             })();
+
             setIsFetching(false);
         }
     }, [isVisible]);
@@ -489,20 +499,24 @@ const RandomisationOutput = ({
     const columns = useMemo(
         () => [
             {
-                Header: "Assembly Segment",
+                Header: "Assembly Number",
                 accessor: "ac_no", // accessor is the "key" in the data
             },
             {
-                Header: "CU Count",
-                accessor: "cu_count",
+                Header: "Assembly Name",
+                accessor: "ac_name", // accessor is the "key" in the data
             },
             {
                 Header: "BU Count",
-                accessor: "bu_count",
+                accessor: row => Math.ceil((row.unit_no * row.ps_no * row.bu_count) / 100),
+            },
+            {
+                Header: "CU Count",
+                accessor: row => Math.ceil((row.ps_no * row.cu_count) / 100),
             },
             {
                 Header: "VT Count",
-                accessor: "vt_count",
+                accessor: row => Math.ceil((row.ps_no * row.vt_count) / 100),
             },
         ],
         []
@@ -552,7 +566,7 @@ const RandomisationOutput = ({
     const handleGenerateReport = async () => {
         try {
             const response = await fetch(
-                `${baseUrl}/generate-first-randomization-report/`,
+                `${baseUrl}/generate-first-randomization-report`,
                 {
                     method: "POST",
                     credentials: "include",
@@ -664,7 +678,7 @@ const AssemblyTableRow = ({ row, unitData }) => {
                             {...cell.getCellProps()}
                             className="relative border-b border-solid border-gray-200 bg-white p-2 text-lg text-gray-600"
                         >
-                            {cell.column.Header === "Assembly Segment" && (
+                            {cell.column.Header === "Assembly Number" && (
                                 <ChevronDown
                                     className={`absolute left-0 top-1/2 ml-7 h-5 w-5 -translate-y-1/2 translate-x-1/2 transition-transform ease-in-out ${!isExpanded && "-rotate-90"
                                         }`}
@@ -679,18 +693,18 @@ const AssemblyTableRow = ({ row, unitData }) => {
                 <tr onClick={toggleExpander}>
                     <td className="bg-zinc-50 py-2 px-6" colSpan={4}>
                         <div className="px-4 text-left">
-                            <h6 className="text-lg">CU</h6>
+                            <h6 className="text-lg">BU</h6>
                             <div className="mx-auto mb-2 grid grid-cols-7 text-center font-sans text-base">
-                                {unitData.cu.map((unit, _id) => (
+                                {unitData.bu.map((unit, _id) => (
                                     <p className="m-0" key={_id}>
                                         {unit}
                                     </p>
                                 ))}
 
                             </div>
-                            <h6 className="text-lg">BU</h6>
+                            <h6 className="text-lg">CU</h6>
                             <div className="mx-auto mb-2 grid grid-cols-7 text-center font-sans text-base">
-                                {unitData.bu.map((unit, _id) => (
+                                {unitData.cu.map((unit, _id) => (
                                     <p className="m-0" key={_id}>
                                         {unit}
                                     </p>

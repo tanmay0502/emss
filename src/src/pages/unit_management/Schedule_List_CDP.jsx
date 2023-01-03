@@ -1,6 +1,6 @@
 import React from "react";
 import DynamicDataTable from "@langleyfoxall/react-dynamic-data-table";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom'
 import Edit from '../../assets/editBtn.png';
 import styles from './styles/ScheduleCDPList.module.css';
@@ -12,38 +12,91 @@ export default function Schedule_List_CDP() {
 
     const navigate = useNavigate()
     const [sortOrder, setSortOrder] = useState("asc");
-    const [sortBy, setSortBy] = useState("None");
-    const [isDetail, setIsDetail] = useState(0);
+    const [setSortBy] = useState("None");
+    const [isDetail] = useState(0);
     const [tableFilter, setTableFilter] = useState("");
+    const [tableData, setTableData] = useState([])
+    const [cdp, setcdp] = useState([])
+    const [IsLoading, setIsLoading] = useState(0);
 
 
-    const row1 = {
-        'CDP Incharge': 'AA1122',
-        'Process': 'Polling',
-        "Unit Quantity": '123',
-        "Unit Type": 'CU',
-        "No. of engineers": '2021',
-        "Manufacturer": 'BEL',
-        "Start Date of FLC": '22-09-2021',
-        "End Date of FLC": '15-10-2021',
-        "Edit":
-            <div className={styles.editBtn} onClick={() => {
-                window.location.pathname = "/session/unitmanagement/ScheduleCDP_edit";
-            }}>
-                <img src={Edit} />
-            </div>
-
+    async function getlistCDP() {
+        try {
+            const response = await fetch(
+                `${process.env.REACT_APP_API_SERVER}/unit/listCDP`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: 'include'
+                }
+            );
+            const data = await response.json();
+            console.log(data, "getlistCDP")
+            if (response.status == 200) {
+                setcdp(data['data'])
+            }
+        } catch (err) {
+            console.log({ err });
+        }
     }
 
 
-    const data = [row1, row1, row1, row1, row1, row1, row1, row1, row1, row1, row1, row1, row1,];
-    // const data1 = [row1, row2, row1];
+    useEffect(() => {
+        if (cdp) {
+            var data = cdp.filter((elem) => {
+                if (tableFilter === "") {
+                    return true;
+                }
+                else {
+                    return false;
+                    // const filter = tableFilter.toLowerCase();
+                    // return (elem["userid"].toLowerCase().includes(filter) || elem["name"].toLowerCase().includes(filter))
+                }
+            }).map((val) => {
+                // let st = ""
+                // let ed = ""
+                try {
+                    // st = st + val['startdate'].slice(0, 10)
+                    // ed = ed + val["enddate"].slice(0, 10)
+                } catch (err) {
+                    // st = ""
+                    console.log(err)
+                }
 
-    // const Table = [
-    //     <Collapse orderId='XYZ/20' data={data} time='22-09-2021' />,
-    //     <Collapse orderId='XYZ/12' data={data} time='12-12-2021' />,
-    //     <Collapse orderId='XYZ/14' data={data1} time='2-05-2021' bottom={true} />
-    // ]
+                return {
+                    'CDP ID': val['id'],
+                    'CDP Incharge': val['cdpincharge'],
+                    'Manufacturer': val['manufacturer'],
+                    'Process': val['process'],
+                    "CDP Period": (val['startdate'] && val['enddate']) ? val['startdate'].split('T')[0] + " - " + val['enddate'].split('T')[0] : ""
+                }
+            })
+            setTableData(data)
+
+        }
+        return () => {
+
+        }
+    }, [cdp, tableFilter])
+
+
+    useEffect(
+        () => {
+
+            setIsLoading(1);
+
+            let timer1 = setTimeout(() => getlistCDP(), 1 * 1000);
+
+            return () => {
+                clearTimeout(timer1);
+            };
+        },
+        [setIsLoading]
+    );
+
+    console.log(tableData, 'tableData', cdp)
 
     return (
         <div className={`${styles.myWrapper1}`} style={{ position: "relative", height: "100%" }}>
@@ -70,12 +123,9 @@ export default function Schedule_List_CDP() {
                             <option value={"None"}>Default</option>
                             <option value={"CDP Incharge"}>CDP Incharge</option>
                             <option value={"Process"}>Process</option>
-                            <option value={"Unit Quantity"}>Unit Quantity</option>
-                            <option value={"Unit Type"}>Unit Type</option>
-                            <option value={"No. of engineers"}>No. of engineers</option>
                             <option value={"Manufacturer"}>Manufacturer</option>
-                            <option value={"Start Date of FLC"}>Start Date of FLC</option>
-                            <option value={"End Date of FLC"}>End Date of FLC</option>
+                            <option value={"Start Date"}>Start Date</option>
+                            <option value={"End Date"}>End Date </option>
                         </select>
                         <ChevronDown />
 
@@ -91,12 +141,12 @@ export default function Schedule_List_CDP() {
                 <div class={styles.table}>
 
                     <DynamicDataTable
-                        rows={data}
+                        rows={tableData.length !== 0 ? tableData : [{ "": "No CDP scheduled" }]}
+                        fieldsToExclude={["CDP ID"]}
                         buttons={[]}
-                    // onClick={(event, row) => {
-                    //     navigate(`/session/ordermanagement/orderdetails`)
-                    // }}
-
+                        onClick={(event, row) => {
+                            navigate('/session/unitmanagement/editcdp/' + row["CDP ID"])
+                        }}
                     />
                 </div>
                 : ''
