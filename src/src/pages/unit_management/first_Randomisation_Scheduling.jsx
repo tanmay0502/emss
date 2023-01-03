@@ -184,6 +184,8 @@ function First_Randomisation_Scheduling() {
     }
 
 
+    console.log(dist, 'distdistdist')
+
     const onFormSubmit = async (e) => {
         e.preventDefault();
         Submit_First_randomization();
@@ -309,42 +311,6 @@ function First_Randomisation_Scheduling() {
                     />
 
                 </div>
-
-
-                    <div className={styles.div5}>
-                        
-                            <DynamicDataTable
-                                renderCheckboxes={true}
-                                renderMasterCheckbox={false}
-                                isCheckboxChecked={({dtCode}) => {
-                                    console.log(dtCode)    
-                                    distCodes.has(dtCode)
-                                }}
-
-                                onCheckboxChange={(_, { dtCode }) => {
-                                    var tmp = new Set(distCodes)
-                                    if (distCodes.has(dtCode)) {
-                                        tmp.delete(dtCode)
-                                    } else {
-                                        tmp.add(dtCode)
-                                    }
-                                    setDistCodes(tmp)
-                                }}
-
-                                rows={dist}
-                                buttons={[]}
-                                fieldMap={
-                                    {
-                                        // 'acCode': 'AC Code',
-                                        // 'acName': 'AC Name'
-                                    }
-                                }
-                            />
-                        
-                    </div>
-                    
-                
-
             </div>
             <center><input type={"submit"} className={styles.mySubmit} ></input></center>
         </form>

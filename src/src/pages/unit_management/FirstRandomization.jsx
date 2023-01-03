@@ -1,32 +1,17 @@
 import { useState, useEffect, useMemo } from "react";
 import styles from "./styles/UnitList.module.css";
 import { useTable } from "react-table";
-import { DynamicDataTable } from "@langleyfoxall/react-dynamic-data-table";
-import {
-    AiOutlineSortAscending,
-    AiOutlineSortDescending,
-} from "react-icons/ai";
-
-
-import { useNavigate } from "react-router-dom";
-import { ReactComponent as OptionsIndicator } from "../../assets/Options_Indicator.svg";
-import { ReactComponent as SearchInputElement } from "../../assets/searchInputIcon.svg";
 import { ReactComponent as ChevronDown } from "../../assets/ChevronDown.svg";
-import { expD } from "./Homepage";
-import { formatRealm2, getRealm } from "../../components/utils"
-
 const userID = sessionStorage.getItem("sessionToken");
 const baseUrl = `${process.env.REACT_APP_API_SERVER}/unit`;
 const URL = window.location.href;
 const arr = URL.split("/");
-const param = arr[arr.length - 1];
+const param = arr[arr.length - 2];
 const arr1 = param.split("=");
 const randomizationid = arr1[0];
+const supplementary = arr[arr.length - 1] == 'Yes' ? true : false;
 
 export default function FirstRandomization() {
-
-
-
 
     const initialVisibilityValues = {
         firstRandomisationForm: true,
