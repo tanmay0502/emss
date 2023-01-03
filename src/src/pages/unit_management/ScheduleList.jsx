@@ -7,6 +7,7 @@ import styles from './styles/ScheduleList.module.css';
 import { AiOutlineSortAscending, AiOutlineSortDescending } from "react-icons/ai";
 import { ReactComponent as SearchInputElement } from '../../assets/searchInputIcon.svg';
 import { ReactComponent as ChevronDown } from '../../assets/ChevronDown.svg';
+
 // import { ReactComponent as Edit } from '../../assets/editBtn.svg';
 export default function ScheduleList() {
 
@@ -15,7 +16,7 @@ export default function ScheduleList() {
     const [sortBy, setSortBy] = useState("None");
     const [isDetail, setIsDetail] = useState(0);
     const [tableFilter, setTableFilter] = useState("");
-    
+    let post = sessionStorage.getItem("sessionToken").substring(8);
     const [elections, setElections] = useState([])
     const [electionList, setElectionList] = useState([])
 
@@ -92,17 +93,25 @@ export default function ScheduleList() {
 
 
     // console.log({electionList})
+
+
+
+
     return (
         <div className={`${styles.myWrapper1}`} style={{ position: "relative", height: "100%" }}>
             {isDetail == 0 ? <div className='MainHeader pd-5 ' style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between", "alignItems": "center" }}>
                 <h4 className='text-white'>Scheduled Election List</h4>
 
                 <div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center" }}>
+                    {post === "ADM" ? 
                     <button className='createRequestBtn' onClick={() => {
                         window.location.pathname = "/session/unitmanagement/election_scheduling";
                     }}>
                         Schedule Election
                     </button>
+                    :
+                    <div className="text-white pr-2"> You dont have rights to Schedule new Election </div>
+                    }
 
                     <div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center", background: "#F9FBFF", borderRadius: "10px", padding: "7.5px 15px 7.5px 0", fontSize: "0.8em" }}>
                         <SearchInputElement style={{ margin: "0 7.5px", width: "20px" }} />
