@@ -65,6 +65,9 @@
 .users-table th:first-child, .users-table th:nth-child(3){
 	text-align: center;
 }
+.user-table th:nth-child(5){
+	padding-bottom: 10px;
+}
 
 .users-table th:first-child{
 	padding-left: 10px;

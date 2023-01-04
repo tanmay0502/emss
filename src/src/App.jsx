@@ -25,7 +25,6 @@ import OrderManagement from './pages/order_management/OrderManagement';
 import OrderTypes from './pages/order_management/OrderTypes';
 import GenerateOrder from './pages/order_management/GenarateOrder';
 import ViewOrderDetails from './pages/order_management/ViewOrderDetails';
-import EditView from './pages/home/EditView';
 import UnitList from './pages/unit_management/UnitList';
 import ScheduleElection from './pages/unit_management/ScheduleElection';
 import ScheduleList from './pages/unit_management/ScheduleList';
@@ -89,10 +88,6 @@ function App() {
 						<Route
 							path="/session/unitmanagement/HomePage"
 							element={<HomePage />}
-						/>
-						<Route
-							path="/session/home/editview"
-							element={<EditView />}
 						/>
 
 						<Route path="/session/usermanagement/" element={<ManageUsers />} />

@@ -249,10 +249,6 @@ function Home1() {
 	return (
 		<div className='dashboard_container'>
 
-			<div className='edit_view_button'>
-				<Vector /> <span onClick={() => navigate("/session/home/editview")}>Edit View</span>
-			</div>
-
 			<div className="w-100 gridCustom mt-4" >
 				<div className="gross_box d-flex justify-content-evenly">
 					<div className="left_sec">

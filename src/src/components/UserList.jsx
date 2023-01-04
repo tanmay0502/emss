@@ -372,7 +372,7 @@ function UserList() {
 					</div>
 
 				</div> : <></>}
-				{isDetail == 0 && isEdit == 0 ? <DynamicDataTable className="users-table"
+				{isDetail == 0 && isEdit == 0 ?  <DynamicDataTable className="users-table"
 					rows={tableData}
 					fieldsToExclude={["Details", "Edit", "status", "newUserId"]}
 					orderByField={sortMapping[sortBy]}
@@ -388,6 +388,7 @@ function UserList() {
 						"User ID": (<div className="cursor-pointer" onClick={() => { setSortBy("User ID") }}>User ID</div>),
 						"User Name": (<div className="cursor-pointer" onClick={() => { setSortBy("Name") }}>User Name</div>),
 						"Role": (<div className="cursor-pointer" onClick={() => { setSortBy("Role") }}>Role</div>),
+						"Phone Number": (<div className="cursor-pointer" onClick={() => { setSortBy("Role") }}>Phone Number</div>),
 						"Status": (<div className="cursor-pointer" onClick={() => { setSortBy("None") }}>Status</div>)
 					}}
 					buttons={[]}
@@ -498,7 +499,7 @@ function UserList() {
 						{/* <div className="icon">
 							<TotalUsers />
 						</div> */}
-							<h4 className='flex items-center'>Role-wise Counts:</h4>
+							<h4 className='flex items-center'>Role-wise (Permanent Users):</h4>
 						</div>
 
 						<div className='grid grid-cols-3'> 
