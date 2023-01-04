@@ -144,6 +144,50 @@ export const formatRealm2 = (
   return [];
 };
 
+
+export const formatRealm3 = (
+  data,
+  stCode = "",
+  ac = ""
+) => {
+  if (!stCode && !ac) {
+    let states = [];
+    let temp = {};
+    for (let i = 0; i < data.length; i++) {
+      const e = data[i];
+      temp[e[0][0]] = e[0][1];
+    }
+    Object.keys(temp).map((val) => {
+      states.push({
+        stCode: val,
+        stName: temp[val],
+      });
+    });
+    return states;
+  } else if (stCode && !ac) {
+    let acs = [];
+    let temp = {};
+    for (let i = 0; i < data.length; i++) {
+      const e = data[i];
+      if (e[0][0] === stCode) {
+        temp[e[2][0]] = e[2][1];
+      }
+    }
+    Object.keys(temp).map((val) => {
+      acs.push({
+        acCode: val,
+        acName: temp[val],
+      });
+    });
+    return acs;
+  }
+  return [];
+};
+
+
+
+
+
 export const getRealm = async (module_name, operation) => {
   try {
     const response = await fetch(
@@ -172,6 +216,14 @@ export const getRealm = async (module_name, operation) => {
   }
   return [];
 };
+
+
+
+
+
+
+
+
 
 export const getTotalCounts = async (oprnd, status) => {
   try {

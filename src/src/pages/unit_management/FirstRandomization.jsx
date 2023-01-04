@@ -9,7 +9,7 @@ const arr = URL.split("/");
 const param = arr[arr.length - 2];
 const arr1 = param.split("=");
 const randomizationid = arr1[0];
-const supplementary = arr[arr.length - 1] == 'Yes' ? true : false;
+const suppl = arr[arr.length - 1] == 'Yes' ? true : false;
 
 export default function FirstRandomization() {
 
@@ -93,9 +93,9 @@ const FirstRandomisationForm = ({ isVisible = true }) => {
                 ac_name: "",
                 ps_no: "",
                 unit_no: "",
-                cu_count: "120",
-                bu_count: "120",
-                vt_count: "120",
+                cu_count: suppl ? "0" : "120",
+                bu_count: suppl ? "0" : "120",
+                vt_count: suppl ? "0" : "120",
             },
             ...assemblyData.slice(id + 1),
         ]);
@@ -115,15 +115,25 @@ const FirstRandomisationForm = ({ isVisible = true }) => {
             setIsSubmitted(false);
             const units_requirement = [];
             for (let i = 0; i < assemblyData.length; i++) {
-                units_requirement.push(
-                    {
-                        ac_no: assemblyData[i].ac_no,
-                        cu_count: assemblyData[i].cu_count ? Math.ceil(parseInt(assemblyData[i].cu_count) * parseInt(assemblyData[i].ps_no) / 100) : 0,
-                        bu_count: assemblyData[i].bu_count ? Math.ceil(parseInt(assemblyData[i].bu_count) * parseInt(assemblyData[i].ps_no) * parseInt(assemblyData[i].unit_no) / 100) : 0,
-                        vt_count: assemblyData[i].vt_count ? Math.ceil(parseInt(assemblyData[i].vt_count) * parseInt(assemblyData[i].ps_no) / 100) : 0,
-                    }
-                );
-
+		if (suppl) {
+                    units_requirement.push(
+			{
+                            ac_no: assemblyData[i].ac_no,
+                            cu_count: assemblyData[i].cu_count ? assemblyData[i].cu_count : 0,
+                            bu_count: assemblyData[i].bu_count ? assemblyData[i].bu_count : 0,
+                            vt_count: assemblyData[i].vt_count ? assemblyData[i].vt_count : 0,
+			}
+                    );
+		} else {
+                    units_requirement.push(
+			{
+                            ac_no: assemblyData[i].ac_no,
+                            cu_count: assemblyData[i].cu_count ? Math.ceil(parseInt(assemblyData[i].cu_count) * parseInt(assemblyData[i].ps_no) / 100) : 0,
+                            bu_count: assemblyData[i].bu_count ? Math.ceil(parseInt(assemblyData[i].bu_count) * parseInt(assemblyData[i].ps_no) * parseInt(assemblyData[i].unit_no) / 100) : 0,
+                            vt_count: assemblyData[i].vt_count ? Math.ceil(parseInt(assemblyData[i].vt_count) * parseInt(assemblyData[i].ps_no) / 100) : 0,
+			}
+                    );
+		}		    
             }
             try {
                 const response = await fetch(`${baseUrl}/first_randomization`, {
@@ -264,9 +274,9 @@ const FirstRandomisationForm = ({ isVisible = true }) => {
                                     ac_no: data['data']['acs'][keys[i]]['ac_no'],
                                     ps_no: data['data']['acs'][keys[i]]['ps_no'],
                                     unit_no: data['data']['acs'][keys[i]]['bu_no'],
-                                    cu_count: "120",
-                                    bu_count: "120",
-                                    vt_count: "120"
+                                    cu_count: suppl ? "0" : "120",
+                                    bu_count: suppl ? "0" : "120",
+                                    vt_count: suppl ? "0" : "120"
                                 }
                             );
                             templist.push(
@@ -281,7 +291,9 @@ const FirstRandomisationForm = ({ isVisible = true }) => {
                         setAssemblyData(tempdata);
                         setAssemblyPSData(tempdata);
                         console.log(tempdata)
-                    }
+                    } else {
+			alert(data['message']);
+		    }
                 } catch (err) {
                     alert(`Error occured: ${err}`);
                 }
@@ -296,7 +308,7 @@ const FirstRandomisationForm = ({ isVisible = true }) => {
             {isVisible && (
                 <div className="mb-10 flex h-auto w-full flex-col items-center justify-center overflow-hidden rounded-[25px] bg-white pb-[25px]">
                     <div className={styles.unit_list_header}>
-                        <h4>First Randomisation</h4>
+                        <h4>First {suppl?"Supplementary ":""}Randomisation</h4>
                     </div>
                     {!isFetching && (
                         <div className="mt-2 w-full bg-white p-6">
@@ -412,7 +424,7 @@ const FirstRandomisationForm = ({ isVisible = true }) => {
 
                                         <div className="flex w-3/8 flex-col text-left">
                                             <label className="mb-2 w-full text-base">
-                                                Unit Percentage {"(BU  CU  VT)"}
+                                                Unit {suppl?"Count":"Percentage"} {"(BU  CU  VT)"}
                                                 <span className="text-red-600"> *</span>
                                             </label>
                                             <div className="flex w-full justify-between gap-2 text-gray-800">
@@ -493,15 +505,15 @@ const RandomisationOutput = ({
             },
             {
                 Header: "BU Count",
-                accessor: row => Math.ceil((row.unit_no * row.ps_no * row.bu_count) / 100),
+                accessor: row => suppl ? row.bu_count : Math.ceil((row.unit_no * row.ps_no * row.bu_count) / 100),
             },
             {
                 Header: "CU Count",
-                accessor: row => Math.ceil((row.ps_no * row.cu_count) / 100),
+                accessor: row => suppl ? row.cu_count : Math.ceil((row.ps_no * row.cu_count) / 100),
             },
             {
                 Header: "VT Count",
-                accessor: row => Math.ceil((row.ps_no * row.vt_count) / 100),
+                accessor: row => suppl ? row.vt_count : Math.ceil((row.ps_no * row.vt_count) / 100),
             },
         ],
         []

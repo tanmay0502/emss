@@ -1,7 +1,7 @@
 import { DynamicDataTable } from '@langleyfoxall/react-dynamic-data-table'
 import React, { useEffect, useState } from 'react'
 import styles from './styles/ScheduleNew.module.css'
-import { getRealm, formatRealm2 } from '../../components/utils'
+import { getRealm, formatRealm2,formatRealm3 } from '../../components/utils'
 
 function ScheduleElection() {
     
@@ -183,10 +183,9 @@ const handleEdit_Temporary_Users = (i) => {
 
     useEffect(() => {
         if (currState && currState !== "") {
-            setDistn(formatRealm2(realm, currState))
+            setDistn(formatRealm3(realm, currState))
             console.log(distn)
         }
-
     }, [currState, realm]);
 
     return(
@@ -271,11 +270,12 @@ const handleEdit_Temporary_Users = (i) => {
                         <option value="" disabled selected>
                             Select AC
                         </option>
-                        {AC && Object.keys(AC).map((st) => (
-                            <option value={st} className="text-black">
-                            {st}
+                        {distn && distn.map((st,i) => (
+                            <option value={distn[i]["acCode"]} className="text-black">
+                                {distn[i]["acCode"]} - {distn[i]["acName"]}
+                                
                             </option>
-                        ))}
+                            ))}
 
                     </select>
                     </div>
