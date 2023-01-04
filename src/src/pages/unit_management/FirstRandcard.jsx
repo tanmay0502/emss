@@ -102,6 +102,7 @@ export default function FirstRandcard() {
 
 		const data = await response.json();
 		if (response.status == 200) {
+
 			navigate(`/session/unitmanagement/firstrandomization/${id}/${Suppl}`)
 		}
 

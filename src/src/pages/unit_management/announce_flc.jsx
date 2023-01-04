@@ -107,8 +107,8 @@ function Announce_Flc() {
             const data = await response.json();
             console.log(data)
             if (response.status === 200) {
-                let distList = formatRealm2(data['data'],window.sessionStorage.getItem("sessionToken").substring(0, 2),"","","");
-                console.log("adi",distList)
+                let distList = formatRealm2(data['data'], window.sessionStorage.getItem("sessionToken").substring(0, 2), "", "", "");
+                console.log("adi", distList)
                 setDistrict(distList);
             }
         } catch (error) {
@@ -140,30 +140,30 @@ function Announce_Flc() {
 
 
 
+    async function getList() {
+
+        try {
+            const response = await fetch(
+                `${process.env.REACT_APP_API_SERVER}/warehouse/listWarehouses`,
+                {
+                    method: "POST",
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                    }),
+                })
+
+            const data = await response.json();
+            setDetails(data["data"])
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
     useEffect(
         () => {
-            async function getList() {
-
-                try {
-                    const response = await fetch(
-                        `${process.env.REACT_APP_API_SERVER}/warehouse/listWarehouses`,
-                        {
-                            method: "POST",
-                            credentials: "include",
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify({
-                            }),
-                        })
-
-                    const data = await response.json();
-                    setDetails(data["data"])
-
-                } catch (error) {
-                    console.log(error)
-                }
-            }
             let timer1 = setTimeout(() => getList(), 1 * 1000);
 
             return () => {

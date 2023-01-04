@@ -136,7 +136,7 @@ function App() {
 						/>
 						<Route
 							path="/session/unitmanagement/viewunit/:unitId"
-							element={<Viewunit/>}
+							element={<Viewunit />}
 						/>
 						<Route
 							path="/session/unitmanagement/second_randomisation_scheduling"

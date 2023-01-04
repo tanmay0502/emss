@@ -76,6 +76,8 @@ export default function HomePageCardBottom({ state, dist }) {
 			navigate(`/session/unitmanagement/schedule_tna_list`);
 		} else if (cardVal === "Physical Verification") {
 			navigate(`/session/unitmanagement/schedule_varification_list`);
+		} else if (cardVal === "CDP Scheduling") {
+			navigate(`/session/unitmanagement/Schedule_List_CDP`);
 		}
 	};
 
@@ -108,6 +110,9 @@ export default function HomePageCardBottom({ state, dist }) {
 					</option>
 					<option className="bg-white text-black" value="Physical Verification">
 						Physical Verification
+					</option>
+					<option className="bg-white text-black" value="CDP Scheduling">
+						CDP Scheduling
 					</option>
 				</select>
 

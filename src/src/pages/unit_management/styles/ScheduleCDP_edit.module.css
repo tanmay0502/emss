@@ -133,6 +133,11 @@
   margin: 5% 15%;
 }
 
+.div11 {
+  grid-area: 4 / 2 / 5 / 3;
+  margin: 5% 15%;
+  width: 176%;
+}
 
 
 .submitBtn1 {

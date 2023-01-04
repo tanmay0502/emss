@@ -147,10 +147,10 @@ export default function FLCList() {
                     </div>
                 </div>
             </div> : <></>}
-            {isDetail === 0 ?
+            {(tableData != []) ?
                 <div class={styles.table}>
                     <DynamicDataTable
-                        rows={tableData.length !== 0 ? tableData : [{ "": "No FLC scheduled" }]}
+                        rows={tableData}
                         fieldsToExclude={["FLC ID"]}
                         buttons={[]}
                         onClick={(event, row) => {

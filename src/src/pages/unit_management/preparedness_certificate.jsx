@@ -17,6 +17,7 @@ export default function Prepared_Certificate(props) {
     const [listElections, setListElections] = useState([])
     const [modalIsOpen_Preparedness_Certificate, setIsOpen_Preparedness_Certificate] = React.useState(false);
 
+
     function openModal_Preparedness_Certificate() {
         setIsOpen_Preparedness_Certificate(true);
     }
@@ -62,7 +63,7 @@ export default function Prepared_Certificate(props) {
             );
 
             const data = await response.json();
-            console.log(data, "datatatatat")
+            console.log(data, "Harshith")
             if (response.status == 200) {
                 setPhotoFileData(data['data'])
             }
@@ -97,7 +98,6 @@ export default function Prepared_Certificate(props) {
                     },
                 })
             const data = await response.json();
-            console.log(data, 'datatatt')
             if (data.length) {
                 setListElections(data)
             }
@@ -168,7 +168,7 @@ export default function Prepared_Certificate(props) {
     }
 
 
-    async function GetRecentPreparedness(electionID) {
+    async function GetRecentPreparedness() {
         try {
             const response = await fetch(
                 `${process.env.REACT_APP_API_SERVER}/unit/getRecentPreparedness`,
@@ -179,18 +179,18 @@ export default function Prepared_Certificate(props) {
                     },
                     credentials: 'include',
                     body: JSON.stringify({
-                        "electionID": electionID
+                        "electionID": electionid
                     }),
                 }
             );
             const data = await response.json();
-            console.log(data, "i want data")
+
             if (response.status == 200) {
-                let date = data['data'][0]['preparenesscertificateuploadedon'].split('T')[0];
-                let uploadedtime = data['data'][0]['preparenesscertificateuploadedon'].split('T')[1].slice(0, 8);
+                let date = data ? data['data'][0]['preparenesscertificateuploadedon'].split('T')[0] : '';
+                let uploadedtime = data ? data['data'][0]['preparenesscertificateuploadedon'].split('T')[1].slice(0, 8) : '';
                 console.log(date)
                 settime(uploadedtime)
-                setShow(date.slice(8) + '-' + date.slice(5, 7) + "-" + date.slice(0, 4))
+                setShow(data ? date.slice(8) + '-' + date.slice(5, 7) + "-" + date.slice(0, 4) : '')
                 setID(data['data'][0]['flcid']);
             }
         } catch (err) {
@@ -211,7 +211,9 @@ export default function Prepared_Certificate(props) {
         [electionid]
     );
 
-    console.log(electionid, "electionidelectionidelectionid")
+
+
+
 
 
     const handleInputChange = (e) => {
@@ -254,6 +256,13 @@ export default function Prepared_Certificate(props) {
                 </div>
                 <div className={styles.Upload}>
                     {uploaded != -1 &&
+                        <div className="flex" style={{ paddingTop: '2px' }}>
+                            <div onClick={openModal_Preparedness_Certificate} style={{ fontSize: "15px" }}>  <u> View Preparedness Certificate </u>  </div>
+                            <div className="pl-2" style={{ fontSize: "15px" }}>Uploaded on {show} {time}</div>
+                        </div>
+                    }
+
+                    {uploaded == -1 && show != '' && time != '' &&
                         <div className="flex" style={{ paddingTop: '2px' }}>
                             <div onClick={openModal_Preparedness_Certificate} style={{ fontSize: "15px" }}>  <u> View Preparedness Certificate </u>  </div>
                             <div className="pl-2" style={{ fontSize: "15px" }}>Uploaded on {show} {time}</div>

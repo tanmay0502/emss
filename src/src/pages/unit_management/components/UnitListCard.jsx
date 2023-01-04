@@ -70,7 +70,8 @@ const UnitListCard = ({ updateChecked, bgColor, ReplacedUnitID, data }) => {
   };
 
 
-
+  const User_ID = sessionStorage.getItem("sessionToken");
+  const Role = User_ID.substring(8)
   const [mfg, setMFG] = useState('')
   const [unitType, setUnitType] = useState('');
   const [model, setModel] = useState('')
@@ -325,6 +326,12 @@ const UnitListCard = ({ updateChecked, bgColor, ReplacedUnitID, data }) => {
       setTableData(sorted);
     } else {
       setTableData(tableData);
+    }
+  }
+
+  const callfunction = (name, id) => {
+    if (Role == 'RO' || Role == 'PCRO') {
+      updateChecked(name, id)
     }
   }
 
@@ -641,7 +648,7 @@ const UnitListCard = ({ updateChecked, bgColor, ReplacedUnitID, data }) => {
 
                 return (
                   <>
-                    <tr style={{ backgroundColor: ((ReplacedUnitID.includes(val['ID'])) ? bgColor : ''), hover: "black" }} onClick={() => { updateChecked("Row", val['ID']) }} >
+                    <tr style={{ backgroundColor: ((ReplacedUnitID.includes(val['ID'])) ? bgColor : ''), hover: "black" }} onClick={() => { callfunction("Row", val['ID']) }} >
                       <td className="text-black text-sm">{val['ID']}</td>
                       <td className="text-black text-sm">{val['Status']}</td>
                       <td className="text-black text-sm">{val['Remarks']}</td>

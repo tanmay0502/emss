@@ -62,14 +62,15 @@ export default function UnitList() {
       });
 
       let Input = await response.json();
+      console.log(Input, "Input", "In Poll")
       if (response.status == 200) {
-        if (Input && Input["data"] && Input['data'].length) {
-          setData(Input['data']);
-        }
-        else {
-          setData([]);
-        }
+        // if (Input && Input["data"] && Input['data'].length) {
+        setData(Input['data']);
       }
+      else {
+        setData([]);
+      }
+      // }
     } catch (err) {
       console.log(err)
     }
@@ -78,7 +79,7 @@ export default function UnitList() {
 
   useEffect(
     () => {
-      let timer1 = setTimeout(() => getData(), 1 * 1000);
+      let timer1 = setTimeout(() => getData(), 1 * 500);
       return () => {
         clearTimeout(timer1);
       };
@@ -100,14 +101,16 @@ export default function UnitList() {
       });
 
       let Input = await response.json();
+      console.log(Input, "Input", "In Reserve")
       if (response.status == 200) {
-        if (Input && Input["data"] && Input['data'].length) {
-          setData2(Input['data']);
-        }
-        else {
-          setData2([]);
-        }
+        // if (Input && Input["data"] && Input['data'].length) {
+        setData2(Input['data']);
+        // }
       }
+      else {
+        setData2([]);
+      }
+
     } catch (err) {
       console.log(err)
     }
@@ -152,7 +155,7 @@ export default function UnitList() {
 
   // useEffect(
   //   () => {
-  //     let timer1 = setTimeout(() => getData3(), 1 * 1000);
+  //     let timer1 = setTimeout(() => getData3(), 1 * 1500);
   //     return () => {
   //       clearTimeout(timer1);
   //     };
@@ -869,44 +872,57 @@ const ReplacementForm = ({ flag, data2, initialInputValuesReplace, setInputValue
   }
 
 
-  useEffect(() => {
-    // if (isPageLoaded == 0) {
-    getData()
-    //   setIsPageLoaded(1)
-    // }
-  }, [])
+  useEffect(
+    () => {
+      let timer1 = setTimeout(() => getData(), 1 * 1000);
+      return () => {
+        clearTimeout(timer1);
+      };
+    },
+    []
+  );
+
+
 
   function callpollingstation() {
     (async () => {
+
       try {
-        const response = await fetch(`${baseUrl}/fetch-polling-stations/`, {
+        const response = await fetch(`${baseUrl}/fetch-polling-stations`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          credentials: "include"
+          credentials: "include",
+          body: JSON.stringify({
+          })
         });
-        const Data = await response.json();
+        const data = await response.json();
+        console.log(data, 'data')
         // if (response.status === 200) {
-        //   if (Data.hasOwnProperty(district_id)) {
-        //     setAssemblyList(Data[district_id]);
+        //   if (data.hasOwnProperty('data')) {
+        //     setAssemblyList(data['data'][ACCode]['ps']);
         //   }
         // }
+        // else {
+        //   setAssemblyList([]);
+        // }
       } catch (err) {
+
         alert(`Error occured: ${err}`);
       }
     })();
   }
 
-  useEffect(() => {
-    if (isPageLoaded1 == 0) {
-      callpollingstation()
-      setIsPageLoaded1(1)
-    }
-  })
 
 
   const handleFormSubmit = async (e) => {
     let confirmation = window.confirm("Are you sure you have selected all the Unit")
     if (confirmation === true) {
+      console.log({
+        "replacementLevel": inputValuesReplace['replacementlevel'],
+        "lstReplacingUnits": [
+          Added
+        ]
+      })
       try {
         const response = await fetch(`${baseUrl}/replace_unit`, {
           method: "POST",
@@ -934,6 +950,9 @@ const ReplacementForm = ({ flag, data2, initialInputValuesReplace, setInputValue
     else { }
   };
 
+  const User_ID = sessionStorage.getItem("sessionToken");
+  const Role = User_ID.substring(8)
+
   const onFormSubmit = async (e) => {
     e.preventDefault();
     handleFormSubmit()
@@ -952,6 +971,7 @@ const ReplacementForm = ({ flag, data2, initialInputValuesReplace, setInputValue
                 </label>
                 <div className="relative text-[#494A59]">
                   <select
+                    disabled={(Role == 'RO' || Role == 'PCRO') ? false : true}
                     className="relative h-10 w-full rounded-md border p-2"
                     name="pollingstation"
                     placeholder="Select"
@@ -975,6 +995,7 @@ const ReplacementForm = ({ flag, data2, initialInputValuesReplace, setInputValue
                 </label>
                 <div className="relative text-[#494A59]">
                   <select
+                    disabled={(Role == 'RO' || Role == 'PCRO') ? false : true}
                     className="relative h-10 w-full rounded-md border p-2"
                     name="replacementlevel"
                     placeholder="Select"
@@ -984,7 +1005,7 @@ const ReplacementForm = ({ flag, data2, initialInputValuesReplace, setInputValue
                     {" "}
                     <option hidden>Select</option>
                     <option>Commissioning</option>
-                    <option>Distribution</option>
+                    <option>Dispersal</option>
                     <option>Mock Polling</option>
                     <option>Actual Polling</option>
                   </select>
@@ -1083,6 +1104,7 @@ const ReplacementForm = ({ flag, data2, initialInputValuesReplace, setInputValue
                       <td className="text-black text-sm">
                         <select
                           required
+                          disabled
                           className="relative h-10 !w-80  rounded-md border p-2"
                           placeholder="Replacing Unit ID"
                           name="replacingUnitId"
@@ -1095,6 +1117,7 @@ const ReplacementForm = ({ flag, data2, initialInputValuesReplace, setInputValue
                       <td className="text-black text-sm">
                         <select
                           required
+                          disabled
                           className="relative h-10 !w-80  rounded-md border p-2"
                           placeholder="Type Of Defect"
                           name="defectType"

@@ -27,7 +27,8 @@ function ScheduleCDP() {
     const [manufacture, setmanufacture] = useState('')
     const userID = sessionStorage.getItem("sessionToken");
     const [currState, setCurrState] = useState(userID.slice(0, 2));
-
+    const User_ID = sessionStorage.getItem("sessionToken");
+    const Role = User_ID.substring(8)
 
     console.log({
         "CDPIncharge": CDPIncharge,
@@ -135,6 +136,16 @@ function ScheduleCDP() {
         setelectionid(Number(listElections[e.target.value]['election_id']));
     };
 
+    useEffect(
+        () => {
+            if (Role == 'RO') {
+                if (District.length)
+                    setac(District[0][2][0])
+            }
+        },
+        [District]
+    );
+
 
 
 
@@ -233,26 +244,39 @@ function ScheduleCDP() {
 
                 <div class={styles.parent}>
                     <div class={styles.div1}>
-                        <p> AC</p>
-                        <select
-                            disabled={electionid !== -1 ? false : true}
-                            required
-                            name=""
-                            id="ac"
-                            placeholder='Select AC'
-                            value={ac}
-                            onChange={(e) => { setac(e.target.value) }}
-                        >
-                            <option value="" hidden >
-                                Select
-                            </option>
-                            {District.length > 0 && District.map((val, ind) => (
-                                <option value={val[2][0]} >
-                                    {val[2][1]}
+                        <p> AC</p>{Role == 'PCRO' ?
+
+                            <select
+                                disabled={electionid !== -1 ? false : true}
+                                required
+                                name=""
+                                id="ac"
+                                placeholder='Select AC'
+                                value={ac}
+                                onChange={(e) => { setac(e.target.value) }}
+                            >
+                                <option value="" hidden >
+                                    Select
                                 </option>
-                            ))
-                            }
-                        </select>
+                                {District.length > 0 && District.map((val, ind) => (
+                                    <option value={val[2][0]} >
+                                        {val[2][1]}
+                                    </option>
+                                ))
+                                }
+                            </select> : ((Role == 'RO') ?
+                                <input
+                                    disabled={true}
+                                    type="text"
+                                    required
+                                    name=""
+                                    id="incharge"
+                                    placeholder='Enter UserID'
+                                    value={District.length ? District[0][2][1] : ''}
+                                    onChange={(e) => { setac(e.target.value) }}
+                                >
+                                </input> : '')
+                        }
                     </div>
 
                     <div class={styles.div2}>

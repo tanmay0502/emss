@@ -159,16 +159,11 @@ function FlcEdit() {
 
     useEffect(
         () => {
-
-            setIsLoading(1);
-
-            let timer1 = setTimeout(() => getListN(), 1 * 1000);
-
+            let timer1 = setTimeout(() => getListN(), 1 * 500);
             return () => {
                 clearTimeout(timer1);
             };
         },
-
         []
     );
 
@@ -201,16 +196,11 @@ function FlcEdit() {
 
     useEffect(
         () => {
-
-            setIsLoading(1);
-
             let timer1 = setTimeout(() => getListD(), 1 * 1000);
-
             return () => {
                 clearTimeout(timer1);
             };
         },
-
         []
     );
     async function getListK() {
@@ -239,11 +229,7 @@ function FlcEdit() {
     }
     useEffect(
         () => {
-
-            setIsLoading(1);
-
-            let timer1 = setTimeout(() => getListK(), 1 * 1000);
-
+            let timer1 = setTimeout(() => getListK(), 1 * 1500);
             return () => {
                 clearTimeout(timer1);
             };
@@ -390,7 +376,7 @@ function FlcEdit() {
 
     useEffect(
         () => {
-            let timer1 = setTimeout(() => getpreparednesscertificate(), 1 * 1000);
+            let timer1 = setTimeout(() => getpreparednesscertificate(), 1 * 1500);
             return () => {
                 clearTimeout(timer1);
             };
@@ -437,7 +423,7 @@ function FlcEdit() {
 
     useEffect(
         () => {
-            let timer1 = setTimeout(() => getflcreport(), 1 * 1000);
+            let timer1 = setTimeout(() => getflcreport(), 1 * 500);
             return () => {
                 clearTimeout(timer1);
             };
@@ -536,7 +522,7 @@ function FlcEdit() {
                         "startDate": startdate ? startdate.slice(8) + '-' + startdate.slice(5, 7) + "-" + startdate.slice(0, 4) : '',
                         "endDate": enddate ? enddate.slice(8) + '-' + enddate.slice(5, 7) + "-" + enddate.slice(0, 4) : '',
                         "flcVenue": flcvenue,
-                        "flcassemblywarehouse":FLC_Assembly_Warehouse? FLC_Assembly_Warehouse:'',
+                        "flcassemblywarehouse": FLC_Assembly_Warehouse ? FLC_Assembly_Warehouse : '',
                         "districtstrongroom": District_Strong_Room ? District_Strong_Room : '',
                         "defectivewarehouse": Defective_Warehouse ? Defective_Warehouse : '',
                     }),
@@ -589,7 +575,7 @@ function FlcEdit() {
                         "flcSupervisorEmailId": flcsupervisoremailid,
                         "numEngineers": numengineers,
                         "flcVenue": flcvenue,
-                        "flcassemblywarehouse":FLC_Assembly_Warehouse ,
+                        "flcassemblywarehouse": FLC_Assembly_Warehouse,
                         "districtstrongroom": District_Strong_Room,
                         "defectivewarehouse": Defective_Warehouse
                     }),
@@ -1070,9 +1056,11 @@ function FlcEdit() {
                             <select
                                 onChange={(e) => { setFLC_Assembly_Warehouse(e.target.value) }}
                                 disabled={edit === 'CEO' || edit === 'DEO' ? false : true}
+                                value={FLC_Assembly_Warehouse}
+                                placeholder='Select FLC Assembly Warehouse'
                             >
                                 {" "}
-                                <option hidden>{FLC_Assembly_Warehouse}</option>
+                                <option hidden>select</option>
                                 {ListFLC_Assembly_Warehouse &&
                                     ListFLC_Assembly_Warehouse.map((val, ind) => {
                                         return (<>
@@ -1086,9 +1074,11 @@ function FlcEdit() {
                             <select
                                 onChange={(e) => { setDistrict_Strong_Room(e.target.value) }}
                                 disabled={edit === 'CEO' || edit === 'DEO' ? false : true}
+                                value={District_Strong_Room}
+                                placeholder='Select District Strong Room'
                             >
                                 {" "}
-                                <option hidden>{District_Strong_Room}</option>
+                                <option hidden>select</option>
                                 {ListDistrict_Strong_Room &&
                                     ListDistrict_Strong_Room.map((val, ind) => {
                                         return (<>
@@ -1102,9 +1092,11 @@ function FlcEdit() {
                             <select
                                 onChange={(e) => { setDefective_Warehouse(e.target.value) }}
                                 disabled={edit === 'CEO' || edit === 'DEO' ? false : true}
+                                value={Defective_Warehouse}
+                                placeholder='Select Defective Warehouse'
                             >
                                 {" "}
-                                <option hidden>{Defective_Warehouse}</option>
+                                <option hidden>select</option>
                                 {ListDefective_Warehouse &&
                                     ListDefective_Warehouse.map((val, ind) => {
                                         return (<>
@@ -1246,12 +1238,6 @@ function FlcEdit() {
                                 <button style={{ color: "white", }} onClick={closeModal_flcreport}>Close</button>
                             </div>
                         </Modal>
-
-
-
-
-
-
                     </div>
                 </div>
 

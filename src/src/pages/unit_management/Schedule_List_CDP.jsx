@@ -18,7 +18,8 @@ export default function Schedule_List_CDP() {
     const [tableData, setTableData] = useState([])
     const [cdp, setcdp] = useState([])
     const [IsLoading, setIsLoading] = useState(0);
-
+    const User_ID = sessionStorage.getItem("sessionToken");
+    const Role = User_ID.substring(8)
 
     async function getlistCDP() {
         try {
@@ -70,7 +71,7 @@ export default function Schedule_List_CDP() {
                     'CDP Incharge': val['cdpincharge'],
                     'Manufacturer': val['manufacturer'],
                     'Process': val['process'],
-                    "CDP Period": (val['startdate'] && val['enddate']) ? val['startdate'].split('T')[0] + " - " + val['enddate'].split('T')[0] : ""
+                    "CDP Period": (val['startdate'] && val['enddate']) ? val['startdate'].split('T')[0].slice(8) + "-" + val['startdate'].split('T')[0].slice(5, 7) + '-' + val['startdate'].split('T')[0].slice(0, 4) + " - " + val['enddate'].split('T')[0].slice(8) + "-" + val['enddate'].split('T')[0].slice(5, 7) + '-' + val['enddate'].split('T')[0].slice(0, 4) : ''
                 }
             })
             setTableData(data)
@@ -96,7 +97,7 @@ export default function Schedule_List_CDP() {
         [setIsLoading]
     );
 
-    console.log(tableData, 'tableData', cdp)
+    console.log(tableData, 'tableData', cdp, isDetail)
 
     return (
         <div className={`${styles.myWrapper1}`} style={{ position: "relative", height: "100%" }}>
@@ -104,11 +105,14 @@ export default function Schedule_List_CDP() {
                 <h4 className='text-white'>Schedule CDP List</h4>
 
                 <div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center" }}>
-                    <button className='createRequestBtn' onClick={() => {
-                        window.location.pathname = "/session/unitmanagement/ScheduleCDP";
-                    }}>
-                        Schedule CDP
-                    </button>
+                    {(Role == 'RO' || Role == 'PCRO') &&
+
+                        <button className='createRequestBtn' onClick={() => {
+                            window.location.pathname = "/session/unitmanagement/ScheduleCDP";
+                        }}>
+                            Schedule CDP
+                        </button>
+                    }
 
                     <div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center", background: "#F9FBFF", borderRadius: "10px", padding: "7.5px 15px 7.5px 0", fontSize: "0.8em" }}>
                         <SearchInputElement style={{ margin: "0 7.5px", width: "20px" }} />
@@ -137,11 +141,10 @@ export default function Schedule_List_CDP() {
                     </div>
                 </div>
             </div> : <></>}
-            {isDetail === 0 ?
+            {(tableData != []) ?
                 <div class={styles.table}>
-
                     <DynamicDataTable
-                        rows={tableData.length !== 0 ? tableData : [{ "": "No CDP scheduled" }]}
+                        rows={tableData}
                         fieldsToExclude={["CDP ID"]}
                         buttons={[]}
                         onClick={(event, row) => {
@@ -149,7 +152,7 @@ export default function Schedule_List_CDP() {
                         }}
                     />
                 </div>
-                : ''
+                : <div style={{ background: 'black' }}>'hiiiiiiiiiiiiiiii'</div>
             }
         </div>
     )

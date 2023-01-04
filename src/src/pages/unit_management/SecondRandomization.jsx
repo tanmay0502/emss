@@ -12,12 +12,7 @@ import {
 import { ReactComponent as ChevronDown } from "../../assets/ChevronDown.svg";
 const userID = sessionStorage.getItem("sessionToken");
 const baseUrl = `${process.env.REACT_APP_API_SERVER}/unit`;
-const URL = window.location.href;
-const arr = URL.split("/");
-const param = arr[arr.length - 2];
-const arr1 = param.split("=");
-const randomizationid = arr1[0];
-const suppl = arr[arr.length - 1] == 'Yes' ? true : false;
+
 
 
 
@@ -48,6 +43,12 @@ export default function SecondRandomization() {
 
 // 2nd Randomisation Card
 const SecondRandomisationForm = ({ isVisible }) => {
+    const URL = window.location.href;
+    const arr = URL.split("/");
+    // const param = arr[arr.length - 2];
+    // const arr1 = param.split("=");
+    const randomizationid = (arr.length) ? arr[arr.length - 2] : '';
+    const suppl = (arr.length) ? ((arr[arr.length - 1]) == 'Yes' ? true : false) : '';
     const [ACList, setACList] = useState({});
     const [ACCode, setACCode] = useState('');
 
@@ -92,12 +93,12 @@ const SecondRandomisationForm = ({ isVisible }) => {
     const [assemblyList, setAssemblyList] = useState([]);
     const [assemblyDetails, setAssemblyDetails] = useState({});
     var secondForm = "";
-    
+
     const handleInputChange = (e) => {
         const { name, value, dataset } = e.currentTarget;
         const update = [...assemblyData];
         update[dataset.id][name] = value;
-	if (name === 'ps_no') {
+        if (name === 'ps_no') {
             const tmp = assemblyList.find(obj => obj['ps_no'] == value);
             update[dataset.id]['ps_name'] = tmp['ps_name'];
         }
@@ -114,9 +115,9 @@ const SecondRandomisationForm = ({ isVisible }) => {
             {
                 ps_no: "",
                 ps_name: "",
-                cu_count: "0",
+                cu_count: 0,
                 bu_count: "0",
-                vt_count: "0",
+                vt_count: 0,
             },
             ...assemblyData.slice(id + 1),
         ]);
@@ -133,6 +134,11 @@ const SecondRandomisationForm = ({ isVisible }) => {
     const handleFormSubmit = async (e) => {
         let confirmation = window.confirm("Are you sure you have selected all the Unit")
         if (confirmation === true) {
+            console.log({
+                "units_requirement": assemblyData,
+                "ac_no": ACCode,
+                "randomizationid": randomizationid
+            })
             setIsSubmitted(false);
             // const units_requirement = assemblyList
             //     .filter((d) => d.ps_no)
@@ -152,7 +158,7 @@ const SecondRandomisationForm = ({ isVisible }) => {
                     body: JSON.stringify({
                         "units_requirement": assemblyData,
                         "ac_no": ACCode,
-                        randomizationid
+                        "randomizationid": randomizationid
                     }),
                 });
                 const data = await response.json();
@@ -160,9 +166,9 @@ const SecondRandomisationForm = ({ isVisible }) => {
 
                     setRandomisedData(data);
                     setIterationIndex(data.length);
-		    // if (!suppl) {
-		    // 	setAssemblyData(units_requirement);
-		    // }
+                    // if (!suppl) {
+                    // 	setAssemblyData(units_requirement);
+                    // }
                     setIsSubmitted(true);
                     // pass the data to child component & re-render
                 } else {
@@ -197,35 +203,35 @@ const SecondRandomisationForm = ({ isVisible }) => {
                     const data = await response.json();
                     if (response.status === 200) {
                         if (data.hasOwnProperty('data')) {
-			    setAssemblyDetails({
-				'bu_no': data['data'][ACCode]['bu_no'],
-				'ac_name': data['data'][ACCode]['ac_name'],
-				'randomized': data['data'][ACCode]['randomized']
-			    });
-			    if (!suppl) {
-				const tempdata=[];
-				const keys = Object.keys(data['data'][ACCode]['ps']);
-				for (let i = 0; i < keys.length; i++) {
-				    tempdata.push(
-					{
-					    ps_no:data['data'][ACCode]['ps'][keys[i]]['ps_no'],
-					    ps_name:data['data'][ACCode]['ps'][keys[i]]['ps_name'],
-					    cu_count: "1",
-					    bu_count: assemblyDetails['bu_no'],
-					    vt_count: "1"
-					}
-				    );
-				}
-				setAssemblyData(tempdata);
-			    } else {
-				setAssemblyData([{
-				    ps_no:"",
-				    ps_name:"",
-				    bu_count:"0",
-				    cu_count:"0",
-				    vt_count:"0"
-				}]);
-			    }
+                            setAssemblyDetails({
+                                'bu_no': data['data'][ACCode]['bu_no'],
+                                'ac_name': data['data'][ACCode]['ac_name'],
+                                'randomized': data['data'][ACCode]['randomized']
+                            });
+                            if (!suppl) {
+                                const tempdata = [];
+                                const keys = Object.keys(data['data'][ACCode]['ps']);
+                                for (let i = 0; i < keys.length; i++) {
+                                    tempdata.push(
+                                        {
+                                            ps_no: data['data'][ACCode]['ps'][keys[i]]['ps_no'],
+                                            ps_name: data['data'][ACCode]['ps'][keys[i]]['ps_name'],
+                                            cu_count: 1,
+                                            bu_count: assemblyDetails['bu_no'],
+                                            vt_count: 1
+                                        }
+                                    );
+                                }
+                                setAssemblyData(tempdata);
+                            } else {
+                                setAssemblyData([{
+                                    ps_no: "",
+                                    ps_name: "",
+                                    bu_count: "0",
+                                    cu_count: 0,
+                                    vt_count: 0
+                                }]);
+                            }
                             setAssemblyList(data['data'][ACCode]['ps']);
                         }
                     }
@@ -243,9 +249,9 @@ const SecondRandomisationForm = ({ isVisible }) => {
             setIsFetching(false);
         }
     }, [isVisible, ACCode]);
-    
+
     if (!suppl && !isFetching && assemblyList && assemblyList.length > 0) {
-	secondForm = (
+        secondForm = (
             <div className="group mb-5 flex w-full justify-evenly items-center">
                 <div className="mr-8 flex w-3/8 flex-col text-left">
                     <label className=" w-full text-base">
@@ -257,7 +263,7 @@ const SecondRandomisationForm = ({ isVisible }) => {
                             type="number"
                             name="cu_count"
                             placeholder="CU"
-                            value={assemblyList.length-1}
+                            value={assemblyList.length - 1}
                             disabled
                         />
                     </div>
@@ -274,7 +280,7 @@ const SecondRandomisationForm = ({ isVisible }) => {
                             name="bu_count"
                             placeholder="BU"
                             title="Total BUs"
-                            value={assemblyDetails['bu_no'] ? (assemblyList.length-1) * assemblyDetails['bu_no'] : 0}
+                            value={assemblyDetails['bu_no'] ? (assemblyList.length - 1) * assemblyDetails['bu_no'] : 0}
                             disabled
                         />
                         <input
@@ -283,7 +289,7 @@ const SecondRandomisationForm = ({ isVisible }) => {
                             name="cu_count"
                             placeholder="CU"
                             title="Total CUs"
-                            value={assemblyList.length-1}
+                            value={assemblyList.length - 1}
                             disabled
                         />
                         <input
@@ -292,95 +298,95 @@ const SecondRandomisationForm = ({ isVisible }) => {
                             name="vt_count"
                             placeholder="VT"
                             title="Total VTs"
-                            value={assemblyList.length-1}
+                            value={assemblyList.length - 1}
                             disabled
                         />
                     </div>
                 </div>
             </div>
         );
-    }else if (suppl && !isFetching && assemblyList && assemblyList.length > 0) {
-	console.log(assemblyData,"assemblyData");
-	secondForm = (
-	    assemblyData.map((data, id) => (
-		<div
-		    className="group mb-5 flex w-full justify-evenly"
-		    key={id}
+    } else if (suppl && !isFetching && assemblyList && assemblyList.length > 0) {
+        console.log(assemblyData, "assemblyData");
+        secondForm = (
+            assemblyData.map((data, id) => (
+                <div
+                    className="group mb-5 flex w-full justify-evenly"
+                    key={id}
                 >
-		    <div className="-mr-16 hidden w-10 flex-col items-center justify-end group-hover:flex">
+                    <div className="-mr-16 hidden w-10 flex-col items-center justify-end group-hover:flex">
                         <button
-			    className="mb-0.5 inline-flex h-[22px] w-[22px] items-center justify-center !rounded-full border-[1px] border-rose-600 bg-white p-0.5 text-red-600 hover:border-dashed hover:bg-rose-50"
-			    onClick={handleSubtractButtonClick}
-			    data-id={id}
+                            className="mb-0.5 inline-flex h-[22px] w-[22px] items-center justify-center !rounded-full border-[1px] border-rose-600 bg-white p-0.5 text-red-600 hover:border-dashed hover:bg-rose-50"
+                            onClick={handleSubtractButtonClick}
+                            data-id={id}
                         >
-			    <svg
+                            <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
                                 viewBox="0 0 24 24"
                                 strokeWidth={1.5}
                                 stroke="currentColor"
                                 className="h-6 w-6"
-			    >
+                            >
                                 <path
-				    strokeLinecap="round"
-				    strokeLinejoin="round"
-				    d="M19.5 12h-15"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M19.5 12h-15"
                                 />
-			    </svg>
+                            </svg>
                         </button>
                         <button
-			    className="inline-flex h-[22px] w-[22px] items-center justify-center !rounded-full border-[1px]  border-lime-600 bg-white p-0.5 text-lime-600 hover:border-dashed hover:bg-lime-50"
-			    onClick={handleAddButtonClick}
-			    data-id={id}
+                            className="inline-flex h-[22px] w-[22px] items-center justify-center !rounded-full border-[1px]  border-lime-600 bg-white p-0.5 text-lime-600 hover:border-dashed hover:bg-lime-50"
+                            onClick={handleAddButtonClick}
+                            data-id={id}
                         >
-			    <svg
+                            <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
                                 viewBox="0 0 24 24"
                                 strokeWidth={1.5}
                                 stroke="currentColor"
                                 className="h-6 w-6"
-			    >
+                            >
                                 <path
-				    strokeLinecap="round"
-				    strokeLinejoin="round"
-				    d="M12 4.5v15m7.5-7.5h-15"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M12 4.5v15m7.5-7.5h-15"
                                 />
-			    </svg>
+                            </svg>
                         </button>
-		    </div>
-		    <div className="-mr-16 w-10 group-hover:hidden"></div>
-		    <div className="mr-8 flex w-1/6 flex-col text-left">
+                    </div>
+                    <div className="-mr-16 w-10 group-hover:hidden"></div>
+                    <div className="mr-8 flex w-1/6 flex-col text-left">
                         <label className="mb-2 w-full text-base">
-			    Polling Station {id + 1}
-			    <span className="text-red-600"> *</span>
+                            Polling Station {id + 1}
+                            <span className="text-red-600"> *</span>
                         </label>
                         <div className="relative text-gray-800">
-			    <select
+                            <select
                                 className="h-10 w-full rounded-md p-2 px-5 placeholder:text-gray-400 focus-within:border-primary focus:border-primary"
                                 name="ps_no"
                                 placeholder="Select"
                                 value={data.ps_no}
                                 onChange={handleInputChange}
                                 data-id={id}
-			    >
+                            >
                                 {" "}
                                 <option hidden>Select</option>
                                 {assemblyList.map((item) => (
-				    <option value={item.ps_no}>{item.ps_name}  ({item.ps_no})</option>
+                                    <option value={item.ps_no}>{item.ps_name}  ({item.ps_no})</option>
                                 ))}
-			    </select>
-			    <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1/2" />
+                            </select>
+                            <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1/2" />
                         </div>
-		    </div>
-		    
-		    <div className="flex w-3/8 flex-col text-left">
+                    </div>
+
+                    <div className="flex w-3/8 flex-col text-left">
                         <label className="mb-2 w-full text-base">
-			    Unit Count {"(BU  CU  VT)"}
-			    <span className="text-red-600"> *</span>
+                            Unit Count {"(BU  CU  VT)"}
+                            <span className="text-red-600"> *</span>
                         </label>
                         <div className="flex w-full justify-between gap-2 text-gray-800">
-			    <input
+                            <input
                                 className="h-10 w-1/3 rounded-md border-0 bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
                                 type="number"
                                 name="bu_count"
@@ -388,8 +394,8 @@ const SecondRandomisationForm = ({ isVisible }) => {
                                 value={data.bu_count}
                                 onChange={handleInputChange}
                                 data-id={id}
-			    />
-			    <input
+                            />
+                            <input
                                 className="h-10 w-1/3 rounded-md border-0 bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
                                 type="number"
                                 name="cu_count"
@@ -397,8 +403,8 @@ const SecondRandomisationForm = ({ isVisible }) => {
                                 value={data.cu_count}
                                 onChange={handleInputChange}
                                 data-id={id}
-			    />
-			    <input
+                            />
+                            <input
                                 className="h-10 w-1/3 rounded-md border-0 bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
                                 type="number"
                                 name="vt_count"
@@ -406,13 +412,13 @@ const SecondRandomisationForm = ({ isVisible }) => {
                                 value={data.vt_count}
                                 onChange={handleInputChange}
                                 data-id={id}
-			    />
+                            />
                         </div>
-		    </div>
+                    </div>
                 </div>
-	    )));
-    }else{
-	secondForm=<h4 style={{'textAlign': 'center'}}>{pollingStationDataMessage}</h4>
+            )));
+    } else {
+        secondForm = <h4 style={{ 'textAlign': 'center' }}>{pollingStationDataMessage}</h4>
     }
 
 
@@ -421,7 +427,7 @@ const SecondRandomisationForm = ({ isVisible }) => {
             {isVisible && (
                 <div className="mb-10 flex h-auto w-full flex-col items-center justify-center overflow-hidden rounded-[25px] bg-white pb-[25px]">
                     <div className={styles.unit_list_header}>
-                        <h4>Second {suppl?"Supplementary ":""}Randomisation</h4>
+                        <h4>Second {suppl ? "Supplementary " : ""}Randomisation</h4>
                     </div>
                     <div className="mt-2 w-full bg-white p-6">
                         <div className="flex flex-col">
@@ -442,7 +448,7 @@ const SecondRandomisationForm = ({ isVisible }) => {
                                 </div>
 
                             </div>
-			    {secondForm}
+                            {secondForm}
                         </div>
                     </div>
                     <button
@@ -474,10 +480,30 @@ const SecondRandomisationOutput = ({
     fetchNewIterations,
     ACCode
 }) => {
+    const URL = window.location.href;
+    const arr = URL.split("/");
+    // const param = arr[arr.length - 2];
+    // const arr1 = param.split("=");
+    const randomizationid = (arr.length) ? arr[arr.length - 2] : '';
+    const suppl = (arr.length) ? ((arr[arr.length - 1]) == 'Yes' ? true : false) : '';
     const iterationText = ["Third Last", "Second Last", "Latest"];
     const [isRandomisationSaved, setIsRandomisationSaved] = useState(false);
-    console.log(assemblyData,"assemblyData");
-    const data = useMemo(() => assemblyData, [assemblyData]);
+    const prepareTableHeaders = (headers) => {
+        const tmp = headers.find(obj => obj['ps_no'] == 'reserve');
+        if (!tmp) {
+            headers.push({
+                ps_no: 'reserve',
+                ps_name: 'In Reserve',
+                bu_count: '-',
+                cu_count: '-',
+                vt_count: '-'
+            });
+        }
+        return headers;
+    };
+
+    console.log(assemblyData, "assemblyData");
+    const data = useMemo(() => prepareTableHeaders(assemblyData), [assemblyData]);
     console.log(data, "data")
     const columns = useMemo(
         () => [
@@ -491,19 +517,20 @@ const SecondRandomisationOutput = ({
             },
             {
                 Header: "BU Count",
-                accessor: row => row.ps_no=="reserve" ? "-" :row.bu_count,
+                accessor: row => row.ps_no == "reserve" ? "-" : row.bu_count,
             },
             {
                 Header: "CU Count",
-                accessor: row => row.ps_no=="reserve" ? "-" :row.cu_count,
+                accessor: row => row.ps_no == "reserve" ? "-" : row.cu_count,
             },
             {
                 Header: "VT Count",
-                accessor: row => row.ps_no=="reserve" ? "-" :row.vt_count,
+                accessor: row => row.ps_no == "reserve" ? "-" : row.vt_count,
             },
         ],
         []
     );
+
     const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
         useTable({ columns, data });
 
@@ -536,7 +563,7 @@ const SecondRandomisationOutput = ({
                     body: JSON.stringify({
                         iteration_index: iterationIndex,
                         ac_no: ACCode,
-                        randomizationid
+                        randomizationid: randomizationid
                     }),
                 }
             );

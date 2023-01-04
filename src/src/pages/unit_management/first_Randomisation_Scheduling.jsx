@@ -112,14 +112,20 @@ function First_Randomisation_Scheduling() {
 
     }, [realm]);
 
-    useEffect(() => {
-        if (currState && currState !== "") {
-            setDist(formatRealm2(realm, currState))
-            console.log(dist)
-        }
+    useEffect(
+        () => {
+            if (currState && currState !== "") {
+                let timer1 = setTimeout(() => setDist(formatRealm2(realm, currState)), 1 * 1000);
 
-    }, [currState, realm]);
+                return () => {
+                    clearTimeout(timer1);
+                };
+            }
+        },
+        [currState, realm]
+    );
 
+    console.log(dist)
 
 
     async function Submit_First_randomization() {
@@ -144,7 +150,13 @@ function First_Randomisation_Scheduling() {
             + mins + ":"
             + secs;
 
-        console.log(time, document.getElementById("enddate") ? document.getElementById("enddate").value + " " + time : "")
+        console.log({
+            districts: [...distCodes],
+            electionid: document.getElementById("electiontype") ? document.getElementById("electiontype").value : "",
+            startdate: document.getElementById("startdate") ? document.getElementById("startdate").value + " " + time : "",
+            enddate: document.getElementById("enddate") ? document.getElementById("enddate").value + " " + time : "",
+            supplementary: document.getElementById("supplementary") ? document.getElementById("supplementary").value : "f"
+        })
 
         try {
             const response = await fetch(
@@ -171,7 +183,7 @@ function First_Randomisation_Scheduling() {
                 alert("Schedule First Randomization Created Successfully");
                 window.location.pathname = "/session/unitmanagement"
             } else {
-                alert(data3.data);
+                alert('First Randomization not Possible');
                 document.getElementById("electiontype").value = ""
                 document.getElementById("startdate").value = ""
                 document.getElementById("enddate").value = ""

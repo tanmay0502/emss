@@ -4,15 +4,18 @@ import { useTable } from "react-table";
 import { ReactComponent as ChevronDown } from "../../assets/ChevronDown.svg";
 const userID = sessionStorage.getItem("sessionToken");
 const baseUrl = `${process.env.REACT_APP_API_SERVER}/unit`;
-const URL = window.location.href;
-const arr = URL.split("/");
-const param = arr[arr.length - 2];
-const arr1 = param.split("=");
-const randomizationid = arr1[0];
-const suppl = arr[arr.length - 1] == 'Yes' ? true : false;
+
 
 export default function FirstRandomization() {
+    const URL = window.location.href;
+    const arr = URL.split("/");
+    // const param = arr[arr.length - 2];
+    // const arr1 = param.split("=");
 
+    const randomizationid = (arr.length) ? arr[arr.length - 2] : '';
+    const suppl = (arr.length) ? ((arr[arr.length - 1]) == 'Yes' ? true : false) : '';
+
+    console.log(URL, "URL")
     const initialVisibilityValues = {
         firstRandomisationForm: true,
     };
@@ -39,6 +42,13 @@ export default function FirstRandomization() {
 
 // Status Update Card
 const ActionButton = ({ isActive, text, name, onClick }) => {
+    const URL = window.location.href;
+    const arr = URL.split("/");
+    // const param = arr[arr.length - 2];
+    // const arr1 = param.split("=");
+
+    const randomizationid = (arr.length) ? arr[arr.length - 2] : '';
+    const suppl = (arr.length) ? ((arr[arr.length - 1]) == 'Yes' ? true : false) : '';
     return (
         <button
             className={`font-mediumisActive mx-auto mb-8 w-4/5 border-[1px] border-solid border-secondary hover:bg-secondary hover:text-white ${isActive ? "bg-secondary text-white" : "bg-white  text-secondary"
@@ -55,7 +65,13 @@ const ActionButton = ({ isActive, text, name, onClick }) => {
 
 // 1st Randomisation Card
 const FirstRandomisationForm = ({ isVisible = true }) => {
+    const URL = window.location.href;
+    const arr = URL.split("/");
+    // const param = arr[arr.length - 2];
+    // const arr1 = param.split("=");
 
+    const randomizationid = (arr.length) ? arr[arr.length - 2] : '';
+    const suppl = (arr.length) ? ((arr[arr.length - 1]) == 'Yes' ? true : false) : '';
     // const district_id = userID.slice(2, 5); // calc from userId
     console.log(userID.slice(2, 5))
     const [districtName, setDistrictName] = useState([])
@@ -115,25 +131,25 @@ const FirstRandomisationForm = ({ isVisible = true }) => {
             setIsSubmitted(false);
             const units_requirement = [];
             for (let i = 0; i < assemblyData.length; i++) {
-		if (suppl) {
+                if (suppl) {
                     units_requirement.push(
-			{
+                        {
                             ac_no: assemblyData[i].ac_no,
                             cu_count: assemblyData[i].cu_count ? assemblyData[i].cu_count : 0,
                             bu_count: assemblyData[i].bu_count ? assemblyData[i].bu_count : 0,
                             vt_count: assemblyData[i].vt_count ? assemblyData[i].vt_count : 0,
-			}
+                        }
                     );
-		} else {
+                } else {
                     units_requirement.push(
-			{
+                        {
                             ac_no: assemblyData[i].ac_no,
                             cu_count: assemblyData[i].cu_count ? Math.ceil(parseInt(assemblyData[i].cu_count) * parseInt(assemblyData[i].ps_no) / 100) : 0,
                             bu_count: assemblyData[i].bu_count ? Math.ceil(parseInt(assemblyData[i].bu_count) * parseInt(assemblyData[i].ps_no) * parseInt(assemblyData[i].unit_no) / 100) : 0,
                             vt_count: assemblyData[i].vt_count ? Math.ceil(parseInt(assemblyData[i].vt_count) * parseInt(assemblyData[i].ps_no) / 100) : 0,
-			}
+                        }
                     );
-		}		    
+                }
             }
             try {
                 const response = await fetch(`${baseUrl}/first_randomization`, {
@@ -292,8 +308,8 @@ const FirstRandomisationForm = ({ isVisible = true }) => {
                         setAssemblyPSData(tempdata);
                         console.log(tempdata)
                     } else {
-			alert(data['message']);
-		    }
+                        alert(data['message']);
+                    }
                 } catch (err) {
                     alert(`Error occured: ${err}`);
                 }
@@ -308,7 +324,7 @@ const FirstRandomisationForm = ({ isVisible = true }) => {
             {isVisible && (
                 <div className="mb-10 flex h-auto w-full flex-col items-center justify-center overflow-hidden rounded-[25px] bg-white pb-[25px]">
                     <div className={styles.unit_list_header}>
-                        <h4>First {suppl?"Supplementary ":""}Randomisation</h4>
+                        <h4>First {suppl ? "Supplementary " : ""}Randomisation</h4>
                     </div>
                     {!isFetching && (
                         <div className="mt-2 w-full bg-white p-6">
@@ -424,7 +440,7 @@ const FirstRandomisationForm = ({ isVisible = true }) => {
 
                                         <div className="flex w-3/8 flex-col text-left">
                                             <label className="mb-2 w-full text-base">
-                                                Unit {suppl?"Count":"Percentage"} {"(BU  CU  VT)"}
+                                                Unit {suppl ? "Count" : "Percentage"} {"(BU  CU  VT)"}
                                                 <span className="text-red-600"> *</span>
                                             </label>
                                             <div className="flex w-full justify-between gap-2 text-gray-800">
@@ -488,6 +504,13 @@ const RandomisationOutput = ({
     randomData,
     fetchNewIterations,
 }) => {
+    const URL = window.location.href;
+    const arr = URL.split("/");
+    // const param = arr[arr.length - 2];
+    // const arr1 = param.split("=");
+
+    const randomizationid = (arr.length) ? arr[arr.length - 2] : '';
+    const suppl = (arr.length) ? ((arr[arr.length - 1]) == 'Yes' ? true : false) : '';
     const iterationText = ["Third Last", "Second Last", "Latest"];
     const [isRandomisationSaved, setIsRandomisationSaved] = useState(false);
     const data = useMemo(() => assemblyData, [assemblyData]);
