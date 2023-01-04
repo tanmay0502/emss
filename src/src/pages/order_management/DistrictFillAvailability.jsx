@@ -759,9 +759,9 @@ export default function DistrictFillAvailability(props) {
                                                 <tr>
                                                     <td colSpan={20}>
                                                         <div className="flex w-full">
-                                                            <div className="w-1/5">Type</div>
-                                                            <div className="w-1/5">Model</div>
                                                             <div className="w-1/5">Manufacturer</div>
+                                                            <div className="w-1/5">Model</div>
+                                                            <div className="w-1/5">Type</div>
                                                             <div className="w-1/5">Available Units</div>
                                                             <div className="w-1/5">Filled Units</div>
                                                         </div>
@@ -776,13 +776,13 @@ export default function DistrictFillAvailability(props) {
                                                         {orderCount[id][key]["type"]!="select" && orderCount[id][key]["model"]!="select" && orderCount[id][key]["manufacturer"]!="select" && <div className="flex justify-between text-black p-3 h-6 text-sm pb-2 ">
                                                             {/* <p>{orderCount[id][key]["type"]}</p><p>{"-->"}</p><p>{orderCount[id][key]["model"]}</p><p>{"-->"}</p><p>{orderCount[id][key]["manufacturer"]}</p><p>{"-->"}</p><p>{orderCount[id][key]["quantity"]}</p> */}
                                                             <div className="w-full flex">
-                                                                <div className="w-1/5">{orderCount[id][key]["type"]}</div>
-                                                                <div className="w-1/5">{orderCount[id][key]["model"]}</div>
                                                                 <div className="w-1/5">{orderCount[id][key]["manufacturer"]}</div>
+                                                                <div className="w-1/5">{orderCount[id][key]["model"]}</div>
+                                                                <div className="w-1/5">{orderCount[id][key]["type"]}</div>
                                                                 <div className="w-1/5">
                                                                     {Units && Units[sessionStorage.getItem("sessionToken").substring(0,2)+val["dtCode"]+"000DEO"] && Units[sessionStorage.getItem("sessionToken").substring(0,2)+val["dtCode"]+"000DEO"][orderCount[id][key]["manufacturer"].substring(0,1)+orderCount[id][key]["model"]+orderCount[id][key]["type"]]}
                                                                 </div>
-                                                                <div className="w-1/5"><input type="number" placeholder="No of Unit" className="border " id={id.toString() + "_" + key.toString() + "_quantity"} onChange={(e)=>calculate(id,key,"quantity",e.target.value)} value={orderCount[id][key]["quantity"]} required></input></div>
+                                                                <div className="w-1/5"><input type="number" placeholder="No of Unit" className="border  w-32" id={id.toString() + "_" + key.toString() + "_quantity"} onChange={(e)=>calculate(id,key,"quantity",e.target.value)} value={orderCount[id][key]["quantity"]} required></input></div>
                                                             </div>
                                                         </div> }
                                                     </div>

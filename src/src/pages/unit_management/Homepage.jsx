@@ -65,6 +65,10 @@ export default function HomePage() {
     });
     const navigate = useNavigate();
 
+    function handleOrder(){
+        navigate("/session/unitmanagement/orders")
+    }
+
     
     const getDataTotal = async (oprnd) => {
         const data2 = await getTotalCounts(oprnd)
@@ -316,6 +320,7 @@ export default function HomePage() {
                         </tbody>
                         
                     </table>
+
                 </div>
             </div>
         );
@@ -443,9 +448,12 @@ export default function HomePage() {
     return (
 
         <div className={styles.parent}>
+            
             <div className={styles.parent3}>
                 <div className={styles.myCardSampleHome +" col-span-2 m-auto"}>
                     <div className={styles.s+""}>
+
+                        
                         {upVisible?<div className=" absolute text-red-600 cursor-pointer text-lg" onClick={()=>{
                             if (district!=ID.slice(2,5)) {
                                 setDistrict(ID.slice(2,5));
@@ -482,6 +490,7 @@ export default function HomePage() {
                             })}
                         </select></>:<></>}
                     </div>
+                
                     <div className={styles.Scrolll}>
                         <table className='w-100 '>
                             <thead >
@@ -529,6 +538,9 @@ export default function HomePage() {
 
 				<HomePageCardBottom state={state} dist={district}/>
 				<HomePageCardBottom state={state} dist={district}/>
+                <div className=" bg-white rounded-md shadow-md cursor-pointer m-6 p-6" onClick={handleOrder}>
+                        Dispatch/Recieve Orders
+                </div>
 			</div>
 
             <div className={styles.parent2} >

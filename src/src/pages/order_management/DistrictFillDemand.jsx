@@ -573,6 +573,16 @@ export default function DistrictFillDemand(props) {
                                                 {/* <td className="text-black text-sm">{val["Warehouse Type"]}</td> */}
                                                 {/* <td className="text-black text-sm">{val['Status']}</td> */}
                                                 </tr>
+                                                <tr>
+                                                    <td colSpan={20}>
+                                                        <div className="flex w-full">
+                                                            <div className="w-1/4">Manufacturer</div>
+                                                            <div className="w-1/4">Model</div>
+                                                            <div className="w-1/4">Type</div>
+                                                            <div className="w-1/4">Filled Units</div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
                                                 {orderCount && <tr className="pb-10 ">
                                             <td colSpan="2" className="">
                                                 {orderCount && orderCount[id] && Object.keys(orderCount[id]).map((key)=>(
@@ -581,10 +591,10 @@ export default function DistrictFillDemand(props) {
                                                         {orderCount[id][key]["type"]!="select" && orderCount[id][key]["model"]!="select" && orderCount[id][key]["manufacturer"]!="select" && <div className="flex justify-between p-3 h-6 text-sm pb-2 text-black">
                                                             {/* <p>{orderCount[id][key]["type"]}</p><p>{"-->"}</p><p>{orderCount[id][key]["model"]}</p><p>{"-->"}</p><p>{orderCount[id][key]["manufacturer"]}</p><p>{"-->"}</p><p>{orderCount[id][key]["quantity"]}</p> */}
                                                             <div className="w-full flex">
-                                                                <div className="w-1/4">{orderCount[id][key]["type"]}</div>
-                                                                <div className="w-1/4">{orderCount[id][key]["model"]}</div>
                                                                 <div className="w-1/4">{orderCount[id][key]["manufacturer"]}</div>
-                                                                <div className="w-1/4"><input type="number" placeholder="No of Unit" className="border " id={id.toString() + "_" + key.toString() + "_quantity"} onChange={(e)=>calculate(id,key,"quantity",e.target.value)} value={orderCount[id][key]["quantity"]} required></input>
+                                                                <div className="w-1/4">{orderCount[id][key]["model"]}</div>
+                                                                <div className="w-1/4">{orderCount[id][key]["type"]}</div>
+                                                                <div className="w-1/4"><input type="number" placeholder="No of Unit" className="border w-32" id={id.toString() + "_" + key.toString() + "_quantity"} onChange={(e)=>calculate(id,key,"quantity",e.target.value)} value={orderCount[id][key]["quantity"]} required></input>
 </div>
                                                             </div>
                                                         </div> }

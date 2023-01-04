@@ -341,12 +341,13 @@ export default function WareHouseListUnitTrackerFillDemand(props) {
         let f=0;
         { Object.keys(unitsDetails).map((key)=>{
             if(unitsDetails[key]["CU"][0]!=unitsDetails[key]["CU"][1] || unitsDetails[key]["BU"][0]!=unitsDetails[key]["BU"][1] || unitsDetails[key]["VVPAT"][0]!=unitsDetails[key]["VVPAT"][1]){
-                alert("Filled units and Total units must be same");
                 f=1;
             }
         })}
         if(f){
             // console.log("ddddd");
+            alert("Filled Capacity is not in accordance of Disrict unit allocation")
+           
             return
         }
         console.log("dd")
@@ -482,6 +483,16 @@ export default function WareHouseListUnitTrackerFillDemand(props) {
                                                 {/* <td className="text-black text-sm">{val["Warehouse Type"]}</td> */}
                                                 {/* <td className="text-black text-sm">{val['Status']}</td> */}
                                                 </tr>
+                                                <tr>
+                                                    <td colSpan={20}>
+                                                        <div className="flex w-full">
+                                                            <div className="w-1/4">Type</div>
+                                                            <div className="w-1/4">Model</div>
+                                                            <div className="w-1/4">Manufacturer</div>
+                                                            <div className="w-1/4">Filled Units</div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
                                                 {orderCount && <tr className="pb-10 ">
                                             <td colSpan="2" className="">
                                                 {orderCount && orderCount[id] && Object.keys(orderCount[id]).map((key)=>(
@@ -493,7 +504,7 @@ export default function WareHouseListUnitTrackerFillDemand(props) {
                                                                 <div className="w-1/4">{orderCount[id][key]["type"]}</div>
                                                                 <div className="w-1/4">{orderCount[id][key]["model"]}</div>
                                                                 <div className="w-1/4">{orderCount[id][key]["manufacturer"]}</div>
-                                                                <div className="w-1/4"><input type="number" placeholder="No of Unit" className="border " value={orderCount[id][key]["quantity"]} onChange={(e)=>{
+                                                                <div className="w-1/4"><input type="number" placeholder="No of Unit" className="border  w-32" value={orderCount[id][key]["quantity"]} onChange={(e)=>{
                                                                     setOrderCount((prev)=>{
                                                                         let ppp = {...prev}
                                                                         let f=0

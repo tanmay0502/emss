@@ -555,20 +555,24 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
          {Object.keys(orderCount[id]).map((key)=>{
         {Object.keys(Units).map((k1,ind)=>{
             
-                if (Units[k1][orderCount[id][key]["manufacturer"].substring(0,1)+orderCount[id][key]["model"]+orderCount[id][key]["type"]] < orderCount[id][key]["quantity"]){
+                if (ind==id && Units[k1][orderCount[id][key]["manufacturer"].substring(0,1)+orderCount[id][key]["model"]+orderCount[id][key]["type"]] < orderCount[id][key]["quantity"]){
                     f=1;
+                    
+
                 }
 
         
         })}})}})
         { Object.keys(unitsDetails).map((key)=>{
             if(unitsDetails[key]["CU"][0]>unitsDetails[key]["CU"][1] || unitsDetails[key]["BU"][0]>unitsDetails[key]["BU"][1] || unitsDetails[key]["VVPAT"][0]>unitsDetails[key]["VVPAT"][1]){
-                alert("Filled units and Total units must be same");
+                
+
                 f=1;
             }
         })}
         if(f){
             // console.log("ddddd");
+            alert("Filled Capacity is not in accordance of Disrict unit allocation")
             return
         }
         let data={
@@ -818,7 +822,7 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
                                                                    ))}
                                                                   
                                                                    </div>
-                                                                <div className="w-1/5"><input type="number" placeholder="No of Unit" className="border " value={orderCount[id][key]["quantity"]} onChange={(e)=>{
+                                                                <div className="w-1/5"><input type="number" placeholder="No of Unit" className="border  w-32 " value={orderCount[id][key]["quantity"]} onChange={(e)=>{
                                                                     setOrderCount((prev)=>{
                                                                         let ppp = {...prev}
                                                                         let f=0

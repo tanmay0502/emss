@@ -128,6 +128,7 @@ const [fetchedVehicle, setFetchedVehicle] = useState(0);
 
 
 function getData(){
+  if(allOrders.length!=0){
   console.log(allOrders)
   let body={
     "listofOrders": [
@@ -153,9 +154,10 @@ setDataInput(hh)
       
   })
 }
+}
 
 useEffect(()=>{
-  let timer1 = setTimeout(() => getData(), 0.1 * 1000);
+  let timer1 = setTimeout(() => getData(), 1 * 1000);
 
   return () => {
     clearTimeout(timer1);
