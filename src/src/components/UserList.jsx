@@ -198,7 +198,7 @@ function UserList() {
 					let active = tmp["data"]["users"][i]["active"]
 					let check = currId.substring(8)
 					console.log(check)
-					if(check === "TMP"){
+					if(check[0] === "T" && check[1] === "M" && check[2] === "P" ){
 						tUsers = tUsers + 1
 						if(active === "A"){
 							aTUsers = aTUsers +1;

@@ -288,11 +288,11 @@ function Home1() {
 					{stateID === "IN" ? <><label className="card_title">
 						Select State:
 					</label>
-						<select name="" id="statesDropdownHome">
+						<select name="" id="statesDropdownHome" onChange={(e) => {setSTName(e.target.value);setIndiaMap(0); setShow(true); setShow2(false);setContent2(e.target.value) }}>
 							<option>{"none"}</option>
 							{statesCode.map((val, ind) => {
 								return (
-									<option onClick={() => { setSTName(val.state); setIndiaMap(0); show2(); setContent2(val.state) }}>{val.state}</option>
+									<option value={val.state} onClick={() => { setIndiaMap(0); setShow(true); setShow2(false);setContent2(val.state) }} >{val.state}</option>
 								)
 							})}
 						</select></> : ""}
@@ -300,8 +300,9 @@ function Home1() {
 					<div style={{ height: '75%', overflow: 'hidden' }}>
 						<span className="heading" style={{ maxWidth: "100%", display: "block", "textOverflow": "ellipsis", "whiteSpace": "nowrap" }}> {"India:" + content2}</span>
 						<div className='map' >
-							{indiaMap == 0 && <MapDialog show={show} StateName={STName} closeModal={handleClose} setTooltipContent={setContent2} />}
-							{indiaMap == 1 && <MapIndia show2={show2} closeModal2={handleOpen} setTooltipContent={setContent2} setStateName={setSTName} setShowDistrict={setShow} showInfo={setContent} />}
+							{/* {console.log(STName)} */}
+							{indiaMap === 0 && <MapDialog show={show} StateName={STName} closeModal={handleClose} setTooltipContent={setContent2} />}
+							{indiaMap === 1 && <MapIndia show2={show2} closeModal2={handleOpen} setTooltipContent={setContent2} setStateName={setSTName} setShowDistrict={setShow} showInfo={setContent} />}
 						</div>
 					</div>
 				</div>}

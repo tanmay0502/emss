@@ -2,6 +2,7 @@ import { DynamicDataTable } from '@langleyfoxall/react-dynamic-data-table'
 import React, { useEffect, useState } from 'react'
 import styles from './styles/ScheduleNew.module.css'
 import { getRealm, formatRealm2,formatRealm3 } from '../../components/utils'
+import { AiOutlineClose } from "react-icons/ai"
 
 function ScheduleElection() {
     
@@ -37,6 +38,13 @@ const [rows_Temporary_Users, setRows_Temporary_Users] = useState([2]);
 const [isEdit_Temporary_Users, setEdit_Temporary_Users] = React.useState(-1);
 
 
+const setACFunction = (e) => {
+    console.log(distn[e.target.value]["acCode"])
+    if (!AC.includes(distn[e.target.value][1][1])) {
+        setAC([...AC, distn[e.target.value]["acCode"]])
+        // setAC([...AC, distn[e.target.value][1][0]])
+    }
+}
 
 
 const handleRemoveClick_Temporary_Users = (i) => {
@@ -81,7 +89,7 @@ const handleEdit_Temporary_Users = (i) => {
 
     // Check Replacement for Dist in new API: 
     async function postElection() {
-
+        console.log(currState)
         try {
             const response = await fetch(
                 `${process.env.REACT_APP_API_SERVER}/unit/schedule_election`,
@@ -91,17 +99,25 @@ const handleEdit_Temporary_Users = (i) => {
                         "Content-Type": "application/json",
                     },
                     credentials: 'same-origin',
-                    body: JSON.stringify({
-                        // Severity: document.getElementById("formSeverity").value.slice(-1),
-                        State: document.getElementById("1").value,
-                        // Dist: document.getElementById("2").value,
-                        AC: document.getElementById("3").value,
-                        electionType: document.getElementById("4").value.slice(-1),
-                        startDate: document.getElementById("5").value + " " + time,
-                        endDate: document.getElementById("6").value + " " + time
+                    
+                    body: JSON.stringify(
+                        // State: document.getElementById("1").value,
+                        {
 
+                            electionList: [
+                              {
+                                "electionType" : eType,
+                                "state" : eType === "GP" ? "IN" :currState,
+                                "PC" : "-",
+                                "AC" : eType === "BA" ? AC:"-",
+                                "startDate" : document.getElementById("5").value,
+                                "endDate" : document.getElementById("6").value
+                              }
+                            ]
 
-                    }),
+                          }
+
+                    ),
                 }
             );
             
@@ -110,7 +126,7 @@ const handleEdit_Temporary_Users = (i) => {
             const data = await response.json();
             console.log("data" + data);
             console.log("Message:" + data["message"])
-            if (data["message"] === "Insertion successful") {
+            if (data["message"] === "insertion successfull") {
                 document.getElementById("form").reset();
                 alert("Successful");
                 window.location.pathname = "/session/unitmanagement/schedule_list";
@@ -122,7 +138,15 @@ const handleEdit_Temporary_Users = (i) => {
             console.log(err);
         }
     }
+    const handleRemoveClick = (i) => {
 
+        const listSelectedDistricts = [...AC];
+        listSelectedDistricts.splice(i, 1);
+        const listSelectedDistrictssf = [...AC];
+        listSelectedDistrictssf.splice(i, 1);
+        setAC(listSelectedDistricts);
+        setAC(listSelectedDistrictssf)
+    };
     const onFormSubmit = async (e) => {
         e.preventDefault();
         console.log("submit button clicked")
@@ -256,31 +280,45 @@ const handleEdit_Temporary_Users = (i) => {
                     </div>
                 </div>
 
+                {showAC === true && 
                 <div class={styles.div5}> 
                 <div style={{ display: showAC ? "block" : "none" }}>
                 <p> AC</p>
                     <select
                         //   required={!isTemporary}
                         required
-                        name=""
+                        // name=""
                         id="3"
                         className=" selectBox"
-                    //   onChange={(e) => setRoleFunc(e.target.value)}
-                    >
-                        <option value="" disabled selected>
+                        onChange={(e) => {
+                            setACFunction(e)
+                        }}
+                        >
+                        <option value="" disabled selected >
                             Select AC
                         </option>
-                        {distn && distn.map((st,i) => (
+                        {distn.length>0 && distn.map((st,i) => (
                             <option value={distn[i]["acCode"]} className="text-black">
-                                {distn[i]["acCode"]} - {distn[i]["acName"]}
+                                {/* {`${val.dtCode} (${val.dtName})`} */}
+                                {`${distn[i]["acCode"]} (${distn[i]["acName"]})`}
                                 
                             </option>
                             ))}
 
                     </select>
+                    
                     </div>
+                    <div className='flex flex-wrap w-full items-center'>
+                        {console.log(AC+ "AC")}
+                            {AC && AC.map((val, index) => (
+                                <div className='rounded-lg gap-1 m-1 p-2 flex align-middle shadow-md shadow-black'>{val}
+                                    <AiOutlineClose className='cursor-pointer text-red-400' onClick={() => {
+                                        handleRemoveClick(index)
+                                    }} /></div>
+                            ))}
+                        </div>
                 </div>
-
+                }
                 <div class={styles.div1}> 
                 <p> Election Type</p>
                     <select
@@ -331,7 +369,7 @@ const handleEdit_Temporary_Users = (i) => {
                     ></input>
                 </div>
             </div>
-
+                {showTable &&
                 <div style={{ display: showTable ? "block" : "none" }}>
                         {/* <DynamicDataTable rows={data2} buttons={[]} /> */}
                         <table >
@@ -345,7 +383,8 @@ const handleEdit_Temporary_Users = (i) => {
                             </thead>
                             {rows_Temporary_Users.length > 0 &&
                                 rows_Temporary_Users.map((val, id) => {
-                                    return (isEdit_Temporary_Users != id ?
+                                    console.log(id)
+                                    return (isEdit_Temporary_Users !== id ?
                                         <tbody >
                                             <tr onDoubleClick={() => { handleEdit_Temporary_Users(id) }}>
                                                 <td className="text-black text-sm">{val['User_ID']}</td>
@@ -360,7 +399,7 @@ const handleEdit_Temporary_Users = (i) => {
                                                 <select
                                                     //   required={!isTemporary}
                                                     value={val.User_ID}
-                                                    required
+                                                    required={true}
                                                     name="User_ID"
                                                     className="selectBox"
                                                     onChange={(e) => handleInputChange_Temporary_Users(e, id)}
@@ -420,7 +459,7 @@ const handleEdit_Temporary_Users = (i) => {
                         </table>
                         <button type="button" className="text-white bg-orange-600 p-1 text-2xl w-8 h-8 -mt-4 " style={{ borderRadius: "50%", marginLeft: "85%", marginTop: "1%" }} onClick={() => { handleAdd_Temporary_Users() }}>+</button>
                     </div>
-
+                }
         </div>
         <div style={{ display: showSubmit ? "block" : "none" }}><button class={styles.submitBtn} type='submit' > Submit </button></div>
             

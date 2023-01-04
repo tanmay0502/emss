@@ -9,6 +9,7 @@ import { TagsInput } from "react-tag-input-component";
 function EditTna() {
     const [details, setDetails] = useState([])
     const [tags, setTags] = React.useState([]);
+    const [listtags, setlisttags] = React.useState([]);
     const [edit, setEdit] = useState(false)
     const [tna,setTna] = useState([])
     const [polling, setPolling] = useState([])
@@ -17,7 +18,22 @@ function EditTna() {
     const [percDef, setPercDef] = useState("")
     const poll = 200
     
+    useEffect(
+        () => {
+            if (listtags) {
+                for (let k = 0; k < listtags.length; k++) {
+                    if (!tags.includes(listtags[k][0]))
+                        setTags((prev) => {
+                            let kk = [...prev]
+                            kk.push(listtags[k][0])
+                            return kk;
+                        })
+                }
+            }
+        },
 
+        [listtags]
+    );
 
     const checkCount = () => {
         // console.log(tna[0].awarnessunits)
@@ -73,11 +89,12 @@ function EditTna() {
                     credentials: 'same-origin',
                 }
             );
-            const data = await response.json();
-            console.log(data)
+            const data2 = await response.json();
+            console.log({data2})
             setIsLoading(0);
-            setTna(data["data"]);       
-            
+            setTna(data2["data"]);       
+            setlisttags(data2["data"][0]["temporaryUsers"])
+            console.log(data2["data"][0]["temporaryUsers"])
         } catch (err) {
             console.log({err});
         }
@@ -153,16 +170,14 @@ function EditTna() {
     useEffect(() => {
         try{
             if(tna !== undefined){
-                console.log(tna)
-                // setCurrTags(tna["temporaryUsers"]);
-                // setTags(currTags)
-
-                
+                console.log(tna)       
                 setCurrTna(Object.values(tna[0]))
-                // console.log(currTna)
-                // console.log(currTna[16][0][0])
+                // let tagArray = []
+                // for(let i =0; i<currTna[16].length; i++){
+                //     tagArray.push(currTna[16][i][0]);
+                // }
+                // setTags(tagArray)
 
-      
             }   
 
         }catch{
@@ -172,18 +187,18 @@ function EditTna() {
     },[tna])
 
 
-    useEffect(() => {
-        try{
-        let tagArray = []
-        for(let i =0; i<currTna[16].length; i++){
-            tagArray.push(currTna[16][i][0]);
-        }
-        setCurrTags(tagArray)
-        setTags(currTags)
-        }catch(err){
-            console.log(err)
-        }
-    },[currTna])
+    // useEffect(() => {
+    //     try{
+    //     let tagArray = []
+    //     for(let i =0; i<currTna[16].length; i++){
+    //         tagArray.push(currTna[16][i][0]);
+    //     }
+    //     setCurrTags(tagArray)
+    //     setTags(currTags)
+    //     }catch(err){
+    //         console.log(err)
+    //     }
+    // },[currTna])
 
 
 
@@ -581,7 +596,7 @@ function EditTna() {
                         value={tags}
                         onlyUnique={true}
                         disabled={!edit}
-                        // id="formTags"
+                        id="formTags"
                         onChange={setTags}
                         placeHolder="SSPPAAARRR, SSPPAAARRR"
                         />

@@ -2,7 +2,6 @@ import React from "react";
 import DynamicDataTable from "@langleyfoxall/react-dynamic-data-table";
 import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom'
-import Edit from '../../assets/editBtn.png';
 import styles from './styles/ScheduleList.module.css';
 import { AiOutlineSortAscending, AiOutlineSortDescending } from "react-icons/ai";
 import { ReactComponent as SearchInputElement } from '../../assets/searchInputIcon.svg';
@@ -13,7 +12,7 @@ export default function ScheduleList() {
 
     const navigate = useNavigate()
     const [sortOrder, setSortOrder] = useState("asc");
-    const [sortBy, setSortBy] = useState("None");
+
     const [isDetail, setIsDetail] = useState(0);
     const [tableFilter, setTableFilter] = useState("");
     let post = sessionStorage.getItem("sessionToken").substring(8);
@@ -23,20 +22,20 @@ export default function ScheduleList() {
     async function getElectionList() {
         try {
             const response = await fetch(
-                `${process.env.REACT_APP_API_SERVER}/unit/listElection`,
+                `${process.env.REACT_APP_API_SERVER}/unit/listElections`,
                 {
-                    method: "GET",
+                    method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
                     credentials: 'same-origin',
-                    mode: "cors"
                 }
             );
             const data = await response.json();
-            console.log(data['data'])
-            if(data["data"]!=404){
-                setElections(data['data']);
+            console.log(data)
+            if(response.status===200){
+                setElections(data);
+                console.log(elections)
                 
             }
             
@@ -47,24 +46,26 @@ export default function ScheduleList() {
 
     function makeElctionList(elections){
         let eList = []
+        console.log("in")
         for( const i in elections){
-            console.log("i " + i + "data: " + elections[i][0])
+            console.log("i " + i + "data: " + elections[i]["election_id"])
             const row = {
-                'State': elections[i][0],
-                'Dist': elections[i][1],
-                "AC": elections[i][2],
-                "Election Type": elections[i][3],
-                "Start Date": elections[i][4].slice(0,10),
-                "End Date": elections[i][5].slice(0,10),
-                "Edit":
-                <div className={styles.editBtn}
-                onClick={() => {
-                    navigate(`/session/unitmanagement/edit_election/${i}`)
-                }}
-                >
-                    <img src={Edit} />
+                'ID':elections[i]["election_id"],
+                'State': elections[i]['state'],
+                'PC': elections[i]['pc'],
+                "AC": elections[i]["ac"],
+                "Election Type": elections[i]['electiontype'],
+                "Start Date": elections[i]['startdate'],
+                "End Date": elections[i]['enddate'],
+                // "Edit":
+                // <div className={styles.editBtn}
+                // onClick={() => {
+                //     navigate(`/session/unitmanagement/edit_election/${i}`)
+                // }}
+                // >
+                //     <img src={Edit} />
                     
-                </div>
+                // </div>
             }  
             console.log({row})
             eList.push(row);
@@ -81,8 +82,16 @@ export default function ScheduleList() {
         //     }, []);
         // }
     useEffect(() => {
-        getElectionList();
-        // s(elections)
+
+          
+
+        let timer1 = setTimeout(() => getElectionList() (), 1 * 1000);
+
+        return () => {
+          clearTimeout(timer1);
+          setIsDetail(0)
+        };
+        
     }, []);
 
     useEffect(()=>{
@@ -99,7 +108,7 @@ export default function ScheduleList() {
 
     return (
         <div className={`${styles.myWrapper1}`} style={{ position: "relative", height: "100%" }}>
-            {isDetail == 0 ? <div className='MainHeader pd-5 ' style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between", "alignItems": "center" }}>
+            {isDetail === 0 ? <div className='MainHeader pd-5 ' style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between", "alignItems": "center" }}>
                 <h4 className='text-white'>Scheduled Election List</h4>
 
                 <div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center" }}>
@@ -122,7 +131,7 @@ export default function ScheduleList() {
                         <span style={{ minWidth: "max-content", paddingInlineStart: "7.5px" }}>Sort by : &nbsp;</span>
                         <select
                             style={{ textAlign: "center", outline: "none", background: "transparent", padding: "0px", border: "none" }}
-                            onChange={(e) => setSortBy(e.target.value)}>
+                            >
                             <option value={"None"}>Default</option>
                             <option value={"State"}>State</option>
                             <option value={"Start Date"}>Start Date</option>
@@ -149,9 +158,14 @@ export default function ScheduleList() {
                     electionList
                 }
                 buttons={[]} 
-                // onClick={(event, row) => {
-                //     navigate(`/session/ordermanagement/orderdetails`)
-                // }}
+                onClick={(event, row) => {
+                    if (post === "ADM"){
+                        navigate(`/session/unitmanagement/edit_election/${row["ID"]}`)
+                    }else{
+                        alert("You dont have rights to Edit Election")
+                    }
+                    
+                }}
                 
                 />
                 </div>
