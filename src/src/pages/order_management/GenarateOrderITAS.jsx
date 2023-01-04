@@ -149,6 +149,11 @@ export default function GenarateOrderITAS() {
         }
       );
       const data2 = await response.json();
+      if(response.status==200){
+
+      }else{
+        alert(data2["message"])
+      }
       console.log(data2["OrderIDs List"]);
 
       let t = [];

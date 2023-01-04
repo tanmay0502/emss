@@ -258,6 +258,9 @@ export default function WareHouseListUnitTrackerFillDemand(props) {
     }, [])
 
     function run(){
+        if(props.Order && Object.keys(orderCount).length!=0) {
+            console.log(orderCount)
+        
         WareHouse_List.map((val,id)=>{
             props.Order.map((val2,id2)=>{
                 const type= val2["item"]
@@ -267,27 +270,27 @@ export default function WareHouseListUnitTrackerFillDemand(props) {
             })
         })
     }
+    }
+
     const [fl, setFl] = useState(0);
 
     useEffect(()=>{
+
+        if(Object.keys(orderCount).length==0 && WareHouse_List.length!=0){
         let fillDemand = {}
-        Details.map((val,id)=>{
+        WareHouse_List.map((val,id)=>{
             fillDemand[id.toString()]={};
         })
-        
         console.log(fillDemand)
+        if(Object.keys(orderCount).length==0)
         setOrderCount(fillDemand);
-        if(props.Order ) {
-           
-            console.log(orderCount)
-
-            if (Object.keys(orderCount).length != 0 && fl == 0) {
-                setFl(1);
-                run();
-            }
-            
     }
-    },[Details])
+        if(Object.keys(orderCount).length!=0 && fl==0){
+            setFl(1);
+            run();
+        }
+       
+    },[Details,WareHouse_List,orderCount])
 
 
     const [boxId, setBoxId] = useState([]);
@@ -335,6 +338,18 @@ export default function WareHouseListUnitTrackerFillDemand(props) {
 
 
     const  handleSubmit= async (e)=>{
+        let f=0;
+        { Object.keys(unitsDetails).map((key)=>{
+            if(unitsDetails[key]["CU"][0]!=unitsDetails[key]["CU"][1] || unitsDetails[key]["BU"][0]!=unitsDetails[key]["BU"][1] || unitsDetails[key]["VVPAT"][0]!=unitsDetails[key]["VVPAT"][1]){
+                alert("Filled units and Total units must be same");
+                f=1;
+            }
+        })}
+        if(f){
+            // console.log("ddddd");
+            return
+        }
+        console.log("dd")
         let data={
             "orderid": props.OrderID,
             "flag": "D",
@@ -469,7 +484,7 @@ export default function WareHouseListUnitTrackerFillDemand(props) {
                                                 </tr>
                                                 {orderCount && <tr className="pb-10 ">
                                             <td colSpan="2" className="">
-                                                {Object.keys(orderCount[id]).map((key)=>(
+                                                {orderCount && orderCount[id] && Object.keys(orderCount[id]).map((key)=>(
                                                     <div className="">
                                                         
                                                         {orderCount[id][key]["type"]!="select" && orderCount[id][key]["model"]!="select" && orderCount[id][key]["manufacturer"]!="select" && <div className="flex justify-between p-3 h-6 text-sm pb-2 text-black">
@@ -533,8 +548,8 @@ export default function WareHouseListUnitTrackerFillDemand(props) {
                         <div className="flex w-full h-16 text-orange-600">
                             <div className="w-1/5">Manufacturer</div>
                             <div className="w-1/5">Model</div>
-                            <div className="w-1/5">Total CU / Filled CU</div>
                             <div className="w-1/5">Total BU / Filled BU</div>
+                            <div className="w-1/5">Total CU / Filled CU</div>
                             <div className="w-1/5">Total VVPAT / Filled VVPAT</div>
                         </div>
                         <hr />
@@ -543,9 +558,9 @@ export default function WareHouseListUnitTrackerFillDemand(props) {
                         <div className="flex w-full h-14 pt-4">
                             <div className="w-1/5">{key.substring(0,1)=="E"?"ECIL":"BEL"}</div>
                             <div className="w-1/5">{key.substring(1,3)}</div>
-                            <div className={`w-1/5 ${unitsDetails[key]["CU"][0] < unitsDetails[key]["CU"][1] ? "text-red-400":"text-green-400"}`}>{unitsDetails[key]["CU"][0]+ "/" + unitsDetails[key]["CU"][1]}</div>
-                            <div className={`w-1/5 ${unitsDetails[key]["BU"][0] < unitsDetails[key]["BU"][1] ? "text-red-400":"text-green-400"}`}>{unitsDetails[key]["BU"][0]+ "/" + unitsDetails[key]["BU"][1]}</div>
-                            <div className={`w-1/5 ${unitsDetails[key]["VVPAT"][0] < unitsDetails[key]["VVPAT"][1] ? "text-red-400":"text-green-400"}`}>{unitsDetails[key]["VVPAT"][0]+ "/" + unitsDetails[key]["VVPAT"][1]}</div>
+                            <div className={`w-1/5 ${unitsDetails[key]["BU"][0] !== unitsDetails[key]["BU"][1] ? "text-red-400":"text-green-400"}`}>{unitsDetails[key]["BU"][0]+ "/" + unitsDetails[key]["BU"][1]}</div>
+                            <div className={`w-1/5 ${unitsDetails[key]["CU"][0] !== unitsDetails[key]["CU"][1] ? "text-red-400":"text-green-400"}`}>{unitsDetails[key]["CU"][0]+ "/" + unitsDetails[key]["CU"][1]}</div>
+                            <div className={`w-1/5 ${unitsDetails[key]["VVPAT"][0] !== unitsDetails[key]["VVPAT"][1] ? "text-red-400":"text-green-400"}`}>{unitsDetails[key]["VVPAT"][0]+ "/" + unitsDetails[key]["VVPAT"][1]}</div>
                          
                         </div>
                         <hr />

@@ -31,12 +31,12 @@ export default function DistrictFillAvailability(props) {
         let data = await getRealm("Order", "FillCapacity")
         let districts = formatRealm2(data, sessionStorage.getItem("sessionToken").substring(0, 2),"", "", "");
         console.log(districts)
-        districts.map((dist)=>{
-            let timer = setTimeout(()=>getTUnits(sessionStorage.getItem("sessionToken").substring(0,2)+dist["dtCode"]+"000DEO",100));
-            return(()=>{
-                clearTimeout(timer)
-            })
-        })
+        // districts.map((dist)=>{
+        //     let timer = setTimeout(()=>getTUnits(sessionStorage.getItem("sessionToken").substring(0,2)+dist["dtCode"]+"000DEO",100));
+        //     return(()=>{
+        //         clearTimeout(timer)
+        //     })
+        // })
         setDistricts(districts);
     }
 
@@ -678,6 +678,20 @@ export default function DistrictFillAvailability(props) {
     useEffect(()=>{
         console.log(Units);
     },[Units])
+
+
+    useEffect(()=>{
+        console.log(Units)
+           let p = Object.keys(Units).length;
+           if(p<Districts.length){
+                let timer2 = setTimeout(()=>getTUnits(sessionStorage.getItem("sessionToken").substring(0,2)+Districts[p]["dtCode"]+"000DEO"),100);
+    
+                return (()=>{
+                    clearTimeout(timer2);
+                })
+           }
+           
+        },[Districts,Units])
 
 
 

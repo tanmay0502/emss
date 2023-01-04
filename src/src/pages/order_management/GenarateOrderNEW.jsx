@@ -65,6 +65,11 @@ export default function GenarateOrderNEW() {
         }
       );
       const data = await response.json();
+      if(response.status==200){
+
+      }else{
+        alert(data["message"])
+      }
       console.log(data);
       if (response.status == 200) {
         setPhotoFileData(data)

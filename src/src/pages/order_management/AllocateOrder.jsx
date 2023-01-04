@@ -34,45 +34,47 @@ function AllocateOrder({OrderID, type}) {
       }
 
 	const [body, setBody] = useState(sampleBody)
-
-	useEffect(()=>{
-		async function getState() {
-			try {
-				let uri = `${process.env.REACT_APP_API_SERVER}/order/getoptimalallocation/`
-				const response = await fetch(
-				uri,
-				{
-					method: "POST",
-					headers: {
-					"Content-Type": "application/json",
-					},
-					credentials: 'include',
-					body: JSON.stringify({"orderid": OrderID})
-				}
-				);
-				const data2 = await response.json();
-				console.log("getoptimalallocation",data2.allocation)
-
-				if(response.status==200){
-					setBody(prev=>{
-						prev.details=data2.allocation;
-						return prev;
-					})
-					setWearhouse(data2);
-					
-	
-					setUpdate(prev=>(prev+1)%10)
-	
-				}
-				else{
-					alert(data2["message"]);
-				}
-				
-			} catch (err) {
-					console.log(err);
-				}
+	async function getState() {
+		try {
+			let uri = `${process.env.REACT_APP_API_SERVER}/order/getoptimalallocation/`
+			const response = await fetch(
+			uri,
+			{
+				method: "POST",
+				headers: {
+				"Content-Type": "application/json",
+				},
+				credentials: 'include',
+				body: JSON.stringify({"orderid": OrderID})
 			}
-			getState();
+			);
+			const data2 = await response.json();
+			console.log("getoptimalallocation",data2.allocation)
+
+			if(response.status==200){
+				setBody(prev=>{
+					prev.details=data2.allocation;
+					return prev;
+				})
+				setWearhouse(data2);
+				
+
+				setUpdate(prev=>(prev+1)%10)
+
+			}
+			else{
+				alert(data2["message"]);
+			}
+			
+		} catch (err) {
+				console.log(err);
+			}
+		}
+	useEffect(()=>{
+		let timer = setTimeout(()=>getState(),1000);
+		return(()=>{
+			clearTimeout(timer)
+		})
 	},[])
 	console.log(wearhouse,"ARnav")
     
@@ -152,39 +154,8 @@ function AllocateOrder({OrderID, type}) {
 		}
 		// console.log("Submitted", body)
 	  };
-	  
-	useEffect(() => {
-		async function getState() {
-		try {
-			let uri = `${process.env.REACT_APP_API_SERVER}/order/OptimalOrderGeneration/`
-			const response = await fetch(
-			uri,
-			{
-				method: "POST",
-				headers: {
-				"Content-Type": "application/json",
-				},
-				credentials: 'include',
-				body: JSON.stringify({"orderid": OrderID})
-			}
-			);
-			const data2 = await response.json();
-			console.log("wearhouse received",data2)
-			if(response.status==200){
-				setWearhouse(data2);
 
-			}
-			else{
-				alert(data2["message"]);
-			}
-		//   setWearhouse(data2);
-			} catch (err) {
-				console.log(err);
-			}
-		}
-		getState();
-	}, [])
-	
+	  
 	
     
 

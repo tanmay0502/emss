@@ -487,24 +487,27 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
     const [fl, setFl] = useState(0);
 
     useEffect(()=>{
+        if(Object.keys(orderCount).length ==0 && Details.length!=0){
         let fillDemand = {}
         Details.map((val,id)=>{
             fillDemand[id.toString()]={};
         })
         
-        console.log(fillDemand)
+        console.log(Details,fillDemand)
         setOrderCount(fillDemand);
+    }
         if(props.Order ) {
            
             console.log(orderCount)
 
             if (Object.keys(orderCount).length != 0 && fl == 0) {
+                console.log(fl,"ffffffffffffffff")
                 setFl(1);
                 run();
             }
             
     }
-    },[Details])
+    },[Details,orderCount])
 
 
     const [boxId, setBoxId] = useState([]);
@@ -547,6 +550,27 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
 
 
     const  handleSubmit= async (e)=>{
+        let f=0;
+        WareHouse_List.map((val, id) =>{
+         {Object.keys(orderCount[id]).map((key)=>{
+        {Object.keys(Units).map((k1,ind)=>{
+            
+                if (Units[k1][orderCount[id][key]["manufacturer"].substring(0,1)+orderCount[id][key]["model"]+orderCount[id][key]["type"]] < orderCount[id][key]["quantity"]){
+                    f=1;
+                }
+
+        
+        })}})}})
+        { Object.keys(unitsDetails).map((key)=>{
+            if(unitsDetails[key]["CU"][0]>unitsDetails[key]["CU"][1] || unitsDetails[key]["BU"][0]>unitsDetails[key]["BU"][1] || unitsDetails[key]["VVPAT"][0]>unitsDetails[key]["VVPAT"][1]){
+                alert("Filled units and Total units must be same");
+                f=1;
+            }
+        })}
+        if(f){
+            // console.log("ddddd");
+            return
+        }
         let data={
             "orderid": props.OrderID,
             "flag": "A",
@@ -850,8 +874,8 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
                         <div className="flex w-full h-16 text-orange-600">
                             <div className="w-1/5">Manufacturer</div>
                             <div className="w-1/5">Model</div>
-                            <div className="w-1/5">Total CU / Filled CU</div>
                             <div className="w-1/5">Total BU / Filled BU</div>
+                            <div className="w-1/5">Total CU / Filled CU</div>
                             <div className="w-1/5">Total VVPAT / Filled VVPAT</div>
                         </div>
                         <hr />
@@ -860,9 +884,9 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
                         <div className="flex w-full h-14 pt-4">
                             <div className="w-1/5">{key.substring(0,1)=="E"?"ECIL":"BEL"}</div>
                             <div className="w-1/5">{key.substring(1,3)}</div>
-                            <div className={`w-1/5 ${unitsDetails[key]["CU"][0] > unitsDetails[key]["CU"][1] ? "text-red-400":"text-green-400"}`}>{unitsDetails[key]["CU"][0]+ "/" + unitsDetails[key]["CU"][1]}</div>
                             <div className={`w-1/5 ${unitsDetails[key]["BU"][0] > unitsDetails[key]["BU"][1] ? "text-red-400":"text-green-400"}`}>{unitsDetails[key]["BU"][0]+ "/" + unitsDetails[key]["BU"][1]}</div>
-                            <div className={`w-1/5 ${unitsDetails[key]["VVPAT"][0] > unitsDetails[key]["VVPAT"][1] ? "text-red-400":"text-green-400"}`}>{unitsDetails[key]["VVPAT"][0]+ "/" + unitsDetails[key]["VVPAT"][1]}</div>
+                            <div className={`w-1/5 ${unitsDetails[key]["CU"][0] > unitsDetails[key]["CU"][1] ? "text-red-400":"text-green-400"}`}>{unitsDetails[key]["CU"][0]+ "/" + unitsDetails[key]["CU"][1]}</div>
+                            <div className={`w-1/5 ${unitsDetails[key]["VVPAT"][0] > unitsDetails[key]["VVPAT"][1] ? "text-red-400":"text-green-400"}`}>{unitsDetails[key]["VVPAT"][0]+ "/" + unitsDetails[key]["VVPAT"][1]}</div>  
                          
                         </div>
                         <hr />

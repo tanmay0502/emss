@@ -121,8 +121,8 @@ export default function ViewOrderDetails() {
 
   useEffect(() => {
 
-    let timer = setTimeout(()=>getOrders(),200);
-    let timer2 = setTimeout(()=>ifDistrict(),500);
+    let timer = setTimeout(()=>getOrders(),700);
+    let timer2 = setTimeout(()=>ifDistrict(),1200);
     
     return (()=>{
       clearTimeout(timer)

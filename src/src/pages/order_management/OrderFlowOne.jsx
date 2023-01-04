@@ -103,38 +103,41 @@ export default function OrderFlowOne({OrderID,isSender}) {
     setSubDat(finalsubdat);
   }
 
-  useEffect(() => {
-    async function getOrders() {
-      try {
-        const body = {"orderid": orderID}
-        const response = await fetch(
-          `${process.env.REACT_APP_API_SERVER}/order/view_order/`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            credentials: 'include',
-            body: JSON.stringify(body)
-          }
-        );
-        const data2 = await response.json();
-        if(data2['data']) {
-          console.log(data2["data"])
-            getSubOrder(data2['data']);
-            setAllOrders(data2["data"]);
+  async function getOrders() {
+    try {
+      const body = {"orderid": orderID}
+      const response = await fetch(
+        `${process.env.REACT_APP_API_SERVER}/order/view_order/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: 'include',
+          body: JSON.stringify(body)
         }
-        else{
-          alert(data2.message)
-        }
-      } catch (err) {
-        console.log(err);
+      );
+      const data2 = await response.json();
+      if(data2['data']) {
+        console.log(data2["data"])
+          getSubOrder(data2['data']);
+          setAllOrders(data2["data"]);
       }
+      else{
+        alert(data2.message)
+      }
+    } catch (err) {
+      console.log(err);
     }
-    if (isPageLoaded == 0) {
-      getOrders();
-      setIsPageLoaded(1)
-    }
+  }
+
+  useEffect(() => {
+    
+    let timer  = setTimeout(()=>getOrders(),1000);
+
+    return (()=>{
+      clearTimeout(timer)
+    })
 
   },[])
 

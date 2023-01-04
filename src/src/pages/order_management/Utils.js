@@ -125,7 +125,7 @@ export const  UnitCount = async (body) => {
     
    try{
         const response = await fetch(
-        `${process.env.REACT_APP_API_SERVER}/unit/unitcountbystatus/`,
+        `${process.env.REACT_APP_API_SERVER}/unit/total_counts`,
         {
         method: "POST",
         headers: {

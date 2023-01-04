@@ -150,6 +150,12 @@ export default function GenarateOrderITRS() {
         }
       );
       const data2 = await response.json();
+      console.log(data2)
+      if(response.status==200){
+
+      }else{
+        alert(data2["message"])
+      }
       console.log(data2["OrderIDs List"]);
 
       let t = [];
@@ -166,14 +172,13 @@ export default function GenarateOrderITRS() {
         getcertificate(p);
         openModal();
       }
+      
       if (response["status"] == 200) {
         // alert("Order Generated Successfully");
         getcertificate(p);
         openModal();
       }
-      else{
-        alert(data2.message)
-      }
+      
       // if (response["status"] == 200) {
       //   window.location = '/session/ordermanagement'
       // }

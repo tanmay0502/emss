@@ -114,31 +114,35 @@ export default function OrderList() {
         "Last Action Date": "Last Action Date",
     }
     const UserId = window.sessionStorage.getItem('sessionToken');
-    useEffect(()=>{
-        async function getOrders() {
-            try {
-                const response = await fetch(
-                    `${process.env.REACT_APP_API_SERVER}/order/list_orders/`,
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        credentials: 'include',
-                    }
-                );
-                const data2 = await response.json();
-                console.log(data2)
-                if (data2["status"] != 404 && data2["data"])
-                    setData(data2["data"])
-                    else{
-                        alert(data2.message)
-                      }
-            } catch (err) {
-                console.log(err);
-            }
+    async function getOrders() {
+        try {
+            const response = await fetch(
+                `${process.env.REACT_APP_API_SERVER}/order/list_orders/`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: 'include',
+                }
+            );
+            const data2 = await response.json();
+            console.log(data2)
+            if (data2["status"] != 404 && data2["data"])
+                setData(data2["data"])
+                else{
+                    alert(data2.message)
+                  }
+        } catch (err) {
+            console.log(err);
         }
-        getOrders();
+    }
+    useEffect(()=>{
+        let timer = setTimeout(()=>getOrders(),400);
+
+        return (()=>{
+            clearTimeout(timer);
+        })
     },[])
     
     const [data, setData] = useState([]);
