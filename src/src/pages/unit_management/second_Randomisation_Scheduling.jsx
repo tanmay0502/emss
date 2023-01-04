@@ -107,7 +107,14 @@ function Second_Randomisation_Scheduling() {
             + mins + ":"
             + secs;
 
-        console.log(document.getElementById("electiontype").value, 'document.getElementById("electiontype").value', document.getElementById("supplementary").value)
+        console.log({
+            district: districtCode,
+            acs: [...ACCodes],
+            electionid: document.getElementById("electiontype") ? document.getElementById("electiontype").value : "",
+            startdate: document.getElementById("startdate") ? document.getElementById("startdate").value + " " + time : "",
+            enddate: document.getElementById("enddate") ? document.getElementById("enddate").value + " " + time : "",
+            supplementary: document.getElementById("supplementary") ? document.getElementById("supplementary").value : "f",
+        })
         try {
             const response = await fetch(
                 `${process.env.REACT_APP_API_SERVER}/unit/schedule-second-randomization`,

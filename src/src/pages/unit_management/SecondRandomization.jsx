@@ -116,7 +116,7 @@ const SecondRandomisationForm = ({ isVisible }) => {
                 ps_no: "",
                 ps_name: "",
                 cu_count: 0,
-                bu_count: "0",
+                bu_count: 0,
                 vt_count: 0,
             },
             ...assemblyData.slice(id + 1),
@@ -162,6 +162,7 @@ const SecondRandomisationForm = ({ isVisible }) => {
                     }),
                 });
                 const data = await response.json();
+                console.log(data, 'date')
                 if (response.status === 200) {
 
                     setRandomisedData(data);
@@ -172,7 +173,7 @@ const SecondRandomisationForm = ({ isVisible }) => {
                     setIsSubmitted(true);
                     // pass the data to child component & re-render
                 } else {
-                    alert(data.message);
+                    alert("Not Possible");
                 }
             } catch (err) {
                 alert(`Error occured: ${err}`);
@@ -183,7 +184,7 @@ const SecondRandomisationForm = ({ isVisible }) => {
 
 
     const [pollingStationDataMessage, setPollingStationDataMessage] = useState("Fetching Polling Station Data...")
-
+    console.log(assemblyDetails, "assemblyDetails")
     useEffect(() => {
         // Initial fetching of any previous available user inputsc
         if (isVisible && ACCode && ACCode !== '') {

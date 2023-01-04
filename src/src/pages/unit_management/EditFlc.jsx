@@ -116,10 +116,12 @@ function FlcEdit() {
     const [Type_of_election_sf, setType_of_election_sf] = useState('');
     const User_ID = sessionStorage.getItem("sessionToken");
     const [photoFileData, setPhotoFileData] = useState("")
+    const [photoFileName, setPhotoFileName] = useState("")
     const [flcreport, setflcreport] = useState("")
     const [flcreportname, setflcreportname] = useState("")
     const [Acknowledgmentname, setAcknowledgmentname] = useState("")
     const [inputflcreport, setinputflcreport] = useState(-1)
+    const [inputphotoFileData, setinputphotoFileData] = useState(-1)
     const [Acknowledgment, setAcknowledgment] = useState("")
     const [InputAcknowledgment, setInputAcknowledgment] = useState(-1)
     const [Intimation_Letter, setIntimation_Letter] = useState("")
@@ -267,7 +269,7 @@ function FlcEdit() {
             if (response.status === 200) {
                 if (data['data'].length) {
                     setFlc((data['data'] !== null) ? data['data'] : [])
-                    setdistrict((data['data'][0]['district'] !== null) ? data['data'][0]['district'] : '')
+                    setdistrict((data['data'][0]['districtName'] !== null) ? data['data'][0]['districtName'] : '')
                     setmanufacture((data['data'][0]['manufacturer'] !== null) ? data['data'][0]['manufacturer'] : '')
                     setTentative_month_of_election((data['data'][0]['tentativemonth'] !== null) ? data['data'][0]['tentativemonth'] : '')
                     setTentative_Year_Of_Election((data['data'][0]['tentativeyear'] !== null) ? data['data'][0]['tentativeyear'] : '')
@@ -367,6 +369,7 @@ function FlcEdit() {
             const data = await response.json();
             if (response.status === 200) {
                 setPhotoFileData(data['data'])
+                setinputphotoFileData(1)
             }
 
         } catch (err) {
@@ -680,6 +683,47 @@ function FlcEdit() {
         SubmitAcknowledgment();
     };
 
+    async function SubmitPreparednesscertificate() {
+
+        setinputphotoFileData(1);
+
+        try {
+            let id = issueId();
+            const response = await fetch(
+                `${process.env.REACT_APP_API_SERVER}/unit/uploadUnitDocument`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        "fileType": "preparednessCertificate",
+                        "flcID": Number(id),
+                        "fileData": photoFileData
+                    }),
+                }
+            );
+
+            const data = await response.json();
+            if (data["message"] === "Success") {
+                document.getElementById("form").reset();
+                alert("Successful");
+                window.location.pathname = "/session/unitmanagement/flc_list";
+            } else {
+                alert("Edit Failed! ");
+
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    const Uploadpreparednesscertificate = async (e) => {
+        e.preventDefault();
+        SubmitPreparednesscertificate();
+    };
+
 
 
     async function SubmitFlcReport() {
@@ -796,6 +840,7 @@ function FlcEdit() {
                         <div class={scheduleStyles.div4}>
                             <p>District</p>
                             <input
+                                disabled
                                 class={scheduleStyles.input}
                                 type="text"
                                 id="1"
@@ -803,7 +848,6 @@ function FlcEdit() {
                                 placeholder='Enter District'
                                 value={district}
                                 onChange={(e) => { setdistrict(e.target.value) }}
-                                disabled={edit === 'CEO' ? false : true}
                             ></input>
 
                         </div>
@@ -1114,7 +1158,49 @@ function FlcEdit() {
                             : " "}
                     </>
                     <div className={scheduleStyles.parent3}>
-                        <label htmlFor="" style={{ paddingTop: "11px", fontSize: "20px", marginRight: '53%' }}> Preparedness Certificate: </label>
+                        <label htmlFor="" style={{ paddingTop: "11px", fontSize: "20px", marginRight: '53%' }}>  Preparedness Certificate: </label>
+                        {photoFileData !== '' && inputphotoFileData === 1 &&
+                            <div onClick={openModal_Preparedness_Certificate}
+                                style={{ marginRight: '60%', background: "white", color: "black", overflow: "hidden", display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                            ><u>View Preparedness Certificate</u></div>
+                        }
+
+                        {photoFileData === '' && Role !== 'DEO' &&
+                            <div
+                                style={{ marginRight: '79%', background: "white", color: "black", overflow: "hidden", display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                            >  <u> Not Uploaded </u>  </div>
+                        }
+
+                        {photoFileData === '' && inputphotoFileData === -1 && Role === 'DEO' &&
+                            <input
+                                id="formUserImage"
+                                type="file"
+                                required
+                                onChange={async (e) => {
+                                    setPhotoFileName(e.target.value.replace(/^.*[\\/]/, ''))
+                                    setPhotoFileData(await getBase64(e.target.files[0]))
+                                }}
+                            />
+                        }
+
+                        {photoFileData !== '' && inputphotoFileData === -1 && Role === 'DEO' &&
+                            <button class={scheduleStyles.uploadBtn} onClick={Uploadpreparednesscertificate}> Upload </button>
+                        }
+
+                        <Modal
+                            isOpen={modalIsOpen_Preparedness_Certificate}
+                            onAfterOpen={afterOpenModal_Preparedness_Certificate}
+                            onRequestClose={closeModal_Preparedness_Certificate}
+                            style={customStyles}
+                        >
+                            <div id="root" className=''>
+                                <div className='flex justify-center items-center'>
+                                    {<embed style={{ width: "600px", height: "600px", padding: "10px" }} src={`${photoFileData}`} />}
+                                </div>
+                                <button style={{ color: "white", }} onClick={closeModal_Preparedness_Certificate}>Close</button>
+                            </div>
+                        </Modal>
+                        {/* <label htmlFor="" style={{ paddingTop: "11px", fontSize: "20px", marginRight: '53%' }}> Preparedness Certificate: </label>
                         <div onClick={openModal_Preparedness_Certificate}
                             style={{ marginRight: '61%', background: "white", color: "black", overflow: "hidden", display: 'flex', justifyContent: 'center', alignItems: 'center' }}
                         >  <u> View Preparedness Certificate </u>  </div>
@@ -1131,7 +1217,7 @@ function FlcEdit() {
                                 </div>
                                 <button style={{ color: "white", }} onClick={closeModal_Preparedness_Certificate}>Close</button>
                             </div>
-                        </Modal>
+                        </Modal> */}
 
                         <label htmlFor="" style={{ paddingTop: "11px", fontSize: "20px", marginRight: '67%' }}>  Intimation Letter: </label>
                         <div onClick={openModal_Intimation_Letter}

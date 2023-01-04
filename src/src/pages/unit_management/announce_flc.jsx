@@ -13,7 +13,7 @@ function Announce_Flc() {
     var secs = currentdate.getSeconds();
     const [District, setDistrict] = useState([])
     // const [details, setDetails] = useState([])
-    const [setDetails] = useState([])
+    const [details, setDetails] = useState([])
     const [listElections, setListElections] = useState([])
     const [electionid, setelectionid] = useState(-1)
     const [manufacture, setmanufacture] = useState('')
@@ -290,12 +290,13 @@ function Announce_Flc() {
 
     const setDistrictFunction = (e) => {
 
-        if (!selectedDistricts.includes(District[e.target.value][1][1])) {
-            setSelectedDistricts([...selectedDistricts, District[e.target.value][1][1]])
-            setSelectedDistrictssf([...selectedDistrictssf, District[e.target.value][1][0]])
+        if (!selectedDistricts.includes(District[e.target.value]['dtName'])) {
+            setSelectedDistricts([...selectedDistricts, District[e.target.value]['dtName']])
+            setSelectedDistrictssf([...selectedDistrictssf, District[e.target.value]['dtCode']])
         }
     }
 
+    console.log(District, 'DistrictDistrict')
 
     const handleInputChange = (e) => {
         let month = listElections[e.target.value].startdate.slice(3, 5);
@@ -422,6 +423,8 @@ function Announce_Flc() {
     };
 
 
+    console.log(selectedDistricts, selectedDistrictssf)
+
     const onFormSubmit = async (e) => {
         e.preventDefault();
         AnnounceFLC();
@@ -458,7 +461,7 @@ function Announce_Flc() {
                     </div>
 
                     <div className='w-full text-left p-4'>
-                        {/* <div className='flex' > */}
+
                         <div className='w-1/2 m-2' >
                             <p>Districts</p>
                             <select
@@ -483,7 +486,9 @@ function Announce_Flc() {
 
                             </select>
                         </div>
-                        <div className='flex flex-wrap w-full items-center'>
+
+
+                        <div className='flex flex-wrap w-full  items-center'>
                             {selectedDistricts && selectedDistricts.map((val, index) => (
                                 <div className='rounded-lg gap-1 m-1 p-2 flex align-middle shadow-md shadow-black'>{val}
                                     <AiOutlineClose className='cursor-pointer text-red-400' onClick={() => {
@@ -491,6 +496,7 @@ function Announce_Flc() {
                                     }} /></div>
                             ))}
                         </div>
+
                         <div className='grid grid-cols-2 gap-6'>
 
                             <div className=''>
