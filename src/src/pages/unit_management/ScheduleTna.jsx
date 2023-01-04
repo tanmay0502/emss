@@ -21,7 +21,11 @@ function ScheduleTna() {
 
 
     const checkPerc = () => {
-        setPercDef((countDef / polling) * 100)
+        setPercDef((countDef/polling)*100)
+        if(percDef >11){
+            alert("Unit Count should be less than 11%")
+            setPercDef(10)
+        }
     }
 
     useEffect(() => {
