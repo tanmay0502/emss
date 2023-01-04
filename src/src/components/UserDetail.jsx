@@ -9,7 +9,7 @@ function UserDetail(props) {
   const [editPic, setEditPic] = useState(0)
   const [currImage, setCurrImage] = useState(0)
   const [uploadPending, setUploadPending] = useState(0)
-  
+  const User_ID = sessionStorage.getItem("sessionToken");
   
   function editProfile() {
     setEditPic(editPic ^ 1);
@@ -74,6 +74,9 @@ function UserDetail(props) {
       }
   }
 
+  const changePassword = async () => {
+    navigate(`/session/user-profile/changepassword/${props.detail["userid"]}`)
+  }
 
   const ResetPassword = async () => {
     const userId = props.detail["userid"];
@@ -182,9 +185,11 @@ useEffect(() => {
           <div className="right_btn" onClick={() => {props.editPage()}}>
             Edit User Profile
           </div>
-          <div className="right_btn" onClick={() => ResetPassword()}>
+          {props.detail["userid"]==User_ID ?<div className="right_btn" onClick={() => changePassword()}>
+            Change Password
+          </div>:<div className="right_btn" onClick={() => ResetPassword()}>
             Reset Password
-          </div>
+          </div>}
         </div>
       </div>
       <div className="rounded-full justify-center flex " style={{ position: "relative" }}>

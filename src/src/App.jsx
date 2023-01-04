@@ -41,6 +41,7 @@ import ScheduleCDP_edit from './pages/unit_management/ScheduleCDP_edit';
 import ScheduleCDP from './pages/unit_management/ScheduleCDP';
 import First_Randomisation_Scheduling from './pages/unit_management/first_Randomisation_Scheduling'
 import Second_Randomisation_Scheduling from './pages/unit_management/second_Randomisation_Scheduling'
+import ChangePassword from './components/ChangePassword';
 
 import FirstRandomization from './pages/unit_management/FirstRandomization';
 import SecondRandomization from './pages/unit_management/SecondRandomization';
@@ -245,6 +246,10 @@ function App() {
 						<Route
 							path="/session/user-profile/:id"
 							element={<Profile />}
+						/>
+						<Route
+							path="/session/user-profile/changepassword/:id"
+							element={<ChangePassword />}
 						/>
 						<Route
 							path="/session/viewpermissions"

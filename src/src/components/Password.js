@@ -1,6 +1,5 @@
 import React from "react";
 import { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { AiOutlineEye, AiFillEyeInvisible } from 'react-icons/ai';
 const Password = (props) => {
   const [passwordType, setPasswordType] = useState("password");
