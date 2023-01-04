@@ -776,7 +776,7 @@ export default function WareHouseListUnitTrackerFillAvailability(props) {
 
                                 </thead>
                             </table>
-                        <div  className="overflow-x-scroll overflow-y-hidden  p-5" style={{height:"700px"}}>
+                        <div  className="overflow-x-scroll  p-5" style={{height:"700px"}}>
                            
                         <table className="w-11/12 m-2">
                                 <tbody >

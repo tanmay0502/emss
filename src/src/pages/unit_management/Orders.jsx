@@ -17,7 +17,7 @@ function Orders(){
   const [allOrders, setAllOrders] = useState([]);
   const [orderID,setOrderID] = useState("");
   const [displayMessage, setDisplayMessage] = useState("");
-  const [isvalidated,setIsvalidated] = useState(-1)
+  const [isvalidated,setIsvalidated] = useState(0)
   const [isValidating,setIsValidating] =useState(0)
   const [role, setRole] =useState(-1);
   const [isFile, setIsFile] = useState(0);
@@ -272,7 +272,7 @@ useEffect(()=>{
           
             <div className='MainHeader pd-5 ' style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between", "alignItems": "center" }}>
                     <h4 className='text-white'>Order</h4>
-                    <button className='text-white text-lg' onClick={()=>setIsvalidated(0)}>Validate a Order</button>
+                    <button className='text-white text-lg' onClick={()=>setIsvalidated(0)}>Enter a Order</button>
             </div>
            {isvalidated==0 &&
            <div className='m-10 '>
