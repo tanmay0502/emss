@@ -364,7 +364,19 @@ function Announce_Flc() {
 
     };
 
-
+    console.log({
+        "district": selectedDistrictssf,
+        "manufacturer": manufacture,
+        "manufacturerStateCoordinatorName": Manufacturer_State_Coordinator_Name,
+        "manufacturerStateCoordinatorMobNo": Manufacturer_State_Coordinator_Mobile_No,
+        "manufacturerStateCoordinatorEmailId": Manufacturer_State_Coordinator_Email_ID,
+        "startDate": startdate ? startdate.slice(8) + '-' + startdate.slice(5, 7) + "-" + startdate.slice(0, 4) : '',
+        "endDate": enddate ? enddate.slice(8) + '-' + enddate.slice(5, 7) + "-" + enddate.slice(0, 4) : '',
+        "tentativeYear": Tentative_Year_Of_Election,
+        "tentativeMonth": Tentative_month_of_election,
+        "electionType": Type_of_election_sf,
+        "electionID": electionid
+    })
     async function AnnounceFLC() {
 
         if (electionid !== -1) {

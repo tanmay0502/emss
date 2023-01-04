@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import styles from './styles/ViewUnit.module.css'
+import { useNavigate } from "react-router-dom";
+
+
 export default function Viewunit() {
+
+
+  const navigate = useNavigate();
   const [UNITID, setUNITID] = useState();
   const [status, setstatus] = useState();
   const [location, setlocation] = useState();
@@ -10,6 +16,8 @@ export default function Viewunit() {
   const [updatedby, setupdatedby] = useState();
   const [remark, setremark] = useState();
   const [timestamp, settimestamp] = useState();
+  const User_ID = sessionStorage.getItem("sessionToken");
+  const Role = User_ID.substring(8)
   const unitId = () => {
     const URL = window.location.href;
     const arr = URL.split("/");
@@ -62,123 +70,131 @@ export default function Viewunit() {
     },
     [UNITID]
   );
+
+  const Statushistory = async (e) => {
+    navigate('/session/unitmanagement/statushistory/' + UNITID)
+  };
+
   return (
-    <div className="shadow-lg mb-10 pb-10 bg-white" style={{ borderRadius: "2%" }}>
-      <div className='MainHeader pd-5 ' style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between", "alignItems": "center" }}>
-        <h4 className='text-white'>Unit </h4>
-      </div>
-      <div class={styles.parent}>
-        <div class={styles.div1}>
-          <p>Unit ID</p>
-          <input
-            type="text"
-            class={styles.input}
-            id="1"
-            className="selectBox"
-            placeholder='---'
-            disabled
-            defaultValue={UNITID}
-          ></input>
-        </div>
-        <div class={styles.div2}>
-          <p>Status</p>
-          <input
-            type="text"
-            class={styles.input}
-            id="1"
-            className="selectBox"
-            placeholder='---'
-            disabled
-            defaultValue={status}
-          ></input>
-        </div>
-        <div class={styles.div3}>
-          <p>Remark</p>
-          <input
-            type="text"
-            class={styles.input}
-            id="1"
-            className="selectBox"
-            placeholder='---'
-            disabled
-            defaultValue={remark}
-          ></input>
-        </div>
-        <div class={styles.div4}>
-          <p>Location</p>
-          <input
-            type="text"
-            class={styles.input}
-            id="1"
-            className="selectBox"
-            placeholder='---'
-            disabled
-            defaultValue={location}
-          ></input>
-        </div>
-        <div class={styles.div5}>
-          <p>Updated By</p>
-          <input
-            type="text"
-            class={styles.input}
-            id="1"
-            className="selectBox"
-            placeholder='---'
-            disabled
-            defaultValue={updatedby}
-          ></input>
-        </div>
-        <div class={styles.div6}>
-          <p>Time Stamp</p>
-          <input
-            type="text"
-            class={styles.input}
-            id="1"
-            className="selectBox"
-            placeholder='---'
-            disabled
-            defaultValue={timestamp}
-          ></input>
-        </div>
-        <div class={styles.div7}>
-          <p>Model</p>
-          <input
-            type="text"
-            class={styles.input}
-            id="1"
-            className="selectBox"
-            placeholder='---'
-            disabled
-            defaultValue={model}
-          ></input>
-        </div>
-        <div class={styles.div8}>
-          <p>Version</p>
-          <input
-            type="text"
-            class={styles.input}
-            id="1"
-            className="selectBox"
-            placeholder='---'
-            disabled
-            defaultValue={version}
-          ></input>
-        </div>
-        <div class={styles.div9}>
-          <p>Year</p>
-          <input
-            type="text"
-            class={styles.input}
-            id="1"
-            className="selectBox"
-            placeholder='---'
-            disabled
-            defaultValue={year}
-          ></input>
-        </div>
-      </div>
+    <>
 
 
-    </div>
+      <div className="shadow-lg mb-10 pb-10 bg-white" style={{ borderRadius: "2%" }}>
+        <div className='MainHeader pd-5 ' style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between", "alignItems": "center" }}>
+          <h4 className='text-white'>Unit </h4>
+        </div>
+        <div class={styles.parent}>
+          <div class={styles.div1}>
+            <p>Unit ID</p>
+            <input
+              type="text"
+              class={styles.input}
+              id="1"
+              className="selectBox"
+              placeholder='---'
+              disabled
+              defaultValue={UNITID}
+            ></input>
+          </div>
+          <div class={styles.div2}>
+            <p>Status</p>
+            <input
+              type="text"
+              class={styles.input}
+              id="1"
+              className="selectBox"
+              placeholder='---'
+              disabled
+              defaultValue={status}
+            ></input>
+          </div>
+          <div class={styles.div3}>
+            <p>Remark</p>
+            <input
+              type="text"
+              class={styles.input}
+              id="1"
+              className="selectBox"
+              placeholder='---'
+              disabled
+              defaultValue={remark}
+            ></input>
+          </div>
+          <div class={styles.div4}>
+            <p>Location</p>
+            <input
+              type="text"
+              class={styles.input}
+              id="1"
+              className="selectBox"
+              placeholder='---'
+              disabled
+              defaultValue={location}
+            ></input>
+          </div>
+          <div class={styles.div5}>
+            <p>Updated By</p>
+            <input
+              type="text"
+              class={styles.input}
+              id="1"
+              className="selectBox"
+              placeholder='---'
+              disabled
+              defaultValue={updatedby}
+            ></input>
+          </div>
+          <div class={styles.div6}>
+            <p>Time Stamp</p>
+            <input
+              type="text"
+              class={styles.input}
+              id="1"
+              className="selectBox"
+              placeholder='---'
+              disabled
+              defaultValue={timestamp}
+            ></input>
+          </div>
+          <div class={styles.div7}>
+            <p>Model</p>
+            <input
+              type="text"
+              class={styles.input}
+              id="1"
+              className="selectBox"
+              placeholder='---'
+              disabled
+              defaultValue={model}
+            ></input>
+          </div>
+          <div class={styles.div8}>
+            <p>Version</p>
+            <input
+              type="text"
+              class={styles.input}
+              id="1"
+              className="selectBox"
+              placeholder='---'
+              disabled
+              defaultValue={version}
+            ></input>
+          </div>
+          <div class={styles.div9}>
+            <p>Year</p>
+            <input
+              type="text"
+              class={styles.input}
+              id="1"
+              className="selectBox"
+              placeholder='---'
+              disabled
+              defaultValue={year}
+            ></input>
+          </div>
+        </div>
+      </div>
+      {Role == 'ADM' && <button class={styles.submitBtn} onClick={Statushistory}> View History </button>}
+    </>
   );
 }

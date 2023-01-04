@@ -83,6 +83,7 @@ function First_Randomisation_Scheduling() {
     }
 
 
+
     useEffect(
         () => {
 
@@ -127,36 +128,36 @@ function First_Randomisation_Scheduling() {
 
     console.log(dist)
 
+    var currentdate = new Date();
+    var hrs = currentdate.getHours();
+    var mins = currentdate.getMinutes();
+    var secs = currentdate.getSeconds();
 
+    if (hrs < 10) {
+        hrs = "0" + hrs;
+
+    }
+    if (mins < 10) {
+        mins = "0" + mins;
+    }
+    if (secs < 10) {
+        secs = "0" + secs;
+    }
+
+    var time = hrs + ":"
+        + mins + ":"
+        + secs;
+
+
+    console.log({
+        districts: [...distCodes],
+        electionid: document.getElementById("electiontype") ? document.getElementById("electiontype").value : "",
+        startdate: document.getElementById("startdate") ? document.getElementById("startdate").value + " " + time : "",
+        enddate: document.getElementById("enddate") ? document.getElementById("enddate").value + " " + time : "",
+        supplementary: document.getElementById("supplementary") ? document.getElementById("supplementary").value : "f"
+    })
     async function Submit_First_randomization() {
 
-        var currentdate = new Date();
-        var hrs = currentdate.getHours();
-        var mins = currentdate.getMinutes();
-        var secs = currentdate.getSeconds();
-
-        if (hrs < 10) {
-            hrs = "0" + hrs;
-
-        }
-        if (mins < 10) {
-            mins = "0" + mins;
-        }
-        if (secs < 10) {
-            secs = "0" + secs;
-        }
-
-        var time = hrs + ":"
-            + mins + ":"
-            + secs;
-
-        console.log({
-            districts: [...distCodes],
-            electionid: document.getElementById("electiontype") ? document.getElementById("electiontype").value : "",
-            startdate: document.getElementById("startdate") ? document.getElementById("startdate").value + " " + time : "",
-            enddate: document.getElementById("enddate") ? document.getElementById("enddate").value + " " + time : "",
-            supplementary: document.getElementById("supplementary") ? document.getElementById("supplementary").value : "f"
-        })
 
         try {
             const response = await fetch(
@@ -184,7 +185,7 @@ function First_Randomisation_Scheduling() {
                 window.location.pathname = "/session/unitmanagement"
             } else {
                 alert('First Randomization not Possible');
-                document.getElementById("electiontype").value = ""
+                document.getElementById("electiontype").value = "select"
                 document.getElementById("startdate").value = ""
                 document.getElementById("enddate").value = ""
             }
@@ -236,8 +237,8 @@ function First_Randomisation_Scheduling() {
                         </select>
                     </div>
                     <div class={styles.div2}>
-                        <p> Supplementary? </p>
-                        <select id="supplementary" onSelect={(e) => { setelectiontype(e) }}>
+                        <p> Supplementary </p>
+                        <select id="supplementary">
                             <option value="f">No</option>
                             <option value="t">Yes</option>
                         </select>
@@ -277,7 +278,6 @@ function First_Randomisation_Scheduling() {
                         renderCheckboxes={true}
                         renderMasterCheckbox={false}
                         isCheckboxChecked={({ dtCode }) => {
-                            console.log(dtCode)
                             distCodes.has(dtCode)
                         }}
                         // onMasterCheckboxChange={(_, rows) => {

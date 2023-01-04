@@ -152,7 +152,7 @@ export default function Schedule_List_CDP() {
                         }}
                     />
                 </div>
-                : <div style={{ background: 'black' }}>'hiiiiiiiiiiiiiiii'</div>
+                : ''
             }
         </div>
     )

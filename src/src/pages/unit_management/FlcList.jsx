@@ -66,6 +66,7 @@ export default function FLCList() {
                 return {
                     'FLC ID': val['flcid'],
                     'Manufacturer': val['manufacturer'],
+                    'State': val['state'],
                     'District': val['districtName'],
                     'Election Type': ((val['electiontype'] === 'GA') ? "General Assembly" : (val['electiontype'] === 'GP') ? 'General Parliment' : (val['electiontype'] === 'BA') ? 'By-Poll Assembly' : 'By-Poll Parliment'),
                     "FLC Period": (val['startdate'] && val['enddate']) ? val['startdate'].split('T')[0] + " - " + val['enddate'].split('T')[0] : ""

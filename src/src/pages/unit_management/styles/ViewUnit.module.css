@@ -48,3 +48,9 @@ margin: 5% 15%;
     display: flex;
     padding-bottom: 10px;
   }
+
+.submitBtn {
+  background-color: #f56a3f;
+  color: white;
+  margin-left: 90%;
+}
