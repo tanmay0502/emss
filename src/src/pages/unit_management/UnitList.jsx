@@ -42,6 +42,7 @@ export default function UnitList() {
     block: false,
     unblock: false,
     dispatch: false,
+    destroy:false,
 
   };
   const [ReplacedUnitID, setReplacedUnitID] = useState([]);
@@ -391,7 +392,7 @@ export default function UnitList() {
 
   return (
     <>
-      <StatusUpdate isVisibleepUnmarkForm={cardVisibility.epUnmarkForm} isVisibleepForm={cardVisibility.epForm} isVisibleblock={cardVisibility.block} isVisibleunblock={cardVisibility.unblock} activeButtons={cardVisibility} onButtonClick={handleButtonClick} flag={flag} data2={data2} initialInputValuesReplace={initialInputValuesReplace} setInputValuesReplace={setInputValuesReplace} inputValuesReplace={inputValuesReplace} handleInputChangeReplace={handleInputChangeReplace} isVisible={cardVisibility.replacementForm} Added={Added} handleInputChange_ReplacedUnitID={handleInputChange_ReplacedUnitID} handleInputChange_ReplacingUnitID={handleInputChange_ReplacingUnitID} handleInputChange_typeofdefect={handleInputChange_typeofdefect} handleEdit_Dropdown_rows={handleEdit_Dropdown_rows} Typeofdefect={Typeofdefect} ReplacingUnitID={ReplacingUnitID} ReplacedUnitID={ReplacedUnitID} handleRemoveClick_Dropdown_rows={handleRemoveClick_Dropdown_rows} />
+      <StatusUpdate isVisibleepUnmarkForm={cardVisibility.epUnmarkForm} isVisibledestroyed={cardVisibility.destroy} isVisibledispatch={cardVisibility.dispatch} isVisibleepForm={cardVisibility.epForm} isVisibleblock={cardVisibility.block} isVisibleunblock={cardVisibility.unblock} activeButtons={cardVisibility} onButtonClick={handleButtonClick} flag={flag} data2={data2} initialInputValuesReplace={initialInputValuesReplace} setInputValuesReplace={setInputValuesReplace} inputValuesReplace={inputValuesReplace} handleInputChangeReplace={handleInputChangeReplace} isVisible={cardVisibility.replacementForm} Added={Added} handleInputChange_ReplacedUnitID={handleInputChange_ReplacedUnitID} handleInputChange_ReplacingUnitID={handleInputChange_ReplacingUnitID} handleInputChange_typeofdefect={handleInputChange_typeofdefect} handleEdit_Dropdown_rows={handleEdit_Dropdown_rows} Typeofdefect={Typeofdefect} ReplacingUnitID={ReplacingUnitID} ReplacedUnitID={ReplacedUnitID} handleRemoveClick_Dropdown_rows={handleRemoveClick_Dropdown_rows} />
       {cardVisibility.replacementForm == true ?
         <UnitListCard updateChecked={updateChecked} bgColor={bgColor} ReplacedUnitID={ReplacedUnitID} data={data} />
         :
@@ -415,7 +416,7 @@ const ActionButton = ({ isActive, text, name, onClick }) => {
   );
 };
 
-const StatusUpdate = ({ isVisibleepUnmarkForm, isVisibleepForm, isVisibleblock, isVisibleunblock, activeButtons, onButtonClick, flag, data2, initialInputValuesReplace, setInputValuesReplace, inputValuesReplace, handleInputChangeReplace, isVisible, Added, handleInputChange_ReplacedUnitID, handleInputChange_ReplacingUnitID, handleInputChange_typeofdefect, handleEdit_Dropdown_rows, ReplacingUnitID, ReplacedUnitID, Typeofdefect, handleRemoveClick_Dropdown_rows }) => {
+const StatusUpdate = ({ isVisibleepUnmarkForm,isVisibledestroyed,isVisibledispatch, isVisibleepForm, isVisibleblock, isVisibleunblock, activeButtons, onButtonClick, flag, data2, initialInputValuesReplace, setInputValuesReplace, inputValuesReplace, handleInputChangeReplace, isVisible, Added, handleInputChange_ReplacedUnitID, handleInputChange_ReplacingUnitID, handleInputChange_typeofdefect, handleEdit_Dropdown_rows, ReplacingUnitID, ReplacedUnitID, Typeofdefect, handleRemoveClick_Dropdown_rows }) => {
   return (
 
     <div className={styles.unit_list_container}>
@@ -462,6 +463,12 @@ const StatusUpdate = ({ isVisibleepUnmarkForm, isVisibleepForm, isVisibleblock, 
           name="dispatch"
           onClick={onButtonClick}
         />
+        <ActionButton
+          isActive={activeButtons.destroy}
+          text="Unit Destruction"
+          name="destroy"
+          onClick={onButtonClick}
+        />
       </div>
 
       <EPUnmarkForm isVisible={isVisibleepUnmarkForm} />
@@ -469,6 +476,8 @@ const StatusUpdate = ({ isVisibleepUnmarkForm, isVisibleepForm, isVisibleblock, 
       <ReplacementForm flag={flag} data2={data2} initialInputValuesReplace={initialInputValuesReplace} setInputValuesReplace={setInputValuesReplace} inputValuesReplace={inputValuesReplace} handleInputChangeReplace={handleInputChangeReplace} isVisible={isVisible} Added={Added} handleInputChange_ReplacedUnitID={handleInputChange_ReplacedUnitID} handleInputChange_ReplacingUnitID={handleInputChange_ReplacingUnitID} handleInputChange_typeofdefect={handleInputChange_typeofdefect} handleEdit_Dropdown_rows={handleEdit_Dropdown_rows} Typeofdefect={Typeofdefect} ReplacingUnitID={ReplacingUnitID} ReplacedUnitID={ReplacedUnitID} handleRemoveClick_Dropdown_rows={handleRemoveClick_Dropdown_rows} />
       <UnBlock isVisible={isVisibleunblock} />
       <Block isVisible={isVisibleblock} />
+      <Orders isVisible={isVisibledispatch}/>
+      {/* <Destroy isVisible={isVisibledestroyed}/> */}
     </div >
 
   );
