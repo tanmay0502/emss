@@ -3,6 +3,9 @@ import React, { useEffect, useState } from 'react'
 import styles from './styles/ScheduleNew.module.css'
 import { getRealm, formatRealm2,formatRealm3 } from '../../components/utils'
 import { AiOutlineClose } from "react-icons/ai"
+// import { Multiselect } from "multiselect-react-dropdown"
+import { components } from "react-select";
+import { default as ReactSelect } from "react-select";
 
 function ScheduleElection() {
     
@@ -28,23 +31,26 @@ function ScheduleElection() {
     const [Dist, setDist] = useState("");
     const [Dists, setDists] = useState("");
     const [AC, setAC] = useState("");
+    const [currACs, setCurrACs] = useState("")
 
     const [state, setState] = useState("");
     const [states, setStates] = useState({});
 
-//TEMP START
-const [tableFilter, setTableFilter] = useState("");
-const [rows_Temporary_Users, setRows_Temporary_Users] = useState([2]);
-const [isEdit_Temporary_Users, setEdit_Temporary_Users] = React.useState(-1);
-
-
+    
 const setACFunction = (e) => {
-    console.log(distn[e.target.value]["acCode"])
-    if (!AC.includes(distn[e.target.value][1][1])) {
-        setAC([...AC, distn[e.target.value]["acCode"]])
+    // alert(distn[e.target.value]["acCode"])
+    if (!AC.includes(distn[e.target.value]["acCode"])) {
+        setAC([...AC, distn[e.target.value]["acCode"] + " "+ distn[e.target.value]["acName"]])
         // setAC([...AC, distn[e.target.value][1][0]])
     }
 }
+
+
+//TEMP START
+const [tableFilter, setTableFilter] = useState("");
+const [rows_Temporary_Users, setRows_Temporary_Users] = useState([]);
+const [isEdit_Temporary_Users, setEdit_Temporary_Users] = React.useState(-1);
+const [submitElection, setSubmitElection] = useState([])
 
 
 const handleRemoveClick_Temporary_Users = (i) => {
@@ -61,7 +67,7 @@ const handleAdd_Temporary_Users = () => {
     setRows_Temporary_Users([
         ...rows_Temporary_Users,
         {
-            User_ID: "",
+            BPState: "",
             "": <div style={{ display: "flex", flexDirection: "row", alignItems: "right", justifyContent: "flex-start", paddingLeft: "40px" }}></div>,
             Name: " ",
             " ": <div className="flex justify-end " style={{ marginLeft: "3%" }}><button type="button" className="text-white bg-orange-600 p-1 text-2xl w-8 h-8 -mt-4 " style={{ borderRadius: "50%", marginTop: "2%" }} >-</button></div>
@@ -138,6 +144,126 @@ const handleEdit_Temporary_Users = (i) => {
             console.log(err);
         }
     }
+
+    async function postElectionBA() {
+        console.log(currState)
+        let submitList = []
+        function pushFunction(acn){
+            submitList.push(
+                {
+                    "electionType" : "BA",
+                    "state" : currState,
+                    "PC" : "-",
+                    "AC" : acn,
+                    "startDate" : document.getElementById("5").value,
+                    "endDate" : document.getElementById("6").value
+                  }
+            )
+        }
+        for(const i in AC){
+            pushFunction(AC[i].slice(0,3))
+            // alert(AC[i].slice(0,3))
+        }
+        try {
+            const response = await fetch(
+                `${process.env.REACT_APP_API_SERVER}/unit/schedule_election`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: 'same-origin',
+                    
+                    body: JSON.stringify(
+                        // State: document.getElementById("1").value,
+                        {
+
+                            electionList: submitList
+                            
+
+                          }
+
+                    ),
+                }
+            );
+            
+
+            console.log(response);
+            const data = await response.json();
+            console.log("data" + data);
+            console.log("Message:" + data["message"])
+            if (data["message"] === "insertion successfull") {
+                document.getElementById("form").reset();
+                alert("Successful");
+                window.location.pathname = "/session/unitmanagement/schedule_list";
+            } else {
+                alert("Failed!");
+            
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    async function postElectionBP() {
+        console.log(currState)
+        let submitList = []
+        function pushFunction(state, pc){
+            submitList.push(
+                {
+                    "electionType" : "BP",
+                    "state" : state,
+                    "PC" : pc,
+                    "AC" : eType === "BA" ? AC:"-",
+                    "startDate" : document.getElementById("5").value,
+                    "endDate" : document.getElementById("6").value
+                  }
+            )
+        }
+        for(const i in rows_Temporary_Users){
+            pushFunction(rows_Temporary_Users[i]["BPState"], rows_Temporary_Users[i]["Name"])
+        }
+        
+        try {
+            const response = await fetch(
+                `${process.env.REACT_APP_API_SERVER}/unit/schedule_election`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: 'same-origin',
+                    
+                    body: JSON.stringify(
+                        // State: document.getElementById("1").value,
+                        {
+
+                            electionList: submitList
+
+                          }
+
+                    ),
+                }
+            );
+            
+
+            console.log(response);
+            const data = await response.json();
+            console.log("data" + data);
+            console.log("Message:" + data["message"])
+            if (data["message"] === "insertion successfull") {
+                document.getElementById("form").reset();
+                alert("Successful");
+                window.location.pathname = "/session/unitmanagement/schedule_list";
+            } else {
+                alert("Failed!");
+            
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     const handleRemoveClick = (i) => {
 
         const listSelectedDistricts = [...AC];
@@ -150,7 +276,14 @@ const handleEdit_Temporary_Users = (i) => {
     const onFormSubmit = async (e) => {
         e.preventDefault();
         console.log("submit button clicked")
-        postElection();
+        if(eType === "GA" || eType ==="GP"){
+            postElection();
+        }else if(eType === "BA"){
+            postElectionBA();
+        }else if(eType === "BP"){
+            postElectionBP();
+        }
+       
     };
 
     const [eType, setEType] = useState("")
@@ -199,9 +332,7 @@ const handleEdit_Temporary_Users = (i) => {
     useEffect(() => {
         if (realm && realm !== []) {
             setState2(formatRealm2(realm))
-            console.log(realm)
             console.log(state2)
-
         }
     }, [realm]);
 
@@ -211,6 +342,21 @@ const handleEdit_Temporary_Users = (i) => {
             console.log(distn)
         }
     }, [currState, realm]);
+
+    const Option = (props) => {
+        return (
+          <div>
+            <components.Option {...props}>
+              <input
+                type="checkbox"
+                checked={props.isSelected}
+                onChange={() => null}
+              />{" "}
+              <label>{props.label}</label>
+            </components.Option>
+          </div>
+        );
+      };
 
     return(
         <>
@@ -284,12 +430,34 @@ const handleEdit_Temporary_Users = (i) => {
                 <div class={styles.div5}> 
                 <div style={{ display: showAC ? "block" : "none" }}>
                 <p> AC</p>
+                {/* <div className='z-10'>
+                    {distn &&
+                    <ReactSelect
+                    options={distn}
+                    isMulti
+                    closeMenuOnSelect={false}
+                    hideSelectedOptions={true}
+                    components={{
+                      Option
+                    }}
+                    // onChange={this.handleChange}
+                    // allowSelectAll={true}
+                    // value={this.state.optionSelected}
+                  />
+                    // <Multiselect
+                    //     options={distn} // Options to display in the dropdown
+                    //     // selectedValues={this.state.selectedValue} // Preselected value to persist in dropdown
+                    //     // onSelect={} // Function will trigger on select event
+                    //     // onRemove={this.onRemove} // Function will trigger on remove event
+                    //     displayValue= {"acName"}  // Property name to display in the dropdown options/
+                    // />
+                    } */}
                     <select
                         //   required={!isTemporary}
                         required
                         // name=""
-                        id="3"
-                        className=" selectBox"
+                        // id="3"
+                        className="selectBox"
                         onChange={(e) => {
                             setACFunction(e)
                         }}
@@ -297,19 +465,20 @@ const handleEdit_Temporary_Users = (i) => {
                         <option value="" disabled selected >
                             Select AC
                         </option>
+                        {console.log(distn)}
+
                         {distn.length>0 && distn.map((st,i) => (
+                            
                             <option value={distn[i]["acCode"]} className="text-black">
-                                {/* {`${val.dtCode} (${val.dtName})`} */}
                                 {`${distn[i]["acCode"]} (${distn[i]["acName"]})`}
                                 
                             </option>
                             ))}
 
                     </select>
-                    
+                    {/* </div> */}
                     </div>
                     <div className='flex flex-wrap w-full items-center'>
-                        {console.log(AC+ "AC")}
                             {AC && AC.map((val, index) => (
                                 <div className='rounded-lg gap-1 m-1 p-2 flex align-middle shadow-md shadow-black'>{val}
                                     <AiOutlineClose className='cursor-pointer text-red-400' onClick={() => {
@@ -372,6 +541,7 @@ const handleEdit_Temporary_Users = (i) => {
                 {showTable &&
                 <div style={{ display: showTable ? "block" : "none" }}>
                         {/* <DynamicDataTable rows={data2} buttons={[]} /> */}
+                        {console.log(rows_Temporary_Users)}
                         <table >
                             <thead >
                                 <tr>
@@ -383,11 +553,13 @@ const handleEdit_Temporary_Users = (i) => {
                             </thead>
                             {rows_Temporary_Users.length > 0 &&
                                 rows_Temporary_Users.map((val, id) => {
-                                    console.log(id)
+                                    
                                     return (isEdit_Temporary_Users !== id ?
+                                        
                                         <tbody >
+                                            {console.log(id, " " , isEdit_Temporary_Users )}
                                             <tr onDoubleClick={() => { handleEdit_Temporary_Users(id) }}>
-                                                <td className="text-black text-sm">{val['User_ID']}</td>
+                                                <td className="text-black text-sm">{val['BPState']}</td>
                                                 <td className="text-black text-sm">{val['']}</td>
                                                 <td className="text-black text-sm" onClick={() => handleRemoveClick_Temporary_Users(id)}>{val[' ']}</td>
                                                 </tr>
@@ -398,9 +570,9 @@ const handleEdit_Temporary_Users = (i) => {
                                                 <td >
                                                 <select
                                                     //   required={!isTemporary}
-                                                    value={val.User_ID}
+                                                    value={val.BPState}
                                                     required={true}
-                                                    name="User_ID"
+                                                    name="BPState"
                                                     className="selectBox"
                                                     onChange={(e) => handleInputChange_Temporary_Users(e, id)}
                                                 >
@@ -417,8 +589,8 @@ const handleEdit_Temporary_Users = (i) => {
                                                     
                                                     {/* <input
                                                         className={styles.Assigned_Engineer_Tr}
-                                                        value={val.User_ID}
-                                                        name="User_ID"
+                                                        value={val.BPState}
+                                                        name="BPState"
                                                         placeholder="Select State"
                                                         onChange={(e) => handleInputChange_Temporary_Users(e, id)}
                                                     /> */}

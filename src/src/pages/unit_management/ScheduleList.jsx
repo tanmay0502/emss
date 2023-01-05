@@ -52,11 +52,11 @@ export default function ScheduleList() {
             const row = {
                 'ID':elections[i]["election_id"],
                 'State': elections[i]['state'],
-                'PC': elections[i]['pc'],
+                // 'PC': elections[i]['pc'],
                 "AC": elections[i]["ac"],
                 "Election Type": elections[i]['electiontype'],
-                "Start Date": elections[i]['startdate'],
-                "End Date": elections[i]['enddate'],
+                "Start Date - End Date": elections[i]['startdate'] +" to "+ elections[i]['enddate'],
+                // "End Date": ,
                 // "Edit":
                 // <div className={styles.editBtn}
                 // onClick={() => {
@@ -158,6 +158,7 @@ export default function ScheduleList() {
                     electionList
                 }
                 buttons={[]} 
+                fieldsToExclude={["ID"]}
                 onClick={(event, row) => {
                     if (post === "ADM"){
                         navigate(`/session/unitmanagement/edit_election/${row["ID"]}`)
