@@ -46,16 +46,17 @@ export default function ScheduleList() {
 
     function makeElctionList(elections){
         let eList = []
-        console.log("in")
-        for( const i in elections){
-            console.log("i " + i + "data: " + elections[i]["election_id"])
+        const electionslist=elections['data']
+        console.log("in",electionslist)
+        for( const i in electionslist){
+            console.log("i " + i + "data: " + electionslist[i]["election_id"])
             const row = {
-                'ID':elections[i]["election_id"],
-                'State': elections[i]['state'],
+                'ID':electionslist[i]["election_id"],
+                'State': electionslist[i]['state'],
                 // 'PC': elections[i]['pc'],
-                "AC": elections[i]["ac"],
-                "Election Type": elections[i]['electiontype'],
-                "Start Date - End Date": elections[i]['startdate'] +" to "+ elections[i]['enddate'],
+                "AC": electionslist[i]["ac"],
+                "Election Type": electionslist[i]['electiontype'],
+                "Start Date - End Date": electionslist[i]['startdate'] +" to "+ electionslist[i]['enddate'],
                 // "End Date": ,
                 // "Edit":
                 // <div className={styles.editBtn}

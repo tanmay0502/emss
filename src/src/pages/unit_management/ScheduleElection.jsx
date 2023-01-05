@@ -4,8 +4,8 @@ import styles from './styles/ScheduleNew.module.css'
 import { getRealm, formatRealm2,formatRealm3 } from '../../components/utils'
 import { AiOutlineClose } from "react-icons/ai"
 // import { Multiselect } from "multiselect-react-dropdown"
-import { components } from "react-select";
-import { default as ReactSelect } from "react-select";
+// import { components } from "react-select";
+// import { default as ReactSelect } from "react-select";
 
 function ScheduleElection() {
     
@@ -346,14 +346,14 @@ const handleEdit_Temporary_Users = (i) => {
     const Option = (props) => {
         return (
           <div>
-            <components.Option {...props}>
+            <Option {...props}>
               <input
                 type="checkbox"
                 checked={props.isSelected}
                 onChange={() => null}
               />{" "}
               <label>{props.label}</label>
-            </components.Option>
+            </Option>
           </div>
         );
       };

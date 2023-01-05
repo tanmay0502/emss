@@ -463,12 +463,12 @@ const StatusUpdate = ({ isVisibleepUnmarkForm,isVisibledestroyed,isVisibledispat
           name="dispatch"
           onClick={onButtonClick}
         />
-        <ActionButton
+        {/* <ActionButton
           isActive={activeButtons.destroy}
           text="Unit Destruction"
           name="destroy"
           onClick={onButtonClick}
-        />
+        /> */}
       </div>
 
       <EPUnmarkForm isVisible={isVisibleepUnmarkForm} />
@@ -483,6 +483,8 @@ const StatusUpdate = ({ isVisibleepUnmarkForm,isVisibledestroyed,isVisibledispat
   );
 };
 
+const Destroy = ({isVisible}) =>{
+}
 // EP Marking Form
 const EPForm = ({ isVisible }) => {
   const initialValues = {

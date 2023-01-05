@@ -34,11 +34,11 @@ const Footer = (props) => {
             Tech support
           </a>{" "}
           |{" "}
-          <a href="" className="text-white">
+          <a href="" className="text-white" >
           Privacy Policy
           </a>{" "}
           |{" "}
-          <a href="http://localhost:8100/static/tnc.pdf" className="text-white">
+          <a className="text-white">
             Terms & Conditions
           </a>
         </h2>
