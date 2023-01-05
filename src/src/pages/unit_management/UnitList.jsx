@@ -10,6 +10,7 @@ import scheduleStyles from './styles/ScheduleFlc.module.css'
 import { TagsInput } from "react-tag-input-component";
 import UnitListEpmarkEpUnmark from "./components/UnitListEpmarkEpUnmark";
 import { List } from "antd/lib/form/Form";
+import Orders from './Orders';
 const userID = sessionStorage.getItem("sessionToken");
 const baseUrl = `${process.env.REACT_APP_API_SERVER}/unit`;
 
@@ -40,6 +41,8 @@ export default function UnitList() {
     epUnmarkForm: false,
     block: false,
     unblock: false,
+    dispatch: false,
+
   };
   const [ReplacedUnitID, setReplacedUnitID] = useState([]);
   const [ReplacingUnitID, setReplacingUnitID] = useState([]);
@@ -51,7 +54,7 @@ export default function UnitList() {
   const [data, setData] = useState(expD);
   const [data2, setData2] = useState(expD);
   const [data3, setData3] = useState(expD);
-  const [isPageLoaded, setIsPageLoaded] = useState(0)
+  const [isPageLoaded, setIsPageLoaded] = useState(0);
 
 
   const getData = async () => {
@@ -393,6 +396,7 @@ export default function UnitList() {
       <EPUnmarkForm isVisible={cardVisibility.epUnmarkForm} />
       <Block isVisible={cardVisibility.block} />
       <UnBlock isVisible={cardVisibility.unblock} />
+      <Orders isVisible={cardVisibility.dispatch}/>
       {cardVisibility.replacementForm == true ?
         <UnitListCard updateChecked={updateChecked} bgColor={bgColor} ReplacedUnitID={ReplacedUnitID} data={data} />
         :
@@ -455,6 +459,12 @@ const StatusUpdate = ({ activeButtons, onButtonClick, flag, data2, initialInputV
           isActive={activeButtons.unblock}
           text="UnBlock"
           name="unblock"
+          onClick={onButtonClick}
+        />
+        <ActionButton
+          isActive={activeButtons.dispatch}
+          text="Dispatch/Recieve Orders"
+          name="dispatch"
           onClick={onButtonClick}
         />
       </div>

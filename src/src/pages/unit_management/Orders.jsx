@@ -12,7 +12,7 @@ import Papa from "papaparse";
 const allowedExtensions = ["csv"];
 
 
-function Orders(){
+function Orders({ isVisible }){
 
   const [allOrders, setAllOrders] = useState([]);
   const [orderID,setOrderID] = useState("");
@@ -266,13 +266,15 @@ useEffect(()=>{
       
     const navigate = useNavigate()
     return(
-        <div className="shadow-lg mb-10 pb-10 bg-white" style={{borderRadius:"2%"}}>
+      <>
+      {isVisible && (
+        <div className="shadow-lg mb-10 pb-10 bg-white" style={{borderRadius:"15px"}}>
           
           
           
             <div className='MainHeader pd-5 ' style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between", "alignItems": "center" }}>
                     <h4 className='text-white'>Order</h4>
-                    <button className='text-white text-lg' onClick={()=>setIsvalidated(0)}>Enter a Order</button>
+                    <button className='text-white text-lg' onClick={()=>setIsvalidated(0)}>Enter a new Order</button>
             </div>
            {isvalidated==0 &&
            <div className='m-10 '>
@@ -327,7 +329,7 @@ useEffect(()=>{
                 <p className='text-lg '>Pending for Recieve</p>
               </div>
               <div className='w-1/6 p-1 shadow-md m-2 text-7xl'>
-                <div >{allOrders["pendingtosend"]}</div>
+                <div >{allOrders["pendingtosent"]}</div>
                 <p className='text-lg '>Pendng to Dispatch</p>
               </div>
            </div>
@@ -576,6 +578,8 @@ useEffect(()=>{
         {/* <ReadCsv/> */}
         
         </div>
+       )}
+       </>
     )
 }
 

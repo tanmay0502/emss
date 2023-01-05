@@ -48,9 +48,9 @@ export default function FLCList() {
                     return true;
                 }
                 else {
-                    return false;
-                    // const filter = tableFilter.toLowerCase();
-                    // return (elem["userid"].toLowerCase().includes(filter) || elem["name"].toLowerCase().includes(filter))
+                    const filter = tableFilter.toLowerCase();
+                    console.log(elem,"======")
+                    return (elem["districtName"].toLowerCase().includes(filter) || elem["state"].toLowerCase().includes(filter) || elem["manufacturer"].toLowerCase().includes(filter))
                 }
             }).map((val) => {
                 // let st = ""
