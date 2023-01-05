@@ -10,10 +10,10 @@ import scheduleStyles from './styles/ScheduleFlc.module.css'
 import { TagsInput } from "react-tag-input-component";
 import UnitListEpmarkEpUnmark from "./components/UnitListEpmarkEpUnmark";
 import { List } from "antd/lib/form/Form";
+import { formatRealm2 } from '../../components/utils';
 import Orders from './Orders';
 const userID = sessionStorage.getItem("sessionToken");
 const baseUrl = `${process.env.REACT_APP_API_SERVER}/unit`;
-
 
 
 export default function UnitList() {
@@ -42,7 +42,8 @@ export default function UnitList() {
     block: false,
     unblock: false,
     dispatch: false,
-    destroy:false,
+    destroy: false,
+    FLC_Assembly: false,
 
   };
   const [ReplacedUnitID, setReplacedUnitID] = useState([]);
@@ -70,7 +71,6 @@ export default function UnitList() {
       });
 
       let Input = await response.json();
-      console.log(Input, "Input", "In Poll")
       if (response.status == 200) {
         // if (Input && Input["data"] && Input['data'].length) {
         setData(Input['data']);
@@ -109,7 +109,6 @@ export default function UnitList() {
       });
 
       let Input = await response.json();
-      console.log(Input, "Input", "In Reserve")
       if (response.status == 200) {
         // if (Input && Input["data"] && Input['data'].length) {
         setData2(Input['data']);
@@ -392,7 +391,7 @@ export default function UnitList() {
 
   return (
     <>
-      <StatusUpdate isVisibleepUnmarkForm={cardVisibility.epUnmarkForm} isVisibledestroyed={cardVisibility.destroy} isVisibledispatch={cardVisibility.dispatch} isVisibleepForm={cardVisibility.epForm} isVisibleblock={cardVisibility.block} isVisibleunblock={cardVisibility.unblock} activeButtons={cardVisibility} onButtonClick={handleButtonClick} flag={flag} data2={data2} initialInputValuesReplace={initialInputValuesReplace} setInputValuesReplace={setInputValuesReplace} inputValuesReplace={inputValuesReplace} handleInputChangeReplace={handleInputChangeReplace} isVisible={cardVisibility.replacementForm} Added={Added} handleInputChange_ReplacedUnitID={handleInputChange_ReplacedUnitID} handleInputChange_ReplacingUnitID={handleInputChange_ReplacingUnitID} handleInputChange_typeofdefect={handleInputChange_typeofdefect} handleEdit_Dropdown_rows={handleEdit_Dropdown_rows} Typeofdefect={Typeofdefect} ReplacingUnitID={ReplacingUnitID} ReplacedUnitID={ReplacedUnitID} handleRemoveClick_Dropdown_rows={handleRemoveClick_Dropdown_rows} />
+      <StatusUpdate isVisibleFLC_Assembly={cardVisibility.FLC_Assembly} isVisibleepUnmarkForm={cardVisibility.epUnmarkForm} isVisibledestroyed={cardVisibility.destroy} isVisibledispatch={cardVisibility.dispatch} isVisibleepForm={cardVisibility.epForm} isVisibleblock={cardVisibility.block} isVisibleunblock={cardVisibility.unblock} activeButtons={cardVisibility} onButtonClick={handleButtonClick} flag={flag} data2={data2} initialInputValuesReplace={initialInputValuesReplace} setInputValuesReplace={setInputValuesReplace} inputValuesReplace={inputValuesReplace} handleInputChangeReplace={handleInputChangeReplace} isVisible={cardVisibility.replacementForm} Added={Added} handleInputChange_ReplacedUnitID={handleInputChange_ReplacedUnitID} handleInputChange_ReplacingUnitID={handleInputChange_ReplacingUnitID} handleInputChange_typeofdefect={handleInputChange_typeofdefect} handleEdit_Dropdown_rows={handleEdit_Dropdown_rows} Typeofdefect={Typeofdefect} ReplacingUnitID={ReplacingUnitID} ReplacedUnitID={ReplacedUnitID} handleRemoveClick_Dropdown_rows={handleRemoveClick_Dropdown_rows} />
       {cardVisibility.replacementForm == true ?
         <UnitListCard updateChecked={updateChecked} bgColor={bgColor} ReplacedUnitID={ReplacedUnitID} data={data} />
         :
@@ -416,7 +415,7 @@ const ActionButton = ({ isActive, text, name, onClick }) => {
   );
 };
 
-const StatusUpdate = ({ isVisibleepUnmarkForm,isVisibledestroyed,isVisibledispatch, isVisibleepForm, isVisibleblock, isVisibleunblock, activeButtons, onButtonClick, flag, data2, initialInputValuesReplace, setInputValuesReplace, inputValuesReplace, handleInputChangeReplace, isVisible, Added, handleInputChange_ReplacedUnitID, handleInputChange_ReplacingUnitID, handleInputChange_typeofdefect, handleEdit_Dropdown_rows, ReplacingUnitID, ReplacedUnitID, Typeofdefect, handleRemoveClick_Dropdown_rows }) => {
+const StatusUpdate = ({ isVisibleFLC_Assembly, isVisibleepUnmarkForm, isVisibledestroyed, isVisibledispatch, isVisibleepForm, isVisibleblock, isVisibleunblock, activeButtons, onButtonClick, flag, data2, initialInputValuesReplace, setInputValuesReplace, inputValuesReplace, handleInputChangeReplace, isVisible, Added, handleInputChange_ReplacedUnitID, handleInputChange_ReplacingUnitID, handleInputChange_typeofdefect, handleEdit_Dropdown_rows, ReplacingUnitID, ReplacedUnitID, Typeofdefect, handleRemoveClick_Dropdown_rows }) => {
   return (
 
     <div className={styles.unit_list_container}>
@@ -463,6 +462,12 @@ const StatusUpdate = ({ isVisibleepUnmarkForm,isVisibledestroyed,isVisibledispat
           name="dispatch"
           onClick={onButtonClick}
         />
+        <ActionButton
+          isActive={activeButtons.FLC_Assembly}
+          text="FLC Assembly"
+          name="FLC_Assembly"
+          onClick={onButtonClick}
+        />
         {/* <ActionButton
           isActive={activeButtons.destroy}
           text="Unit Destruction"
@@ -471,19 +476,21 @@ const StatusUpdate = ({ isVisibleepUnmarkForm,isVisibledestroyed,isVisibledispat
         /> */}
       </div>
 
+
       <EPUnmarkForm isVisible={isVisibleepUnmarkForm} />
       <EPForm isVisible={isVisibleepForm} />
       <ReplacementForm flag={flag} data2={data2} initialInputValuesReplace={initialInputValuesReplace} setInputValuesReplace={setInputValuesReplace} inputValuesReplace={inputValuesReplace} handleInputChangeReplace={handleInputChangeReplace} isVisible={isVisible} Added={Added} handleInputChange_ReplacedUnitID={handleInputChange_ReplacedUnitID} handleInputChange_ReplacingUnitID={handleInputChange_ReplacingUnitID} handleInputChange_typeofdefect={handleInputChange_typeofdefect} handleEdit_Dropdown_rows={handleEdit_Dropdown_rows} Typeofdefect={Typeofdefect} ReplacingUnitID={ReplacingUnitID} ReplacedUnitID={ReplacedUnitID} handleRemoveClick_Dropdown_rows={handleRemoveClick_Dropdown_rows} />
       <UnBlock isVisible={isVisibleunblock} />
       <Block isVisible={isVisibleblock} />
-      <Orders isVisible={isVisibledispatch}/>
+      <Orders isVisible={isVisibledispatch} />
+      <FLC_Assembly isVisible={isVisibleFLC_Assembly} />
       {/* <Destroy isVisible={isVisibledestroyed}/> */}
     </div >
 
   );
 };
 
-const Destroy = ({isVisible}) =>{
+const Destroy = ({ isVisible }) => {
 }
 // EP Marking Form
 const EPForm = ({ isVisible }) => {
@@ -926,7 +933,7 @@ const ReplacementForm = ({ flag, data2, initialInputValuesReplace, setInputValue
       });
 
       const Input = await response.json();
-      console.log(Input, 'Input')
+
       if (response.status == 200) {
         setAssemblyList(Input['data'][User_ID.slice(5, 8)]['ps'])
       }
@@ -936,7 +943,7 @@ const ReplacementForm = ({ flag, data2, initialInputValuesReplace, setInputValue
     }
   }
 
-  console.log(assemblyList)
+
 
   useEffect(
     () => {
@@ -950,7 +957,6 @@ const ReplacementForm = ({ flag, data2, initialInputValuesReplace, setInputValue
 
 
   const handleFormSubmit = async (Finalanswer) => {
-    console.log(Finalanswer)
     try {
       const response = await fetch(`${baseUrl}/replace_unit`, {
         method: "POST",
@@ -974,8 +980,6 @@ const ReplacementForm = ({ flag, data2, initialInputValuesReplace, setInputValue
     }
     setInputValuesReplace(initialInputValuesReplace);
   };
-
-  console.log(ReplacingUnitID, ReplacedUnitID, Typeofdefect)
 
 
   const User_ID = sessionStorage.getItem("sessionToken");
@@ -1011,6 +1015,9 @@ const ReplacementForm = ({ flag, data2, initialInputValuesReplace, setInputValue
         {isVisible && (
           <div styles={{ marginTop: "20%" }}>
             <div className="w-full flex justify-around">
+
+
+
               <div className="m-2 text-left w-1/3">
                 <label className="mb-2 w-full text-base">
                   Polling Station<span className="text-red-600">*</span>
@@ -1058,6 +1065,8 @@ const ReplacementForm = ({ flag, data2, initialInputValuesReplace, setInputValue
                   <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1/2" />
                 </div>
               </div>
+
+
             </div>
 
             <div className={ReplacementStyles.Replacement_dropdown_table}>
@@ -1222,7 +1231,6 @@ const Block = ({ isVisible }) => {
         })
 
       const data = await response.json();
-      console.log(data, 'datak')
       if (response.status == 200)
         setListDefective_Warehouse(data["data"])
     } catch (error) {
@@ -1240,7 +1248,6 @@ const Block = ({ isVisible }) => {
     []
   );
 
-  console.log(inputValues, "inputValues")
 
   const handleFormSubmit = async (e) => {
 
@@ -1405,7 +1412,6 @@ const UnBlock = ({ isVisible }) => {
     []
   );
 
-  console.log(inputValues, "inputValues")
 
   const handleFormSubmit = async (e) => {
 
@@ -1517,3 +1523,273 @@ const UnBlock = ({ isVisible }) => {
 };
 
 
+const FLC_Assembly = ({ isVisible }) => {
+
+
+
+  const initialValues = {
+    state: "",
+    district: "",
+    remark: "",
+  };
+
+
+  const [inputValues, setInputValues] = useState(initialValues);
+  const [data, setdata] = useState(initialValues);
+  const [State, setState] = useState([]);
+  const [District, setDistrict] = useState([]);
+  const [dataInput, setDataInput] = useState([""]);
+  const [listElections, setListElections] = useState([])
+  const [electionid, setelectionid] = useState(-1)
+
+  async function getListElections() {
+
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_SERVER}/unit/listElections`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+      const data = await response.json();
+      console.log(data)
+      if (response.status == 200) {
+        setListElections(data['data'])
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(
+    () => {
+      let timer1 = setTimeout(() => getListElections(), 1 * 1000);
+
+      return () => {
+        clearTimeout(timer1);
+      };
+    },
+    []
+  );
+
+
+  console.log(listElections)
+  console.log({
+    "unitIDs": dataInput,
+    "electionID": Number(electionid),
+    "state": inputValues['state'],
+    "district": inputValues['district']
+  })
+  const handleFormSubmit = async () => {
+    try {
+      const response = await fetch(`${baseUrl}/flc_assembly_scan`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          "unitIDs": dataInput,
+          "electionID": Number(electionid),
+          "state": inputValues['state'],
+          "district": inputValues['district']
+        }
+        ),
+      });
+      const data = await response.json();
+      if (data.status === 200) {
+        alert(data.message);
+      } else {
+        alert(data.message);
+        setInputValues(initialValues)
+        setelectionid(-1);
+        setDataInput('')
+      }
+    } catch (err) {
+      alert(`Error occured: ${err}`);
+    }
+
+  };
+
+
+  async function getRealm() {
+
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_SERVER}/user/getRealm`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            "module_name": "Unit",
+            "operation": "FLCAssembly"
+          }),
+        }
+      )
+
+      const Input = await response.json();
+
+      if (response.status === 200) {
+        setdata(Input['data'])
+        let state = formatRealm2(Input['data'], '', '', '', '');
+        setState(state)
+        // console.log("adi", distList)
+        // setDistrict(distList);
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+
+  useEffect(
+    () => {
+      let timer1 = setTimeout(() => getRealm(), 1 * 1000);
+
+      return () => {
+        clearTimeout(timer1);
+      };
+    },
+    []
+  );
+
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setInputValues({
+      ...inputValues,
+      [name]: value,
+    });
+
+    if (name == "state") {
+      let district = formatRealm2(data, value, '', '', '');
+      setDistrict(district)
+    }
+  };
+
+  const User_ID = sessionStorage.getItem("sessionToken");
+  const Role = User_ID.substring(8)
+
+  const onFormSubmit = async (e) => {
+    e.preventDefault();
+    handleFormSubmit()
+  };
+
+  return (
+    <>
+      <form onSubmit={onFormSubmit} className="w-full rounded-lg " styles={{ marginTop: "20%" }}>
+        {isVisible && (
+          <div styles={{ marginTop: "20%" }}>
+            <div className="w-full flex justify-around">
+
+              <div className="m-2 text-left w-1/3">
+                <label className="mb-2 w-full text-base">
+                  Election<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-[#494A59]">
+                  <select
+
+                    className="relative h-10 w-full rounded-md border p-2"
+                    name="setelectionid"
+                    placeholder="Select"
+                    value={electionid}
+                    onChange={(e) => {
+                      setelectionid(e.target.value)
+                    }}
+                  >
+                    {" "}
+                    <option hidden>Select</option>
+                    {listElections &&
+                      listElections.map((val, ind) => {
+                        return (<>
+                          <option value={val['election_id']}>{`${val.electiontype} ${val.startdate ? val.startdate.slice(6, 11) : ''}`}</option>
+                        </>)
+                      })}
+                  </select>
+                  <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1/2" />
+                </div>
+              </div>
+
+              <div className="m-2 text-left w-1/3">
+                <label className="mb-2 w-full text-base">
+                  State<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-[#494A59]">
+                  <select
+
+                    className="relative h-10 w-full rounded-md border p-2"
+                    name="state"
+                    placeholder="Select"
+                    value={inputValues.state}
+                    onChange={handleInputChange}
+                  >
+                    {" "}
+                    <option hidden>Select</option>
+                    {State &&
+                      State.map((val, ind) => {
+                        return (<>
+                          <option value={val['stCode']}>{val['stName']}</option>
+                        </>)
+                      })}
+                  </select>
+                  <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1/2" />
+                </div>
+              </div>
+
+              <div className="m-2 w-1/3 text-left">
+                <label className="mb-2 w-full text-base">
+                  District<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-[#494A59]">
+                  <select
+                    disabled={inputValues['state'] != '' ? false : true}
+                    className="relative h-10 w-full rounded-md border p-2"
+                    placeholder="Select"
+                    name="district"
+                    value={inputValues.district}
+                    onChange={handleInputChange}
+                  >
+                    {" "}
+                    <option hidden>Select</option>
+                    {District &&
+                      District.map((val, ind) => {
+                        return (<>
+                          <option value={val['dtCode']}>{val['dtName']}</option>
+                        </>)
+                      })}
+                  </select>
+                  <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1/2" />
+                </div>
+              </div>
+            </div>
+
+            <div className="m-2 w-1/3 text-left" style={{ marginLeft: '37%', marginTop: '2%' }}>
+              <label className="mb-2 w-full text-base">
+                Unit ID's<span className="text-red-600">*</span>
+              </label>
+              <div className="relative text-[#494A59]">
+                <div className="w-full">
+                  <textarea name="" id="" cols="60" className='p-2' rows={10}
+
+                    onChange={(e) => {
+                      setDataInput(e.target.value)
+                    }}
+                    value={dataInput}
+
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+
+            <button class={scheduleStyles.submitBtn} type='submit' style={{ marginBottom: "1%" }}> Submit </button>
+          </div>
+        )
+        }
+      </form >
+    </>
+  );
+};

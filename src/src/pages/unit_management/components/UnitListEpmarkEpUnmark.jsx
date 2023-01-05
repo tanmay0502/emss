@@ -157,11 +157,11 @@ const UnitListEpmarkEpUnmark = ({ data }) => {
     }
 
     function formatData() {
-        console.log(data)
+
         if (data) {
             var data_tmp = data
                 .filter((elem) => {
-                    console.log(elem)
+
                     if (tableFilter === "") {
                         return true;
                     } else {
@@ -174,7 +174,6 @@ const UnitListEpmarkEpUnmark = ({ data }) => {
                     }
                 })
                 .map((val) => {
-                    console.log(val)
                     return {
                         ID: val["unitid"],
                         Status_Hidden: val["modelStatus"],

@@ -130,13 +130,26 @@ function Announce_Flc() {
                     },
                 })
             const data = await response.json();
-            if (data.length) {
-                setListElections(data)
+            console.log(data)
+            if (response.status == 200) {
+                setListElections(data['data'])
             }
         } catch (error) {
             console.log(error)
         }
     }
+
+    useEffect(
+        () => {
+            let timer1 = setTimeout(() => getListElections(), 1 * 1000);
+
+            return () => {
+                clearTimeout(timer1);
+            };
+        },
+        []
+    );
+
 
 
 
@@ -185,16 +198,6 @@ function Announce_Flc() {
         []
     );
 
-    useEffect(
-        () => {
-            let timer1 = setTimeout(() => getListElections(), 1 * 1000);
-
-            return () => {
-                clearTimeout(timer1);
-            };
-        },
-        []
-    );
 
 
     async function getpreparednessStatistics(id_election) {
