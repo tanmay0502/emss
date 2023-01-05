@@ -204,7 +204,7 @@ export default function UnitList() {
               "replacingUnitId": "",
               "replacedUnitId": data[k]['unitid'],
               "defectType": "",
-              "": <div className="flex justify-end " style={{ marginLeft: "3%" }}><button type="button" className="text-white bg-orange-600 p-1 text-2xl w-8 h-8 -mt-4 " style={{ borderRadius: "50%", marginTop: "2%" }} >-</button></div>
+              // "": <div className="flex justify-end " style={{ marginLeft: "3%" }}><button type="button" className="text-white bg-orange-600 p-1 text-2xl w-8 h-8 -mt-4 " style={{ borderRadius: "50%", marginTop: "2%" }} >-</button></div>
             })
             return kk;
           }
@@ -248,7 +248,7 @@ export default function UnitList() {
           "replacingUnitId": "",
           "replacedUnitId": ID,
           "defectType": "",
-          "": <div className="flex justify-end " style={{ marginLeft: "3%" }}><button type="button" className="text-white bg-orange-600 p-1 text-2xl w-8 h-8 -mt-4 " style={{ borderRadius: "50%", marginTop: "2%" }} >-</button></div>
+          // "": <div className="flex justify-end " style={{ marginLeft: "3%" }}><button type="button" className="text-white bg-orange-600 p-1 text-2xl w-8 h-8 -mt-4 " style={{ borderRadius: "50%", marginTop: "2%" }} >-</button></div>
         },
       ]);
       setUpdate(prev => (prev + 1))
@@ -938,48 +938,59 @@ const ReplacementForm = ({ flag, data2, initialInputValuesReplace, setInputValue
   );
 
 
-  const handleFormSubmit = async (e) => {
-    let confirmation = window.confirm("Are you sure you have selected all the Unit")
-    if (confirmation === true) {
-      console.log({
-        "replacementLevel": inputValuesReplace['replacementlevel'],
-        "lstReplacingUnits": [
-          Added
-        ]
-      })
-      try {
-        const response = await fetch(`${baseUrl}/replace_unit`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({
-            "replacementLevel": inputValuesReplace['replacementlevel'],
-            "lstReplacingUnits": [
-              Added
-            ]
-          }
-          ),
-        });
-        const data = await response.json();
-        if (data.status === 200) {
-          alert(data.message);
-        } else {
-          alert(data.message);
+  const handleFormSubmit = async (Finalanswer) => {
+    console.log(Finalanswer)
+    try {
+      const response = await fetch(`${baseUrl}/replace_unit`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          "replacementLevel": inputValuesReplace['replacementlevel'],
+          "lstReplacingUnits": Finalanswer
+
         }
-      } catch (err) {
-        alert(`Error occured: ${err}`);
+        ),
+      });
+      const data = await response.json();
+      if (data.status === 200) {
+        alert(data.message);
+      } else {
+        alert(data.message);
       }
-      setInputValuesReplace(initialInputValuesReplace);
+    } catch (err) {
+      alert(`Error occured: ${err}`);
     }
-    else { }
+    setInputValuesReplace(initialInputValuesReplace);
   };
+
+  console.log(ReplacingUnitID, ReplacedUnitID, Typeofdefect)
+
 
   const User_ID = sessionStorage.getItem("sessionToken");
   const Role = User_ID.substring(8)
 
   const onFormSubmit = async (e) => {
     e.preventDefault();
-    handleFormSubmit()
+    let Finalanswer = [];
+    // let vt = 0;
+    // let cu = 0;
+    // let bu = 0;
+    // if (inputValuesReplace['replacementlevel'] == 'Actual Polling') {
+    //   if (ReplacedUnitID[0].slice(1, 3) == 'BU' || ReplacedUnitID[0].slice(1, 3) == 'CU') {
+
+    //   }
+    // }
+    for (let k = 0; k < ReplacedUnitID.length; k++) {
+
+      Finalanswer.push({
+        "replacingUnitId": ReplacingUnitID[k],
+        "replacedUnitId": ReplacedUnitID[k],
+        "defectType": Typeofdefect[k],
+      })
+    }
+    console.log(Finalanswer, 'FinalanswerFinalanswerFinalanswerFinalanswer')
+    handleFormSubmit(Finalanswer)
 
   };
 
