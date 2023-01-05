@@ -116,6 +116,42 @@ export default function HomePage() {
         })
         return temp;
     }
+
+    const mappeddata = () =>{
+        let temp = {
+            B_M2: [0,0,0],
+            B_M3: [0,0,0],
+            E_M2: [0,0,0],
+            E_M3: [0,0,0]
+        }
+        if (!data) {
+            return temp;
+        }
+        data.map((val)=>{
+            if (val.manufacturer==="B"&& val.model==="M2") {
+                temp.B_M2[0] += val.BU;
+                temp.B_M2[1] += val.CU;
+                temp.B_M2[2] += val.VT;
+            }
+            if (val.manufacturer==="B"&& val.model==="M3") {
+                temp.B_M3[0] += val.BU;
+                temp.B_M3[1] += val.CU;
+                temp.B_M3[2] += val.VT;
+            }
+            if (val.manufacturer==="E"&& val.model==="M2") {
+                temp.E_M2[0] += val.BU;
+                temp.E_M2[1] += val.CU;
+                temp.E_M2[2] += val.VT;
+            }
+            if (val.manufacturer==="E"&& val.model==="M3") {
+                temp.E_M3[0] += val.BU;
+                temp.E_M3[1] += val.CU;
+                temp.E_M3[2] += val.VT;
+            }
+        })
+        return temp;
+    }
+
     useEffect(() => {
         let oprnd = window.sessionStorage.getItem('sessionToken');
         if (state!="IN") {
@@ -127,7 +163,7 @@ export default function HomePage() {
         const fun = async ()=>{
             const data2 = await getTotalCounts(oprnd, status1)
             let data = data2.data
-            statusData1(data);
+            statusData1(mappeddata(data));
             console.log("StatusData1", data2)
         }
         fun();
@@ -143,7 +179,7 @@ export default function HomePage() {
         const fun = async ()=>{
             const data2 = await getTotalCounts(oprnd, status2)
             let data = data2.data
-            statusData2(data);
+            statusData2(mappeddata(data));
             console.log("StatusData2", data2)
         }
         fun();
@@ -156,7 +192,11 @@ export default function HomePage() {
                 oprnd = state+district+oprnd.slice(5,7)
             }
         } 
-        getDataTotal(oprnd)
+        const func = async ()=>{
+        const mappedunits = await getDataTotal(oprnd)
+        setUnitCount(mappedunits)
+    }
+    func();
     },[state, district])
 
     // useEffect(() => {
@@ -246,18 +286,17 @@ export default function HomePage() {
 
     function CreateCard({status, setStatus, statusData}) {
         console.log(status)
-        console.log(statusData)
         let data;
-        // if (Object.keys(statusData).length) {
-        //     data= statusData;
-        // } else {
+        if (Object.keys(statusData).length) {
+            data= statusData;
+        } else {
             data= {
                 B_M2: [0,0,0],
                 B_M3: [0,0,0],
                 E_M2: [0,0,0],
                 E_M3: [0,0,0]
             }
-        // }
+        }
         return ( !data?"":
             <div className={styles.myCardSample}>
                 <div className={styles.card_title}>
