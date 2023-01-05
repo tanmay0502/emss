@@ -10,7 +10,7 @@ import TnASchdulingCard from "./TnASchdulingCard";
 import PhysVerificationCard from "./PhysVerificationCard";
 import { useNavigate } from "react-router-dom";
 
-export default function HomePageCardBottom({ state, dist }) {
+export default function HomePageCardBottom({ state, dist, init }) {
 	const navigate = useNavigate()
 	const User_ID = sessionStorage.getItem("sessionToken");
 	const Role = User_ID.substring(8);
@@ -61,7 +61,7 @@ export default function HomePageCardBottom({ state, dist }) {
 		}
 	};
 
-	const [cardVal, setcardVal] = useState("FLC Scheduling");
+	const [cardVal, setcardVal] = useState(init);
 
 	const cardRedirect = (e) => {
 		if (cardVal === "FLC Scheduling") {

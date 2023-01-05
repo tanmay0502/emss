@@ -536,8 +536,8 @@ export default function HomePage() {
                     </div>
                 </div>
 
-				<HomePageCardBottom state={state} dist={district}/>
-				<HomePageCardBottom state={state} dist={district}/>
+				<HomePageCardBottom state={state} dist={district} init={"FLC Scheduling"}/>
+				<HomePageCardBottom state={state} dist={district} init= {"1st Randomisation Scheduling"}/>
                 <div className=" bg-white rounded-md shadow-md cursor-pointer m-6 p-6" onClick={handleOrder}>
                         Dispatch/Recieve Orders
                 </div>
