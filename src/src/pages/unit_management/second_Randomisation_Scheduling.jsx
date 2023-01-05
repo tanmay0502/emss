@@ -62,8 +62,9 @@ function Second_Randomisation_Scheduling() {
                 credentials: "include"
             });
             const data = await response.json();
+            console.log(data, 'data')
             if (response.status === 200) {
-                setelectiontype(data, 'electiontype');
+                setelectiontype(data['data']);
                 console.log(data)
             }
         } catch (err) {
@@ -208,7 +209,7 @@ function Second_Randomisation_Scheduling() {
                         >
                             {''}
                             <option hidden>select</option>
-                            {
+                            {electiontype &&
                                 electiontype.map((val) => {
                                     return (
                                         <option value={val['election_id']}>

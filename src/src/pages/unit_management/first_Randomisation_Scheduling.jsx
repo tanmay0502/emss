@@ -74,7 +74,7 @@ function First_Randomisation_Scheduling() {
             });
             const data = await response.json();
             if (response.status === 200) {
-                setelectiontype(data);
+                setelectiontype(data['data']);
                 console.log(data)
             }
         } catch (err) {
@@ -225,7 +225,7 @@ function First_Randomisation_Scheduling() {
                         >
                             {''}
                             <option hidden>select</option>
-                            {
+                            {electiontype &&
                                 electiontype.map((val) => {
                                     return (
                                         <option value={val['election_id']}>

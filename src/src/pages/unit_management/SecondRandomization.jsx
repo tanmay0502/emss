@@ -197,8 +197,7 @@ const SecondRandomisationForm = ({ isVisible }) => {
                         headers: { "Content-Type": "application/json" },
                         credentials: "include",
                         body: JSON.stringify({
-                            ac_no: ACCode,
-                            randomizationid: randomizationid
+                            ac_no: ACCode
                         })
                     });
                     const data = await response.json();
@@ -239,7 +238,7 @@ const SecondRandomisationForm = ({ isVisible }) => {
                     else {
                         setAssemblyData([]);
                         setAssemblyList([]);
-                        setPollingStationDataMessage(data.message)
+                        setPollingStationDataMessage(data.error)
                     }
                 } catch (err) {
 

@@ -8,6 +8,7 @@ import { ReactComponent as Delete } from "../../assets/Delete.svg";
 import UnitListCard from "./components/UnitListCard";
 import scheduleStyles from './styles/ScheduleFlc.module.css'
 import UnitListEpmarkEpUnmark from "./components/UnitListEpmarkEpUnmark";
+import { List } from "antd/lib/form/Form";
 const userID = sessionStorage.getItem("sessionToken");
 const baseUrl = `${process.env.REACT_APP_API_SERVER}/unit`;
 
@@ -36,6 +37,8 @@ export default function UnitList() {
     replacementForm: false,
     epForm: false,
     epUnmarkForm: false,
+    block: false,
+    unblock: false,
   };
   const [ReplacedUnitID, setReplacedUnitID] = useState([]);
   const [ReplacingUnitID, setReplacingUnitID] = useState([]);
@@ -387,6 +390,8 @@ export default function UnitList() {
       <StatusUpdate activeButtons={cardVisibility} onButtonClick={handleButtonClick} flag={flag} data2={data2} initialInputValuesReplace={initialInputValuesReplace} setInputValuesReplace={setInputValuesReplace} inputValuesReplace={inputValuesReplace} handleInputChangeReplace={handleInputChangeReplace} isVisible={cardVisibility.replacementForm} Added={Added} handleInputChange_ReplacedUnitID={handleInputChange_ReplacedUnitID} handleInputChange_ReplacingUnitID={handleInputChange_ReplacingUnitID} handleInputChange_typeofdefect={handleInputChange_typeofdefect} handleEdit_Dropdown_rows={handleEdit_Dropdown_rows} Typeofdefect={Typeofdefect} ReplacingUnitID={ReplacingUnitID} ReplacedUnitID={ReplacedUnitID} handleRemoveClick_Dropdown_rows={handleRemoveClick_Dropdown_rows} />
       <EPForm isVisible={cardVisibility.epForm} />
       <EPUnmarkForm isVisible={cardVisibility.epUnmarkForm} />
+      <Block isVisible={cardVisibility.block} />
+      <UnBlock isVisible={cardVisibility.unblock} />
       {cardVisibility.replacementForm == true ?
         <UnitListCard updateChecked={updateChecked} bgColor={bgColor} ReplacedUnitID={ReplacedUnitID} data={data} />
         :
@@ -436,6 +441,19 @@ const StatusUpdate = ({ activeButtons, onButtonClick, flag, data2, initialInputV
           isActive={activeButtons.replacementForm}
           text="Unit Replacement"
           name="replacementForm"
+          onClick={onButtonClick}
+        />
+
+        <ActionButton
+          isActive={activeButtons.block}
+          text="Block"
+          name="block"
+          onClick={onButtonClick}
+        />
+        <ActionButton
+          isActive={activeButtons.unblock}
+          text="UnBlock"
+          name="unblock"
           onClick={onButtonClick}
         />
       </div>
@@ -884,34 +902,38 @@ const ReplacementForm = ({ flag, data2, initialInputValuesReplace, setInputValue
 
 
 
-  function callpollingstation() {
-    (async () => {
+  const callpollingstation = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_SERVER}/unit/fetch-polling-stations/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          ac_no: User_ID.slice(5, 8)
+        })
+      });
 
-      try {
-        const response = await fetch(`${baseUrl}/fetch-polling-stations`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({
-          })
-        });
-        const data = await response.json();
-        console.log(data, 'data')
-        // if (response.status === 200) {
-        //   if (data.hasOwnProperty('data')) {
-        //     setAssemblyList(data['data'][ACCode]['ps']);
-        //   }
-        // }
-        // else {
-        //   setAssemblyList([]);
-        // }
-      } catch (err) {
-
-        alert(`Error occured: ${err}`);
+      const Input = await response.json();
+      if (response.status == 200) {
+        setAssemblyList(Input['data'][User_ID.slice(5, 8)]['ps'])
       }
-    })();
+
+    } catch (err) {
+      console.log(err)
+    }
   }
 
+  console.log(assemblyList)
+
+  useEffect(
+    () => {
+      let timer1 = setTimeout(() => callpollingstation(), 1 * 1000);
+      return () => {
+        clearTimeout(timer1);
+      };
+    },
+    []
+  );
 
 
   const handleFormSubmit = async (e) => {
@@ -981,8 +1003,8 @@ const ReplacementForm = ({ flag, data2, initialInputValuesReplace, setInputValue
                     {" "}
                     <option hidden>Select</option>
 
-                    {assemblyList.map((item, _id) => (
-                      <option key={_id}>{item}</option>
+                    {assemblyList && assemblyList.map((val) => (
+                      <option value={val['ps_no']}>{val['ps_name']}</option>
                     ))}
                   </select>
                   <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1/2" />
@@ -1142,16 +1164,325 @@ const ReplacementForm = ({ flag, data2, initialInputValuesReplace, setInputValue
 };
 
 
+const Block = ({ isVisible }) => {
+  const initialValues = {
+    unitIDList: "",
+    Location: "",
+    remark: "",
+  };
+  const [inputValues, setInputValues] = useState(initialValues);
+  const [ListDefective_Warehouse, setListDefective_Warehouse] = useState([]);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setInputValues({
+      ...inputValues,
+      [name]: value,
+    });
+  };
+
+
+  async function getListK() {
+
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_SERVER}/warehouse/listWarehouses`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            "Type": 'K'
+          }),
+        })
+
+      const data = await response.json();
+      console.log(data, 'datak')
+      if (response.status == 200)
+        setListDefective_Warehouse(data["data"])
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(
+    () => {
+      let timer1 = setTimeout(() => getListK(), 1 * 1500);
+      return () => {
+        clearTimeout(timer1);
+      };
+    },
+    []
+  );
+
+  console.log(inputValues, "inputValues")
+
+  const handleFormSubmit = async (e) => {
+
+    try {
+      const response = await fetch(`${baseUrl}/blockUnit`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ ...inputValues }),
+      });
+      const data = await response.json();
+      if (data.status === 200) {
+        alert(data.message);
+      } else {
+        alert(data.message);
+      }
+    } catch (err) {
+      alert(`Error occured: ${err}`);
+    }
+    setInputValues(initialValues);
+  };
 
 
 
+  return (
+    <>
+      {isVisible && (
+        <div className={styles.unit_list_container}>
+          <div className={styles.unit_list_header}>
+            <h4>Block</h4>{" "}
+          </div>
+          <div className="mt-2 w-full bg-white p-6">
+            <div className="grid grid-cols-3">
+
+
+              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+                <label className="mb-2 w-full text-base">
+                  Unit ID
+                  <span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-gray-800">
+                  <input
+                    required
+                    className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                    name="unitIDList"
+                    placeholder='Unit ID'
+                    value={inputValues.unitIDList}
+                    onChange={handleInputChange}
+                  />
+                </div>
+              </div>
+
+              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+                <label className="mb-2 w-full text-base">
+                  Warehouse<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-[#494A59]">
+                  <select
+                    required
+                    className="relative h-10 w-full rounded-md border p-2"
+                    name="Location"
+                    placeholder="Select"
+                    value={inputValues.Location}
+                    onChange={handleInputChange}
+                  >
+                    {" "}
+                    <option hidden>Select</option>
+                    {ListDefective_Warehouse &&
+                      ListDefective_Warehouse.map((val, ind) => {
+                        return (<>
+                          <option value={val['warehouseid']}>{val['warehouseid']}</option>
+                        </>)
+                      })}
+
+                  </select>
+                  <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1/2" />
+                </div>
+              </div>
+
+              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+                <label className="mb-2 w-full text-base">
+                  Remarks<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-gray-800">
+                  <input
+                    className="h-40 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                    name="remark"
+                    placeholder="Remarks"
+                    value={inputValues.remark}
+                    onChange={handleInputChange}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <button
+            className="font-semibold text-white"
+            onClick={handleFormSubmit}
+          >
+            Submit
+          </button>
+        </div>
+      )}
+    </>
+  );
+};
+
+
+const UnBlock = ({ isVisible }) => {
+  const initialValues = {
+    unitIDList: "",
+    Location: "",
+    remark: "",
+  };
+  const [inputValues, setInputValues] = useState(initialValues);
+  const [ListDefective_Warehouse, setListDefective_Warehouse] = useState([]);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setInputValues({
+      ...inputValues,
+      [name]: value,
+    });
+  };
+
+
+  async function getListK() {
+
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_SERVER}/warehouse/listWarehouses`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            "Type": 'K'
+          }),
+        })
+
+      const data = await response.json();
+      console.log(data, 'datak')
+      if (response.status == 200)
+        setListDefective_Warehouse(data["data"])
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(
+    () => {
+      let timer1 = setTimeout(() => getListK(), 1 * 1500);
+      return () => {
+        clearTimeout(timer1);
+      };
+    },
+    []
+  );
+
+  console.log(inputValues, "inputValues")
+
+  const handleFormSubmit = async (e) => {
+
+    try {
+      const response = await fetch(`${baseUrl}/unblock_unit`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ ...inputValues }),
+      });
+      const data = await response.json();
+      if (data.status === 200) {
+        alert(data.message);
+      } else {
+        alert(data.message);
+      }
+    } catch (err) {
+      alert(`Error occured: ${err}`);
+    }
+    setInputValues(initialValues);
+  };
 
 
 
+  return (
+    <>
+      {isVisible && (
+        <div className={styles.unit_list_container}>
+          <div className={styles.unit_list_header}>
+            <h4>Block</h4>{" "}
+          </div>
+          <div className="mt-2 w-full bg-white p-6">
+            <div className="grid grid-cols-3">
 
 
+              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+                <label className="mb-2 w-full text-base">
+                  Unit ID
+                  <span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-gray-800">
+                  <input
+                    required
+                    className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                    name="unitIDList"
+                    placeholder='Unit ID'
+                    value={inputValues.unitIDList}
+                    onChange={handleInputChange}
+                  />
+                </div>
+              </div>
 
+              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+                <label className="mb-2 w-full text-base">
+                  Warehouse<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-[#494A59]">
+                  <select
+                    required
+                    className="relative h-10 w-full rounded-md border p-2"
+                    name="Location"
+                    placeholder="Select"
+                    value={inputValues.Location}
+                    onChange={handleInputChange}
+                  >
+                    {" "}
+                    <option hidden>Select</option>
+                    {ListDefective_Warehouse &&
+                      ListDefective_Warehouse.map((val, ind) => {
+                        return (<>
+                          <option value={val['warehouseid']}>{val['warehouseid']}</option>
+                        </>)
+                      })}
 
+                  </select>
+                  <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1/2" />
+                </div>
+              </div>
 
+              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+                <label className="mb-2 w-full text-base">
+                  Remarks<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-gray-800">
+                  <input
+                    className="h-40 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                    name="remark"
+                    placeholder="Remarks"
+                    value={inputValues.remark}
+                    onChange={handleInputChange}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <button
+            className="font-semibold text-white"
+            onClick={handleFormSubmit}
+          >
+            Submit
+          </button>
+        </div>
+      )}
+    </>
+  );
+};
 
 

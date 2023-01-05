@@ -10,6 +10,8 @@ export default function StatusHistory() {
     const arr1 = param.split("=");
     const UNITID = arr1[0];
     const [Data, setData] = useState([]);
+
+
     const getData = async () => {
         try {
             const response = await fetch(`${process.env.REACT_APP_API_SERVER}/unit/viewUnitHistory/`, {
@@ -62,9 +64,10 @@ export default function StatusHistory() {
                                     <Group LabelText='Location' value={val[4]} />
                                     <Group LabelText='Updated at' value={val[1] != '' ? val[1].split('T')[0].slice(8) + "-" + val[1].split('T')[0].slice(5, 7) + '-' + val[1].split('T')[0].slice(0, 4) + ' ' + val[1].split('T')[1].slice(0, 8) : ''} />
                                 </div>
-                                <div className={`${styles.myFlexBox} ${styles.myFlexWrap}`}>
-                                    <Group LabelText='Remarks' value={val[5]} />
-                                </div>
+                                {/* <div className={`${styles.myFlexBox} ${styles.myFlexWrap}`}>
+                                    <Group LabelText='Remarks' value={val[5] != '' ? val[5] : 'None'} />
+                                </div> */}
+                                <hr></hr>
                             </div>)
                         })}
                 </div>
