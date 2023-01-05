@@ -358,8 +358,6 @@ function ScheduleCDP_edit() {
                             />
 
                         </div>
-
-
                     </div>
                 </div>
                 {edit != '' ? <button class={styles.submitBtn1} type='submit' > Submit </button> : ''}

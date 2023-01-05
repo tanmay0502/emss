@@ -7,6 +7,7 @@ import { ReactComponent as ChevronDown } from "../../assets/ChevronDown.svg";
 import { ReactComponent as Delete } from "../../assets/Delete.svg";
 import UnitListCard from "./components/UnitListCard";
 import scheduleStyles from './styles/ScheduleFlc.module.css'
+import { TagsInput } from "react-tag-input-component";
 import UnitListEpmarkEpUnmark from "./components/UnitListEpmarkEpUnmark";
 import { List } from "antd/lib/form/Form";
 const userID = sessionStorage.getItem("sessionToken");
@@ -914,6 +915,7 @@ const ReplacementForm = ({ flag, data2, initialInputValuesReplace, setInputValue
       });
 
       const Input = await response.json();
+      console.log(Input, 'Input')
       if (response.status == 200) {
         setAssemblyList(Input['data'][User_ID.slice(5, 8)]['ps'])
       }
@@ -1225,7 +1227,11 @@ const Block = ({ isVisible }) => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ ...inputValues }),
+        body: JSON.stringify({
+          "unitIDList": [inputValues['unitIDList']],
+          "Location": inputValues['Location'],
+          "remark": inputValues['remark']
+        }),
       });
       const data = await response.json();
       if (data.status === 200) {
@@ -1331,8 +1337,13 @@ const UnBlock = ({ isVisible }) => {
     Location: "",
     remark: "",
   };
+
+
   const [inputValues, setInputValues] = useState(initialValues);
   const [ListDefective_Warehouse, setListDefective_Warehouse] = useState([]);
+  const [ids, setids] = useState([]);
+
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setInputValues({
@@ -1386,11 +1397,18 @@ const UnBlock = ({ isVisible }) => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify({ ...inputValues }),
+        body: JSON.stringify(
+          {
+            "unitIDList": ids,
+            "Location": inputValues['Location'],
+            "remark": inputValues['remark']
+
+          }),
       });
       const data = await response.json();
       if (data.status === 200) {
         alert(data.message);
+        setids([])
       } else {
         alert(data.message);
       }
@@ -1400,32 +1418,28 @@ const UnBlock = ({ isVisible }) => {
     setInputValues(initialValues);
   };
 
-
-
   return (
     <>
       {isVisible && (
         <div className={styles.unit_list_container}>
           <div className={styles.unit_list_header}>
-            <h4>Block</h4>{" "}
+            <h4>UnBlock</h4>{" "}
           </div>
           <div className="mt-2 w-full bg-white p-6">
             <div className="grid grid-cols-3">
 
-
               <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
                 <label className="mb-2 w-full text-base">
-                  Unit ID
+                  Unit Id
                   <span className="text-red-600">*</span>
                 </label>
                 <div className="relative text-gray-800">
-                  <input
-                    required
-                    className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-                    name="unitIDList"
-                    placeholder='Unit ID'
-                    value={inputValues.unitIDList}
-                    onChange={handleInputChange}
+                  <TagsInput
+                    className='li_noti hide-scroll-bar tagInput p-2'
+                    value={ids}
+                    id="formTags"
+                    onChange={setids}
+                    placeHolder="WB00000CEO, AP00000DEO"
                   />
                 </div>
               </div>
