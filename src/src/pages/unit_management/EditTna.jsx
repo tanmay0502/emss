@@ -7,6 +7,7 @@ import { ReactComponent as SearchInputElement } from '../../assets/searchInputIc
 import { TagsInput } from "react-tag-input-component";
 
 function EditTna() {
+    let post = sessionStorage.getItem("sessionToken").substring(8);
     const [details, setDetails] = useState([])
     const [tags, setTags] = React.useState([]);
     const [listtags, setlisttags] = React.useState([]);
@@ -318,7 +319,7 @@ function EditTna() {
     return(
         <>
         {console.log(currTna)}
-        {edit === false ? 
+        {edit === false && post === "DEO"? 
         <button className={styles.editBtn} 
             onClick = {() => {setEdit(true)}}
         >

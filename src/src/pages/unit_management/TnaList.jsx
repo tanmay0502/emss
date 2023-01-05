@@ -197,11 +197,11 @@ export default function ScheduleList() {
                 buttons={[]} 
                 fieldsToExclude={["ID"]}
                 onClick={(event, row) => {
-                    if (post === "DEO"){
+                    // if (post === "DEO"){
                         navigate(`/session/unitmanagement/edit_tna/${row["ID"]}`)
-                    }else{
-                        alert("Only DEOs can edit Training and Awareness")
-                    }
+                    // }else{
+                        // alert("Only DEOs can edit Training and Awareness")
+                    // }
                     
                 }}
                 
