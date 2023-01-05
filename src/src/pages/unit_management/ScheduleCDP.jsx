@@ -60,8 +60,9 @@ function ScheduleCDP() {
                     },
                 })
             const data = await response.json();
-            if (data.length) {
-                setListElections(data)
+            console.log(data, 'datadata')
+            if (response.status == 200) {
+                setListElections(data['data'])
             }
         } catch (error) {
             console.log(error)

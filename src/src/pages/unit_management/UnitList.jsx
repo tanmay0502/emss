@@ -136,39 +136,39 @@ export default function UnitList() {
   );
 
 
-  // const getData3 = async () => {
-  //   try {
-  //     const response = await fetch(`${process.env.REACT_APP_API_SERVER}/unit/listUnits/`, {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({
-  //       }),
-  //       credentials: "include",
-  //     });
+  const getData3 = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_SERVER}/unit/listUnits/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+        }),
+        credentials: "include",
+      });
 
-  //     let Input = await response.json();
-  //     if (response.status == 200) {
-  //       if (Input && Input["data"] && Input['data'].length) {
-  //         setData3(Input['data']);
-  //       }
-  //       else {
-  //         setData3([]);
-  //       }
-  //     }
-  //   } catch (err) {
-  //     console.log(err)
-  //   }
-  // }
+      let Input = await response.json();
+      if (response.status == 200) {
+        if (Input && Input["data"] && Input['data'].length) {
+          setData3(Input['data']);
+        }
+        else {
+          setData3([]);
+        }
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
-  // useEffect(
-  //   () => {
-  //     let timer1 = setTimeout(() => getData3(), 1 * 1500);
-  //     return () => {
-  //       clearTimeout(timer1);
-  //     };
-  //   },
-  //   []
-  // );
+  useEffect(
+    () => {
+      let timer1 = setTimeout(() => getData3(), 1 * 1500);
+      return () => {
+        clearTimeout(timer1);
+      };
+    },
+    []
+  );
 
   const [flag, setflag] = useState([]);
   const [isPageLoadedAll, setIsPageLoadedAll] = useState(0)
@@ -391,12 +391,7 @@ export default function UnitList() {
 
   return (
     <>
-      <StatusUpdate activeButtons={cardVisibility} onButtonClick={handleButtonClick} flag={flag} data2={data2} initialInputValuesReplace={initialInputValuesReplace} setInputValuesReplace={setInputValuesReplace} inputValuesReplace={inputValuesReplace} handleInputChangeReplace={handleInputChangeReplace} isVisible={cardVisibility.replacementForm} Added={Added} handleInputChange_ReplacedUnitID={handleInputChange_ReplacedUnitID} handleInputChange_ReplacingUnitID={handleInputChange_ReplacingUnitID} handleInputChange_typeofdefect={handleInputChange_typeofdefect} handleEdit_Dropdown_rows={handleEdit_Dropdown_rows} Typeofdefect={Typeofdefect} ReplacingUnitID={ReplacingUnitID} ReplacedUnitID={ReplacedUnitID} handleRemoveClick_Dropdown_rows={handleRemoveClick_Dropdown_rows} />
-      <EPForm isVisible={cardVisibility.epForm} />
-      <EPUnmarkForm isVisible={cardVisibility.epUnmarkForm} />
-      <Block isVisible={cardVisibility.block} />
-      <UnBlock isVisible={cardVisibility.unblock} />
-      <Orders isVisible={cardVisibility.dispatch}/>
+      <StatusUpdate isVisibleepUnmarkForm={cardVisibility.epUnmarkForm} isVisibleepForm={cardVisibility.epForm} isVisibleblock={cardVisibility.block} isVisibleunblock={cardVisibility.unblock} activeButtons={cardVisibility} onButtonClick={handleButtonClick} flag={flag} data2={data2} initialInputValuesReplace={initialInputValuesReplace} setInputValuesReplace={setInputValuesReplace} inputValuesReplace={inputValuesReplace} handleInputChangeReplace={handleInputChangeReplace} isVisible={cardVisibility.replacementForm} Added={Added} handleInputChange_ReplacedUnitID={handleInputChange_ReplacedUnitID} handleInputChange_ReplacingUnitID={handleInputChange_ReplacingUnitID} handleInputChange_typeofdefect={handleInputChange_typeofdefect} handleEdit_Dropdown_rows={handleEdit_Dropdown_rows} Typeofdefect={Typeofdefect} ReplacingUnitID={ReplacingUnitID} ReplacedUnitID={ReplacedUnitID} handleRemoveClick_Dropdown_rows={handleRemoveClick_Dropdown_rows} />
       {cardVisibility.replacementForm == true ?
         <UnitListCard updateChecked={updateChecked} bgColor={bgColor} ReplacedUnitID={ReplacedUnitID} data={data} />
         :
@@ -420,7 +415,7 @@ const ActionButton = ({ isActive, text, name, onClick }) => {
   );
 };
 
-const StatusUpdate = ({ activeButtons, onButtonClick, flag, data2, initialInputValuesReplace, setInputValuesReplace, inputValuesReplace, handleInputChangeReplace, isVisible, Added, handleInputChange_ReplacedUnitID, handleInputChange_ReplacingUnitID, handleInputChange_typeofdefect, handleEdit_Dropdown_rows, ReplacingUnitID, ReplacedUnitID, Typeofdefect, handleRemoveClick_Dropdown_rows }) => {
+const StatusUpdate = ({ isVisibleepUnmarkForm, isVisibleepForm, isVisibleblock, isVisibleunblock, activeButtons, onButtonClick, flag, data2, initialInputValuesReplace, setInputValuesReplace, inputValuesReplace, handleInputChangeReplace, isVisible, Added, handleInputChange_ReplacedUnitID, handleInputChange_ReplacingUnitID, handleInputChange_typeofdefect, handleEdit_Dropdown_rows, ReplacingUnitID, ReplacedUnitID, Typeofdefect, handleRemoveClick_Dropdown_rows }) => {
   return (
 
     <div className={styles.unit_list_container}>
@@ -469,7 +464,11 @@ const StatusUpdate = ({ activeButtons, onButtonClick, flag, data2, initialInputV
         />
       </div>
 
+      <EPUnmarkForm isVisible={isVisibleepUnmarkForm} />
+      <EPForm isVisible={isVisibleepForm} />
       <ReplacementForm flag={flag} data2={data2} initialInputValuesReplace={initialInputValuesReplace} setInputValuesReplace={setInputValuesReplace} inputValuesReplace={inputValuesReplace} handleInputChangeReplace={handleInputChangeReplace} isVisible={isVisible} Added={Added} handleInputChange_ReplacedUnitID={handleInputChange_ReplacedUnitID} handleInputChange_ReplacingUnitID={handleInputChange_ReplacingUnitID} handleInputChange_typeofdefect={handleInputChange_typeofdefect} handleEdit_Dropdown_rows={handleEdit_Dropdown_rows} Typeofdefect={Typeofdefect} ReplacingUnitID={ReplacingUnitID} ReplacedUnitID={ReplacedUnitID} handleRemoveClick_Dropdown_rows={handleRemoveClick_Dropdown_rows} />
+      <UnBlock isVisible={isVisibleunblock} />
+      <Block isVisible={isVisibleblock} />
     </div >
 
   );
@@ -541,25 +540,20 @@ const EPForm = ({ isVisible }) => {
     }
   };
 
+  const onFormSubmit = async (e) => {
+    e.preventDefault();
+    handleFormSubmit()
+
+  };
 
 
   return (
     <>
-      {isVisible && (
-        <div className={styles.unit_list_container}>
-          <div className={styles.unit_list_header}>
-            <h4>EP Mark</h4>{" "}
-            <button
-              className="font-semibold text-black"
-              onClick={handleFinalFormSubmit}
-              style={{ backgroundColor: "white" }}
-            >
-              Final Submit
-            </button>
-          </div>
-          <div className="mt-2 w-full bg-white p-6">
-            <div className="grid grid-cols-3">
-              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+      <form onSubmit={onFormSubmit} className="w-full rounded-lg " styles={{ marginTop: "20%" }}>
+        {isVisible && (
+          <div styles={{ marginTop: "20%" }}>
+            <div className="w-full flex justify-around">
+              <div className="m-2 text-left w-1/3">
                 <label className="mb-2 w-full text-base">
                   Bulk<span className="text-red-600">*</span>
                 </label>
@@ -579,7 +573,7 @@ const EPForm = ({ isVisible }) => {
                   <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1/2" />
                 </div>
               </div>
-              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+              <div className="m-2 text-left w-1/3">
                 <label className="mb-2 w-full text-base">
                   Destination Location<span className="text-red-600">*</span>
                 </label>
@@ -593,7 +587,7 @@ const EPForm = ({ isVisible }) => {
                   />
                 </div>
               </div>
-              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+              <div className="m-2 text-left w-1/3">
                 <label className="mb-2 w-full text-base">
                   {inputValues.bulk === "Yes" ? "AC Number" : "Unit IDs"}
                   <span className="text-red-600">*</span>
@@ -614,7 +608,7 @@ const EPForm = ({ isVisible }) => {
                   />
                 </div>
               </div>
-              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+              <div className="m-2 text-left w-1/3">
                 <label className="mb-2 w-full text-base">
                   Remarks<span className="text-red-600">*</span>
                 </label>
@@ -629,15 +623,12 @@ const EPForm = ({ isVisible }) => {
                 </div>
               </div>
             </div>
+            {/* </div> */}
+            <button class={scheduleStyles.submitBtn} type='submit' style={{ marginBottom: "1%" }}> Submit </button>
           </div>
-          <button
-            className="font-semibold text-white"
-            onClick={handleFormSubmit}
-          >
-            Submit
-          </button>
-        </div>
-      )}
+        )
+        }
+      </form >
     </>
   );
 };
@@ -699,6 +690,13 @@ const EPUnmarkForm = ({ isVisible }) => {
     }
   };
 
+  const onFormSubmit = async (e) => {
+    e.preventDefault();
+    handleFormSubmit()
+
+  };
+
+
   const navigate = useNavigate();
   const fileNameArray = [];
   const fileTypeArray = [];
@@ -759,14 +757,11 @@ const EPUnmarkForm = ({ isVisible }) => {
 
   return (
     <>
-      {isVisible && (
-        <div className={styles.unit_list_container}>
-          <div className={styles.unit_list_header}>
-            <h4>EP Unmark</h4>
-          </div>
-          <div className="mt-2 w-full bg-white p-6">
-            <div className="grid grid-cols-3">
-              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+      <form onSubmit={onFormSubmit} className="w-full rounded-lg " styles={{ marginTop: "20%" }}>
+        {isVisible && (
+          <div styles={{ marginTop: "20%" }}>
+            <div className="w-full flex justify-around">
+              <div className="m-2 text-left w-1/3">
                 <label className="mb-2 w-full text-base">
                   Bulk<span className="text-red-600">*</span>
                 </label>
@@ -787,7 +782,7 @@ const EPUnmarkForm = ({ isVisible }) => {
                 </div>
               </div>
 
-              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+              <div className="m-2 text-left w-1/3">
                 <label className="mb-2 w-full text-base">
                   Destination Location<span className="text-red-600">*</span>
                 </label>
@@ -801,7 +796,7 @@ const EPUnmarkForm = ({ isVisible }) => {
                   />
                 </div>
               </div>
-              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+              <div className="m-2 text-left w-1/3">
                 <label className="mb-2 w-full text-base">
                   {inputValues.bulk === "Yes" ? "AC Number" : "Unit IDs"}
                   <span className="text-red-600">*</span>
@@ -822,7 +817,7 @@ const EPUnmarkForm = ({ isVisible }) => {
                   />
                 </div>
               </div>
-              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+              <div className="m-2 text-left w-1/3">
                 <label className="mb-2 w-full text-base">
                   Remarks<span className="text-red-600">*</span>
                 </label>
@@ -837,7 +832,7 @@ const EPUnmarkForm = ({ isVisible }) => {
                 </div>
               </div>
 
-              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+              <div className="m-2 text-left w-1/3">
                 <label className="mb-2 w-full text-base">
                   Supporting Documents <span className="text-red-600">*</span>
                 </label>
@@ -853,16 +848,11 @@ const EPUnmarkForm = ({ isVisible }) => {
                 ></input>
               </div>
             </div>
+            <button class={scheduleStyles.submitBtn} type='submit' style={{ marginBottom: "1%" }}> Submit </button>
           </div>
-
-          <button
-            className="font-semibold text-white"
-            onClick={handleFormSubmit}
-          >
-            Submit
-          </button>
-        </div>
-      )}
+        )
+        }
+      </form >
     </>
   );
 };
@@ -1255,20 +1245,19 @@ const Block = ({ isVisible }) => {
     setInputValues(initialValues);
   };
 
+  const onFormSubmit = async (e) => {
+    handleFormSubmit()
+
+  };
 
 
   return (
     <>
-      {isVisible && (
-        <div className={styles.unit_list_container}>
-          <div className={styles.unit_list_header}>
-            <h4>Block</h4>{" "}
-          </div>
-          <div className="mt-2 w-full bg-white p-6">
-            <div className="grid grid-cols-3">
-
-
-              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+      <form onSubmit={onFormSubmit} className="w-full rounded-lg " styles={{ marginTop: "20%" }}>
+        {isVisible && (
+          <div styles={{ marginTop: "20%" }}>
+            <div className="w-full flex justify-around">
+              <div className="m-2 w-1/3 text-left">
                 <label className="mb-2 w-full text-base">
                   Unit ID
                   <span className="text-red-600">*</span>
@@ -1285,7 +1274,7 @@ const Block = ({ isVisible }) => {
                 </div>
               </div>
 
-              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+              <div className="m-2 w-1/3 text-left">
                 <label className="mb-2 w-full text-base">
                   Warehouse<span className="text-red-600">*</span>
                 </label>
@@ -1312,7 +1301,7 @@ const Block = ({ isVisible }) => {
                 </div>
               </div>
 
-              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+              <div className="m-2 w-1/3 text-left">
                 <label className="mb-2 w-full text-base">
                   Remarks<span className="text-red-600">*</span>
                 </label>
@@ -1327,15 +1316,11 @@ const Block = ({ isVisible }) => {
                 </div>
               </div>
             </div>
+            <button class={scheduleStyles.submitBtn} type='submit' style={{ marginBottom: "1%" }}> Submit </button>
           </div>
-          <button
-            className="font-semibold text-white"
-            onClick={handleFormSubmit}
-          >
-            Submit
-          </button>
-        </div>
-      )}
+        )
+        }
+      </form >
     </>
   );
 };
@@ -1375,7 +1360,7 @@ const UnBlock = ({ isVisible }) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            "Type": 'K'
+            "Type": 'C'
           }),
         })
 
@@ -1428,17 +1413,20 @@ const UnBlock = ({ isVisible }) => {
     setInputValues(initialValues);
   };
 
-  return (
-    <>
-      {isVisible && (
-        <div className={styles.unit_list_container}>
-          <div className={styles.unit_list_header}>
-            <h4>UnBlock</h4>{" "}
-          </div>
-          <div className="mt-2 w-full bg-white p-6">
-            <div className="grid grid-cols-3">
+  const onFormSubmit = async (e) => {
+    handleFormSubmit()
 
-              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+  };
+
+
+  return (
+
+    <>
+      <form onSubmit={onFormSubmit} className="w-full rounded-lg " styles={{ marginTop: "20%" }}>
+        {isVisible && (
+          <div styles={{ marginTop: "20%" }}>
+            <div className="w-full flex justify-around">
+              <div className="m-2 w-1/3 text-left">
                 <label className="mb-2 w-full text-base">
                   Unit Id
                   <span className="text-red-600">*</span>
@@ -1454,7 +1442,7 @@ const UnBlock = ({ isVisible }) => {
                 </div>
               </div>
 
-              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+              <div className="m-2 w-1/3 text-left">
                 <label className="mb-2 w-full text-base">
                   Warehouse<span className="text-red-600">*</span>
                 </label>
@@ -1481,9 +1469,9 @@ const UnBlock = ({ isVisible }) => {
                 </div>
               </div>
 
-              <div className="mx-auto mb-8 flex w-3/4 flex-col text-left">
+              <div className="m-2 w-1/3 text-left">
                 <label className="mb-2 w-full text-base">
-                  Remarks<span className="text-red-600">*</span>
+                  Remarks<span className="text-red-600"></span>
                 </label>
                 <div className="relative text-gray-800">
                   <input
@@ -1496,15 +1484,12 @@ const UnBlock = ({ isVisible }) => {
                 </div>
               </div>
             </div>
+            <button class={scheduleStyles.submitBtn} type='submit' style={{ marginBottom: "1%" }}> Submit </button>
           </div>
-          <button
-            className="font-semibold text-white"
-            onClick={handleFormSubmit}
-          >
-            Submit
-          </button>
-        </div>
-      )}
+
+        )
+        }
+      </form >
     </>
   );
 };

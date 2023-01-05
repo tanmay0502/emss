@@ -60,7 +60,7 @@ const SecondRandomisationForm = ({ isVisible }) => {
         try {
             const response = await fetch(`${baseUrl}/fetch-ac-pc?` +
                 new URLSearchParams({
-                    randomizationid: randomizationid,
+                    randomizationid: String(randomizationid),
                 }),
                 {
                     method: "POST",
@@ -227,7 +227,7 @@ const SecondRandomisationForm = ({ isVisible }) => {
                                 setAssemblyData([{
                                     ps_no: "",
                                     ps_name: "",
-                                    bu_count: "0",
+                                    bu_count: 0,
                                     cu_count: 0,
                                     vt_count: 0
                                 }]);
