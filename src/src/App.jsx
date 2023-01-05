@@ -64,6 +64,8 @@ import FetchFile from './pages/issue_request_management/FetchFile';
 import Orders from './pages/unit_management/Orders';
 import Prepared_Certificate from './pages/unit_management/preparedness_certificate';
 import NotFound404 from './NotFound404';
+import SetModels from './components/SetModels';
+import SetStates from './components/SetStates';
 function App() {
 
 	const [sessionState, setSessionState] = useState({
@@ -247,12 +249,20 @@ function App() {
 							element={<ChangePassword />}
 						/>
 						<Route
-							path="/session/viewpermissions"
+							path="/session/adminutilities/viewpermissions"
 							element={<ViewPermission />}
 						/>
 						<Route
-							path="/session/setroles"
+							path="/session/adminutilities/setroles"
 							element={<SetRoles />}
+						/>
+						<Route
+							path="/session/adminutilities/setmodels"
+							element={<SetModels />}
+						/>
+						<Route
+							path="/session/adminutilities/setstates"
+							element={<SetStates />}
 						/>
 						<Route
 							path="/session/ordermanagement"

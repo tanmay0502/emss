@@ -22,17 +22,48 @@ import './Navbar.css'
 // import Invent from './assets/invent.png'
 import { ReactComponent as Invent} from './assets/invent.svg'
 import { ReactComponent as Manuals} from './assets/manuals.svg'
+import AdminUtilities from './components/AdminUtilities';
+import { Validate_Permission } from './components/utils';
 
 function Routed(props) {
 
 	// const [profileView,setProfileView]=useState(0);
 	// const [profileOption,setProfileOption]=useState(0);
 
+	const [isAdmin, setIsAdmin] =useState(0);
+
+	async function IsAdmin(){
+		let body = {
+			"moduleName": "User",
+			"operation": "AdminUtilities",
+			"operandState": "*",
+			"operandDist": "*",
+			"operandAC": "*",
+			"operandRole": "*"
+		  }
+		let ans = await Validate_Permission(body);
+		console.log(ans);
+
+		if(ans){
+			setIsAdmin(1);
+		}
+	}
+
+	useEffect(()=>{
+		let time = setTimeout(()=>IsAdmin(),1000);
+		return (()=>{
+			clearTimeout(time);
+		})
+	},[])
+
 	const outlet = useOutlet();
 
 	const [userData, setUserData] = useState({
 		username: null
 	})
+
+	const [AdminUtilities, setAdminUtilities] = useState("none")
+	const [isShow, setIsShow] = useState(0);
 
 	function logOut() {
 		const response = fetch(
@@ -52,6 +83,21 @@ function Routed(props) {
 		// localStorage.setItem("token", null);
 		window.location.replace("/login");
 	}
+
+	useEffect(()=>{
+		if(isShow && AdminUtilities!="none"){
+		navigate(`/session/adminutilities/${AdminUtilities}`)
+		}
+		
+	},[AdminUtilities])
+
+	useEffect(()=>{
+		if(!window.location.pathname.startsWith("/session/adminutilities")){
+			setAdminUtilities("none")
+		}
+	},[window.location.pathname])
+
+
 
 	const navigate = useNavigate()
 	const location = useLocation()
@@ -278,6 +324,8 @@ function Routed(props) {
 						</div>
 						{/* <span>Welcome, {userData.username}</span> */}
 						<button className={window.location.pathname.startsWith("/session/home") ? 'nav-button active' : 'nav-button'} onClick={() => {
+							
+							
 							navigate("/session/home")
 						}}>
 							<div>
@@ -364,24 +412,39 @@ function Routed(props) {
 						</div>
 
 						
+						{isAdmin==1 && 
+						<select
+						className={`${!window.location.pathname.startsWith("/session/adminutilities")?'text-black':'text-white'}`}
+						style={!window.location.pathname.startsWith("/session/adminutilities")?{ }:{backgroundColor:"#84587C"}}
+						value={AdminUtilities}
+						onChange={(e)=>{
+							setAdminUtilities(e.target.value)
+							console.log(e.target.value)
+							if(e.target.value!="none"){
+							setIsShow(1);
+							}
+						}}
+						>
+							
+							<option value="none"><div>Admin Utilities</div></option>
+							<option value="viewpermissions">Permissions</option>
+							<option value="setroles">Roles</option>
+							<option value="setmodels">Models</option>
+							<option value="setstates">States</option>
+							
+						</select>
+						}
 
-						<button className={window.location.pathname.startsWith("/session/viewpermissions") ? 'nav-button active' : 'nav-button'}
+						{/* <button className={window.location.pathname.startsWith("/session/adminutilities") ? 'nav-button active' : 'nav-button'}
 							onClick={() => {
-								navigate('/session/viewpermissions')}
+								navigate(`/session/adminutilities/${AdminUtilities}`)}
 							}>
 								
-								<div><PermissionIcon/>Permissions</div>
+								<div><PermissionIcon/>Admin Utilities</div>
 								<ChevronRight className="chevron" />
-						</button>
+						</button> */}
 
-						<button className={window.location.pathname.startsWith("/session/setroles") ? 'nav-button active' : 'nav-button'}
-							onClick={() => {
-								navigate('/session/setroles')}
-							}>
-								
-								<div><PermissionIcon/>Roles</div>
-								<ChevronRight className="chevron" />
-						</button>
+						
 
 					</div>
 

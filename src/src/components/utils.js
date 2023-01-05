@@ -286,3 +286,34 @@ export const totalStatusAvailable = [
   "Under T&A",
   "Unpolled Defective",
 ]
+
+
+
+
+export const Validate_Permission = async (body) => {
+  try {
+   
+    const response = await fetch(
+      process.env.REACT_APP_API_SERVER + "/user/validate_permissionAPI",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(body),
+      }
+    );
+    let data2 = await response.json();
+    console.log(data2)
+
+    if(response.status==200) {
+      return 1;
+    }
+    else
+    return 0;
+  } catch (err) {
+    console.log(err);
+    return {}
+  }
+};
