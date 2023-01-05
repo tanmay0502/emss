@@ -40,7 +40,7 @@ export default function FLCSchedulecard({state, dist}) {
 	<table style={{fontSize: "15px", width: "100%", marginTop: "15px", textAlign: "center"}}>
 		<thead>
 			<tr style={{padding: "0px", width: "100%", display: "contents", paddingBottom: "20px" }}>
-				<th className="pr-2" style={{width: "5%", paddingLeft: "0px"}}>Dist</th>
+				<th className="pr-2" style={{width: "5%", paddingLeft: "0px"}}>State</th>
 				<th className="px-3" style={{width: "5%"}}>FLC OK</th>
 				<th className="px-3" style={{width: "5%"}}>FLC NOK</th>
 				<th style={{padding: "0px", width: "85%"}}>Dates</th>
