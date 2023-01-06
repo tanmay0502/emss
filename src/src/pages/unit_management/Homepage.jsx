@@ -37,7 +37,7 @@ export default function HomePage() {
     const [statusData, setStatusData] = useState({});
     const [status1, setStatus1] = useState(totalStatusAvailable[0]);
     const [statusData1, setStatusData1] = useState([]);
-    const [status2, setStatus2] = useState(totalStatusAvailable[1]);
+    const [status2, setStatus2] = useState(totalStatusAvailable[10]);
     const [statusData2, setStatusData2] = useState([]);
     const [cDat, setCDat] = useState([]);
     const [bDat, setBDat] = useState([]);

@@ -852,13 +852,13 @@ useEffect(()=>{
               required={isTemporary}
               type="file"
               placeholder="Choose Image (Upto 500KB)"
-              accept="image/png"
+              accept="image/*"
               onChange={(e) => {
                 uploadImage(e);
             }}
             />
             
-            <p style={{color:"red"}}>Only .png file is supported due to security reasons</p>
+            <p style={{color:"red"}}>Only image files are supported. </p>
           </div>
         </div>
 

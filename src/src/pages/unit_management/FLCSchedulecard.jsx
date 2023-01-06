@@ -53,7 +53,7 @@ export default function FLCSchedulecard({state, dist}) {
 					<tr style={{width: "100%"}}>
 						<td className="pl-0 pr-2" style={{width: "5%", paddingLeft: "0px"}}>{el["area"]}</td>
 						<td className="px-3" style={{width: "5%"}}>{el["flcokunits"] ? el["flcokunits"] : 0}</td>
-						<td className="px-3" style={{width: "5%"}}>{el["flcnokunits"] ? el["flcnotokunits"] : 0}</td>
+						<td className="px-3" style={{width: "5%"}}>{el["flcnotokunits"] ? el["flcnotokunits"] : 0}</td>
 						<td className="px-0" style={{width: "85%"}}>{el["startdate"]}-{el["enddate"]}</td>
 					</tr>
 				)
