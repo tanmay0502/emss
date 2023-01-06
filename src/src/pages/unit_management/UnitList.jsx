@@ -44,7 +44,8 @@ export default function UnitList() {
     dispatch: false,
     destroy: false,
     FLC_Assembly: false,
-
+    FLC_Scan: false,
+    destruction: false
   };
   const [ReplacedUnitID, setReplacedUnitID] = useState([]);
   const [ReplacingUnitID, setReplacingUnitID] = useState([]);
@@ -391,7 +392,7 @@ export default function UnitList() {
 
   return (
     <>
-      <StatusUpdate isVisibleFLC_Assembly={cardVisibility.FLC_Assembly} isVisibleepUnmarkForm={cardVisibility.epUnmarkForm} isVisibledestroyed={cardVisibility.destroy} isVisibledispatch={cardVisibility.dispatch} isVisibleepForm={cardVisibility.epForm} isVisibleblock={cardVisibility.block} isVisibleunblock={cardVisibility.unblock} activeButtons={cardVisibility} onButtonClick={handleButtonClick} flag={flag} data2={data2} initialInputValuesReplace={initialInputValuesReplace} setInputValuesReplace={setInputValuesReplace} inputValuesReplace={inputValuesReplace} handleInputChangeReplace={handleInputChangeReplace} isVisible={cardVisibility.replacementForm} Added={Added} handleInputChange_ReplacedUnitID={handleInputChange_ReplacedUnitID} handleInputChange_ReplacingUnitID={handleInputChange_ReplacingUnitID} handleInputChange_typeofdefect={handleInputChange_typeofdefect} handleEdit_Dropdown_rows={handleEdit_Dropdown_rows} Typeofdefect={Typeofdefect} ReplacingUnitID={ReplacingUnitID} ReplacedUnitID={ReplacedUnitID} handleRemoveClick_Dropdown_rows={handleRemoveClick_Dropdown_rows} />
+      <StatusUpdate isVisibledestruction={cardVisibility.destruction} isVisibleFLC_Scan={cardVisibility.FLC_Scan} isVisibleFLC_Assembly={cardVisibility.FLC_Assembly} isVisibleepUnmarkForm={cardVisibility.epUnmarkForm} isVisibledestroyed={cardVisibility.destroy} isVisibledispatch={cardVisibility.dispatch} isVisibleepForm={cardVisibility.epForm} isVisibleblock={cardVisibility.block} isVisibleunblock={cardVisibility.unblock} activeButtons={cardVisibility} onButtonClick={handleButtonClick} flag={flag} data2={data2} initialInputValuesReplace={initialInputValuesReplace} setInputValuesReplace={setInputValuesReplace} inputValuesReplace={inputValuesReplace} handleInputChangeReplace={handleInputChangeReplace} isVisible={cardVisibility.replacementForm} Added={Added} handleInputChange_ReplacedUnitID={handleInputChange_ReplacedUnitID} handleInputChange_ReplacingUnitID={handleInputChange_ReplacingUnitID} handleInputChange_typeofdefect={handleInputChange_typeofdefect} handleEdit_Dropdown_rows={handleEdit_Dropdown_rows} Typeofdefect={Typeofdefect} ReplacingUnitID={ReplacingUnitID} ReplacedUnitID={ReplacedUnitID} handleRemoveClick_Dropdown_rows={handleRemoveClick_Dropdown_rows} />
       {cardVisibility.replacementForm == true ?
         <UnitListCard updateChecked={updateChecked} bgColor={bgColor} ReplacedUnitID={ReplacedUnitID} data={data} />
         :
@@ -415,7 +416,7 @@ const ActionButton = ({ isActive, text, name, onClick }) => {
   );
 };
 
-const StatusUpdate = ({ isVisibleFLC_Assembly, isVisibleepUnmarkForm, isVisibledestroyed, isVisibledispatch, isVisibleepForm, isVisibleblock, isVisibleunblock, activeButtons, onButtonClick, flag, data2, initialInputValuesReplace, setInputValuesReplace, inputValuesReplace, handleInputChangeReplace, isVisible, Added, handleInputChange_ReplacedUnitID, handleInputChange_ReplacingUnitID, handleInputChange_typeofdefect, handleEdit_Dropdown_rows, ReplacingUnitID, ReplacedUnitID, Typeofdefect, handleRemoveClick_Dropdown_rows }) => {
+const StatusUpdate = ({ isVisibledestruction, isVisibleFLC_Scan, isVisibleFLC_Assembly, isVisibleepUnmarkForm, isVisibledestroyed, isVisibledispatch, isVisibleepForm, isVisibleblock, isVisibleunblock, activeButtons, onButtonClick, flag, data2, initialInputValuesReplace, setInputValuesReplace, inputValuesReplace, handleInputChangeReplace, isVisible, Added, handleInputChange_ReplacedUnitID, handleInputChange_ReplacingUnitID, handleInputChange_typeofdefect, handleEdit_Dropdown_rows, ReplacingUnitID, ReplacedUnitID, Typeofdefect, handleRemoveClick_Dropdown_rows }) => {
   return (
 
     <div className={styles.unit_list_container}>
@@ -468,6 +469,18 @@ const StatusUpdate = ({ isVisibleFLC_Assembly, isVisibleepUnmarkForm, isVisibled
           name="FLC_Assembly"
           onClick={onButtonClick}
         />
+        <ActionButton
+          isActive={activeButtons.FLC_Scan}
+          text="FLC Scan"
+          name="FLC_Scan"
+          onClick={onButtonClick}
+        />
+        <ActionButton
+          isActive={activeButtons.destruction}
+          text="Destruction"
+          name="destruction"
+          onClick={onButtonClick}
+        />
         {/* <ActionButton
           isActive={activeButtons.destroy}
           text="Unit Destruction"
@@ -484,6 +497,8 @@ const StatusUpdate = ({ isVisibleFLC_Assembly, isVisibleepUnmarkForm, isVisibled
       <Block isVisible={isVisibleblock} />
       <Orders isVisible={isVisibledispatch} />
       <FLC_Assembly isVisible={isVisibleFLC_Assembly} />
+      <FLC_Scan isVisible={isVisibleFLC_Scan} />
+      <Destruction isVisible={isVisibledestruction} />
       {/* <Destroy isVisible={isVisibledestroyed}/> */}
     </div >
 
@@ -605,6 +620,8 @@ const EPForm = ({ isVisible }) => {
                   />
                 </div>
               </div>
+            </div>
+            <div className="w-full flex justify-around" style={{ marginTop: "2%" }}>
               <div className="m-2 text-left w-1/3">
                 <label className="mb-2 w-full text-base">
                   {inputValues.bulk === "Yes" ? "AC Number" : "Unit IDs"}
@@ -641,7 +658,6 @@ const EPForm = ({ isVisible }) => {
                 </div>
               </div>
             </div>
-            {/* </div> */}
             <button class={scheduleStyles.submitBtn} type='submit' style={{ marginBottom: "1%" }}> Submit </button>
           </div>
         )
@@ -779,7 +795,7 @@ const EPUnmarkForm = ({ isVisible }) => {
         {isVisible && (
           <div styles={{ marginTop: "20%" }}>
             <div className="w-full flex justify-around">
-              <div className="m-2 text-left w-1/3">
+              <div className="m-2 text-left w-1/4">
                 <label className="mb-2 w-full text-base">
                   Bulk<span className="text-red-600">*</span>
                 </label>
@@ -800,7 +816,7 @@ const EPUnmarkForm = ({ isVisible }) => {
                 </div>
               </div>
 
-              <div className="m-2 text-left w-1/3">
+              <div className="m-2 text-left w-1/4">
                 <label className="mb-2 w-full text-base">
                   Destination Location<span className="text-red-600">*</span>
                 </label>
@@ -814,7 +830,7 @@ const EPUnmarkForm = ({ isVisible }) => {
                   />
                 </div>
               </div>
-              <div className="m-2 text-left w-1/3">
+              <div className="m-2 text-left w-1/4">
                 <label className="mb-2 w-full text-base">
                   {inputValues.bulk === "Yes" ? "AC Number" : "Unit IDs"}
                   <span className="text-red-600">*</span>
@@ -835,7 +851,9 @@ const EPUnmarkForm = ({ isVisible }) => {
                   />
                 </div>
               </div>
-              <div className="m-2 text-left w-1/3">
+            </div>
+            <div className="w-full flex justify-around" style={{ marginTop: "2%" }}>
+              <div className="m-2 text-left w-1/4">
                 <label className="mb-2 w-full text-base">
                   Remarks<span className="text-red-600">*</span>
                 </label>
@@ -850,7 +868,7 @@ const EPUnmarkForm = ({ isVisible }) => {
                 </div>
               </div>
 
-              <div className="m-2 text-left w-1/3">
+              <div className="m-2 text-left w-1/4">
                 <label className="mb-2 w-full text-base">
                   Supporting Documents <span className="text-red-600">*</span>
                 </label>
@@ -1330,7 +1348,9 @@ const Block = ({ isVisible }) => {
                 </div>
               </div>
 
-              <div className="m-2 w-1/3 text-left">
+            </div>
+            <div>
+              <div className="m-2 w-1/3 text-left" style={{ marginLeft: '35%', marginTop: '2%' }}>
                 <label className="mb-2 w-full text-base">
                   Remarks<span className="text-red-600">*</span>
                 </label>
@@ -1497,7 +1517,9 @@ const UnBlock = ({ isVisible }) => {
                 </div>
               </div>
 
-              <div className="m-2 w-1/3 text-left">
+            </div>
+            <div>
+              <div className="m-2 w-1/3 text-left" style={{ marginLeft: '37%', marginTop: '2%' }}>
                 <label className="mb-2 w-full text-base">
                   Remarks<span className="text-red-600"></span>
                 </label>
@@ -1575,14 +1597,6 @@ const FLC_Assembly = ({ isVisible }) => {
     []
   );
 
-
-  console.log(listElections)
-  console.log({
-    "unitIDs": dataInput,
-    "electionID": Number(electionid),
-    "state": inputValues['state'],
-    "district": inputValues['district']
-  })
   const handleFormSubmit = async () => {
     try {
       const response = await fetch(`${baseUrl}/flc_assembly_scan`, {
@@ -1685,7 +1699,6 @@ const FLC_Assembly = ({ isVisible }) => {
         {isVisible && (
           <div styles={{ marginTop: "20%" }}>
             <div className="w-full flex justify-around">
-
               <div className="m-2 text-left w-1/3">
                 <label className="mb-2 w-full text-base">
                   Election<span className="text-red-600">*</span>
@@ -1740,7 +1753,285 @@ const FLC_Assembly = ({ isVisible }) => {
                 </div>
               </div>
 
+            </div>
+            <div className="w-full flex justify-around">
               <div className="m-2 w-1/3 text-left">
+                <label className="mb-2 w-full text-base">
+                  District<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-[#494A59]">
+                  <select
+                    disabled={inputValues['state'] != '' ? false : true}
+                    className="relative h-10 w-full rounded-md border p-2"
+                    placeholder="Select"
+                    name="district"
+                    value={inputValues.district}
+                    onChange={handleInputChange}
+                  >
+                    {" "}
+                    <option hidden>Select</option>
+                    {District &&
+                      District.map((val, ind) => {
+                        return (<>
+                          <option value={val['dtCode']}>{val['dtName']}</option>
+                        </>)
+                      })}
+                  </select>
+                  <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1/2" />
+                </div>
+              </div>
+
+              <div className="m-2 w-1/3 text-left" >
+                <label className="mb-2 w-full text-base">
+                  Unit ID's<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-[#494A59]">
+                  <div className="w-full">
+                    <textarea name="" id="" cols="60" className='p-2' rows={10}
+                      style={{ width: '100%' }}
+                      onChange={(e) => {
+                        setDataInput(e.target.value)
+                      }}
+                      value={dataInput}
+
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button class={scheduleStyles.submitBtn} type='submit' style={{ marginBottom: "1%" }}> Submit </button>
+          </div>
+        )
+        }
+      </form >
+    </>
+  );
+};
+
+
+
+const FLC_Scan = ({ isVisible }) => {
+
+
+
+  const initialValues = {
+    state: "",
+    district: "",
+    remark: "",
+    type: '',
+  };
+
+
+  const [inputValues, setInputValues] = useState(initialValues);
+  const [data, setdata] = useState(initialValues);
+  const [State, setState] = useState([]);
+  const [District, setDistrict] = useState([]);
+  const [dataInput, setDataInput] = useState([""]);
+  const [listElections, setListElections] = useState([])
+  const [electionid, setelectionid] = useState(-1)
+
+  async function getListElections() {
+
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_SERVER}/unit/listElections`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+      const data = await response.json();
+      console.log(data)
+      if (response.status == 200) {
+        setListElections(data['data'])
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(
+    () => {
+      let timer1 = setTimeout(() => getListElections(), 1 * 1000);
+
+      return () => {
+        clearTimeout(timer1);
+      };
+    },
+    []
+  );
+
+
+  console.log(listElections)
+  console.log({
+    "type": inputValues['type'],
+    "unitIDs": [dataInput],
+    "electionID": Number(electionid),
+    "state": inputValues['state'],
+    "district": inputValues['district']
+  })
+  const handleFormSubmit = async () => {
+    try {
+      const response = await fetch(`${baseUrl}/flc_scan`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          "type": inputValues['type'],
+          "unitIDs": [dataInput],
+          "electionID": Number(electionid),
+          "state": inputValues['state'],
+          "district": inputValues['district']
+        }
+        ),
+      });
+      const data = await response.json();
+      if (data.status === 200) {
+        alert(data.message);
+      } else {
+        alert(data.message);
+        setInputValues(initialValues)
+        setelectionid(-1);
+        setDataInput('')
+      }
+    } catch (err) {
+      alert(`Error occured: ${err}`);
+    }
+
+  };
+
+
+  async function getRealm() {
+
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_SERVER}/user/getRealm`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            "module_name": "Unit",
+            "operation": "FLCAssembly"
+          }),
+        }
+      )
+
+      const Input = await response.json();
+
+      if (response.status === 200) {
+        setdata(Input['data'])
+        let state = formatRealm2(Input['data'], '', '', '', '');
+        setState(state)
+        // console.log("adi", distList)
+        // setDistrict(distList);
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+
+  useEffect(
+    () => {
+      let timer1 = setTimeout(() => getRealm(), 1 * 1000);
+
+      return () => {
+        clearTimeout(timer1);
+      };
+    },
+    []
+  );
+
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setInputValues({
+      ...inputValues,
+      [name]: value,
+    });
+
+    if (name == "state") {
+      let district = formatRealm2(data, value, '', '', '');
+      setDistrict(district)
+    }
+  };
+
+  const User_ID = sessionStorage.getItem("sessionToken");
+  const Role = User_ID.substring(8)
+
+  const onFormSubmit = async (e) => {
+    e.preventDefault();
+    handleFormSubmit()
+  };
+
+  return (
+    <>
+      <form onSubmit={onFormSubmit} className="w-full rounded-lg " styles={{ marginTop: "20%" }}>
+        {isVisible && (
+          <div styles={{ marginTop: "20%" }}>
+            <div className="w-full flex justify-around">
+
+              <div className="m-2 text-left w-1/4">
+                <label className="mb-2 w-full text-base">
+                  Election<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-[#494A59]">
+                  <select
+
+                    className="relative h-10 w-full rounded-md border p-2"
+                    name="setelectionid"
+                    placeholder="Select"
+                    value={electionid}
+                    onChange={(e) => {
+                      setelectionid(e.target.value)
+                    }}
+                  >
+                    {" "}
+                    <option hidden>Select</option>
+                    {listElections &&
+                      listElections.map((val, ind) => {
+                        return (<>
+                          <option value={val['election_id']}>{`${val.electiontype} ${val.startdate ? val.startdate.slice(6, 11) : ''}`}</option>
+                        </>)
+                      })}
+                  </select>
+                  <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1/2" />
+                </div>
+              </div>
+
+              <div className="m-2 text-left w-1/4">
+                <label className="mb-2 w-full text-base">
+                  State<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-[#494A59]">
+                  <select
+
+                    className="relative h-10 w-full rounded-md border p-2"
+                    name="state"
+                    placeholder="Select"
+                    value={inputValues.state}
+                    onChange={handleInputChange}
+                  >
+                    {" "}
+                    <option hidden>Select</option>
+                    {State &&
+                      State.map((val, ind) => {
+                        return (<>
+                          <option value={val['stCode']}>{val['stName']}</option>
+                        </>)
+                      })}
+                  </select>
+                  <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1/2" />
+                </div>
+              </div>
+
+              <div className="m-2 w-1/4 text-left">
                 <label className="mb-2 w-full text-base">
                   District<span className="text-red-600">*</span>
                 </label>
@@ -1767,22 +2058,113 @@ const FLC_Assembly = ({ isVisible }) => {
               </div>
             </div>
 
-            <div className="m-2 w-1/3 text-left" style={{ marginLeft: '37%', marginTop: '2%' }}>
-              <label className="mb-2 w-full text-base">
-                Unit ID's<span className="text-red-600">*</span>
-              </label>
-              <div className="relative text-[#494A59]">
-                <div className="w-full">
-                  <textarea name="" id="" cols="60" className='p-2' rows={10}
+            <div className="w-full flex justify-around" >
+              <div className="m-2 text-left w-1/4" >
+                <label className="mb-2 w-full text-base">
+                  Type<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-[#494A59]">
+                  <select
 
-                    onChange={(e) => {
-                      setDataInput(e.target.value)
-                    }}
-                    value={dataInput}
+                    className="relative h-10 w-full rounded-md border p-2"
+                    name="type"
+                    placeholder="Select"
+                    value={inputValues.type}
+                    onChange={handleInputChange}
+                  >
+                    {" "}
+                    <option hidden>Select</option>
+                    <option value={'true'}>FLC OK</option>
+                    <option value={"false"}>FLC not OK</option>
 
-                  ></textarea>
+                  </select>
+                  <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1/2" />
                 </div>
               </div>
+
+
+              <div className="m-2 text-left w-7/12" >
+                <label className="mb-2 w-full text-base" >
+                  Unit ID's<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-[#494A59]">
+                  <div className="w-full">
+                    <textarea name="" id="" cols="200" className='p-2' rows={10}
+                      style={{
+                        "width": "100%"
+                      }}
+                      onChange={(e) => {
+                        setDataInput(e.target.value)
+                      }}
+                      value={dataInput}
+
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button class={scheduleStyles.submitBtn} type='submit' style={{ marginBottom: "1%" }}> Submit </button>
+          </div>
+        )
+        }
+      </form >
+    </>
+  );
+};
+
+
+
+const Destruction = ({ isVisible }) => {
+
+  const [dataInput, setDataInput] = useState([""]);
+
+  const handleFormSubmit = async () => {
+    try {
+      const response = await fetch(`${baseUrl}/unitDestruction`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          "unitIDList": [dataInput],
+        }
+        ),
+      });
+      const data = await response.json();
+      if (data.status === 200) {
+        alert(data.message);
+      } else {
+        alert(data.message);
+        setDataInput('')
+      }
+    } catch (err) {
+      alert(`Error occured: ${err}`);
+    }
+
+  };
+
+  const onFormSubmit = async (e) => {
+    e.preventDefault();
+    handleFormSubmit()
+  };
+
+  return (
+    <>
+      <form onSubmit={onFormSubmit} className="w-full rounded-lg " styles={{ marginTop: "20%" }}>
+        {isVisible && (
+          <div styles={{ marginTop: "20%" }}>
+            <div className="m-2 w-1/3 text-left" style={{ marginLeft: '34%' }}>
+              <label className="mb-2 w-full text-base">
+                Unit ID<span className="text-red-600">*</span>
+              </label>
+              <input
+                className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                placeholder="Unit IDs"
+                value={dataInput}
+                onChange={(e) => {
+                  setDataInput(e.target.value)
+                }}
+              />
             </div>
 
             <button class={scheduleStyles.submitBtn} type='submit' style={{ marginBottom: "1%" }}> Submit </button>
