@@ -8,12 +8,46 @@ function ScheduleTna() {
     const [tags, setTags] = React.useState([]);
     const [details, setDetails] = useState([])
     const [polling, setPolling] = useState([])
-
+    const [electionid, setelectionid] = useState(-1)
     const [countDef, setCountDef] = useState("")
     const [percDef, setPercDef] = useState("")
+    const [listElections, setListElections] = useState([])
     const poll = 200
 
 
+    async function getListElections() {
+        try {
+            const response = await fetch(
+                `${process.env.REACT_APP_API_SERVER}/unit/listElections`,
+                {
+                    method: "POST",
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                })
+            const data = await response.json();
+            if (response.status == 200) {
+                setListElections(data['data'])
+            }
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
+
+
+
+    useEffect(
+        () => {
+            let timer1 = setTimeout(() => getListElections(), 1 * 1000);
+
+            return () => {
+                clearTimeout(timer1);
+            };
+        },
+        []
+    );
 
     const checkCount = () => {
         setCountDef(Math.ceil(polling / 10))
@@ -21,8 +55,8 @@ function ScheduleTna() {
 
 
     const checkPerc = () => {
-        setPercDef((countDef/polling)*100)
-        if(percDef >11){
+        setPercDef((countDef / polling) * 100)
+        if (percDef > 11) {
             alert("Unit Count should be less than 11%")
             setPercDef(10)
         }
@@ -117,6 +151,7 @@ function ScheduleTna() {
                         personHandedOverToDesignation: document.getElementById("6").value,
                         startDate: document.getElementById("7").value,
                         endDate: document.getElementById("8").value,
+                        electionID: electionid,
                         tempUsers: tags
                     }),
                 }
@@ -147,9 +182,34 @@ function ScheduleTna() {
 
     };
 
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setelectionid(Number(value));
+    };
+    console.log(listElections, 'listElections')
+
     return (
         <>
             <form onSubmit={onFormSubmit} id="form">
+                <div className='m-auto mb-5 flex justify-center gap-5 w-96'><h5 className='self-center'>Select Election</h5>
+                    <div className='w-48'>
+                        <select
+                            required
+                            name="electionid"
+                            onChange={(e) => handleInputChange(e)}
+                            value={electionid}
+                        >
+                            {" "}
+                            <option hidden>Select</option>
+                            {listElections &&
+                                listElections.map((val, ind) => {
+                                    return (<>
+                                        <option value={val.election_id}>{`${val.electiontype} ${val.startdate.slice(0, 4)}`}</option>
+                                    </>)
+                                })}
+                        </select>
+                    </div>
+                </div>
                 <div className={styles.Schedule_container}>
                     <div className={styles.Schedule_header}>
                         <h4>
@@ -161,7 +221,7 @@ function ScheduleTna() {
                         <div class={styles.div1}>
                             <p>Source Strong Room</p>
                             <select
-                                //   required={!isTemporary}
+                                disabled={electionid !== -1 ? false : true}
                                 required
                                 name=""
                                 id="1"
@@ -181,7 +241,7 @@ function ScheduleTna() {
                         <div class={styles.div3}>
                             <p>Destination Strong Room</p>
                             <select
-                                //   required={!isTemporary}
+                                disabled={electionid !== -1 ? false : true}
                                 required
                                 name=""
                                 id="2"
@@ -220,6 +280,7 @@ function ScheduleTna() {
 
                         <div class={styles.div5}>
                             <input
+                                disabled={electionid !== -1 ? false : true}
                                 class={styles.input}
                                 type="number"
                                 id="x"
@@ -235,6 +296,7 @@ function ScheduleTna() {
                         <div class={styles.div6}>
 
                             <input
+                                disabled={electionid !== -1 ? false : true}
                                 class={styles.input}
                                 type="number"
                                 id="3"
@@ -256,6 +318,7 @@ function ScheduleTna() {
                         <div class={styles.div13}>
                             <p>Name</p>
                             <input
+                                disabled={electionid !== -1 ? false : true}
                                 class={styles.input}
                                 type="text"
                                 id="4"
@@ -269,6 +332,7 @@ function ScheduleTna() {
                         <div class={styles.div14}>
                             <p>Mobile Number</p>
                             <input
+                                disabled={electionid !== -1 ? false : true}
                                 class={styles.input}
                                 type="number"
                                 id="5"
@@ -282,6 +346,7 @@ function ScheduleTna() {
                         <div class={styles.div15}>
                             <p>Designation</p>
                             <input
+                                disabled={electionid !== -1 ? false : true}
                                 class={styles.input}
                                 type="text"
                                 id="6"
@@ -291,10 +356,23 @@ function ScheduleTna() {
 
                         </div>
 
+                        <div class={styles.div15}>
+                            <p>Designation</p>
+                            <input
+                                disabled={electionid !== -1 ? false : true}
+                                class={styles.input}
+                                type="text"
+                                id="6"
+                                className="selectBox"
+                                placeholder='Enter Designation'
+                            ></input>
+
+                        </div>
 
                         <div class={styles.div16}>
                             <p>Start Date</p>
                             <input
+                                disabled={electionid !== -1 ? false : true}
                                 class={styles.dateInput}
                                 type="date"
                                 id="7"
@@ -308,6 +386,7 @@ function ScheduleTna() {
                         <div class={styles.div18}>
                             <p>End Date</p>
                             <input
+                                disabled={electionid !== -1 ? false : true}
                                 class={styles.dateInput}
                                 type="date"
                                 id="8"
@@ -324,6 +403,7 @@ function ScheduleTna() {
                             <p>Temporary Users</p>
 
                             <TagsInput
+                                disabled={electionid !== -1 ? false : true}
                                 className='li_noti hide-scroll-bar tagInput'
                                 value={tags}
                                 id="formTags"

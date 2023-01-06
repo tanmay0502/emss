@@ -137,17 +137,8 @@
     .div16 { grid-area: 6 / 1 / 7 / 2; }
     .div17 { grid-area: 6 / 2 / 7 / 3; }
     .div18 { grid-area: 6 / 3 / 7 / 4; }
-    .div19 { 
-        grid-area: 7 / 1 / 8 / 2; 
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-
-    }
-    .div20 { 
-        /* display: flex; */
-        grid-area: 7 / 2 / 8 / 4;
-     }
+    .div19 { grid-area: 7 / 1 / 8 / 2; }
+    .div20 { grid-area: 7 / 2 / 8 / 3;}
     .div21 { grid-area: 7 / 3 / 8 / 4; }
   
     input[type="date"]{

@@ -418,7 +418,7 @@ const ActionButton = ({ isActive, text, name, onClick }) => {
   );
 };
 
-const StatusUpdate = ({ isVisibleunderfir, isVisibledestruction, isVisibleFLC_Scan, isVisibleFLC_Assembly, isVisibleepUnmarkForm, isVisibledestroyed, isVisibledispatch, isVisibleepForm, isVisibleblock, isVisibleunblock, activeButtons, onButtonClick, flag, data2, initialInputValuesReplace, setInputValuesReplace, inputValuesReplace, handleInputChangeReplace, isVisible, Added, handleInputChange_ReplacedUnitID, handleInputChange_ReplacingUnitID, handleInputChange_typeofdefect, handleEdit_Dropdown_rows, ReplacingUnitID, ReplacedUnitID, Typeofdefect, handleRemoveClick_Dropdown_rows }) => {
+const StatusUpdate = ({ isVisibleundertna, isVisibleunderfir, isVisibledestruction, isVisibleFLC_Scan, isVisibleFLC_Assembly, isVisibleepUnmarkForm, isVisibledestroyed, isVisibledispatch, isVisibleepForm, isVisibleblock, isVisibleunblock, activeButtons, onButtonClick, flag, data2, initialInputValuesReplace, setInputValuesReplace, inputValuesReplace, handleInputChangeReplace, isVisible, Added, handleInputChange_ReplacedUnitID, handleInputChange_ReplacingUnitID, handleInputChange_typeofdefect, handleEdit_Dropdown_rows, ReplacingUnitID, ReplacedUnitID, Typeofdefect, handleRemoveClick_Dropdown_rows }) => {
   return (
 
     <div className={styles.unit_list_container}>
@@ -509,7 +509,7 @@ const StatusUpdate = ({ isVisibleunderfir, isVisibledestruction, isVisibleFLC_Sc
         />
         <ActionButton
           isActive={activeButtons.undertna}
-          text="Under TnA"
+          text="Under T&A"
           name="undertna"
           onClick={onButtonClick}
         />
@@ -531,6 +531,7 @@ const StatusUpdate = ({ isVisibleunderfir, isVisibledestruction, isVisibleFLC_Sc
       <FLC_Scan isVisible={isVisibleFLC_Scan} />
       <Destruction isVisible={isVisibledestruction} />
       <Underfir isVisible={isVisibleunderfir} />
+      <UnderTnA isVisible={isVisibleundertna} />
 
     </div >
 
@@ -1824,7 +1825,7 @@ const FLC_Assembly = ({ isVisible }) => {
                     {listElections &&
                       listElections.map((val, ind) => {
                         return (<>
-                          <option value={val['election_id']}>{`${val.electiontype} ${val.startdate ? val.startdate.slice(6, 11) : ''}`}</option>
+                          <option value={val['election_id']}>{`${val.electiontype} ${val.startdate ? val.startdate.slice(0, 4) : ''}`}</option>
                         </>)
                       })}
                   </select>
@@ -2090,7 +2091,7 @@ const FLC_Scan = ({ isVisible }) => {
                     {listElections &&
                       listElections.map((val, ind) => {
                         return (<>
-                          <option value={val['election_id']}>{`${val.electiontype} ${val.startdate ? val.startdate.slice(6, 11) : ''}`}</option>
+                          <option value={val['election_id']}>{`${val.electiontype} ${val.startdate ? val.startdate.slice(0, 4) : ''}`}</option>
                         </>)
                       })}
                   </select>
@@ -2344,6 +2345,272 @@ const Underfir = ({ isVisible }) => {
                       }}
                       value={dataInput}
                       placeholder='Remarks'
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button class={scheduleStyles.submitBtn} type='submit' style={{ marginBottom: "1%" }}> Submit </button>
+          </div>
+        )
+        }
+      </form >
+    </>
+  );
+};
+
+
+const UnderTnA = ({ isVisible }) => {
+
+
+
+  const initialValues = {
+    state: "",
+    district: "",
+    remark: "",
+    type: '',
+  };
+
+
+  const [inputValues, setInputValues] = useState(initialValues);
+  const [data, setdata] = useState(initialValues);
+  const [State, setState] = useState([]);
+  const [District, setDistrict] = useState([]);
+  const [dataInput, setDataInput] = useState([""]);
+  const [listElections, setListElections] = useState([])
+  const [electionid, setelectionid] = useState(-1)
+
+  async function getListElections() {
+
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_SERVER}/unit/listElections`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+      const data = await response.json();
+      if (response.status == 200) {
+        setListElections(data['data'])
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(
+    () => {
+      let timer1 = setTimeout(() => getListElections(), 1 * 1000);
+
+      return () => {
+        clearTimeout(timer1);
+      };
+    },
+    []
+  );
+
+  const handleFormSubmit = async () => {
+    try {
+      const response = await fetch(`${baseUrl}/taScan`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          "unitIDs": dataInput,
+          "district": inputValues['district'],
+          "state": inputValues['state'],
+          "electionID": electionid
+        }
+        ),
+      });
+      const data = await response.json();
+      if (data.status === 200) {
+        alert(data.message);
+      } else {
+        alert(data.message);
+        setInputValues(initialValues)
+        setelectionid(-1);
+        setDataInput('')
+      }
+    } catch (err) {
+      alert(`Error occured: ${err}`);
+    }
+
+  };
+
+
+  async function getRealm() {
+
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_SERVER}/user/getRealm`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            "module_name": "Unit",
+            "operation": "FLCAssembly"
+          }),
+        }
+      )
+
+      const Input = await response.json();
+
+      if (response.status === 200) {
+        setdata(Input['data'])
+        let state = formatRealm2(Input['data'], '', '', '', '');
+        setState(state)
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+
+  useEffect(
+    () => {
+      let timer1 = setTimeout(() => getRealm(), 1 * 1000);
+
+      return () => {
+        clearTimeout(timer1);
+      };
+    },
+    []
+  );
+
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setInputValues({
+      ...inputValues,
+      [name]: value,
+    });
+
+    if (name == "state") {
+      let district = formatRealm2(data, value, '', '', '');
+      setDistrict(district)
+    }
+  };
+
+  const User_ID = sessionStorage.getItem("sessionToken");
+  const Role = User_ID.substring(8)
+
+  const onFormSubmit = async (e) => {
+    e.preventDefault();
+    handleFormSubmit()
+  };
+
+  return (
+    <>
+      <form onSubmit={onFormSubmit} className="w-full rounded-lg " styles={{ marginTop: "20%" }}>
+        {isVisible && (
+          <div styles={{ marginTop: "20%" }}>
+            <div className="w-full flex justify-around">
+
+              <div className="m-2 text-left w-1/4">
+                <label className="mb-2 w-full text-base">
+                  Election<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-[#494A59]">
+                  <select
+
+                    className="relative h-10 w-full rounded-md border p-2"
+                    name="setelectionid"
+                    placeholder="Select"
+                    value={electionid}
+                    onChange={(e) => {
+                      setelectionid(e.target.value)
+                    }}
+                  >
+                    {" "}
+                    <option hidden>Select</option>
+                    {listElections &&
+                      listElections.map((val, ind) => {
+                        return (<>
+                          <option value={val['election_id']}>{`${val.electiontype} ${val.startdate ? val.startdate.slice(0, 4) : ''}`}</option>
+                        </>)
+                      })}
+                  </select>
+                  <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1/2" />
+                </div>
+              </div>
+
+              <div className="m-2 text-left w-1/4">
+                <label className="mb-2 w-full text-base">
+                  State<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-[#494A59]">
+                  <select
+
+                    className="relative h-10 w-full rounded-md border p-2"
+                    name="state"
+                    placeholder="Select"
+                    value={inputValues.state}
+                    onChange={handleInputChange}
+                  >
+                    {" "}
+                    <option hidden>Select</option>
+                    {State &&
+                      State.map((val, ind) => {
+                        return (<>
+                          <option value={val['stCode']}>{val['stName']}</option>
+                        </>)
+                      })}
+                  </select>
+                  <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1/2" />
+                </div>
+              </div>
+
+              <div className="m-2 w-1/4 text-left">
+                <label className="mb-2 w-full text-base">
+                  District<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-[#494A59]">
+                  <select
+                    disabled={inputValues['state'] != '' ? false : true}
+                    className="relative h-10 w-full rounded-md border p-2"
+                    placeholder="Select"
+                    name="district"
+                    value={inputValues.district}
+                    onChange={handleInputChange}
+                  >
+                    {" "}
+                    <option hidden>Select</option>
+                    {District &&
+                      District.map((val, ind) => {
+                        return (<>
+                          <option value={val['dtCode']}>{val['dtName']}</option>
+                        </>)
+                      })}
+                  </select>
+                  <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1/2" />
+                </div>
+              </div>
+            </div>
+
+            <div className="w-full flex justify-around" >
+              <div className="m-2 text-left w-7/12" >
+                <label className="mb-2 w-full text-base" >
+                  Unit ID's<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-[#494A59]">
+                  <div className="w-full">
+                    <textarea name="" id="" cols="200" className='p-2' rows={10}
+                      style={{
+                        "width": "100%"
+                      }}
+                      onChange={(e) => {
+                        setDataInput(e.target.value)
+                      }}
+                      value={dataInput}
+
                     ></textarea>
                   </div>
                 </div>

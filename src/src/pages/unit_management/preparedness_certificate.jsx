@@ -98,7 +98,7 @@ export default function Prepared_Certificate(props) {
                     },
                 })
             const data = await response.json();
-            if (response.status==200) {
+            if (response.status == 200) {
                 setListElections(data['data'])
             }
         } catch (error) {
@@ -227,7 +227,7 @@ export default function Prepared_Certificate(props) {
 
     };
 
-    console.log(listElections,'listElectionslistElectionslistElections')
+    console.log(listElections, 'listElectionslistElectionslistElections')
 
     return (
         <form id='form' onSubmit={onFormSubmit}>
@@ -244,7 +244,7 @@ export default function Prepared_Certificate(props) {
                         {listElections &&
                             listElections.map((val, ind) => {
                                 return (<>
-                                    <option value={val.election_id}>{`${val.electiontype} ${val.startdate.slice(6, 11)}`}</option>
+                                    <option value={val.election_id}>{`${val.electiontype} ${val.startdate.slice(0, 4)}`}</option>
                                 </>)
                             })}
                     </select>

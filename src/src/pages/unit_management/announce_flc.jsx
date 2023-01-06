@@ -460,7 +460,7 @@ function Announce_Flc() {
                     {listElections &&
                         listElections.map((val, ind) => {
                             return (<>
-                                <option value={ind}>{`${val.electiontype} ${val.startdate ? val.startdate.slice(6, 11) : ''}`}</option>
+                                <option value={val.election_id}>{`${val.electiontype} ${val.startdate.slice(0, 4)}`}</option>
                             </>)
                         })}
                 </select>
