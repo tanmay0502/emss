@@ -45,7 +45,8 @@ export default function UnitList() {
     destroy: false,
     FLC_Assembly: false,
     FLC_Scan: false,
-    destruction: false
+    destruction: false,
+    underfir: false
   };
   const [ReplacedUnitID, setReplacedUnitID] = useState([]);
   const [ReplacingUnitID, setReplacingUnitID] = useState([]);
@@ -57,8 +58,6 @@ export default function UnitList() {
   const [data, setData] = useState(expD);
   const [data2, setData2] = useState(expD);
   const [data3, setData3] = useState(expD);
-  const [isPageLoaded, setIsPageLoaded] = useState(0);
-
 
   const getData = async () => {
     try {
@@ -73,7 +72,6 @@ export default function UnitList() {
 
       let Input = await response.json();
       if (response.status == 200) {
-        // if (Input && Input["data"] && Input['data'].length) {
         setData(Input['data']);
       }
       else {
@@ -111,9 +109,7 @@ export default function UnitList() {
 
       let Input = await response.json();
       if (response.status == 200) {
-        // if (Input && Input["data"] && Input['data'].length) {
         setData2(Input['data']);
-        // }
       }
       else {
         setData2([]);
@@ -172,9 +168,6 @@ export default function UnitList() {
   );
 
   const [flag, setflag] = useState([]);
-  const [isPageLoadedAll, setIsPageLoadedAll] = useState(0)
-
-
   const SetAll = () => {
     for (let k = 0; k < data.length; k++) {
       if (!ReplacedUnitID.includes(data[k]['unitid'])) {
@@ -205,7 +198,7 @@ export default function UnitList() {
               "replacingUnitId": "",
               "replacedUnitId": data[k]['unitid'],
               "defectType": "",
-              // "": <div className="flex justify-end " style={{ marginLeft: "3%" }}><button type="button" className="text-white bg-orange-600 p-1 text-2xl w-8 h-8 -mt-4 " style={{ borderRadius: "50%", marginTop: "2%" }} >-</button></div>
+
             })
             return kk;
           }
@@ -218,11 +211,9 @@ export default function UnitList() {
 
   useEffect(() => {
     if (data != [] && inputValuesReplace['replacementlevel'] == "Actual Polling") {
-      // if (Added != [] && Added[Added.length - 1]['replacedUnitId'] != '') {
       if (Added.length != 0 && Added[Added.length - 1]['replacedUnitId'].slice(1, 3) != 'VT') {
         SetAll()
       }
-      // }
     }
   }, [Added, inputValuesReplace])
 
@@ -392,7 +383,12 @@ export default function UnitList() {
 
   return (
     <>
-      <StatusUpdate isVisibledestruction={cardVisibility.destruction} isVisibleFLC_Scan={cardVisibility.FLC_Scan} isVisibleFLC_Assembly={cardVisibility.FLC_Assembly} isVisibleepUnmarkForm={cardVisibility.epUnmarkForm} isVisibledestroyed={cardVisibility.destroy} isVisibledispatch={cardVisibility.dispatch} isVisibleepForm={cardVisibility.epForm} isVisibleblock={cardVisibility.block} isVisibleunblock={cardVisibility.unblock} activeButtons={cardVisibility} onButtonClick={handleButtonClick} flag={flag} data2={data2} initialInputValuesReplace={initialInputValuesReplace} setInputValuesReplace={setInputValuesReplace} inputValuesReplace={inputValuesReplace} handleInputChangeReplace={handleInputChangeReplace} isVisible={cardVisibility.replacementForm} Added={Added} handleInputChange_ReplacedUnitID={handleInputChange_ReplacedUnitID} handleInputChange_ReplacingUnitID={handleInputChange_ReplacingUnitID} handleInputChange_typeofdefect={handleInputChange_typeofdefect} handleEdit_Dropdown_rows={handleEdit_Dropdown_rows} Typeofdefect={Typeofdefect} ReplacingUnitID={ReplacingUnitID} ReplacedUnitID={ReplacedUnitID} handleRemoveClick_Dropdown_rows={handleRemoveClick_Dropdown_rows} />
+      <StatusUpdate isVisibleunderfir={cardVisibility.underfir} isVisibledestruction={cardVisibility.destruction} isVisibleFLC_Scan={cardVisibility.FLC_Scan} isVisibleFLC_Assembly={cardVisibility.FLC_Assembly}
+        isVisibleepUnmarkForm={cardVisibility.epUnmarkForm} isVisibledestroyed={cardVisibility.destroy} isVisibledispatch={cardVisibility.dispatch} isVisibleepForm={cardVisibility.epForm} isVisibleblock={cardVisibility.block}
+        isVisibleunblock={cardVisibility.unblock} activeButtons={cardVisibility} onButtonClick={handleButtonClick} flag={flag} data2={data2} initialInputValuesReplace={initialInputValuesReplace}
+        setInputValuesReplace={setInputValuesReplace} inputValuesReplace={inputValuesReplace} handleInputChangeReplace={handleInputChangeReplace} isVisible={cardVisibility.replacementForm} Added={Added}
+        handleInputChange_ReplacedUnitID={handleInputChange_ReplacedUnitID} handleInputChange_ReplacingUnitID={handleInputChange_ReplacingUnitID} handleInputChange_typeofdefect={handleInputChange_typeofdefect}
+        handleEdit_Dropdown_rows={handleEdit_Dropdown_rows} Typeofdefect={Typeofdefect} ReplacingUnitID={ReplacingUnitID} ReplacedUnitID={ReplacedUnitID} handleRemoveClick_Dropdown_rows={handleRemoveClick_Dropdown_rows} />
       {cardVisibility.replacementForm == true ?
         <UnitListCard updateChecked={updateChecked} bgColor={bgColor} ReplacedUnitID={ReplacedUnitID} data={data} />
         :
@@ -416,7 +412,7 @@ const ActionButton = ({ isActive, text, name, onClick }) => {
   );
 };
 
-const StatusUpdate = ({ isVisibledestruction, isVisibleFLC_Scan, isVisibleFLC_Assembly, isVisibleepUnmarkForm, isVisibledestroyed, isVisibledispatch, isVisibleepForm, isVisibleblock, isVisibleunblock, activeButtons, onButtonClick, flag, data2, initialInputValuesReplace, setInputValuesReplace, inputValuesReplace, handleInputChangeReplace, isVisible, Added, handleInputChange_ReplacedUnitID, handleInputChange_ReplacingUnitID, handleInputChange_typeofdefect, handleEdit_Dropdown_rows, ReplacingUnitID, ReplacedUnitID, Typeofdefect, handleRemoveClick_Dropdown_rows }) => {
+const StatusUpdate = ({ isVisibleunderfir, isVisibledestruction, isVisibleFLC_Scan, isVisibleFLC_Assembly, isVisibleepUnmarkForm, isVisibledestroyed, isVisibledispatch, isVisibleepForm, isVisibleblock, isVisibleunblock, activeButtons, onButtonClick, flag, data2, initialInputValuesReplace, setInputValuesReplace, inputValuesReplace, handleInputChangeReplace, isVisible, Added, handleInputChange_ReplacedUnitID, handleInputChange_ReplacingUnitID, handleInputChange_typeofdefect, handleEdit_Dropdown_rows, ReplacingUnitID, ReplacedUnitID, Typeofdefect, handleRemoveClick_Dropdown_rows }) => {
   return (
 
     <div className={styles.unit_list_container}>
@@ -481,14 +477,13 @@ const StatusUpdate = ({ isVisibledestruction, isVisibleFLC_Scan, isVisibleFLC_As
           name="destruction"
           onClick={onButtonClick}
         />
-        {/* <ActionButton
-          isActive={activeButtons.destroy}
-          text="Unit Destruction"
-          name="destroy"
+        <ActionButton
+          isActive={activeButtons.underfir}
+          text="Under Fir"
+          name="underfir"
           onClick={onButtonClick}
-        /> */}
+        />
       </div>
-
 
       <EPUnmarkForm isVisible={isVisibleepUnmarkForm} />
       <EPForm isVisible={isVisibleepForm} />
@@ -499,7 +494,8 @@ const StatusUpdate = ({ isVisibledestruction, isVisibleFLC_Scan, isVisibleFLC_As
       <FLC_Assembly isVisible={isVisibleFLC_Assembly} />
       <FLC_Scan isVisible={isVisibleFLC_Scan} />
       <Destruction isVisible={isVisibledestruction} />
-      {/* <Destroy isVisible={isVisibledestroyed}/> */}
+      <Underfir isVisible={isVisibleunderfir} />
+
     </div >
 
   );
@@ -517,7 +513,7 @@ const EPForm = ({ isVisible }) => {
     remarks: "",
   };
   const [inputValues, setInputValues] = useState(initialValues);
-
+  const [ListDefective_Warehouse, setListDefective_Warehouse] = useState([]);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setInputValues({
@@ -526,27 +522,40 @@ const EPForm = ({ isVisible }) => {
     });
   };
 
-  // const baseUrl = "http://localhost:8100/unit";
 
-  const handleFinalFormSubmit = async (e) => {
+  async function getListJ() {
+
     try {
-      const response = await fetch(`${baseUrl}/marking_complete`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userID, ...inputValues }),
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_API_SERVER}/warehouse/listWarehouses`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            "Type": 'J'
+          }),
+        })
+
       const data = await response.json();
-      if (data.status === 200) {
-        alert(data.message);
-      } else {
-        alert(data.message);
-      }
-    } catch (err) {
-      alert(`Error occured: ${err}`);
+      if (response.status == 200)
+        setListDefective_Warehouse(data["data"])
+    } catch (error) {
+      console.log(error)
     }
-    setInputValues(initialValues);
-  };
+  }
+
+  useEffect(
+    () => {
+      let timer1 = setTimeout(() => getListJ(), 1 * 1500);
+      return () => {
+        clearTimeout(timer1);
+      };
+    },
+    []
+  );
 
 
   const handleFormSubmit = async (e) => {
@@ -576,8 +585,8 @@ const EPForm = ({ isVisible }) => {
   const onFormSubmit = async (e) => {
     e.preventDefault();
     handleFormSubmit()
-
   };
+
 
 
   return (
@@ -610,14 +619,24 @@ const EPForm = ({ isVisible }) => {
                 <label className="mb-2 w-full text-base">
                   Destination Location<span className="text-red-600">*</span>
                 </label>
-                <div className="relative text-gray-800">
-                  <input
-                    className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                <div className="relative text-[#494A59]">
+                  <select
+                    className="relative h-10 w-full rounded-md border p-2"
+                    placeholder="Select"
                     name="destinationLocation"
-                    placeholder="Location"
                     value={inputValues.destinationLocation}
                     onChange={handleInputChange}
-                  />
+                  >
+                    {" "}
+                    <option hidden>Select</option>
+                    {ListDefective_Warehouse &&
+                      ListDefective_Warehouse.map((val, ind) => {
+                        return (<>
+                          <option value={val['warehouseid']}>{val['warehouseid']}</option>
+                        </>)
+                      })}
+                  </select>
+                  <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1/2" />
                 </div>
               </div>
             </div>
@@ -677,7 +696,7 @@ const EPUnmarkForm = ({ isVisible }) => {
     remarks: "",
   };
   const [inputValues, setInputValues] = useState(initialValues);
-
+  const [ListDefective_Warehouse, setListDefective_Warehouse] = useState([]);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setInputValues({
@@ -685,6 +704,41 @@ const EPUnmarkForm = ({ isVisible }) => {
       [name]: value,
     });
   };
+
+  async function getListC() {
+
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_SERVER}/warehouse/listWarehouses`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            "Type": 'C'
+          }),
+        })
+
+      const data = await response.json();
+      if (response.status == 200)
+        setListDefective_Warehouse(data["data"])
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(
+    () => {
+      let timer1 = setTimeout(() => getListC(), 1 * 1500);
+      return () => {
+        clearTimeout(timer1);
+      };
+    },
+    []
+  );
+
 
   const handleFormSubmit = async (e) => {
     let confirmation = window.confirm("Are you sure you have selected all the Unit")
@@ -820,14 +874,24 @@ const EPUnmarkForm = ({ isVisible }) => {
                 <label className="mb-2 w-full text-base">
                   Destination Location<span className="text-red-600">*</span>
                 </label>
-                <div className="relative text-gray-800">
-                  <input
-                    className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                <div className="relative text-[#494A59]">
+                  <select
+                    className="relative h-10 w-full rounded-md border p-2"
+                    placeholder="Select"
                     name="destinationLocation"
-                    placeholder="Location"
                     value={inputValues.destinationLocation}
                     onChange={handleInputChange}
-                  />
+                  >
+                    {" "}
+                    <option hidden>Select</option>
+                    {ListDefective_Warehouse &&
+                      ListDefective_Warehouse.map((val, ind) => {
+                        return (<>
+                          <option value={val['warehouseid']}>{val['warehouseid']}</option>
+                        </>)
+                      })}
+                  </select>
+                  <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1/2" />
                 </div>
               </div>
               <div className="m-2 text-left w-1/4">
@@ -1006,25 +1070,37 @@ const ReplacementForm = ({ flag, data2, initialInputValuesReplace, setInputValue
   const onFormSubmit = async (e) => {
     e.preventDefault();
     let Finalanswer = [];
+    let total = 0;
     // let vt = 0;
     // let cu = 0;
     // let bu = 0;
-    // if (inputValuesReplace['replacementlevel'] == 'Actual Polling') {
-    //   if (ReplacedUnitID[0].slice(1, 3) == 'BU' || ReplacedUnitID[0].slice(1, 3) == 'CU') {
-
-    //   }
-    // }
-    for (let k = 0; k < ReplacedUnitID.length; k++) {
-
-      Finalanswer.push({
-        "replacingUnitId": ReplacingUnitID[k],
-        "replacedUnitId": ReplacedUnitID[k],
-        "defectType": Typeofdefect[k],
-      })
+    if (inputValuesReplace['replacementlevel'] != 'Actual Polling') {
+      for (let k = 0; k < ReplacedUnitID.length; k++) {
+        if (ReplacingUnitID[k] == '' || Typeofdefect[k] == '') {
+          total = total + 1;
+        }
+        Finalanswer.push({
+          "replacingUnitId": ReplacingUnitID[k],
+          "replacedUnitId": ReplacedUnitID[k],
+          "defectType": Typeofdefect[k],
+        })
+      }
+      if (total == 0)
+        handleFormSubmit(Finalanswer)
+      else {
+        alert('Fill all enteries')
+      }
     }
-    console.log(Finalanswer, 'FinalanswerFinalanswerFinalanswerFinalanswer')
-    handleFormSubmit(Finalanswer)
-
+    else {
+      for (let k = 0; k < ReplacedUnitID.length; k++) {
+        Finalanswer.push({
+          "replacingUnitId": ReplacingUnitID[k],
+          "replacedUnitId": ReplacedUnitID[k],
+          "defectType": Typeofdefect[k],
+        })
+      }
+      handleFormSubmit(Finalanswer)
+    }
   };
 
   return (
@@ -1033,9 +1109,6 @@ const ReplacementForm = ({ flag, data2, initialInputValuesReplace, setInputValue
         {isVisible && (
           <div styles={{ marginTop: "20%" }}>
             <div className="w-full flex justify-around">
-
-
-
               <div className="m-2 text-left w-1/3">
                 <label className="mb-2 w-full text-base">
                   Polling Station<span className="text-red-600">*</span>
@@ -1414,7 +1487,6 @@ const UnBlock = ({ isVisible }) => {
         })
 
       const data = await response.json();
-      console.log(data, 'datak')
       if (response.status == 200)
         setListDefective_Warehouse(data["data"])
     } catch (error) {
@@ -1577,7 +1649,6 @@ const FLC_Assembly = ({ isVisible }) => {
           },
         })
       const data = await response.json();
-      console.log(data)
       if (response.status == 200) {
         setListElections(data['data'])
       }
@@ -1651,8 +1722,6 @@ const FLC_Assembly = ({ isVisible }) => {
         setdata(Input['data'])
         let state = formatRealm2(Input['data'], '', '', '', '');
         setState(state)
-        // console.log("adi", distList)
-        // setDistrict(distList);
       }
     } catch (error) {
       console.log(error)
@@ -1844,7 +1913,6 @@ const FLC_Scan = ({ isVisible }) => {
           },
         })
       const data = await response.json();
-      console.log(data)
       if (response.status == 200) {
         setListElections(data['data'])
       }
@@ -1864,15 +1932,6 @@ const FLC_Scan = ({ isVisible }) => {
     []
   );
 
-
-  console.log(listElections)
-  console.log({
-    "type": inputValues['type'],
-    "unitIDs": [dataInput],
-    "electionID": Number(electionid),
-    "state": inputValues['state'],
-    "district": inputValues['district']
-  })
   const handleFormSubmit = async () => {
     try {
       const response = await fetch(`${baseUrl}/flc_scan`, {
@@ -1928,8 +1987,6 @@ const FLC_Scan = ({ isVisible }) => {
         setdata(Input['data'])
         let state = formatRealm2(Input['data'], '', '', '', '');
         setState(state)
-        // console.log("adi", distList)
-        // setDistrict(distList);
       }
     } catch (error) {
       console.log(error)
@@ -2165,6 +2222,96 @@ const Destruction = ({ isVisible }) => {
                   setDataInput(e.target.value)
                 }}
               />
+            </div>
+
+            <button class={scheduleStyles.submitBtn} type='submit' style={{ marginBottom: "1%" }}> Submit </button>
+          </div>
+        )
+        }
+      </form >
+    </>
+  );
+};
+
+
+const Underfir = ({ isVisible }) => {
+
+
+
+
+  const [dataInput, setDataInput] = useState([""]);
+  const [unitid, setunitid] = useState('')
+
+
+  const handleFormSubmit = async () => {
+    try {
+      const response = await fetch(`${baseUrl}/markFIR`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          "unitIDList": [unitid],
+          "remark": dataInput
+        }
+        ),
+      });
+      const data = await response.json();
+      if (data.status === 200) {
+        alert(data.message);
+      } else {
+        alert(data.message);
+        setunitid('')
+        setDataInput('')
+      }
+    } catch (err) {
+      alert(`Error occured: ${err}`);
+    }
+
+  };
+
+
+  const onFormSubmit = async (e) => {
+    e.preventDefault();
+    handleFormSubmit()
+  };
+
+  return (
+    <>
+      <form onSubmit={onFormSubmit} className="w-full rounded-lg " styles={{ marginTop: "20%" }}>
+        {isVisible && (
+          <div styles={{ marginTop: "20%" }}>
+            <div className="w-full flex justify-around">
+              <div className="m-2 w-1/3 text-left">
+                <label className="mb-2 w-full text-base">
+                  Unit ID<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-gray-800">
+                  <input
+                    className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                    onChange={(e) => { setunitid(e.target.value) }}
+                    value={unitid}
+                    placeholder='Unit ID'
+                  />
+                </div>
+              </div>
+
+              <div className="m-2 w-1/3 text-left" >
+                <label className="mb-2 w-full text-base">
+                  Remarks<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-[#494A59]">
+                  <div className="w-full">
+                    <textarea name="" id="" cols="60" className='p-2' rows={10}
+                      style={{ width: '100%' }}
+                      onChange={(e) => {
+                        setDataInput(e.target.value)
+                      }}
+                      value={dataInput}
+                      placeholder='Remarks'
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <button class={scheduleStyles.submitBtn} type='submit' style={{ marginBottom: "1%" }}> Submit </button>

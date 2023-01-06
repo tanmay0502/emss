@@ -22,6 +22,7 @@ export default function Schedule_List_CDP() {
     const Role = User_ID.substring(8)
 
     async function getlistCDP() {
+        setIsLoading(1);
         try {
             const response = await fetch(
                 `${process.env.REACT_APP_API_SERVER}/unit/listCDP`,
@@ -38,8 +39,10 @@ export default function Schedule_List_CDP() {
             if (response.status == 200) {
                 setcdp(data['data'])
             }
+            setIsLoading(0);
         } catch (err) {
             console.log({ err });
+            setIsLoading(0);
         }
     }
 
@@ -140,8 +143,10 @@ export default function Schedule_List_CDP() {
                     </div>
                 </div>
             </div> : <></>}
-            {(tableData != []) ?
-                <div class={styles.table}>
+            {<div class={styles.table}>
+                {IsLoading == 1 ?
+                    <div className='text-center text-6xl' colSpan={10} style={{ marginTop: '2%' }}>Loading ......</div>
+                    :
                     <DynamicDataTable
                         rows={tableData}
                         fieldsToExclude={["CDP ID"]}
@@ -150,8 +155,9 @@ export default function Schedule_List_CDP() {
                             navigate('/session/unitmanagement/editcdp/' + row["CDP ID"])
                         }}
                     />
-                </div>
-                : ''
+                }
+
+            </div>
             }
         </div>
     )

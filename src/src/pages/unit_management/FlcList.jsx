@@ -19,6 +19,7 @@ export default function FLCList() {
     const [IsLoading, setIsLoading] = useState(0);
 
     async function getElectionList() {
+        setIsLoading(1);
         try {
             const response = await fetch(
                 `${process.env.REACT_APP_API_SERVER}/unit/listFLC`,
@@ -35,8 +36,10 @@ export default function FLCList() {
             if (data.length) {
                 setFlc(data)
             }
+            setIsLoading(0);
         } catch (err) {
             console.log({ err });
+            setIsLoading(0);
         }
     }
 
@@ -49,7 +52,7 @@ export default function FLCList() {
                 }
                 else {
                     const filter = tableFilter.toLowerCase();
-                    console.log(elem,"======")
+                    console.log(elem, "======")
                     return (elem["districtName"].toLowerCase().includes(filter) || elem["state"].toLowerCase().includes(filter) || elem["manufacturer"].toLowerCase().includes(filter))
                 }
             }).map((val) => {
@@ -148,8 +151,10 @@ export default function FLCList() {
                     </div>
                 </div>
             </div> : <></>}
-            {(tableData != []) ?
-                <div class={styles.table}>
+            {<div class={styles.table}>
+                {IsLoading == 1 ?
+                    <div className='text-center text-6xl' colSpan={10} style={{ marginTop: '2%' }}>Loading ......</div>
+                    :
                     <DynamicDataTable
                         rows={tableData}
                         fieldsToExclude={["FLC ID"]}
@@ -158,8 +163,9 @@ export default function FLCList() {
                             navigate('/session/unitmanagement/editFlc/' + row["FLC ID"])
                         }}
                     />
-                </div>
-                : <div className={styles.ListLoader}></div>
+                }
+
+            </div>
             }
         </div>
     )
