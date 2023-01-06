@@ -117,7 +117,7 @@ export default function HomePage() {
         return temp;
     }
 
-    const mappeddata = () =>{
+    const mappeddata = (data) =>{
         let temp = {
             B_M2: [0,0,0],
             B_M3: [0,0,0],
@@ -163,11 +163,11 @@ export default function HomePage() {
         const fun = async ()=>{
             const data2 = await getTotalCounts(oprnd, status1)
             let data = data2.data
-            statusData1(mappeddata(data));
-            console.log("StatusData1", data2)
+            setStatusData1(mappeddata(data));
+            console.log("StatusData1",oprnd, data2)
         }
         fun();
-    }, [status1])
+    }, [status1,state,district])
     useEffect(() => {
         let oprnd = window.sessionStorage.getItem('sessionToken');
         if (state!="IN") {
@@ -179,11 +179,11 @@ export default function HomePage() {
         const fun = async ()=>{
             const data2 = await getTotalCounts(oprnd, status2)
             let data = data2.data
-            statusData2(mappeddata(data));
-            console.log("StatusData2", data2)
+            setStatusData2(mappeddata(data));
+            console.log("StatusData2",oprnd, data2)
         }
         fun();
-    }, [status2])
+    }, [status2,state,district])
     useEffect(()=>{
         let oprnd = window.sessionStorage.getItem('sessionToken');
         if (state!="IN") {
@@ -285,7 +285,7 @@ export default function HomePage() {
     }
 
     function CreateCard({status, setStatus, statusData}) {
-        console.log(status)
+        console.log("_+_+_+_+_",statusData)
         let data;
         if (Object.keys(statusData).length) {
             data= statusData;
