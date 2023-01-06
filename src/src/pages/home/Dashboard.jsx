@@ -50,10 +50,68 @@ function Home1() {
 	const [statusData, setStatusData] = useState([]);
 	const [fetchData, setFetchData] = useState([]);
 	const [indiaMap, setIndiaMap] = useState(0);
-
+	const [notifications, setNotifications] = useState([]);
 	const uri = process.env.REACT_APP_API_SERVER + "/unit/total_counts"
 
 	const stateID = window.sessionStorage.getItem('sessionToken').slice(0, 2)
+
+	function dateDiffInDays(date) {
+		const notifDate = new Date(date);
+		const currDate = new Date().getTime();
+		const hoursDiff = Math.floor((currDate - notifDate) / (1000 * 60 * 60));
+
+		if (hoursDiff < 24) {
+			return (hoursDiff + " hrs ago");
+		} else {
+			const ans = date.substr(0, 10);
+			const d = new Date(ans);
+			return `${d.getDate()} ${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][d.getMonth()]}`;;
+		}
+	}
+
+	// async function dismissNotification(notificationId){
+	// 	try {
+	// 		 const response = await fetch(`${process.env.REACT_APP_API_SERVER}/notification/dismissNotification`,
+	// 		 {
+	// 			method: "POST",
+	// 			headers: {
+	// 				"Content-Type": "application/json",
+	// 			},
+	// 			credentials: 'include',
+	// 			body: JSON.stringify(
+	// 				{
+	// 					"notificationId": notificationId
+	// 				}
+	// 			)
+				
+	// 		}
+	// 		 )
+	// 	} catch (error) {
+	// 		console.log(error)
+	// 	}
+	// }
+
+	async function getNotificationList() {
+		console.log("Calling getnotification!!!!!")
+		try {
+			const response = await fetch(
+				`${process.env.REACT_APP_API_SERVER}/notification/notifications`,
+				{
+					method: "GET",
+					credentials: "include",
+					headers: {
+						"Content-Type": "application/json",
+					},
+
+				})
+			const data = await response.json();
+			console.log("NOTIFY:::::::::::::::::::::", data["data"]);
+			setNotifications(data["data"])
+
+		} catch (error) {
+			console.log(error)
+		}
+	}
 
 	useEffect(() => {
 		if (stateID != "IN") {
@@ -132,6 +190,14 @@ function Home1() {
 			setContent2("")
 		}
 	}, [indiaMap])
+
+	useEffect(() => {
+		getIssues()
+		getNotificationList()
+		return () => {
+
+		}
+	}, [])
 
 	useEffect(() => {
 		data = fetchData;
@@ -237,13 +303,7 @@ function Home1() {
 		setIssues(data)
 	}
 
-	useEffect(() => {
-		getIssues()
-
-		return () => {
-
-		}
-	}, [])
+	
 
 
 	return (
@@ -288,7 +348,7 @@ function Home1() {
 							<option>{"None"}</option>
 							{statesCode.map((val, ind) => {
 								return (
-									<option value={val.state} onClick={() => { setIndiaMap(0); setShow(true); setShow2(false);setContent2(val.state) }} >{val.state}</option>
+									<option value={val.state} onClick={() => { setIndiaMap(0); setShow(true); setShow2(false); setContent2(val.state) }} >{val.state}</option>
 								)
 							})}
 						</select></> : ""}
@@ -356,56 +416,29 @@ function Home1() {
 						<div className="heading">Notifications</div>
 						<div className='hBox overflow-x-clip overflow-y-scroll max-h-[350px]' >
 							<ul className='li_noti '>
-								<li>
-									<span>
-										<span>
-											First Randomisation completed in districts - Bhind, Gwalior, Indore, Bhopal
-										</span>
-										<span>3hrs ago</span>
-									</span>
-								</li>
-								<li>
-									<span>
-										<span>
-											<span></span>
-											Request Ticket raised by DEO Gwalior regarding movement of units.
-										</span>
-										<span>3hrs ago</span>
-									</span>
-								</li>
-								<li>
-									<span>
-										<span>
-											<span></span>
-											Request Ticket raised by DEO Gwalior regarding movement of units.
-										</span>
-										<span>3hrs ago</span>
-									</span>
-								</li>
-								<li>
-									<span>
-										<span>
-											First Randomisation completed in districts - Bhind, Gwalior, Indore, Bhopal
-										</span>
-										<span>3hrs ago</span>
-									</span>
-								</li>
-								<li>
-									<span>
-										<span>
-											First Randomisation completed in districts - Bhind, Gwalior, Indore, Bhopal
-										</span>
-										<span>3hrs ago</span>
-									</span>
-								</li>
-								<li>
-									<span>
-										<span>
-											First Randomisation completed in districts - Bhind, Gwalior, Indore, Bhopal
-										</span>
-										<span>3hrs ago</span>
-									</span>
-								</li>
+								{notifications &&
+									notifications.map((v) => (
+										<div className='mt-0'>
+											<div className='grid grid-cols-6 gap-4'>
+												<div class="...">
+													<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+												</div>
+												<div class="col-span-4 ..." style={{ fontSize: 14 }}>{v["message"]}</div>
+
+											</div>
+											<br></br>
+											<div className='grid grid-cols-6 gap-4'>
+												<div class="col-span-5 text-left ..." style={{ fontSize: 14 }}>{dateDiffInDays(v["creationTime"])}</div>
+												<button type="button" class=" bg-white rounded-md p-0 inline-flex items-centre justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-red-500">
+													<svg class="h-6 w-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /> </svg>
+													</button>
+											</div>
+											<br></br>
+											<hr />
+											<br></br>
+										</div>
+										
+									))}
 							</ul>
 						</div>
 					</div>
@@ -413,7 +446,7 @@ function Home1() {
 				</div>}
 
 
-				
+
 
 				{otherElements.includes("Recent Issues") &&
 
@@ -441,6 +474,7 @@ function Home1() {
 														</span>
 														<span>{timeSince(new Date(val['createdon']))}</span>
 													</span>
+
 												</li>
 											)
 										})
@@ -451,7 +485,7 @@ function Home1() {
 
 					</div>}
 
-					{otherElements.includes("Order Status") &&
+				{otherElements.includes("Order Status") &&
 					<div
 						className="myCardSample transCard hover:cursor-pointer transition delay-50 hover:scale-105"
 						onClick={() => {

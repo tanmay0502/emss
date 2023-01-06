@@ -62,7 +62,7 @@ function SuborderTable(props) {
                 <img src={SourceLocationPin} />
             </div>
             <div>
-                <p className={styles.allocationLocationDetailsSource}><span>Source: </span> {props.val.source} </p>
+                <p className={styles.allocationLocationDetailsSource}><span><strong>Source</strong> </span> <br/> {props.val.source}: {props.val.sourcedistrict}</p>
                
             </div>
             <div className={styles.allocationLocationArrow}>
@@ -72,12 +72,12 @@ function SuborderTable(props) {
                 <img src={DestLocationPin} />
             </div>
             <div>
-                <p className={styles.allocationLocationDetailsDestination}><span>Destination: </span> {props.val.destination} </p>
+                <p className={styles.allocationLocationDetailsDestination}><span><strong>Destination</strong> </span> <br/>{props.val.destination}: {props.val.destinationdistrict}</p>
   
             </div>
         </div>
         <div className={styles.allocationDetailsTable}>
-            <DynamicDataTable rows={data} buttons={[]} fieldMap={{'item': 'Item Type','itemmodel': 'Model','itemquantity': 'Quantity'}} />
+            <DynamicDataTable rows={data} buttons={[]} fieldMap={{'sourcedistrict': 'Source District','item': 'Item Type','itemmodel': 'Model','itemquantity': 'Quantity','destinationdistrict': 'Destination District' }} />
         </div>
         <div>
         <ActionButton

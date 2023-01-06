@@ -138,10 +138,10 @@ export default function UnitDescription(props) {
             <div className={styles.orderDetailsIDandSearch}>
                 <span><span className={styles.orderDetailsID}>Order ID: </span>{OrderID}</span>
                 <button onClick={()=>generatePDF(OrderID)} className="text-white">Print Pdf</button>
-                <div className={styles.orderDetailsSearch}>
+                {/* <div className={styles.orderDetailsSearch}>
                     <SearchInputIcon />
                     <input type="search" name="searchRefID" placeholder="Search By Reference ID" />
-                </div>
+                </div> */}
             </div>
             {
                 units.length > 1 &&

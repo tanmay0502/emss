@@ -45,7 +45,9 @@ export default function OrderFlowOne({OrderID,isSender}) {
             "destination" : order['destination'],
             "item" : order["item"],
             "itemmodel": order['itemmodel'],
-            "itemquantity": order['itemquantity']
+            "itemquantity": order['itemquantity'],
+            "sourcedistrict": order['sourcedistrict'],
+            "destinationdistrict": order['destinationdistrict']
           });
         }
       });
@@ -59,10 +61,13 @@ export default function OrderFlowOne({OrderID,isSender}) {
     suborderdat.map((val)=>{
       console.log(val)
       let detail={
+        "sourcedistrict": val["sourcedistrict"],
         "orderid":val["orderid"],
         "item":val["item"],
         "itemmodel":val["itemmodel"],
-        "itemquantity":val["itemquantity"]
+        "itemquantity":val["itemquantity"],
+        "destinationdistrict": val["destinationdistrict"]
+        
       }
       if(val["source"] in included){
         if(val["destination"] in included[val["source"]]){
@@ -85,6 +90,7 @@ export default function OrderFlowOne({OrderID,isSender}) {
 
     })
 
+    
     console.log(included)
     Object.keys(included).map((val)=>{
       Object.keys(included[val]).map((val2)=>{
@@ -93,6 +99,8 @@ export default function OrderFlowOne({OrderID,isSender}) {
             "source":val,
             "destination":val2,
             "details":included[val][val2],
+            "destinationdistrict": included[val][val2][0]["destinationdistrict"],
+            "sourcedistrict": included[val][val2][0]["sourcedistrict"]
           }
         )
       })
@@ -220,6 +228,7 @@ useEffect(()=>{
       )
   })
   let ans = [];
+  console.log("this is the body")
   console.log(body)
     let kk = getVehicleDetails(body);
     kk.then(function(result) {
