@@ -12,7 +12,6 @@
     max-height: calc(100% + 3em);
     overflow-y: auto;
 }
-
 .wrapper{
     position: relative;
     width: 90%;

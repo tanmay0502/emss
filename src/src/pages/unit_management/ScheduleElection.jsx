@@ -63,7 +63,6 @@ const handleRemoveClick_Temporary_Users = (i) => {
         const list = [...rows_Temporary_Users];
         list.splice(i, 1);
         setRows_Temporary_Users(list);
-
     }
 };
 
@@ -230,7 +229,7 @@ const handleEdit_Temporary_Users = (i) => {
         }
         for(const i in rows_Temporary_Users){
             pushFunction(rows_Temporary_Users[i]["BPState"], rows_Temporary_Users[i]["Name"])
-            alert(rows_Temporary_Users[i]["Name"])
+            // alert(rows_Temporary_Users[i]["Name"])
         }
         
         try {
@@ -603,7 +602,8 @@ const handleEdit_Temporary_Users = (i) => {
                                             <tr onDoubleClick={() => { handleEdit_Temporary_Users(id) }}>
                                                 <td className="text-black text-sm">{val['BPState']}</td>
                                                 <td className="text-black text-sm">{val['']}</td>
-                                                <td className="text-black text-sm" onClick={() => handleRemoveClick_Temporary_Users(id)}>{val[' ']}</td>
+                                                <td className="text-black text-sm" ><div className=''>{val['Name'] && val['Name']}</div></td>
+                                                <td onClick={() => handleRemoveClick_Temporary_Users(id)}>{val[' ']}</td>
                                                 </tr>
                                         </tbody>
                                         :
@@ -640,15 +640,15 @@ const handleEdit_Temporary_Users = (i) => {
                                                 </td >
                                                 <td className="text-black text-sm" >{val['']}</td>
                                                 <td >
+                                                {PCs && 
                                                 <select
-                                                    //   required={!isTemporary}
                                                     value={val.Name}
                                                     required={true}
                                                     name="Name"
                                                     className="selectBox"
                                                     onChange={(e) => handleInputChange_Temporary_Users(e, id)}
                                                 >
-                                                    <option value="" disabled selected>
+                                                    <option value="" selected>
                                                         Select PC
                                                     </option>
                                                     {PCs && PCs.map((st,i) => (
@@ -658,14 +658,9 @@ const handleEdit_Temporary_Users = (i) => {
                                                         </option>
                                                     ))}
                                                 </select>
-                                                    {/* <input
-                                                        className={styles.Assigned_Engineer_Tr}
-                                                        value={val.Name}
-                                                        placeholder="Select PC"
-                                                        name="Name"
-                                                        onChange={(e) => handleInputChange_Temporary_Users(e, id)}
-                                                    /> */}
+                                                     }
                                                 </td>
+                                                    
                                                 <td className="text-black text-sm" onClick={() => handleRemoveClick_Temporary_Users(id)}>{val[' ']}</td>
                                             </tr>
                                         </tbody>

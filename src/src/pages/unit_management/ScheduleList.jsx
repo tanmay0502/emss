@@ -6,7 +6,7 @@ import styles from './styles/ScheduleList.module.css';
 import { AiOutlineSortAscending, AiOutlineSortDescending } from "react-icons/ai";
 import { ReactComponent as SearchInputElement } from '../../assets/searchInputIcon.svg';
 import { ReactComponent as ChevronDown } from '../../assets/ChevronDown.svg';
-
+import load from "../../loaders.module.css"
 // import { ReactComponent as Edit } from '../../assets/editBtn.svg';
 export default function ScheduleList() {
 
@@ -18,8 +18,9 @@ export default function ScheduleList() {
     let post = sessionStorage.getItem("sessionToken").substring(8);
     const [elections, setElections] = useState([])
     const [electionList, setElectionList] = useState([])
-
+    const [loading, setLoading] = useState(true)
     async function getElectionList() {
+        setLoading(true)
         try {
             const response = await fetch(
                 `${process.env.REACT_APP_API_SERVER}/unit/listElections`,
@@ -34,9 +35,9 @@ export default function ScheduleList() {
             const data = await response.json();
             console.log(data)
             if(response.status===200){
-                setElections(data["data"]);
+                setElections(data);
                 console.log(elections)
-                
+                setLoading(false)
             }
             
         } catch (err) {
@@ -53,9 +54,9 @@ export default function ScheduleList() {
             const row = {
                 'ID':electionslist[i]["election_id"],
                 'State': electionslist[i]['state'],
-                // 'PC': elections[i]['pc'],
-                "AC": electionslist[i]["ac"],
-                "Election Type": electionslist[i]['electiontype'],
+                'PC': <div className="px-8">{electionslist[i]['pc']}</div>,
+                "AC": <div className="px-8">{electionslist[i]["ac"].slice(0,3)}</div>,
+                "Election Type": <div className="px-8">{electionslist[i]['electiontype']}</div>,
                 "Start Date - End Date": electionslist[i]['startdate'] +" to "+ electionslist[i]['enddate'],
                 // "End Date": ,
                 // "Edit":
@@ -153,6 +154,7 @@ export default function ScheduleList() {
             </div> : <></>}
             {isDetail === 0 ? 
             <div class={styles.table}>
+            {loading === true ? <div className={load.tableLoader}></div>:
             
             <DynamicDataTable 
                 rows={
@@ -170,8 +172,12 @@ export default function ScheduleList() {
                 }}
                 
                 />
+                
+                }
                 </div>
                 : ''
+
+
             }
         </div>
     )

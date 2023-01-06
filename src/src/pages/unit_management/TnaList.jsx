@@ -7,6 +7,7 @@ import styles from './styles/TnaList.module.css';
 import { AiOutlineSortAscending, AiOutlineSortDescending } from "react-icons/ai";
 import { ReactComponent as SearchInputElement } from '../../assets/searchInputIcon.svg';
 import { ReactComponent as ChevronDown } from '../../assets/ChevronDown.svg';
+import load from "../../loaders.module.css"
 // import { ReactComponent as Edit } from '../../assets/editBtn.svg';
 
 
@@ -20,8 +21,11 @@ export default function ScheduleList() {
     const [tableFilter, setTableFilter] = useState("");
     const [tnaList, setTnaList] = useState([]);
     const [tna, setTna] = useState([]);
+    
+    const [loading, setLoading] = useState(true)
     async function getTnaList() {
         setIsLoading(1);
+        setLoading(true)
         try {
             
             const response = await fetch(
@@ -38,6 +42,7 @@ export default function ScheduleList() {
             console.log(data)
                 setTnaList(data);                 
             setIsLoading(0);
+            setLoading(false)
         } catch (err) {
             console.log({err});
         }
@@ -191,7 +196,7 @@ export default function ScheduleList() {
             </div> : <></>}
             {tna !== 0 ? 
             <div class={styles.table}>
-            
+            {loading === true ? <div className={load.tableLoader}></div>:
             <DynamicDataTable 
                 rows={tna && tna}
                 buttons={[]} 
@@ -205,7 +210,7 @@ export default function ScheduleList() {
                     
                 }}
                 
-                />
+                />}
                 </div>
                 : ''
             }
