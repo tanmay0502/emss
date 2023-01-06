@@ -53,8 +53,8 @@ import Announce_Flc from './pages/unit_management/announce_flc'
 import FillDemand from './pages/order_management/FillDemand';
 import FillAvailability from './pages/order_management/FillAvailability';
 import Usermanual from './components/Usermanual';
-import ViewPermission from './components/ViewPermission';
-import SetRoles from './components/SetRoles';
+import ViewPermission from './components/adminUtilities/ViewPermission';
+import SetRoles from './components/adminUtilities/SetRoles';
 import LocationDetails from './pages/order_management/LocationDetails';
 import AdminUtilities from './components/AdminUtilities';
 import Viewunit from './pages/unit_management/ViewUnit';
@@ -64,8 +64,11 @@ import FetchFile from './pages/issue_request_management/FetchFile';
 import Orders from './pages/unit_management/Orders';
 import Prepared_Certificate from './pages/unit_management/preparedness_certificate';
 import NotFound404 from './NotFound404';
-import SetModels from './components/SetModels';
-import SetStates from './components/SetStates';
+import SetModels from './components/adminUtilities/SetModels';
+import SetStates from './components/adminUtilities/SetStates';
+import SetDefect from './components/adminUtilities/SetDefect';
+import SetACs from './components/adminUtilities/SetACs';
+import SetDistricts from './components/adminUtilities/SetDistricts';
 function App() {
 
 	const [sessionState, setSessionState] = useState({
@@ -261,8 +264,20 @@ function App() {
 							element={<SetModels />}
 						/>
 						<Route
+							path="/session/adminutilities/setdefects"
+							element={<SetDefect />}
+						/>
+						<Route
 							path="/session/adminutilities/setstates"
 							element={<SetStates />}
+						/>
+						<Route
+							path="/session/adminutilities/setACs"
+							element={<SetACs />}
+						/>
+						<Route
+							path="/session/adminutilities/setDistricts"
+							element={<SetDistricts />}
 						/>
 						<Route
 							path="/session/ordermanagement"

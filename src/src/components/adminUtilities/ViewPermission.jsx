@@ -1,7 +1,7 @@
 import React, { ReactComponent } from 'react'
 import { useState, useEffect } from "react";
-import EditBtn from '../assets/editBtn.png'
-import DeleleBtn from '../assets/delete.jpg'
+import EditBtn from '../../assets/editBtn.png'
+import DeleleBtn from '../../assets/delete.jpg'
 
 function ViewPermission(){
 
