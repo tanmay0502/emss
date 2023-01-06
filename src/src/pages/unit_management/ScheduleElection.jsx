@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import styles from './styles/ScheduleNew.module.css'
 import { getRealm, formatRealm2,formatRealm3 } from '../../components/utils'
 import { AiOutlineClose } from "react-icons/ai"
+import load from "../../loaders.module.css"
 // import { Multiselect } from "multiselect-react-dropdown"
 // import { components } from "react-select";
 // import { default as ReactSelect } from "react-select";
@@ -55,7 +56,7 @@ const setACFunction = (e) => {
 const [tableFilter, setTableFilter] = useState("");
 const [rows_Temporary_Users, setRows_Temporary_Users] = useState([]);
 const [isEdit_Temporary_Users, setEdit_Temporary_Users] = React.useState(-1);
-const [submitElection, setSubmitElection] = useState([])
+const [submitElection, setSubmitElection] = useState(false)
 
 
 const handleRemoveClick_Temporary_Users = (i) => {
@@ -102,6 +103,7 @@ const handleEdit_Temporary_Users = (i) => {
 
     // Check Replacement for Dist in new API: 
     async function postElection() {
+        // setSubmitElection(true)
         console.log(currState)
         try {
             const response = await fetch(
@@ -138,10 +140,13 @@ const handleEdit_Temporary_Users = (i) => {
             console.log(response);
             const data = await response.json();
             console.log("data" + data);
-            console.log("Message:" + data["message"])
+            // console.log("Message:" + data["message"])
+            // setSubmitElection(false)
             if (data["message"] === "insertion successfull") {
                 document.getElementById("form").reset();
+                
                 alert("Successful");
+                
                 window.location.pathname = "/session/unitmanagement/schedule_list";
             } else {
                 alert("Failed!");
@@ -201,6 +206,7 @@ const handleEdit_Temporary_Users = (i) => {
             console.log("Message:" + data["message"])
             if (data["message"] === "insertion successfull") {
                 document.getElementById("form").reset();
+                setSubmitElection(false)
                 alert("Successful");
                 window.location.pathname = "/session/unitmanagement/schedule_list";
             } else {
@@ -401,6 +407,7 @@ const handleEdit_Temporary_Users = (i) => {
 
     return(
         <>
+        { submitElection === true ? <div className={load.circleLoader}></div>:
         <form onSubmit={onFormSubmit} id="form">
         <div className={styles.Schedule_container}>
             <div className={styles.Schedule_header}>
@@ -673,7 +680,8 @@ const handleEdit_Temporary_Users = (i) => {
         </div>
         <div style={{ display: showSubmit ? "block" : "none" }}><button class={styles.submitBtn} type='submit' > Submit </button></div>
             
-            </form>
+        </form>
+        }
         </>
     )
 }

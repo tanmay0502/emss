@@ -164,7 +164,7 @@ export default function ScheduleList() {
                 fieldsToExclude={["ID"]}
                 onClick={(event, row) => {
                     if (post === "ADM"){
-                        navigate(`/session/unitmanagement/edit_election/${row["ID"]}`)
+                        // navigate(`/session/unitmanagement/edit_election/${row["ID"]}`)
                     }else{
                         alert("You dont have rights to Edit Election")
                     }

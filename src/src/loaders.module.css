@@ -35,3 +35,31 @@
 		width: 2.5vw;
 	}
 }
+
+
+.circleLoader {
+	width: 48px;
+	height: 48px;
+	border-radius: 50%;
+	display: inline-block;
+	position: relative;
+	background: linear-gradient(0deg, #B5B7C0 33%, #84587C 100%);
+	box-sizing: border-box;
+	animation: rotation 1s linear infinite;
+  }
+  .circleLoader::after {
+	content: '';  
+	box-sizing: border-box;
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	width: 44px;
+	height: 44px;
+	border-radius: 50%;
+	background: #263238;
+  }
+  @keyframes rotation {
+	0% { transform: rotate(0deg) }
+	100% { transform: rotate(360deg)}
+  } 

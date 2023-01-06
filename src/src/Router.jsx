@@ -185,6 +185,12 @@ function Routed(props) {
 				<span>Unit Management</span>
 			</>);
 		}
+		if (location.pathname.startsWith('/session/adminutilities')) {
+			return (<>
+				<UserManagementIcon />
+				<span>Admin Utilities</span>
+			</>);
+		}
 		if (location.pathname === `/session/unimanagement/viewUnit/`) {
 			return (<>
 				<UnitManagementIcon />
