@@ -46,7 +46,12 @@ export default function UnitList() {
     FLC_Assembly: false,
     FLC_Scan: false,
     destruction: false,
-    underfir: false
+    underfir: false,
+    pollingfinished: false,
+    countingfinished: false,
+    countingdefective: false,
+    undertna: false,
+    receivingscan: false
   };
   const [ReplacedUnitID, setReplacedUnitID] = useState([]);
   const [ReplacingUnitID, setReplacingUnitID] = useState([]);
@@ -383,7 +388,8 @@ export default function UnitList() {
 
   return (
     <>
-      <StatusUpdate isVisibleunderfir={cardVisibility.underfir} isVisibledestruction={cardVisibility.destruction} isVisibleFLC_Scan={cardVisibility.FLC_Scan} isVisibleFLC_Assembly={cardVisibility.FLC_Assembly}
+      <StatusUpdate isVisiblepollingfinished={cardVisibility.pollingfinished} isVisiblecountingfinished={cardVisibility.countingfinished} isVisiblecountingdefective={cardVisibility.countingdefective} isVisibleundertna={cardVisibility.undertna} isVisiblereceivingscan={cardVisibility.receivingscan}
+        isVisibleunderfir={cardVisibility.underfir} isVisibledestruction={cardVisibility.destruction} isVisibleFLC_Scan={cardVisibility.FLC_Scan} isVisibleFLC_Assembly={cardVisibility.FLC_Assembly}
         isVisibleepUnmarkForm={cardVisibility.epUnmarkForm} isVisibledestroyed={cardVisibility.destroy} isVisibledispatch={cardVisibility.dispatch} isVisibleepForm={cardVisibility.epForm} isVisibleblock={cardVisibility.block}
         isVisibleunblock={cardVisibility.unblock} activeButtons={cardVisibility} onButtonClick={handleButtonClick} flag={flag} data2={data2} initialInputValuesReplace={initialInputValuesReplace}
         setInputValuesReplace={setInputValuesReplace} inputValuesReplace={inputValuesReplace} handleInputChangeReplace={handleInputChangeReplace} isVisible={cardVisibility.replacementForm} Added={Added}
@@ -443,13 +449,13 @@ const StatusUpdate = ({ isVisibleunderfir, isVisibledestruction, isVisibleFLC_Sc
 
         <ActionButton
           isActive={activeButtons.block}
-          text="Block"
+          text="Unit Block"
           name="block"
           onClick={onButtonClick}
         />
         <ActionButton
           isActive={activeButtons.unblock}
-          text="UnBlock"
+          text="Unit Unblock"
           name="unblock"
           onClick={onButtonClick}
         />
@@ -473,14 +479,44 @@ const StatusUpdate = ({ isVisibleunderfir, isVisibledestruction, isVisibleFLC_Sc
         />
         <ActionButton
           isActive={activeButtons.destruction}
-          text="Destruction"
+          text="Unit Destruction"
           name="destruction"
           onClick={onButtonClick}
         />
         <ActionButton
           isActive={activeButtons.underfir}
-          text="Under Fir"
+          text="Under FIR"
           name="underfir"
+          onClick={onButtonClick}
+        />
+        <ActionButton
+          isActive={activeButtons.pollingfinished}
+          text="Polling Finished"
+          name="pollingfinished"
+          onClick={onButtonClick}
+        />
+        <ActionButton
+          isActive={activeButtons.countingfinished}
+          text="Counting Finished"
+          name="countingfinished"
+          onClick={onButtonClick}
+        />
+        <ActionButton
+          isActive={activeButtons.countingdefective}
+          text="Counting Defective"
+          name="countingdefective"
+          onClick={onButtonClick}
+        />
+        <ActionButton
+          isActive={activeButtons.undertna}
+          text="Under TnA"
+          name="undertna"
+          onClick={onButtonClick}
+        />
+        <ActionButton
+          isActive={activeButtons.receivingscan}
+          text="Receiving Scan"
+          name="receivingscan"
           onClick={onButtonClick}
         />
       </div>
