@@ -34,7 +34,7 @@ export default function ScheduleList() {
             const data = await response.json();
             console.log(data)
             if(response.status===200){
-                setElections(data);
+                setElections(data["data"]);
                 console.log(elections)
                 
             }

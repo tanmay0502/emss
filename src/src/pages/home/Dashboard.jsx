@@ -285,7 +285,7 @@ function Home1() {
 						Select State:
 					</label>
 						<select name="" id="statesDropdownHome" onChange={(e) => {setSTName(e.target.value);setIndiaMap(0); setShow(true); setShow2(false);setContent2(e.target.value) }}>
-							<option>{"none"}</option>
+							<option>{"None"}</option>
 							{statesCode.map((val, ind) => {
 								return (
 									<option value={val.state} onClick={() => { setIndiaMap(0); setShow(true); setShow2(false);setContent2(val.state) }} >{val.state}</option>

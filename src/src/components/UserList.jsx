@@ -385,15 +385,15 @@ function UserList() {
 						// console.log(row)
 					}}
 					fieldMap={{
-						"User ID": (<div className="cursor-pointer" onClick={() => { setSortBy("User ID") }}>User ID</div>),
-						"User Name": (<div className="cursor-pointer" onClick={() => { setSortBy("Name") }}>User Name</div>),
-						"Role": (<div className="cursor-pointer" onClick={() => { setSortBy("Role") }}>Role</div>),
-						"Phone Number": (<div className="cursor-pointer" onClick={() => { setSortBy("Role") }}>Phone Number</div>),
-						"Status": (<div className="cursor-pointer" onClick={() => { setSortBy("None") }}>Status</div>)
+						"User ID": (<div className="cursor-pointer" onClick={() => { setSortBy("User ID"); if(sortOrder === 'desc'){setSortOrder("asc")}else{setSortOrder("desc")} }}>User ID</div>),
+						"User Name": (<div className="cursor-pointer" onClick={() => { setSortBy("Name"); if(sortOrder === 'desc'){setSortOrder("asc")}else{setSortOrder("desc")}  }}>User Name</div>),
+						"Role": (<div className="cursor-pointer" onClick={() => { setSortBy("Role"); if(sortOrder === 'desc'){setSortOrder("asc")}else{setSortOrder("desc")}  }}>Role</div>),
+						"Phone Number": (<div className="cursor-pointer" onClick={() => { setSortBy("Role"); if(sortOrder === 'desc'){setSortOrder("asc")}else{setSortOrder("desc")}  }}>Phone Number</div>),
+						"Status": (<div className="cursor-pointer" onClick={() => { setSortBy("None"); if(sortOrder === 'desc'){setSortOrder("asc")}else{setSortOrder("desc")}  }}>Status</div>)
 					}}
 					buttons={[]}
 					allowOrderingBy={[
-						'User ID', 'User Name', 'Role'
+						'User ID', 'User Name', 'Role',"Status"
 					]} />
 					:
 					<></>
@@ -412,8 +412,8 @@ function UserList() {
 
 				}
 			</div>
-			<div className='myWrapper overflow-scroll' style={{ "gridArea": "1 / 2 / 3 / 3", display: "flex", flexDirection: "column", "alignItems": "center", "justifyContent": "center" }}>
-				<ul className='userStats p-2'>
+			<div className='myWrapper !overflow-scroll' style={{ "gridArea": "1 / 2 / 3 / 3", display: "flex", flexDirection: "column", "alignItems": "center", "justifyContent": "center" }}>
+				<ul className='userStats p-2 !pt-32'>
 					<li>
 						<div className="icon">
 							<TotalUsers />

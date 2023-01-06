@@ -1,4 +1,4 @@
-import { DynamicDataTable } from '@langleyfoxall/react-dynamic-data-table'
+import dist, { DynamicDataTable } from '@langleyfoxall/react-dynamic-data-table'
 import React, { useEffect, useState } from 'react'
 import styles from './styles/ScheduleNew.module.css'
 import { getRealm, formatRealm2,formatRealm3 } from '../../components/utils'
@@ -38,11 +38,16 @@ function ScheduleElection() {
 
     
 const setACFunction = (e) => {
-    // alert(distn[e.target.value]["acCode"])
-    if (!AC.includes(distn[e.target.value]["acCode"])) {
-        setAC([...AC, distn[e.target.value]["acCode"] + " "+ distn[e.target.value]["acName"]])
-        // setAC([...AC, distn[e.target.value][1][0]])
+    const currAC = e.target.value
+    for(let i in distn){
+        if(distn[i]["acCode"] === currAC){
+            setAC([...AC, distn[i]["acCode"] + " "+ distn[i]["acName"]])
+        }
     }
+    // if (!AC.includes(distn[e.target.value]["acCode"])) {
+    //     setAC([...AC, distn[e.target.value]["acCode"] + " "+ distn[e.target.value]["acName"]])
+    //     // setAC([...AC, distn[e.target.value][1][0]])
+    // }
 }
 
 
@@ -79,6 +84,9 @@ const handleAdd_Temporary_Users = () => {
 
 
 const handleInputChange_Temporary_Users = (e, index) => {
+    if(typeof(e.target.value) === "string"){
+        getPCList(e.target.value)
+    }
     const { name, value } = e.target;
     const list = [...rows_Temporary_Users];
     list[index][name] = value;
@@ -222,6 +230,7 @@ const handleEdit_Temporary_Users = (i) => {
         }
         for(const i in rows_Temporary_Users){
             pushFunction(rows_Temporary_Users[i]["BPState"], rows_Temporary_Users[i]["Name"])
+            alert(rows_Temporary_Users[i]["Name"])
         }
         
         try {
@@ -291,7 +300,7 @@ const handleEdit_Temporary_Users = (i) => {
     const [showAC, setShowAC] = useState(false)
     const [showSubmit, setShowSubmit] = useState(true)
     const [showTable, setShowTable] = useState(false)
-    const [showDist, setShowDist] = useState(false)
+
 
     useEffect(() => {
         if(eType === "GA"){
@@ -319,12 +328,45 @@ const handleEdit_Temporary_Users = (i) => {
     const [realm, setRealm] = useState([])
     const [state2, setState2] = useState([])
     const [distn, setDistn] = useState([])
+    const [PCs, setPCs] = useState([])
     const [currState, setCurrState] = useState([]);
 
+    async function getPCList(st) {
+        try {
+            const response = await fetch(
+                `${process.env.REACT_APP_API_SERVER}/user/getPCListByState`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: 'same-origin',
+                    body: JSON.stringify({
+                        state: st,
+                    })
+                }
+            );
+            const data = await response.json();
+            console.log(data)
+            if(response.status===200 && data["data"].length !== 0){
+                setPCs(data["data"]);
+                console.log(PCs)
+                
+            }
+            
+        } catch (err) {
+            console.log({err});
+        }
+    }
 
     useEffect(() => {
         getRealmData();
     }, [])
+    useEffect(() => {
+        if(showTable === true){
+            getPCList()
+        }
+    }, [showTable])
 
     const getRealmData = async () => {
         setRealm(await getRealm('Unit', 'ScheduleElection'));
@@ -465,13 +507,13 @@ const handleEdit_Temporary_Users = (i) => {
                         <option value="" disabled selected >
                             Select AC
                         </option>
-                        {console.log(distn)}
+                        {/* {console.log(distn)} */}
 
                         {distn.length>0 && distn.map((st,i) => (
                             
-                            <option value={distn[i]["acCode"]} className="text-black">
-                                {`${distn[i]["acCode"]} (${distn[i]["acName"]})`}
-                                
+                            <option value={st["acCode"]} className="text-black">
+                                {`${st["acCode"]} (${st["acName"]})`}
+                                {/* {console.log(st)} */}
                             </option>
                             ))}
 
@@ -599,21 +641,22 @@ const handleEdit_Temporary_Users = (i) => {
                                                 <td className="text-black text-sm" >{val['']}</td>
                                                 <td >
                                                 <select
-                                                    required
-                                                    name="Name"
+                                                    //   required={!isTemporary}
                                                     value={val.Name}
+                                                    required={true}
+                                                    name="Name"
                                                     className="selectBox"
                                                     onChange={(e) => handleInputChange_Temporary_Users(e, id)}
-                                                    >
+                                                >
                                                     <option value="" disabled selected>
                                                         Select PC
                                                     </option>
-                                                    <option value="GA">
-                                                        General Assembly-GA
-                                                    </option>
-                                                    <option value="GP">
-                                                        General Parliamentary-GP
-                                                    </option>
+                                                    {PCs && PCs.map((st,i) => (
+                                                        <option value={st["pc_no"]} className="text-black">
+                                                            {st["pc_no"]} - {st["pc_name"]}
+                                                            
+                                                        </option>
+                                                    ))}
                                                 </select>
                                                     {/* <input
                                                         className={styles.Assigned_Engineer_Tr}

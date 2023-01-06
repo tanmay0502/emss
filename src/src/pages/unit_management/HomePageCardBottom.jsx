@@ -9,6 +9,7 @@ import ElecSchedulingCard from "./ElecSchedulingCard";
 import TnASchdulingCard from "./TnASchdulingCard";
 import PhysVerificationCard from "./PhysVerificationCard";
 import { useNavigate } from "react-router-dom";
+import {AiOutlineArrowLeft, AiOutlineArrowRight} from 'react-icons/ai'
 
 export default function HomePageCardBottom({ state, dist, init }) {
 	const navigate = useNavigate()
@@ -115,8 +116,10 @@ export default function HomePageCardBottom({ state, dist, init }) {
 						CDP Scheduling
 					</option>
 				</select>
-
-				<img src={RightArrow} alt="" style={{ display: "flex", margin: "auto", height: "100%" }} onClick={cardRedirect} />
+				<div className="flex items-center scale-125 hover:scale-150 text-lg delay-50">
+					<AiOutlineArrowRight  onClick={cardRedirect} className="text-red-600" />
+				</div>
+				
 			</div>
 			{(() => {
 				if (cardVal === "FLC Scheduling") {
