@@ -29,6 +29,9 @@ function OrderActions0(props) {
     
     const [ind,setInd]=useState(4);
     const [filldemand, setFilldemand] = useState(0);
+    const [permissionSenderState, setSenderPermissionState] = useState(false)
+    const [permissionRecieverState, setRecieverPermissionState] = useState(false)
+    const [permissionDetails, setpermissionDetails] = useState(false)
     const navigate = useNavigate()
     const roles = [
         "sender", // fill availability
@@ -38,18 +41,115 @@ function OrderActions0(props) {
         "other", // view
         "admin"
     ]
+    async function validatepermission_senderState() {
+        try {
+          const body = {
+            "moduleName": "Order",
+            "operation": "OrderActionsForSenderState",
+            "operandState": order["source"],
+            "operandDist": "ALL",
+            "operandAC": "000",
+            "operandRole": "-"
+          }
+          console.log(body)
+          const response = await fetch(
+            `${process.env.REACT_APP_API_SERVER}/user/validate_permissionAPI/`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              credentials: 'include',
+              body: JSON.stringify(body)
+            }
+          );
+          console.log("fetcjed", response.status)
+          if (response.status === 200) {
+            setSenderPermissionState(true);
+          }
+        } catch (err) {
+          console.log(err);
+        }
+    }
+
+    async function validatepermission_recieverState() {
+        try {
+          const body = {
+            "moduleName": "Order",
+            "operation": "OrderActionsForRecieverState",
+            "operandState": order["destination"],
+            "operandDist": "ALL",
+            "operandAC": "000",
+            "operandRole": "-"
+          }
+        //   console.log("boddi", body)
+          const response = await fetch(
+            `${process.env.REACT_APP_API_SERVER}/user/validate_permissionAPI/`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              credentials: 'include',
+              body: JSON.stringify(body)
+            }
+          );
+          console.log("fetcjed", response.status)
+          if (response.status === 200) {
+            setRecieverPermissionState(true);
+          }
+        } catch (err) {
+          console.log(err);
+        }
+    }
+    
+    async function validatepermission_Details() {
+        try {
+          const body = {
+            "moduleName": "Order",
+            "operation": "OrderActionsForDetails",
+            "operandState": "IN",
+            "operandDist": "ALL",
+            "operandAC": "000",
+            "operandRole": "-"
+          }
+          console.log(body)
+          const response = await fetch(
+            `${process.env.REACT_APP_API_SERVER}/user/validate_permissionAPI/`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              credentials: 'include',
+              body: JSON.stringify(body)
+            }
+          );
+          console.log("fetcjed", response.status)
+          if (response.status === 200) {
+            setpermissionDetails(true);
+          }
+        } catch (err) {
+          console.log(err);
+        }
+    }
+
+    useEffect(()=>{
+        validatepermission_senderState()
+        validatepermission_recieverState()
+        validatepermission_Details()
+    },[])
 
     useEffect(()=>{  
         const userid=sessionStorage.getItem("sessionToken");
         let sender_order=[]
         let recipient_order=[]
-
         props.Order.map((order)=>{
 
         
         
             console.log(userid.substring(8))
-            if(order["source"]==userid.substring(0,2) && "CEO"==userid.substring(8)){
+            if(permissionSenderState){
                     console.log("Inside if")
                     sender_order.push(order);
                
@@ -69,7 +169,7 @@ function OrderActions0(props) {
                 
                 
             }
-            else if(order["destination"]==userid.substring(0,2) && "CEO"==userid.substring(8)){
+            else if(permissionRecieverState){
                
                 recipient_order.push(order)
                 
@@ -95,7 +195,7 @@ function OrderActions0(props) {
                 }
 
             }
-            else if("ADM"==userid.substring(8)){
+            else if(permissionDetails){
                 setInd(5);
                 if(order["orderstatus"]=="RA" || order["orderstatus"]=="SI" || order["orderstatus"]=="IT" || order["orderstatus"]=="OC"){
                     setf6(1);
@@ -129,7 +229,7 @@ function OrderActions0(props) {
         else if(recipient_order.length>0){
             setInd(1);
         }
-        else if("ADM"==userid.substring(8)){
+        else if(permissionDetails){
             setInd(5);
         }
         else{
@@ -138,7 +238,7 @@ function OrderActions0(props) {
         console.log(sender_order)
         console.log(recipient_order)
         console.log(ind)
-    },[])
+    },[permissionDetails, permissionSenderState, permissionRecieverState])
 
     const actions = (role) => {
         if (role == 'sender') {
@@ -229,7 +329,7 @@ function OrderActions0(props) {
                             <button disabled={!f5}  className={`${f5==0 ? 'bg-gray-400' : 'bg-orange-500'}`} onClick={() => {
                                 setAction(renderAction(1))
                             }}>
-                                Sub Orders
+                                Order Details
                             </button>
                         </div>
                     }
@@ -249,7 +349,7 @@ function OrderActions0(props) {
                                 <button disabled={!f4}  className={`${f4==0 ? 'bg-gray-400' : 'bg-orange-500'}`}  onClick={() => {
                                     setAction(renderAction(2))
                                 }} >
-                                    Sub Orders
+                                    Order Details
                                 </button>
                             </div>
                     }
@@ -282,7 +382,7 @@ function OrderActions0(props) {
                                 <button disabled={!f6}  className={`${f6==0 ? 'bg-gray-400' : 'bg-orange-500'}`} onClick={() => {
                                     setAction(renderAction(0))
                                 }}>
-                                    Sub Orders
+                                    Order Details
                                 </button>
                                 
                             </div>

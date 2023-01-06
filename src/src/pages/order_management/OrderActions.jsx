@@ -31,6 +31,8 @@ function OrderActions(props) {
     
     const [ind,setInd]=useState(4);
     const [filldemand, setFilldemand] = useState(0);
+    const [permissionSenderDistrict, setpermissionSenderDistrict] = useState(false)
+    const [permissionRecieverDistrict, setpermissionRecieverDistrict] = useState(false)
     const navigate = useNavigate()
     const roles = [
         "sender", // fill availability
@@ -40,6 +42,73 @@ function OrderActions(props) {
         "other", // view
         "admin"
     ]
+
+    async function validatepermissionSender_District() {
+        try {
+          const body = {
+            "moduleName": "Order",
+            "operation": "OrderActionsForSenderDistrict",
+            "operandState": order["source"],
+            "operandDist": sessionStorage.getItem("sessionToken").substring(2,5),
+            "operandAC": "000",
+            "operandRole": "-"
+          }
+          console.log(body)
+          const response = await fetch(
+            `${process.env.REACT_APP_API_SERVER}/user/validate_permissionAPI/`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              credentials: 'include',
+              body: JSON.stringify(body)
+            }
+          );
+          console.log("fetcjed", response.status)
+          if (response.status === 200) {
+            setpermissionSenderDistrict(true);
+          }
+        } catch (err) {
+          console.log(err);
+        }
+    }
+    async function validatepermissionReciever_District() {
+        try {
+          const body = {
+            "moduleName": "Order",
+            "operation": "OrderActionsForRecieverDistrict",
+            "operandState": order["destination"],
+            "operandDist": sessionStorage.getItem("sessionToken").substring(2,5),
+            "operandAC": "000",
+            "operandRole": "-"
+          }
+          console.log("", body)
+          const response = await fetch(
+            `${process.env.REACT_APP_API_SERVER}/user/validate_permissionAPI/`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              credentials: 'include',
+              body: JSON.stringify(body)
+            }
+          );
+          console.log("boddi", body)
+          console.log("fetcjed", response.status)
+          if (response.status === 200) {
+            setpermissionRecieverDistrict(true);
+          }
+        } catch (err) {
+          console.log(err);
+        }
+    }
+
+    useEffect(()=>{
+        validatepermissionSender_District()
+        validatepermissionReciever_District()
+    },[])
 
     useEffect(()=>{  
         const userid=sessionStorage.getItem("sessionToken");
@@ -51,7 +120,7 @@ function OrderActions(props) {
         
         
             console.log(userid.substring(8))
-            if(order["source"]==userid.substring(0,2) && "DEO"==userid.substring(8)){
+            if(permissionSenderDistrict){
                     console.log("Inside if")
                     sender_order.push(order);
                
@@ -71,7 +140,7 @@ function OrderActions(props) {
                 
                 
             }
-            else if(order["destination"]==userid.substring(0,2) && "DEO"==userid.substring(8)){
+            else if(permissionRecieverDistrict){
                
                 recipient_order.push(order)
                 
@@ -140,7 +209,7 @@ function OrderActions(props) {
         console.log(sender_order)
         console.log(recipient_order)
         console.log(ind)
-    },[])
+    },[permissionSenderDistrict, permissionRecieverDistrict])
 
     const actions = (role) => {
         if (role == 'sender') {
@@ -230,7 +299,7 @@ function OrderActions(props) {
                             <button disabled={!f5}  className={`${f5==0 ? 'bg-gray-400' : 'bg-orange-500'}`} onClick={() => {
                                 setAction(renderAction(1))
                             }}>
-                                Sub Orders
+                                Order Details
                             </button>
                         </div>
                     }
@@ -250,7 +319,7 @@ function OrderActions(props) {
                                 <button disabled={!f4}  className={`${f4==0 ? 'bg-gray-400' : 'bg-orange-500'}`}  onClick={() => {
                                     setAction(renderAction(2))
                                 }} >
-                                    Sub Orders
+                                    Order Details
                                 </button>
                             </div>
                     }
@@ -283,7 +352,7 @@ function OrderActions(props) {
                                 <button disabled={!f6}  className={`${f6==0 ? 'bg-gray-400' : 'bg-orange-500'}`} onClick={() => {
                                     setAction(renderAction(0))
                                 }}>
-                                    Sub Orders
+                                    Order Details
                                 </button>
                                 
                             </div>

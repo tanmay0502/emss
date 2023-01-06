@@ -55,6 +55,7 @@ export default function ViewOrderDetails() {
   const [flag, setFlag] = useState(0);
   const [flagD, setFlagD] = useState(0);
   const [unitDetails,setUnitDetails] = useState([])
+  const [permission, setpermission] = useState(false)
 
 
   async function ifDistrict() {
@@ -117,16 +118,47 @@ export default function ViewOrderDetails() {
     } catch (err) {
       console.log(err);
     }
+  } 
+  async function validatepermission() {
+    try {
+      const body = {
+        "moduleName": "Order",
+        "operation": "ViewOrderForDistrict",
+        "operandState": sessionStorage.getItem("sessionToken").substring(0,2),
+        "operandDist": sessionStorage.getItem("sessionToken").substring(2,5),
+        "operandAC": "000",
+        "operandRole": "-"
+      }
+      console.log(body)
+      const response = await fetch(
+        `${process.env.REACT_APP_API_SERVER}/user/validate_permissionAPI/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: 'include',
+          body: JSON.stringify(body)
+        }
+      );
+      console.log("fetcjed", response.status)
+      if (response.status === 200) {
+        setpermission(true);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   useEffect(() => {
 
     let timer = setTimeout(()=>getOrders(),700);
     let timer2 = setTimeout(()=>ifDistrict(),1200);
-    
+    let timer3 = setTimeout(()=>validatepermission(),1200);
     return (()=>{
       clearTimeout(timer)
       clearTimeout(timer2)
+      clearTimeout(timer3)
     })
     
 
@@ -194,8 +226,8 @@ export default function ViewOrderDetails() {
         flag == 1 &&
         <>
           {validallOrders && <UnitDescription Order={validallOrders} OrderID={newId=="0"?orderID:newId} isSubOrder={newId=="0"?0:1} /> }
-          {validallOrders && flow==1 && sessionStorage.getItem("sessionToken").substring(8)!="DEO" &&<OrderActions0 Order={validallOrders} OrderID={newId=="0"?orderID:newId}/>}
-          {validallOrders && flow==1 && sessionStorage.getItem("sessionToken").substring(8)=="DEO" && flagD=="True"  &&<OrderActions Order={validallOrders} OrderID={newId=="0"?orderID:newId} unitDetails = {unitDetails}/>}
+          {validallOrders && flow==1 && !permission &&<OrderActions0 Order={validallOrders} OrderID={newId=="0"?orderID:newId}/>}
+          {validallOrders && flow==1 && permission && flagD=="True"  &&<OrderActions Order={validallOrders} OrderID={newId=="0"?orderID:newId} unitDetails = {unitDetails}/>}
           {validallOrders && flow==2 && <OrderActions2 Order={validallOrders} OrderID={newId=="0"?orderID:newId}/>}
         </>
       }
