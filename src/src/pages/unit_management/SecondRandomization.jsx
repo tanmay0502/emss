@@ -131,14 +131,14 @@ const SecondRandomisationForm = ({ isVisible }) => {
         }
     };
 
+    console.log({
+        "units_requirement": assemblyData,
+        "ac_no": ACCode,
+        "randomizationid": randomizationid
+    })
     const handleFormSubmit = async (e) => {
         let confirmation = window.confirm("Are you sure you have selected all the Unit")
         if (confirmation === true) {
-            console.log({
-                "units_requirement": assemblyData,
-                "ac_no": ACCode,
-                "randomizationid": randomizationid
-            })
             setIsSubmitted(false);
             // const units_requirement = assemblyList
             //     .filter((d) => d.ps_no)

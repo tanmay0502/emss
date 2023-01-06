@@ -98,8 +98,8 @@ export default function Prepared_Certificate(props) {
                     },
                 })
             const data = await response.json();
-            if (data.length) {
-                setListElections(data)
+            if (response.status==200) {
+                setListElections(data['data'])
             }
         } catch (error) {
             console.log(error)
@@ -226,6 +226,8 @@ export default function Prepared_Certificate(props) {
         handleFormSubmit()
 
     };
+
+    console.log(listElections,'listElectionslistElectionslistElections')
 
     return (
         <form id='form' onSubmit={onFormSubmit}>
