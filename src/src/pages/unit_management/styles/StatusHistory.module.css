@@ -11,7 +11,13 @@ display: flex;
 padding-bottom: 10px;
 }
  */
-
+ table{
+    height: 95%;
+    /* background-color: #FFFFFF; */
+    /* margin-bottom: 200px; */
+    overflow: scroll;
+	width: 100%;
+}
  .PageTitle {
 	position: relative;
 	display: flex;

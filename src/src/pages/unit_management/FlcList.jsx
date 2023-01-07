@@ -52,7 +52,6 @@ export default function FLCList() {
                 }
                 else {
                     const filter = tableFilter.toLowerCase();
-                    console.log(elem, "======")
                     return (elem["districtName"].toLowerCase().includes(filter) || elem["state"].toLowerCase().includes(filter) || elem["manufacturer"].toLowerCase().includes(filter))
                 }
             }).map((val) => {

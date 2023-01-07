@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Group from './Group'
 import styles from './styles/StatusHistory.module.css'
+import DynamicDataTable from "@langleyfoxall/react-dynamic-data-table";
 
 export default function StatusHistory() {
 
@@ -9,7 +10,9 @@ export default function StatusHistory() {
     const param = arr[arr.length - 1];
     const arr1 = param.split("=");
     const UNITID = arr1[0];
-    const [Data, setData] = useState([]);
+    const [sortedTableData, setSortedTableData] = useState([])
+    const [isDetail, setIsDetail] = useState(0);
+    const [data, setdata] = useState([]);
 
 
     const getData = async () => {
@@ -23,18 +26,26 @@ export default function StatusHistory() {
                 credentials: "include",
             });
 
-            let Input = await response.json();
+            let data = await response.json();
             if (response.status == 200) {
-                setData(Input['data']);
+                const sorted = data['data'].sort((a, b) => {
+                    if (b[1] > a[1]){
+                        return -1;
+                    }
+                    else {  
+                        return 1;
+                    }
+                    
+                })
+                setdata(sorted.reverse());
             }
             else {
-                setData([]);
+                setdata([]);
             }
         } catch (err) {
             console.log(err)
         }
     }
-
 
     useEffect(
         () => {
@@ -46,30 +57,43 @@ export default function StatusHistory() {
         []
     );
 
+    useEffect(() => {
+        if (data){
+		var Data = data.map((val) => {
+			return {
+				"Unit ID": val[0],
+				"Status":val[2] ,
+				"Previous Status":val[3],
+				"Updated By": val[0],
+				"Location": val[4],
+				"Updated At": new Date(val[1]).toLocaleDateString('en-us', { year: "numeric", month: "short", day: "numeric", hour: 'numeric', minute: 'numeric' }),
+        }})
+        console.log(Data,"======")
+    setSortedTableData(Data)
+        }
+    return () => {
+
+    }},[data])
+
     return (
         <div className={styles.MyContainer}>
             <div className={`${styles.myCard}`} >
                 <div className={`${styles.myCardHeader} ${styles.myPadding}`} >
                     Status History
                 </div>
-                <div className={`${styles.myCardBody} ${styles.myPadding} `}>
-                    {Data &&
-                        Data.map((val, ind) => {
-                            return (<div style={{ marginTop: '2%' }}>
-                                <div className={`${styles.myFlexBox} ${styles.myFlexWrap}`} >
-                                    <Group LabelText='Unit ID' value={val[0]} />
-                                    <Group LabelText='Status' value={val[2]} />
-                                    <Group LabelText='Previous Status' value={val[3]} />
-                                    <Group LabelText='Updated By' value={val[6]} />
-                                    <Group LabelText='Location' value={val[4]} />
-                                    <Group LabelText='Updated at' value={val[1] != '' ? val[1].split('T')[0].slice(8) + "-" + val[1].split('T')[0].slice(5, 7) + '-' + val[1].split('T')[0].slice(0, 4) + ' ' + val[1].split('T')[1].slice(0, 8) : ''} />
-                                </div>
-                                {/* <div className={`${styles.myFlexBox} ${styles.myFlexWrap}`}>
-                                    <Group LabelText='Remarks' value={val[5] != '' ? val[5] : 'None'} />
-                                </div> */}
-                                <hr></hr>
-                            </div>)
-                        })}
+                <div className={`${styles.myPadding} `}>
+                {isDetail == 0 ?
+                    <div style={{width:"100%"}}>
+                        <DynamicDataTable
+                        styles={{
+                            width:"100%"
+                        }}
+                            rows={sortedTableData}    
+                            buttons = {[]}                   
+                        />
+                    </div>
+                    : ''
+                }
                 </div>
             </div>
         </div>
