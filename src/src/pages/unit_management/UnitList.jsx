@@ -1825,7 +1825,7 @@ const FLC_Assembly = ({ isVisible }) => {
                     {listElections &&
                       listElections.map((val, ind) => {
                         return (<>
-                          <option value={val['election_id']}>{`${val.electiontype} ${val.startdate ? val.startdate.slice(0, 4) : ''}`}</option>
+                          <option value={val.election_id}>{`${val.electiontype} ${val.startdate.slice(6, 11)}`}</option>
                         </>)
                       })}
                   </select>
@@ -2091,7 +2091,7 @@ const FLC_Scan = ({ isVisible }) => {
                     {listElections &&
                       listElections.map((val, ind) => {
                         return (<>
-                          <option value={val['election_id']}>{`${val.electiontype} ${val.startdate ? val.startdate.slice(0, 4) : ''}`}</option>
+                          <option value={val.election_id}>{`${val.electiontype} ${val.startdate.slice(6, 11)}`}</option>
                         </>)
                       })}
                   </select>
@@ -2534,7 +2534,7 @@ const UnderTnA = ({ isVisible }) => {
                     {listElections &&
                       listElections.map((val, ind) => {
                         return (<>
-                          <option value={val['election_id']}>{`${val.electiontype} ${val.startdate ? val.startdate.slice(0, 4) : ''}`}</option>
+                          <option value={val.election_id}>{`${val.electiontype} ${val.startdate.slice(6, 11)}`}</option>
                         </>)
                       })}
                   </select>

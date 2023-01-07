@@ -144,17 +144,17 @@ export default function Prepared_Certificate(props) {
                 const data = await response.json();
 
                 if (response.status == 200) {
+                    alert(data.message)
                     let electionID = electionid;
                     document.getElementById("form").reset();
                     setuploaded(1);
-                    alert(data.message)
                     GetRecentPreparedness(electionID)
                     setelectionid(-1);
                     setPhotoFileData('');
                 }
                 else {
-                    document.getElementById("form").reset();
                     alert(data.message)
+                    document.getElementById("form").reset();
                     setelectionid(-1);
                     setPhotoFileData('');
                 }
@@ -211,11 +211,6 @@ export default function Prepared_Certificate(props) {
         [electionid]
     );
 
-
-
-
-
-
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setelectionid(Number(value));
@@ -227,7 +222,7 @@ export default function Prepared_Certificate(props) {
 
     };
 
-    console.log(listElections, 'listElectionslistElectionslistElections')
+    console.log(listElections)
 
     return (
         <form id='form' onSubmit={onFormSubmit}>
@@ -244,70 +239,73 @@ export default function Prepared_Certificate(props) {
                         {listElections &&
                             listElections.map((val, ind) => {
                                 return (<>
-                                    <option value={val.election_id}>{`${val.electiontype} ${val.startdate.slice(0, 4)}`}</option>
+                                    <option value={val.election_id}>{`${val.electiontype} ${val.startdate.slice(6, 11)}`}</option>
                                 </>)
                             })}
                     </select>
                 </div>
             </div>
-            <div className={styles.prepared_Certificate_container}>
-                <div className={styles.prepared_Certificate_header}>
-                    <h4>
-                        Preparedness Certificate
-                    </h4>
-                </div>
-                <div className={styles.Upload}>
-                    {uploaded != -1 &&
-                        <div className="flex" style={{ paddingTop: '2px' }}>
-                            <div onClick={openModal_Preparedness_Certificate} style={{ fontSize: "15px" }}>  <u> View Preparedness Certificate </u>  </div>
-                            <div className="pl-2" style={{ fontSize: "15px" }}>Uploaded on {show} {time}</div>
-                        </div>
-                    }
+            {electionid != -1 &&
 
-                    {uploaded == -1 && show != '' && time != '' &&
-                        <div className="flex" style={{ paddingTop: '2px' }}>
-                            <div onClick={openModal_Preparedness_Certificate} style={{ fontSize: "15px" }}>  <u> View Preparedness Certificate </u>  </div>
-                            <div className="pl-2" style={{ fontSize: "15px" }}>Uploaded on {show} {time}</div>
-                        </div>
-                    }
-                    <Modal
-                        isOpen={modalIsOpen_Preparedness_Certificate}
-                        onAfterOpen={afterOpenModal_Preparedness_Certificate}
-                        onRequestClose={closeModal_Preparedness_Certificate}
-                        style={customStyles}
-                    >
-                        <div id="root" className=''>
-                            <div className='flex justify-center items-center'>
-                                {<embed style={{ width: "600px", height: "600px", padding: "10px" }} src={`${photoFileData}`} />}
-                            </div>
-                            <button style={{ color: "white", }} onClick={closeModal_Preparedness_Certificate}>Close</button>
-                        </div>
-                    </Modal>
-                </div>
-                <div className={styles.Upload}>
-                    <div className={styles.mess}>
-                        <div>
-                            <Checkmark />
-                        </div>
-                        <div style={{ marginRight: "10%" }}>I hereby declare that district is ready for first level checking </div>
+                <div className={styles.prepared_Certificate_container}>
+                    <div className={styles.prepared_Certificate_header}>
+                        <h4>
+                            Preparedness Certificate
+                        </h4>
                     </div>
-                    <input
-                        id="formUserImage"
-                        type="file"
-                        required
-                        className={electionid == -1 ? "cursor-not-allowed" : ''}
-                        disabled={electionid == -1 ? true : false}
-                        // placeholder="Choose Image (Upto 5 MB)"
-                        // accept="image/*"
-                        onChange={async (e) => {
-                            setPhotoFileName(e.target.value.replace(/^.*[\\\/]/, ''))
-                            setPhotoFileData(await getBase64(e.target.files[0]))
-                        }}
-                    />
+                    <div className={styles.Upload}>
+                        {uploaded != -1 &&
+                            <div className="flex" style={{ paddingTop: '2px' }}>
+                                <div onClick={openModal_Preparedness_Certificate} style={{ fontSize: "15px" }}>  <u> View Preparedness Certificate </u>  </div>
+                                <div className="pl-2" style={{ fontSize: "15px" }}>Uploaded on {show} {time}</div>
+                            </div>
+                        }
 
+                        {uploaded == -1 && show != '' && time != '' &&
+                            <div className="flex" style={{ paddingTop: '2px' }}>
+                                <div onClick={openModal_Preparedness_Certificate} style={{ fontSize: "15px" }}>  <u> View Preparedness Certificate </u>  </div>
+                                <div className="pl-2" style={{ fontSize: "15px" }}>Uploaded on {show} {time}</div>
+                            </div>
+                        }
+                        <Modal
+                            isOpen={modalIsOpen_Preparedness_Certificate}
+                            onAfterOpen={afterOpenModal_Preparedness_Certificate}
+                            onRequestClose={closeModal_Preparedness_Certificate}
+                            style={customStyles}
+                        >
+                            <div id="root" className=''>
+                                <div className='flex justify-center items-center'>
+                                    {<embed style={{ width: "600px", height: "600px", padding: "10px" }} src={`${photoFileData}`} />}
+                                </div>
+                                <button style={{ color: "white", }} onClick={closeModal_Preparedness_Certificate}>Close</button>
+                            </div>
+                        </Modal>
+                    </div>
+                    <div className={styles.Upload}>
+                        <div className={styles.mess}>
+                            <div>
+                                <Checkmark />
+                            </div>
+                            <div style={{ marginRight: "10%" }}>I hereby declare that district is ready for first level checking </div>
+                        </div>
+                        <input
+                            id="formUserImage"
+                            type="file"
+                            required
+                            className={electionid == -1 ? "cursor-not-allowed" : ''}
+                            disabled={electionid == -1 ? true : false}
+                            // placeholder="Choose Image (Upto 5 MB)"
+                            // accept="image/*"
+                            onChange={async (e) => {
+                                setPhotoFileName(e.target.value.replace(/^.*[\\\/]/, ''))
+                                setPhotoFileData(await getBase64(e.target.files[0]))
+                            }}
+                        />
+
+                    </div>
+                    <button className={scheduleStyles.submitBtn} type='submit' style={{ marginBottom: "1%" }} disabled={electionid == -1 ? true : false}> Submit </button>
                 </div>
-                <button className={scheduleStyles.submitBtn} type='submit' style={{ marginBottom: "1%" }} disabled={electionid == -1 ? true : false}> Submit </button>
-            </div>
+            }
 
         </form >
     )
