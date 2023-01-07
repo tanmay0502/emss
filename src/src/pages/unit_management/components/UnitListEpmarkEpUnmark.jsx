@@ -16,50 +16,6 @@ import Modal from "react-modal"
 const UnitListEpmarkEpUnmark = ({ data }) => {
 
 
-    // const [data, setData] = useState(expD);
-    // const [isPageLoaded, setIsPageLoaded] = useState(0)
-    // const URL = `${process.env.REACT_APP_API_SERVER}/unit/listUnits/` + ((unitType != '') ? `&unitType=${unitType}` : ``) + ((mfg != '') ? `&mfg=${mfg}` : ``) + ((model != '') ? `&model=${model}` : '')
-
-
-    // const getData = async () => {
-    //     try {
-    //         const response = await fetch(`${process.env.REACT_APP_API_SERVER}/unit/listUnits/`, {
-    //             method: "POST",
-    //             headers: { "Content-Type": "application/json" },
-    //             body: JSON.stringify({
-    //                 // "status": "In Poll",
-    //                 // "unitType": unitType,
-    //                 // "mfg": mfg,
-    //                 // "model": model,
-    //                 // "pollingStation": "string"
-    //             }),
-    //             credentials: "include",
-    //         });
-
-    //         let data2 = await response.json();
-    //         if (response.status == 200) {
-    //             if (data2.data.length) {
-    //                 setData(data2.data);
-    //             }
-    //             else {
-    //                 setData([]);
-    //             }
-    //         }
-    //     } catch (err) {
-    //         console.log(err)
-    //     }
-    // }
-
-
-    // useEffect(() => {
-    //     if (isPageLoaded == 0) {
-    //         getData()
-    //         setIsPageLoaded(1)
-    //     }
-    // })
-
-
-
     const ActionButton = ({ isActive, text, name, onClick }) => {
         return (
             <button

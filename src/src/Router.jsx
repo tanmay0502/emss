@@ -19,9 +19,10 @@ import Switch from "react-switch";
 import { useState, useEffect } from 'react';
 import './sidebar.css';
 import './Navbar.css'
+import styles from './Router.module.css'
 // import Invent from './assets/invent.png'
-import { ReactComponent as Invent} from './assets/invent.svg'
-import { ReactComponent as Manuals} from './assets/manuals.svg'
+import { ReactComponent as Invent } from './assets/invent.svg'
+import { ReactComponent as Manuals } from './assets/manuals.svg'
 import AdminUtilities from './components/AdminUtilities';
 import { Validate_Permission } from './components/utils';
 
@@ -30,9 +31,9 @@ function Routed(props) {
 	// const [profileView,setProfileView]=useState(0);
 	// const [profileOption,setProfileOption]=useState(0);
 
-	const [isAdmin, setIsAdmin] =useState(0);
+	const [isAdmin, setIsAdmin] = useState(0);
 
-	async function IsAdmin(){
+	async function IsAdmin() {
 		let body = {
 			"moduleName": "User",
 			"operation": "AdminUtilities",
@@ -40,21 +41,21 @@ function Routed(props) {
 			"operandDist": "*",
 			"operandAC": "*",
 			"operandRole": "*"
-		  }
+		}
 		let ans = await Validate_Permission(body);
 		console.log(ans);
 
-		if(ans){
+		if (ans) {
 			setIsAdmin(1);
 		}
 	}
 
-	useEffect(()=>{
-		let time = setTimeout(()=>IsAdmin(),1000);
-		return (()=>{
+	useEffect(() => {
+		let time = setTimeout(() => IsAdmin(), 1000);
+		return (() => {
 			clearTimeout(time);
 		})
-	},[])
+	}, [])
 
 	const outlet = useOutlet();
 
@@ -69,14 +70,14 @@ function Routed(props) {
 		const response = fetch(
 			`${process.env.REACT_APP_API_SERVER}/user/UserLogout`,
 			{
-			  method: "POST",
-			  credentials: 'same-origin',
-			  headers: {
-				"Content-Type": "application/json",
-			  },
-			  credentials:'include'
+				method: "POST",
+				credentials: 'same-origin',
+				headers: {
+					"Content-Type": "application/json",
+				},
+				credentials: 'include'
 			}
-		  );
+		);
 		sessionStorage.removeItem("sessionToken", null);
 		props.SetSession(null)
 		setUserData(null)
@@ -84,18 +85,18 @@ function Routed(props) {
 		window.location.replace("/login");
 	}
 
-	useEffect(()=>{
-		if(isShow && AdminUtilities!="none"){
-		navigate(`/session/adminutilities/${AdminUtilities}`)
+	useEffect(() => {
+		if (isShow && AdminUtilities != "none") {
+			navigate(`/session/adminutilities/${AdminUtilities}`)
 		}
-		
-	},[AdminUtilities])
 
-	useEffect(()=>{
-		if(!window.location.pathname.startsWith("/session/adminutilities")){
+	}, [AdminUtilities])
+
+	useEffect(() => {
+		if (!window.location.pathname.startsWith("/session/adminutilities")) {
 			setAdminUtilities("none")
 		}
-	},[window.location.pathname])
+	}, [window.location.pathname])
 
 
 
@@ -221,7 +222,7 @@ function Routed(props) {
 				<span>Training and Awareness Scheduling</span>
 			</>);
 		}
-		
+
 		if (location.pathname.startsWith('/session/unitmanagement/first_randomisation_scheduling')) {
 			return (<>
 				<UnitManagementIcon />
@@ -234,7 +235,7 @@ function Routed(props) {
 				<span>Schedule 2nd Randomisation</span>
 			</>);
 
-			
+
 		}
 		if (location.pathname.startsWith('/session/viewpermissions')) {
 			return (<>
@@ -272,48 +273,48 @@ function Routed(props) {
 	}, [])
 
 	const [currImage, setCurrImage] = useState(0)
-	const [isLoading,setIsLoading] = useState(0);
-    async function getCurrImage(id) {
+	const [isLoading, setIsLoading] = useState(0);
+	async function getCurrImage(id) {
 		setIsLoading(1);
-        try {
-            const response = await fetch(
-                `${process.env.REACT_APP_API_SERVER}/user/getProfilePicture`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    credentials: 'include',
-                    body: JSON.stringify({
-                      "userID": id
-                    }),
-                    // mode: "cors"
-                }
-                
-            );
-            const data = await response.json();
-            if (response.status === 200) {
-                if(data["data"] !== undefined){
-                  setCurrImage(data["data"])
-                }else{
-                  setCurrImage(UserImageTest)
-                }
-            }else if(response.status === 404){
-              setCurrImage(UserImageTest)
-            }
-        } catch (err) {
-            console.log({ err });
-        }
-    }
+		try {
+			const response = await fetch(
+				`${process.env.REACT_APP_API_SERVER}/user/getProfilePicture`,
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					credentials: 'include',
+					body: JSON.stringify({
+						"userID": id
+					}),
+					// mode: "cors"
+				}
+
+			);
+			const data = await response.json();
+			if (response.status === 200) {
+				if (data["data"] !== undefined) {
+					setCurrImage(data["data"])
+				} else {
+					setCurrImage(UserImageTest)
+				}
+			} else if (response.status === 404) {
+				setCurrImage(UserImageTest)
+			}
+		} catch (err) {
+			console.log({ err });
+		}
+	}
 	useEffect(() => {
-		if(userData["userId"] !== ""){
+		if (userData["userId"] !== "") {
 			setIsLoading(1);
 			let timer1 = setTimeout(() => getCurrImage(userData["userId"]), 1 * 1000);
-	
+
 			return () => {
-			  clearTimeout(timer1);
+				clearTimeout(timer1);
 			};
-			
+
 		}
 	}, [userData])
 	//Profile Image End
@@ -325,13 +326,13 @@ function Routed(props) {
 				<div className="nav-panel">
 					<div className="nav-panel-top">
 						<div className='app-info'>
-							<img className='App-Icon' src={ECIIcon} alt="ECI"/>
+							<img className='App-Icon' src={ECIIcon} alt="ECI" />
 							EVM Management System
 						</div>
 						{/* <span>Welcome, {userData.username}</span> */}
 						<button className={window.location.pathname.startsWith("/session/home") ? 'nav-button active' : 'nav-button'} onClick={() => {
-							
-							
+
+
 							navigate("/session/home")
 						}}>
 							<div>
@@ -398,95 +399,172 @@ function Routed(props) {
 							<div><ReportIcon />Report</div>
 							<ChevronRight className="chevron" />
 						</button>
-						<button className={'nav-button'} onClick={()=>{
+						<button className={'nav-button'} onClick={() => {
 							window.open("https://ecodehub.in:8000/consumables")
 						}}>
-						<div>
-							<Invent/>
-							Consumables</div>
+							<div>
+								<Invent />
+								Consumables</div>
 							<ChevronRight className="chevron" />
 						</button>
-						<button className={'nav-button'} onClick={() => {navigate("/usermanual")}}>
+						<button className={'nav-button'} onClick={() => { navigate("/usermanual") }}>
 							<div>
-							<Manuals/>
+								<Manuals />
 								Users Manuals</div>
 							<ChevronRight className="chevron" />
 						</button>
 
 						<div className="horz_line">
-						
+
 						</div>
 
-						
-						
 
 
-						{isAdmin==1 && <button className={window.location.pathname.startsWith("/session/adminutilities") ? 'nav-button active' : 'nav-button'}
+						{/* {isAdmin == 1 && <button className={window.location.pathname.startsWith("/session/adminutilities") ? 'nav-button active' : 'nav-button'}
 							onClick={() => {
-								setIsShow(isShow^1)
+								setIsShow(isShow ^ 1)
 							}
 							}>
-								
-								<div><PermissionIcon/>Admin Utilities</div>
-								<ChevronRight className="chevron" />
-						</button>}
-						{isShow==1  && <button className={window.location.pathname.startsWith("/session/adminutilities/viewpermissions") ? 'nav-button active' : 'nav-button'}
+							<div><PermissionIcon />Admin Utilities</div>
+							<ChevronRight className="chevron" />
+						</button>} */}
+						<div className={styles.dropdown} >
+							<button className={window.location.pathname.startsWith("/session/adminutilities") ? 'nav-button active' : 'nav-button'}
+								onClick={() => {
+									setIsShow(isShow ^ 1)
+								}}
+							><div><PermissionIcon />Admin Utilities</div>
+								<ChevronRight className="chevron" /></button>
+							<div className={styles.dropdown_content}>
+								<button className={window.location.pathname.startsWith("/session/adminutilities/viewpermissions") ? 'nav-button active' : 'nav-button'}
+									onClick={() => {
+										navigate(`/session/adminutilities/viewpermissions`)
+									}
+									}>
+
+									<div><PermissionIcon />Permissions</div>
+									{/* <ChevronRight className="chevron" /> */}
+								</button>
+								<button className={window.location.pathname.startsWith("/session/adminutilities/setstates") ? 'nav-button active' : 'nav-button'}
+									onClick={() => {
+										navigate(`/session/adminutilities/setstates`)
+									}
+									}>
+
+									<div><PermissionIcon />States</div>
+									{/* <ChevronRight className="chevron" /> */}
+								</button>
+								<button className={window.location.pathname.startsWith("/session/adminutilities/setmodels") ? 'nav-button active' : 'nav-button'}
+									onClick={() => {
+										navigate(`/session/adminutilities/setmodels`)
+									}
+									}>
+
+									<div><PermissionIcon />Models</div>
+									{/* <ChevronRight className="chevron" /> */}
+								</button>
+								<button className={window.location.pathname.startsWith("/session/adminutilities/setroles") ? 'nav-button active' : 'nav-button'}
+									onClick={() => {
+										navigate(`/session/adminutilities/setroles`)
+									}
+									}>
+
+									<div><PermissionIcon />Roles</div>
+									{/* <ChevronRight className="chevron" /> */}
+								</button>
+								<button className={window.location.pathname.startsWith("/session/adminutilities/setdefects") ? 'nav-button active' : 'nav-button'}
+									onClick={() => {
+										navigate(`/session/adminutilities/setdefects`)
+									}
+									}>
+
+									<div><PermissionIcon />Defects</div>
+									{/* <ChevronRight className="chevron" /> */}
+								</button>
+								<button className={window.location.pathname.startsWith("/session/adminutilities/setACs") ? 'nav-button active' : 'nav-button'}
+									onClick={() => {
+										navigate(`/session/adminutilities/setACs`)
+									}
+									}>
+
+									<div><PermissionIcon />ACs</div>
+									{/* <ChevronRight className="chevron" /> */}
+								</button>
+								<button className={window.location.pathname.startsWith("/session/adminutilities/setdistricts") ? 'nav-button active' : 'nav-button'}
+									onClick={() => {
+										navigate(`/session/adminutilities/setdistricts`)
+									}
+									}>
+
+									<div><PermissionIcon />Districts</div>
+									{/* <ChevronRight className="chevron" /> */}
+								</button>
+							</div>
+						</div>
+						{/* {isShow == 1 && <button className={window.location.pathname.startsWith("/session/adminutilities/viewpermissions") ? 'nav-button active' : 'nav-button'}
 							onClick={() => {
-								navigate(`/session/adminutilities/viewpermissions`)}
+								navigate(`/session/adminutilities/viewpermissions`)
+							}
 							}>
-								
-								<div><PermissionIcon/>Permissions</div>
-								<ChevronRight className="chevron" />
-						</button>}
-						{isShow==1 && <button className={window.location.pathname.startsWith("/session/adminutilities/setstates") ? 'nav-button active' : 'nav-button'}
+
+							<div><PermissionIcon />Permissions</div>
+							<ChevronRight className="chevron" />
+						</button>} */}
+						{/* {isShow == 1 && <button className={window.location.pathname.startsWith("/session/adminutilities/setstates") ? 'nav-button active' : 'nav-button'}
 							onClick={() => {
-								navigate(`/session/adminutilities/setstates`)}
+								navigate(`/session/adminutilities/setstates`)
+							}
 							}>
-								
-								<div><PermissionIcon/>States</div>
-								<ChevronRight className="chevron" />
-						</button>}
-						{isShow==1 && <button className={window.location.pathname.startsWith("/session/adminutilities/setmodels") ? 'nav-button active' : 'nav-button'}
+
+							<div><PermissionIcon />States</div>
+							<ChevronRight className="chevron" />
+						</button>} */}
+						{/* {isShow == 1 && <button className={window.location.pathname.startsWith("/session/adminutilities/setmodels") ? 'nav-button active' : 'nav-button'}
 							onClick={() => {
-								navigate(`/session/adminutilities/setmodels`)}
+								navigate(`/session/adminutilities/setmodels`)
+							}
 							}>
-								
-								<div><PermissionIcon/>Models</div>
-								<ChevronRight className="chevron" />
-						</button>}
-						{isShow==1 && <button className={window.location.pathname.startsWith("/session/adminutilities/setroles") ? 'nav-button active' : 'nav-button'}
+
+							<div><PermissionIcon />Models</div>
+							<ChevronRight className="chevron" />
+						</button>} */}
+						{/* {isShow == 1 && <button className={window.location.pathname.startsWith("/session/adminutilities/setroles") ? 'nav-button active' : 'nav-button'}
 							onClick={() => {
-								navigate(`/session/adminutilities/setroles`)}
+								navigate(`/session/adminutilities/setroles`)
+							}
 							}>
-								
-								<div><PermissionIcon/>Roles</div>
-								<ChevronRight className="chevron" />
-						</button>}
-						{isShow==1 && <button className={window.location.pathname.startsWith("/session/adminutilities/setdefects") ? 'nav-button active' : 'nav-button'}
+
+							<div><PermissionIcon />Roles</div>
+							<ChevronRight className="chevron" />
+						</button>} */}
+						{/* {isShow == 1 && <button className={window.location.pathname.startsWith("/session/adminutilities/setdefects") ? 'nav-button active' : 'nav-button'}
 							onClick={() => {
-								navigate(`/session/adminutilities/setdefects`)}
+								navigate(`/session/adminutilities/setdefects`)
+							}
 							}>
-								
-								<div><PermissionIcon/>Defects</div>
-								<ChevronRight className="chevron" />
-						</button>}
-						{isShow==1 && <button className={window.location.pathname.startsWith("/session/adminutilities/setACs") ? 'nav-button active' : 'nav-button'}
+
+							<div><PermissionIcon />Defects</div>
+							<ChevronRight className="chevron" />
+						</button>} */}
+						{/* {isShow == 1 && <button className={window.location.pathname.startsWith("/session/adminutilities/setACs") ? 'nav-button active' : 'nav-button'}
 							onClick={() => {
-								navigate(`/session/adminutilities/setACs`)}
+								navigate(`/session/adminutilities/setACs`)
+							}
 							}>
-								
-								<div><PermissionIcon/>ACs</div>
-								<ChevronRight className="chevron" />
-						</button>}
-						{isShow==1 && <button className={window.location.pathname.startsWith("/session/adminutilities/setdistricts") ? 'nav-button active' : 'nav-button'}
+
+							<div><PermissionIcon />ACs</div>
+							<ChevronRight className="chevron" />
+						</button>} */}
+						{/* {isShow == 1 && <button className={window.location.pathname.startsWith("/session/adminutilities/setdistricts") ? 'nav-button active' : 'nav-button'}
 							onClick={() => {
-								navigate(`/session/adminutilities/setdistricts`)}
+								navigate(`/session/adminutilities/setdistricts`)
+							}
 							}>
-								
-								<div><PermissionIcon/>Districts</div>
-								<ChevronRight className="chevron" />
-						</button>}
-						
+
+							<div><PermissionIcon />Districts</div>
+							<ChevronRight className="chevron" />
+						</button>} */}
+
 
 					</div>
 
@@ -497,13 +575,13 @@ function Routed(props) {
 							{getNav()}
 						</div>
 						<div className="nav-right">
-							
+
 							<div className="userImage">
-									<img
-										src={currImage !== 0 ? currImage : UserImageTest}
-										style={{borderRadius: "50%", height:"37.5px", width:"37.5px"}}
-										alt="profile"
-									/>
+								<img
+									src={currImage !== 0 ? currImage : UserImageTest}
+									style={{ borderRadius: "50%", height: "37.5px", width: "37.5px" }}
+									alt="profile"
+								/>
 							</div>
 							<div style={{ display: "flex", "flexDirection": "column", alignItems: "center", "justifyContent": "center", overflowY: "visible", maxHeight: "100%" }}>
 								<span tyle={{ position: "relative" }}>{userData.userId ? userData.userId : ""}

@@ -594,6 +594,7 @@ const EPForm = ({ isVisible }) => {
     []
   );
 
+  console.log({ inputValues })
 
   const handleFormSubmit = async (e) => {
     let confirmation = window.confirm("Are you sure you have selected all the Unit")
@@ -780,7 +781,7 @@ const EPUnmarkForm = ({ isVisible }) => {
   const handleFormSubmit = async (e) => {
     let confirmation = window.confirm("Are you sure you have selected all the Unit")
     if (confirmation === true) {
-      e.preventDefault();
+
       try {
         const response = await fetch(
           `${process.env.REACT_APP_API_SERVER}/unit/ep_unmark`,
@@ -805,8 +806,11 @@ const EPUnmarkForm = ({ isVisible }) => {
         const data = await response.json();
         if (data.status == 200) {
           alert(data.message);
+          setInputValues(initialValues)
         } else {
           alert(data.message);
+          setInputValues(initialValues)
+          setFileData('')
         }
       } catch (err) {
         console.log(err);
