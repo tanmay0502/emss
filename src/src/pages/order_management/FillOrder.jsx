@@ -10,6 +10,7 @@ export default function FillOrder({
   destinations,
   dname,
   dcode,
+  type
 }) {
   console.log(sources, destinations);
   const Template = {
@@ -31,9 +32,16 @@ export default function FillOrder({
   const [Units, setUnits] = useState({});
 
   async function getUnits(oprnd) {
+    let temp = ""
+    if(type === "REP"){
+        temp = "Manufacturer Under Repair"
+    }else{
+        temp = "Available For Use"
+    }
+    
     let body = {
       oprnd: oprnd,
-      status: "Available for Use",
+      status: temp,
     };
 
     let data = await UnitCount(body);
@@ -56,19 +64,19 @@ export default function FillOrder({
       data.map((val) => {
         let p = "";
         p += val["manufacturer"] + val["model"] + "BU";
-        if (val["model"] != "BU" && val["model"] != "CU") {
+        if (val["model"] !== "BU" && val["model"] !== "CU") {
           let pp = eval(p) + val["BU"];
           eval(p + " = " + pp);
         }
         p = "";
         p += val["manufacturer"] + val["model"] + "CU";
-        if (val["model"] != "BU" && val["model"] != "CU") {
+        if (val["model"] !== "BU" && val["model"] !== "CU") {
           let pp = eval(p) + val["CU"];
           eval(p + " = " + pp);
         }
         p = "";
         p += val["manufacturer"] + val["model"] + "VT";
-        if (val["model"] != "BU" && val["model"] != "CU") {
+        if (val["model"] !== "BU" && val["model"] !== "CU") {
           let pp = eval(p) + val["VT"];
           eval(p + " = " + pp);
         }
@@ -95,7 +103,7 @@ export default function FillOrder({
   return (
     <div>
       {sources.length == 0 && <h2>Loading. Please Wait...</h2>}
-      {sources.length != 0 && (
+      {sources.length !== 0 && (
         <>
           {Order.map((val1, id1) => (
             <>
@@ -227,7 +235,7 @@ export default function FillOrder({
                                     "000DEO"
                                 ]
                               : Units[val1["source"] + "ALL000CEO"]) &&
-                            val2["model"] != "select" &&
+                            val2["model"] !== "select" &&
                             val2["manufacturer"]
                           ) {
                             setOrder((prev) => {
@@ -270,7 +278,7 @@ export default function FillOrder({
                                   "000DEO"
                               ]
                             : Units[val1["source"] + "ALL000CEO"]) &&
-                          val2["model"] != "select" &&
+                          val2["model"] !== "select" &&
                           val2["manufacturer"]
                             ? (scode == "dtCode"
                                 ? Units[
@@ -283,7 +291,7 @@ export default function FillOrder({
                                 : Units[val1["source"] + "ALL000CEO"])[
                                 val2["manufacturer"].substring(0, 1) +
                                   val2["model"] +
-                                  "CU"
+                                  "BU"
                               ]
                             : "-"
                         }
@@ -297,7 +305,7 @@ export default function FillOrder({
                         value={Order[id1]["details"][id2]["filledCU"]}
                         onChange={(e) => {
                           if (
-                            (scode == "dtCode"
+                            (scode === "dtCode"
                               ? Units[
                                   sessionStorage
                                     .getItem("sessionToken")
@@ -306,7 +314,7 @@ export default function FillOrder({
                                     "000DEO"
                                 ]
                               : Units[val1["source"] + "ALL000CEO"]) &&
-                            val2["model"] != "select" &&
+                            val2["model"] !== "select" &&
                             val2["manufacturer"]
                           ) {
                             setOrder((prev) => {
@@ -350,7 +358,7 @@ export default function FillOrder({
                                   "000DEO"
                               ]
                             : Units[val1["source"] + "ALL000CEO"]) &&
-                          val2["model"] != "select" &&
+                          val2["model"] !== "select" &&
                           val2["manufacturer"]
                             ? (scode == "dtCode"
                                 ? Units[
@@ -363,7 +371,7 @@ export default function FillOrder({
                                 : Units[val1["source"] + "ALL000CEO"])[
                                 val2["manufacturer"].substring(0, 1) +
                                   val2["model"] +
-                                  "BU"
+                                  "CU"
                               ]
                             : "-"
                         }
@@ -386,7 +394,7 @@ export default function FillOrder({
                                     "000DEO"
                                 ]
                               : Units[val1["source"] + "ALL000CEO"]) &&
-                            val2["model"] != "select" &&
+                            val2["model"] !== "select" &&
                             val2["manufacturer"]
                           ) {
                             setOrder((prev) => {
@@ -430,7 +438,7 @@ export default function FillOrder({
                                   "000DEO"
                               ]
                             : Units[val1["source"] + "ALL000CEO"]) &&
-                          val2["model"] != "select" &&
+                          val2["model"] !== "select" &&
                           val2["manufacturer"]
                             ? (scode == "dtCode"
                                 ? Units[
@@ -463,7 +471,7 @@ export default function FillOrder({
                           console.log("hdhdh");
                           for (let id3 = 0; id3 < pp.length; id3++) {
                             console.log(id3, id2);
-                            if (id3 != id2) {
+                            if (id3 !== id2) {
                               newpp.push(pp[id3]);
                             }
                           }
@@ -490,7 +498,7 @@ export default function FillOrder({
                       console.log(Template, ppp[id1][ppp[id1].length - 1]);
                       if (
                         ppp[id1]["details"].length == 0 ||
-                        ppp[id1]["details"][ppp[id1]["details"].length - 1] !=
+                        ppp[id1]["details"][ppp[id1]["details"].length - 1] !==
                           Template
                       )
                         ppp[id1]["details"].push(Template);
@@ -516,7 +524,7 @@ export default function FillOrder({
                     console.log("hdhdh");
                     for (let id3 = 0; id3 < pp.length; id3++) {
                       console.log(id3, id1);
-                      if (id3 != id1) {
+                      if (id3 !== id1) {
                         newpp.push(pp[id3]);
                       }
                     }
@@ -539,7 +547,7 @@ export default function FillOrder({
               setOrder((prev) => {
                 let ppp = [...prev];
                 console.log(ppp);
-                if (ppp.length == 0 || ppp.length - 1 != Template2)
+                if (ppp.length == 0 || ppp.length - 1 !== Template2)
                   ppp.push(Template2);
 
                 return ppp;

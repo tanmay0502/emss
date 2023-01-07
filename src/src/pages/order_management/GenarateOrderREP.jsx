@@ -331,7 +331,7 @@ useEffect(()=>{
       <div className="flex w-full">
         <div className=" w-3/5 pt-10">
           
-          <FillOrder Order={Order} setOrder={setOrder} sources={manufacturers} sname={"mfName"} scode={"mfCode"} destinations={states} dname={"stName"} dcode={"stCode"}/>
+          <FillOrder Order={Order} setOrder={setOrder} sources={manufacturers} sname={"mfName"} scode={"mfCode"} destinations={states} dname={"stName"} dcode={"stCode"} type={body.type}/>
 
         </div>
         <div className="w-2/5">

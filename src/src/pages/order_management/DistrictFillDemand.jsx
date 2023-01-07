@@ -550,7 +550,7 @@ export default function DistrictFillDemand(props) {
                                 </button>
                             </div>
                         </div>
-                        <div className="p-2">
+                        <div className="p-2 myfixedtable !overflow-scroll">
                             <table className="w-full mt-4 ">
                                 <thead className="HeadRow border-b-2">
                                     <tr  className="flex justify-start">
@@ -563,7 +563,8 @@ export default function DistrictFillDemand(props) {
                                    
 
                                 </thead>
-                                <tbody>
+                                <tbody className="">
+                                    
 
                                     {Districts.length > 0 &&
                                         Districts.map((val, id) => (<>
@@ -595,7 +596,7 @@ export default function DistrictFillDemand(props) {
                                                                 <div className="w-1/4">{orderCount[id][key]["model"]}</div>
                                                                 <div className="w-1/4">{orderCount[id][key]["type"]}</div>
                                                                 <div className="w-1/4"><input type="number" placeholder="No of Unit" className="border w-32" id={id.toString() + "_" + key.toString() + "_quantity"} onChange={(e)=>calculate(id,key,"quantity",e.target.value)} value={orderCount[id][key]["quantity"]} required></input>
-</div>
+                                                            </div>
                                                             </div>
                                                         </div> }
                                                     </div>
@@ -682,6 +683,7 @@ export default function DistrictFillDemand(props) {
                                         
                                         </>
                                         ))}
+                                        
                                 </tbody>
                             </table>
                         </div>
