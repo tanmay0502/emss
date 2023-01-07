@@ -171,9 +171,19 @@ export default function OrderList() {
                 }
             );
             const data2 = await response.json();
-            console.log(data2)
-            if (data2["status"] != 404 && data2["data"])
-                setData(data2["data"])
+            console.log(data2,"====")
+            if (data2["status"] != 404 && data2["data"]){
+                const sorted = data2['data'].sort((a, b) => {
+                    if (b['timestamp'] > a['timestamp']){
+                        return -1;
+                    }
+                    else {  
+                        return 1;
+                    }
+                    
+                })
+                setData(sorted.reverse())
+            }
             else {
                 alert(data2.message)
             }
@@ -303,6 +313,9 @@ export default function OrderList() {
             if (sortBy === "Time") {
                 return b.timestamp.localeCompare(a.timestamp);
             }
+            if (sortBy === "Default") {
+                return b.timestamp.localeCompare(a.timestamp);
+            }
             if (sortBy === "CreatorID") {
                 return b.creatoruserid > a.creatoruserid;
             }
@@ -336,7 +349,7 @@ export default function OrderList() {
     const filterTableData = (key) => {
         console.log(key)
         const sorted = tableData.filter((e) => {
-            return e.type.includes(key) || e.displayID.includes(key) || e.timestamp.includes(key) || e.creatoruserid.includes(key);
+            return e.displayID.includes(key) || e.timestamp.includes(key) || e.creatoruserid.includes(key);
         })
         if (key) {
             setSortedTableData(sorted);
@@ -351,7 +364,7 @@ export default function OrderList() {
 
     useEffect(() => {
 
-    }, [update])
+    }, [update,tableData,data])
 
 
     return (
@@ -394,7 +407,6 @@ export default function OrderList() {
                                 <option value={"Default"}>Default</option>
                                 <option value={"OrderID"}>OrderID</option>
                                 <option value={"Time"}>Time</option>
-                                <option value={"Type"}>Type</option>
                             </select>
                             <ChevronDown />
                             <button className='sortOrderButton' onClick={() => {
