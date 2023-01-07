@@ -114,7 +114,6 @@ function FlcEdit() {
     const [Type_of_election, setType_of_election] = useState('');
     const [numengineers, setnumengineers] = useState('');
     const [Type_of_election_sf, setType_of_election_sf] = useState('');
-    const User_ID = sessionStorage.getItem("sessionToken");
     const [photoFileData, setPhotoFileData] = useState("")
     const [photoFileName, setPhotoFileName] = useState("")
     const [flcreport, setflcreport] = useState("")
@@ -131,6 +130,7 @@ function FlcEdit() {
     const [FLC_Assembly_Warehouse, setFLC_Assembly_Warehouse] = useState('');
     const [District_Strong_Room, setDistrict_Strong_Room] = useState('');
     const [Defective_Warehouse, setDefective_Warehouse] = useState('');
+    const User_ID = sessionStorage.getItem("sessionToken");
     const Role = User_ID.substring(8)
 
     async function getListN() {

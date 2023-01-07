@@ -3,14 +3,16 @@ import styles from "./styles/UnitList.module.css";
 import ReplacementStyles from './styles/UnitReplacementDropdown.module.css'
 import { expD } from "./Homepage";
 import { useNavigate } from "react-router-dom";
+import { AiOutlineClose } from "react-icons/ai"
 import { ReactComponent as ChevronDown } from "../../assets/ChevronDown.svg";
 import { ReactComponent as Delete } from "../../assets/Delete.svg";
 import UnitListCard from "./components/UnitListCard";
 import scheduleStyles from './styles/ScheduleFlc.module.css'
 import { TagsInput } from "react-tag-input-component";
 import UnitListEpmarkEpUnmark from "./components/UnitListEpmarkEpUnmark";
+import Unitcountingdefective from "./components/Unitcountingdefective";
 import { List } from "antd/lib/form/Form";
-import { formatRealm2 } from '../../components/utils';
+import { getRealm, formatRealm2, formatRealm3 } from '../../components/utils'
 import Orders from './Orders';
 const userID = sessionStorage.getItem("sessionToken");
 const baseUrl = `${process.env.REACT_APP_API_SERVER}/unit`;
@@ -18,7 +20,8 @@ const baseUrl = `${process.env.REACT_APP_API_SERVER}/unit`;
 
 export default function UnitList() {
 
-
+  const User_ID = sessionStorage.getItem("sessionToken");
+  const Role = User_ID.substring(8)
   const initialInputValuesReplace = {
     pollingstation: "",
     replacementlevel: "",
@@ -51,9 +54,15 @@ export default function UnitList() {
     countingfinished: false,
     countingdefective: false,
     undertna: false,
-    receivingscan: false
+    receivingscan: false,
+    unmarkfir: false,
+    underloan: false,
+    unmarkloan: false
   };
+
+
   const [ReplacedUnitID, setReplacedUnitID] = useState([]);
+  const [UnitID, setUnitID] = useState([]);
   const [ReplacingUnitID, setReplacingUnitID] = useState([]);
   const [Typeofdefect, settypeofdefect] = useState([]);
   const [isEdit_Dropdown_rows, setEdit_Dropdown_rows] = useState(-1);
@@ -63,24 +72,27 @@ export default function UnitList() {
   const [data, setData] = useState(expD);
   const [data2, setData2] = useState(expD);
   const [data3, setData3] = useState(expD);
+  const [data4, setData4] = useState(expD);
 
-  const getData = async () => {
+
+  const getcountinglist = async () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_SERVER}/unit/listUnits/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          "status": "In Poll"
+          "status": "Counting",
+          'electionType': ((Role == 'ARO') ? 'P' : ((Role == 'RO') ? 'A' : ''))
         }),
         credentials: "include",
       });
 
       let Input = await response.json();
       if (response.status == 200) {
-        setData(Input['data']);
+        setData4(Input['data']);
       }
       else {
-        setData([]);
+        setData4([]);
       }
       // }
     } catch (err) {
@@ -91,7 +103,7 @@ export default function UnitList() {
 
   useEffect(
     () => {
-      let timer1 = setTimeout(() => getData(), 1 * 500);
+      let timer1 = setTimeout(() => getcountinglist(), 1 * 2000);
       return () => {
         clearTimeout(timer1);
       };
@@ -99,78 +111,113 @@ export default function UnitList() {
     []
   );
 
+  // const getData = async () => {
+  //   try {
+  //     const response = await fetch(`${process.env.REACT_APP_API_SERVER}/unit/listUnits/`, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({
+  //         "status": "In Poll"
+  //       }),
+  //       credentials: "include",
+  //     });
+
+  //     let Input = await response.json();
+  //     if (response.status == 200) {
+  //       setData(Input['data']);
+  //     }
+  //     else {
+  //       setData([]);
+  //     }
+  //     // }
+  //   } catch (err) {
+  //     console.log(err)
+  //   }
+  // }
 
 
-  const getData2 = async () => {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_API_SERVER}/unit/listUnits/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          "status": "In Reserve"
-        }),
-        credentials: "include",
-      });
-
-      let Input = await response.json();
-      if (response.status == 200) {
-        setData2(Input['data']);
-      }
-      else {
-        setData2([]);
-      }
-
-    } catch (err) {
-      console.log(err)
-    }
-  }
+  // useEffect(
+  //   () => {
+  //     let timer1 = setTimeout(() => getData(), 1 * 500);
+  //     return () => {
+  //       clearTimeout(timer1);
+  //     };
+  //   },
+  //   []
+  // );
 
 
 
-  useEffect(
-    () => {
-      let timer1 = setTimeout(() => getData2(), 1 * 1000);
-      return () => {
-        clearTimeout(timer1);
-      };
-    },
-    []
-  );
+  // const getData2 = async () => {
+  //   try {
+  //     const response = await fetch(`${process.env.REACT_APP_API_SERVER}/unit/listUnits/`, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({
+  //         "status": "In Reserve"
+  //       }),
+  //       credentials: "include",
+  //     });
+
+  //     let Input = await response.json();
+  //     if (response.status == 200) {
+  //       setData2(Input['data']);
+  //     }
+  //     else {
+  //       setData2([]);
+  //     }
+
+  //   } catch (err) {
+  //     console.log(err)
+  //   }
+  // }
 
 
-  const getData3 = async () => {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_API_SERVER}/unit/listUnits/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-        }),
-        credentials: "include",
-      });
 
-      let Input = await response.json();
-      if (response.status == 200) {
-        if (Input && Input["data"] && Input['data'].length) {
-          setData3(Input['data']);
-        }
-        else {
-          setData3([]);
-        }
-      }
-    } catch (err) {
-      console.log(err)
-    }
-  }
+  // useEffect(
+  //   () => {
+  //     let timer1 = setTimeout(() => getData2(), 1 * 1000);
+  //     return () => {
+  //       clearTimeout(timer1);
+  //     };
+  //   },
+  //   []
+  // );
 
-  useEffect(
-    () => {
-      let timer1 = setTimeout(() => getData3(), 1 * 1500);
-      return () => {
-        clearTimeout(timer1);
-      };
-    },
-    []
-  );
+
+  // const getData3 = async () => {
+  //   try {
+  //     const response = await fetch(`${process.env.REACT_APP_API_SERVER}/unit/listUnits/`, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({
+  //       }),
+  //       credentials: "include",
+  //     });
+
+  //     let Input = await response.json();
+  //     if (response.status == 200) {
+  //       if (Input && Input["data"] && Input['data'].length) {
+  //         setData3(Input['data']);
+  //       }
+  //       else {
+  //         setData3([]);
+  //       }
+  //     }
+  //   } catch (err) {
+  //     console.log(err)
+  //   }
+  // }
+
+  // useEffect(
+  //   () => {
+  //     let timer1 = setTimeout(() => getData3(), 1 * 1500);
+  //     return () => {
+  //       clearTimeout(timer1);
+  //     };
+  //   },
+  //   []
+  // );
 
   const [flag, setflag] = useState([]);
   const SetAll = () => {
@@ -233,6 +280,24 @@ export default function UnitList() {
     setCardVisibility(update);
   };
   const [update, setUpdate] = useState(0)
+
+  const UnitChecked = (Row, ID) => {
+    if (!UnitID.includes(ID)) {
+      setBgColor('#e4e7f1')
+      setUnitID([...UnitID, ID])
+      setUpdate(prev => (prev + 1))
+    }
+    else {
+      let i = -1;
+      if (window.confirm(`Are you sure ?`)) {
+        const list_UnitId = [...UnitID];
+        list_UnitId.splice(i, 1);
+        setUnitID(list_UnitId)
+      }
+    }
+  }
+
+
   const updateChecked = (Row, ID) => {
     if (!ReplacedUnitID.includes(ID) && inputValuesReplace['replacementlevel'] != '') {
       setBgColor('#e4e7f1')
@@ -293,8 +358,6 @@ export default function UnitList() {
     setflag(pp)
   }
 
-
-
   useEffect(() => {
     MakeitEmpty()
   }, [inputValuesReplace])
@@ -302,6 +365,8 @@ export default function UnitList() {
   const handleEdit_Dropdown_rows = (i) => {
     setEdit_Dropdown_rows(i);
   };
+
+
   const handleRemoveClick_Dropdown_rows = (i) => {
 
     if (window.confirm(`Are you sure ?`)) {
@@ -385,10 +450,9 @@ export default function UnitList() {
     settypeofdefect(list);
   };
 
-
   return (
     <>
-      <StatusUpdate isVisiblepollingfinished={cardVisibility.pollingfinished} isVisiblecountingfinished={cardVisibility.countingfinished} isVisiblecountingdefective={cardVisibility.countingdefective} isVisibleundertna={cardVisibility.undertna} isVisiblereceivingscan={cardVisibility.receivingscan}
+      <StatusUpdate setUnitID={setUnitID} UnitID={UnitID} isVisibleunmarkloan={cardVisibility.unmarkloan} isVisibleunderloan={cardVisibility.underloan} isVisibleunmarkfir={cardVisibility.unmarkfir} isVisiblepollingfinished={cardVisibility.pollingfinished} isVisiblecountingfinished={cardVisibility.countingfinished} isVisiblecountingdefective={cardVisibility.countingdefective} isVisibleundertna={cardVisibility.undertna} isVisiblereceivingscan={cardVisibility.receivingscan}
         isVisibleunderfir={cardVisibility.underfir} isVisibledestruction={cardVisibility.destruction} isVisibleFLC_Scan={cardVisibility.FLC_Scan} isVisibleFLC_Assembly={cardVisibility.FLC_Assembly}
         isVisibleepUnmarkForm={cardVisibility.epUnmarkForm} isVisibledestroyed={cardVisibility.destroy} isVisibledispatch={cardVisibility.dispatch} isVisibleepForm={cardVisibility.epForm} isVisibleblock={cardVisibility.block}
         isVisibleunblock={cardVisibility.unblock} activeButtons={cardVisibility} onButtonClick={handleButtonClick} flag={flag} data2={data2} initialInputValuesReplace={initialInputValuesReplace}
@@ -398,7 +462,9 @@ export default function UnitList() {
       {cardVisibility.replacementForm == true ?
         <UnitListCard updateChecked={updateChecked} bgColor={bgColor} ReplacedUnitID={ReplacedUnitID} data={data} />
         :
-        <UnitListEpmarkEpUnmark data={data3} />
+        ((cardVisibility.countingdefective == true) ?
+          <Unitcountingdefective UnitChecked={UnitChecked} bgColor={bgColor} UnitID={UnitID} data={data4} />
+          : <UnitListEpmarkEpUnmark data={data3} />)
       }
     </>
   );
@@ -418,7 +484,7 @@ const ActionButton = ({ isActive, text, name, onClick }) => {
   );
 };
 
-const StatusUpdate = ({ isVisibleundertna, isVisibleunderfir, isVisibledestruction, isVisibleFLC_Scan, isVisibleFLC_Assembly, isVisibleepUnmarkForm, isVisibledestroyed, isVisibledispatch, isVisibleepForm, isVisibleblock, isVisibleunblock, activeButtons, onButtonClick, flag, data2, initialInputValuesReplace, setInputValuesReplace, inputValuesReplace, handleInputChangeReplace, isVisible, Added, handleInputChange_ReplacedUnitID, handleInputChange_ReplacingUnitID, handleInputChange_typeofdefect, handleEdit_Dropdown_rows, ReplacingUnitID, ReplacedUnitID, Typeofdefect, handleRemoveClick_Dropdown_rows }) => {
+const StatusUpdate = ({ setUnitID, UnitID, isVisiblecountingdefective, isVisiblecountingfinished, isVisiblepollingfinished, isVisibleunmarkloan, isVisibleunderloan, isVisibleunmarkfir, isVisibleundertna, isVisibleunderfir, isVisibledestruction, isVisibleFLC_Scan, isVisibleFLC_Assembly, isVisibleepUnmarkForm, isVisibledestroyed, isVisibledispatch, isVisibleepForm, isVisibleblock, isVisibleunblock, activeButtons, onButtonClick, flag, data2, initialInputValuesReplace, setInputValuesReplace, inputValuesReplace, handleInputChangeReplace, isVisible, Added, handleInputChange_ReplacedUnitID, handleInputChange_ReplacingUnitID, handleInputChange_typeofdefect, handleEdit_Dropdown_rows, ReplacingUnitID, ReplacedUnitID, Typeofdefect, handleRemoveClick_Dropdown_rows }) => {
   return (
 
     <div className={styles.unit_list_container}>
@@ -490,6 +556,24 @@ const StatusUpdate = ({ isVisibleundertna, isVisibleunderfir, isVisibledestructi
           onClick={onButtonClick}
         />
         <ActionButton
+          isActive={activeButtons.unmarkfir}
+          text="Unmark FIR"
+          name="unmarkfir"
+          onClick={onButtonClick}
+        />
+        <ActionButton
+          isActive={activeButtons.underloan}
+          text="Under loan"
+          name="underloan"
+          onClick={onButtonClick}
+        />
+        <ActionButton
+          isActive={activeButtons.unmarkloan}
+          text="Unmark Loan"
+          name="unmarkloan"
+          onClick={onButtonClick}
+        />
+        <ActionButton
           isActive={activeButtons.pollingfinished}
           text="Polling Finished"
           name="pollingfinished"
@@ -513,12 +597,6 @@ const StatusUpdate = ({ isVisibleundertna, isVisibleunderfir, isVisibledestructi
           name="undertna"
           onClick={onButtonClick}
         />
-        <ActionButton
-          isActive={activeButtons.receivingscan}
-          text="Receiving Scan"
-          name="receivingscan"
-          onClick={onButtonClick}
-        />
       </div>
 
       <EPUnmarkForm isVisible={isVisibleepUnmarkForm} />
@@ -532,9 +610,13 @@ const StatusUpdate = ({ isVisibleundertna, isVisibleunderfir, isVisibledestructi
       <Destruction isVisible={isVisibledestruction} />
       <Underfir isVisible={isVisibleunderfir} />
       <UnderTnA isVisible={isVisibleundertna} />
-
+      <Unmarkfir isVisible={isVisibleunmarkfir} />
+      <Underloan isVisible={isVisibleunderloan} />
+      <Unmarkloan isVisible={isVisibleunmarkloan} />
+      <Pollingfinished isVisible={isVisiblepollingfinished} />
+      <CountingFinished isVisible={isVisiblecountingfinished} />
+      <CountingDefective isVisible={isVisiblecountingdefective} UnitID={UnitID} setUnitID={setUnitID} />
     </div >
-
   );
 };
 
@@ -594,7 +676,6 @@ const EPForm = ({ isVisible }) => {
     []
   );
 
-  console.log({ inputValues })
 
   const handleFormSubmit = async (e) => {
     let confirmation = window.confirm("Are you sure you have selected all the Unit")
@@ -2622,6 +2703,1041 @@ const UnderTnA = ({ isVisible }) => {
             </div>
 
             <button class={scheduleStyles.submitBtn} type='submit' style={{ marginBottom: "1%" }}> Submit </button>
+          </div>
+        )
+        }
+      </form >
+    </>
+  );
+};
+
+const Unmarkfir = ({ isVisible }) => {
+
+
+
+
+  const [dataInput, setDataInput] = useState([""]);
+  const [unitid, setunitid] = useState('')
+
+
+  const handleFormSubmit = async () => {
+    try {
+      const response = await fetch(`${baseUrl}/UnmarkFIR`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          "unitIDList": [unitid],
+          "remark": dataInput
+        }
+        ),
+      });
+      const data = await response.json();
+      if (data.status === 200) {
+        alert(data.message);
+      } else {
+        alert(data.message);
+        setunitid('')
+        setDataInput('')
+      }
+    } catch (err) {
+      alert(`Error occured: ${err}`);
+    }
+
+  };
+
+
+  const onFormSubmit = async (e) => {
+    e.preventDefault();
+    handleFormSubmit()
+  };
+
+  return (
+    <>
+      <form onSubmit={onFormSubmit} className="w-full rounded-lg " styles={{ marginTop: "20%" }}>
+        {isVisible && (
+          <div styles={{ marginTop: "20%" }}>
+            <div className="w-full flex justify-around">
+              <div className="m-2 w-1/3 text-left">
+                <label className="mb-2 w-full text-base">
+                  Unit ID<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-gray-800">
+                  <input
+                    className="h-10 w-full rounded-md bg-zinc-100 p-2 px-5 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                    onChange={(e) => { setunitid(e.target.value) }}
+                    value={unitid}
+                    placeholder='Unit ID'
+                  />
+                </div>
+              </div>
+
+              <div className="m-2 w-1/3 text-left" >
+                <label className="mb-2 w-full text-base">
+                  Remarks<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-[#494A59]">
+                  <div className="w-full">
+                    <textarea name="" id="" cols="60" className='p-2' rows={10}
+                      style={{ width: '100%' }}
+                      onChange={(e) => {
+                        setDataInput(e.target.value)
+                      }}
+                      value={dataInput}
+                      placeholder='Remarks'
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button class={scheduleStyles.submitBtn} type='submit' style={{ marginBottom: "1%" }}> Submit </button>
+          </div>
+        )
+        }
+      </form >
+    </>
+  );
+};
+
+
+const Underloan = ({ isVisible }) => {
+
+
+
+
+  const [dataInput, setDataInput] = useState([""]);
+  const [unitid, setunitid] = useState([''])
+
+  const handleFormSubmit = async () => {
+    try {
+      const response = await fetch(`${baseUrl}/UnderLoan`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          "unitIDList": unitid,
+          "remark": dataInput
+        }
+        ),
+      });
+      const data = await response.json();
+      if (data.status === 200) {
+        alert(data.message);
+      } else {
+        alert(data.message);
+        setunitid('')
+        setDataInput('')
+      }
+    } catch (err) {
+      alert(`Error occured: ${err}`);
+    }
+
+  };
+
+
+  const onFormSubmit = async (e) => {
+    e.preventDefault();
+    handleFormSubmit()
+  };
+
+  return (
+    <>
+      <form onSubmit={onFormSubmit} className="w-full rounded-lg " styles={{ marginTop: "20%" }}>
+        {isVisible && (
+          <div styles={{ marginTop: "20%" }}>
+            <div className="w-full flex justify-around">
+              <div className="m-2 w-1/3 text-left" >
+                <label className="mb-2 w-full text-base">
+                  Unit Id's<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-[#494A59]">
+                  <div className="w-full">
+                    <textarea name="" id="" cols="60" className='p-2' rows={10}
+                      style={{ width: '100%' }}
+                      onChange={(e) => {
+                        setunitid(e.target.value)
+                      }}
+                      value={unitid}
+                      placeholder='unitids'
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+              <div className="m-2 w-1/3 text-left" >
+                <label className="mb-2 w-full text-base">
+                  Remarks<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-[#494A59]">
+                  <div className="w-full">
+                    <textarea name="" id="" cols="60" className='p-2' rows={10}
+                      style={{ width: '100%' }}
+                      onChange={(e) => {
+                        setDataInput(e.target.value)
+                      }}
+                      value={dataInput}
+                      placeholder='Remarks'
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button class={scheduleStyles.submitBtn} type='submit' style={{ marginBottom: "1%" }}> Submit </button>
+          </div>
+        )
+        }
+      </form >
+    </>
+  );
+};
+
+
+const Unmarkloan = ({ isVisible }) => {
+
+
+
+  const [dataInput, setDataInput] = useState([""]);
+  const [unitid, setunitid] = useState([''])
+  const handleFormSubmit = async () => {
+    try {
+      const response = await fetch(`${baseUrl}/UnmarkLoan`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          "unitIDList": unitid,
+          "remark": dataInput
+        }
+        ),
+      });
+      const data = await response.json();
+      if (data.status === 200) {
+        alert(data.message);
+      } else {
+        alert(data.message);
+        setunitid('')
+        setDataInput('')
+      }
+    } catch (err) {
+      alert(`Error occured: ${err}`);
+    }
+  };
+
+  const onFormSubmit = async (e) => {
+    e.preventDefault();
+    handleFormSubmit()
+  };
+
+  return (
+    <>
+      <form onSubmit={onFormSubmit} className="w-full rounded-lg " styles={{ marginTop: "20%" }}>
+        {isVisible && (
+          <div styles={{ marginTop: "20%" }}>
+            <div className="w-full flex justify-around">
+              <div className="m-2 w-1/3 text-left" >
+                <label className="mb-2 w-full text-base">
+                  Unit Id's<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-[#494A59]">
+                  <div className="w-full">
+                    <textarea name="" id="" cols="60" className='p-2' rows={10}
+                      style={{ width: '100%' }}
+                      onChange={(e) => {
+                        setunitid(e.target.value)
+                      }}
+                      value={unitid}
+                      placeholder='unitids'
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+              <div className="m-2 w-1/3 text-left" >
+                <label className="mb-2 w-full text-base">
+                  Remarks<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-[#494A59]">
+                  <div className="w-full">
+                    <textarea name="" id="" cols="60" className='p-2' rows={10}
+                      style={{ width: '100%' }}
+                      onChange={(e) => {
+                        setDataInput(e.target.value)
+                      }}
+                      value={dataInput}
+                      placeholder='Remarks'
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button class={scheduleStyles.submitBtn} type='submit' style={{ marginBottom: "1%" }}> Submit </button>
+          </div>
+        )
+        }
+      </form >
+    </>
+  );
+};
+
+
+
+// Unit Replacement Card
+const Pollingfinished = ({ isVisible }) => {
+
+
+  const handleFormSubmit = async (Finalanswer) => {
+    try {
+      const response = await fetch(`${baseUrl}/pollingFinished`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          "aclist": Finalanswer
+        }
+        ),
+      });
+      const data = await response.json();
+      if (data.status === 200) {
+        alert(data.message);
+        setAc([])
+        setwarehouse([])
+      } else {
+        alert(data.message);
+      }
+    } catch (err) {
+      alert(`Error occured: ${err}`);
+    }
+    // setInputValuesReplace(initialInputValuesReplace);
+  };
+
+
+  const User_ID = sessionStorage.getItem("sessionToken");
+  const Role = User_ID.substring(8)
+  const [Added, setAdded] = useState([])
+  const [ListWarehouse, setListWarehouse] = useState([])
+  const [ACList, setACList] = useState([])
+  const [warehouse, setwarehouse] = useState([]);
+  const [Ac, setAc] = useState([]);
+  const [flag, setflag] = useState([]);
+  const [State, setState] = useState([]);
+  const [data, setdata] = useState([]);
+
+
+  const handleInputChange_Warehouse = (e, index) => {
+
+    const prevvalue = warehouse[index];
+    const { name, value } = e.target;
+    const list = [...warehouse];
+    list[index] = value;
+    const list1 = [...Added];
+    list1[index][name] = value;
+    setAdded(list1);
+    setwarehouse(list);
+  };
+
+  const handleInputChange_Ac = (e, index) => {
+
+    const prevvalue = Ac[index];
+    const { name, value } = e.target;
+    const list = [...Ac];
+    list[index] = value;
+    const list1 = [...Added];
+    list1[index][name] = value;
+    const list2 = { ...flag };
+    list2[value]['flag'] = true
+    list2[value]['id'] = value;
+
+    setAdded(list1);
+    setAc(list);
+    setflag(list2);
+
+    if (flag[value]['id'] != prevvalue) {
+      const list2 = { ...flag };
+      list2[prevvalue]['flag'] = false
+      list2[prevvalue]['id'] = -1
+      setflag(list2);
+    }
+  };
+
+  const Addrow = () => {
+
+    setwarehouse([...warehouse, ''])
+    setAc([...Ac, ""])
+    setAdded([
+      ...Added,
+      {
+        "warehouse": "",
+        "ac": '',
+      }
+    ]);
+  }
+
+
+  async function getRealm() {
+
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_SERVER}/user/getRealm`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            "module_name": "Unit",
+            "operation": "MarkPollCompleted"
+          }),
+        }
+      )
+
+      const Input = await response.json();
+      if (response.status === 200) {
+        setACList(Input['data'])
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(
+    () => {
+      let timer1 = setTimeout(() => getRealm(), 1 * 1000);
+
+      return () => {
+        clearTimeout(timer1);
+      };
+    },
+    []
+  );
+
+  async function getListH() {
+
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_SERVER}/warehouse/listWarehouses`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            "Type": 'H'
+          }),
+        })
+
+      const data = await response.json();
+      setListWarehouse(data["data"])
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+
+  useEffect(
+    () => {
+      let timer1 = setTimeout(() => getListH(), 1 * 1500);
+      return () => {
+        clearTimeout(timer1);
+      };
+    },
+    []
+  );
+
+  const onFormSubmit = async (e) => {
+    e.preventDefault();
+    let Finalanswer = [];
+    let total = 0;
+    for (let k = 0; k < warehouse.length; k++) {
+      if (warehouse[k] == '' || Ac[k] == '') {
+        total = total + 1
+      }
+      Finalanswer.push({
+        "ac": Ac[k],
+        "strongRoom": warehouse[k]
+      })
+    }
+    if (total == 0)
+      handleFormSubmit(Finalanswer)
+    else {
+      alert('Fill all field')
+    }
+  };
+
+
+  useEffect(() => {
+    if (ACList) {
+      let pp = {}
+      for (let k = 0; k < ACList.length; k++) {
+        pp[ACList[k][2][0]] = {
+          "flag": false,
+          "id": -1
+        }
+      }
+      setflag(pp)
+    }
+  }, [ACList])
+
+
+
+  const handleRemoveClick_Dropdown_rows = (i, val) => {
+    if (window.confirm(`Are you sure ?`)) {
+      const prevvalue = val;
+      const list_all = [...Added];
+      list_all.splice(i, 1);
+      const list_warehouse = [...warehouse];
+      list_warehouse.splice(i, 1);
+      const list_ac = [...Ac];
+      list_ac.splice(i, 1);
+      const list_flag = { ...flag }
+
+      if (prevvalue != '') {
+
+        list_flag[prevvalue]['id'] = -1;
+        list_flag[prevvalue]['flag'] = false;
+      }
+
+      setflag(list_flag)
+      setAdded(list_all);
+      setwarehouse(list_warehouse)
+      setAc(list_ac)
+    }
+  };
+
+  return (
+    <>
+      <form onSubmit={onFormSubmit} className="w-full rounded-lg " styles={{ marginTop: "20%" }}>
+        {isVisible && (
+          <div styles={{ marginTop: "20%" }}>
+
+            <div className={ReplacementStyles.Replacement_dropdown_table}>
+              <table>
+                <thead>
+                  <tr>
+                    <th style={{ color: "#f56a3f", padding: "20px" }}></th>
+                    <th style={{ color: "#f56a3f", padding: "20px" }}>AC's</th>
+                    <th style={{ color: "#f56a3f", padding: "20px" }}>WareHouse</th>
+                    <th style={{ color: "#f56a3f", padding: "20px" }}></th>
+                  </tr>
+                </thead>
+                {Added &&
+                  Added.map((val, id) => {
+                    return (<>
+
+                      <tr >
+                        <td></td>
+                        <td className="text-black text-sm">
+                          <select
+                            className="relative h-10 !w-80  rounded-md border p-2"
+                            placeholder="select"
+                            name="ac"
+                            value={Ac[id]}
+                            onChange={(e) => handleInputChange_Ac(e, id)}
+                          >
+                            {" "}
+                            <option hidden>Select</option>
+                            {ACList &&
+                              ACList.map((st, index) => (
+                                (flag && (flag[st[2][0]]['id'] == Ac[id] || flag[st[2][0]]['flag'] == false)) &&
+                                <option value={st[2][0]} className="text-black">
+                                  {st[2][1]}
+                                </option>
+                              ))}
+                          </select>
+                        </td>
+
+                        <td className="text-black text-sm">
+                          <select
+                            className="relative h-10 !w-80  rounded-md border p-2"
+                            placeholder="select"
+                            name="warehouse"
+                            value={warehouse[id]}
+                            onChange={(e) => handleInputChange_Warehouse(e, id)}
+                          >
+                            {" "}
+                            <option hidden>Select</option>
+                            {ListWarehouse &&
+                              ListWarehouse.map((st, index) => (
+                                <option value={st['warehouseid']} className="text-black">
+                                  {st['warehouseid']}
+                                </option>
+                              ))}
+                          </select>
+                        </td>
+                        <td className="text-black text-sm" onClick={() => handleRemoveClick_Dropdown_rows(id, Ac[id])}>{<Delete />}</td>
+                      </tr>
+                      <tr><td colSpan={4}><hr /></td></tr></>
+                    )
+                  })
+                }
+                {Ac.length != ACList.length && <button type="button" className="text-white bg-orange-600 p-1 text-2xl w-8 h-8 -mt-4 " style={{ borderRadius: "50%", marginLeft: "100%", marginTop: "1%" }} onClick={() => { Addrow() }}>+</button>}
+              </table>
+            </div>
+            {(Added.length > 0) && <button class={scheduleStyles.submitBtn} type='submit' style={{ marginBottom: "1%" }}> Submit </button>}
+          </div>
+        )
+        }
+      </form >
+    </>
+  );
+};
+
+
+
+const CountingFinished = ({ isVisible }) => {
+
+
+  const handleFormSubmit = async (Finalanswer) => {
+    try {
+      const response = await fetch(`${baseUrl}/countingFinished`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          "aclist": Finalanswer
+        }
+        ),
+      });
+      const data = await response.json();
+      if (data.status === 200) {
+        alert(data.message);
+        setAc([])
+        setwarehouse([])
+      } else {
+        alert(data.message);
+      }
+    } catch (err) {
+      alert(`Error occured: ${err}`);
+    }
+
+  };
+
+
+  const User_ID = sessionStorage.getItem("sessionToken");
+  const Role = User_ID.substring(8)
+  const [Added, setAdded] = useState([])
+  const [ListWarehouse, setListWarehouse] = useState([])
+  const [ACList, setACList] = useState([])
+  const [warehouse, setwarehouse] = useState([]);
+  const [Ac, setAc] = useState([]);
+  const [flag, setflag] = useState([]);
+  const [State, setState] = useState([]);
+  const [data, setdata] = useState([]);
+
+
+  const handleInputChange_Warehouse = (e, index) => {
+
+    const prevvalue = warehouse[index];
+    const { name, value } = e.target;
+    const list = [...warehouse];
+    list[index] = value;
+    const list1 = [...Added];
+    list1[index][name] = value;
+    setAdded(list1);
+    setwarehouse(list);
+  };
+
+  const handleInputChange_Ac = (e, index) => {
+
+    const prevvalue = Ac[index];
+    const { name, value } = e.target;
+    const list = [...Ac];
+    list[index] = value;
+    const list1 = [...Added];
+    list1[index][name] = value;
+    const list2 = { ...flag };
+    list2[value]['flag'] = true
+    list2[value]['id'] = value;
+
+    setAdded(list1);
+    setAc(list);
+    setflag(list2);
+
+    if (flag[value]['id'] != prevvalue) {
+      const list2 = { ...flag };
+      list2[prevvalue]['flag'] = false
+      list2[prevvalue]['id'] = -1
+      setflag(list2);
+    }
+  };
+
+  const Addrow = () => {
+
+    setwarehouse([...warehouse, ''])
+    setAc([...Ac, ""])
+    setAdded([
+      ...Added,
+      {
+        "warehouse": "",
+        "ac": '',
+      }
+    ]);
+  }
+
+
+  async function getRealm() {
+
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_SERVER}/user/getRealm`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            "module_name": "Unit",
+            "operation": "MarkCountCompleted"
+          }),
+        }
+      )
+
+      const Input = await response.json();
+      if (response.status === 200) {
+        setACList(Input['data'])
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(
+    () => {
+      let timer1 = setTimeout(() => getRealm(), 1 * 1000);
+
+      return () => {
+        clearTimeout(timer1);
+      };
+    },
+    []
+  );
+
+  async function getListI() {
+
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_SERVER}/warehouse/listWarehouses`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            "Type": 'I'
+          }),
+        })
+
+      const data = await response.json();
+      setListWarehouse(data["data"])
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+
+  useEffect(
+    () => {
+      let timer1 = setTimeout(() => getListI(), 1 * 1500);
+      return () => {
+        clearTimeout(timer1);
+      };
+    },
+    []
+  );
+
+  const onFormSubmit = async (e) => {
+    e.preventDefault();
+    let Finalanswer = [];
+    let total = 0;
+    for (let k = 0; k < warehouse.length; k++) {
+      if (warehouse[k] == '' || Ac[k] == '') {
+        total = total + 1
+      }
+      Finalanswer.push({
+        "ac": Ac[k],
+        "strongRoom": warehouse[k]
+      })
+    }
+    if (total == 0)
+      handleFormSubmit(Finalanswer)
+    else {
+      alert('Fill all field')
+    }
+  };
+
+
+  useEffect(() => {
+    if (ACList) {
+      let pp = {}
+      for (let k = 0; k < ACList.length; k++) {
+        pp[ACList[k][2][0]] = {
+          "flag": false,
+          "id": -1
+        }
+      }
+      setflag(pp)
+    }
+  }, [ACList])
+
+
+  const handleRemoveClick_Dropdown_rows = (i, val) => {
+    if (window.confirm(`Are you sure ?`)) {
+      const prevvalue = val;
+      const list_all = [...Added];
+      list_all.splice(i, 1);
+      const list_warehouse = [...warehouse];
+      list_warehouse.splice(i, 1);
+      const list_ac = [...Ac];
+      list_ac.splice(i, 1);
+      const list_flag = { ...flag }
+
+      if (prevvalue != '') {
+
+        list_flag[prevvalue]['id'] = -1;
+        list_flag[prevvalue]['flag'] = false;
+      }
+
+      setflag(list_flag)
+      setAdded(list_all);
+      setwarehouse(list_warehouse)
+      setAc(list_ac)
+    }
+  };
+
+  return (
+    <>
+      <form onSubmit={onFormSubmit} className="w-full rounded-lg " styles={{ marginTop: "20%" }}>
+        {isVisible && (
+          <div styles={{ marginTop: "20%" }}>
+
+            <div className={ReplacementStyles.Replacement_dropdown_table}>
+              <table>
+                <thead>
+                  <tr>
+                    <th style={{ color: "#f56a3f", padding: "20px" }}></th>
+                    <th style={{ color: "#f56a3f", padding: "20px" }}>AC's</th>
+                    <th style={{ color: "#f56a3f", padding: "20px" }}>WareHouse</th>
+                    <th style={{ color: "#f56a3f", padding: "20px" }}></th>
+                  </tr>
+                </thead>
+                {Added &&
+                  Added.map((val, id) => {
+                    return (<>
+
+                      <tr >
+                        <td></td>
+                        <td className="text-black text-sm">
+                          <select
+                            className="relative h-10 !w-80  rounded-md border p-2"
+                            placeholder="select"
+                            name="ac"
+                            value={Ac[id]}
+                            onChange={(e) => handleInputChange_Ac(e, id)}
+                          >
+                            {" "}
+                            <option hidden>Select</option>
+                            {ACList &&
+                              ACList.map((st, index) => (
+                                (flag && (flag[st[2][0]]['id'] == Ac[id] || flag[st[2][0]]['flag'] == false)) &&
+                                <option value={st[2][0]} className="text-black">
+                                  {st[2][1]}
+                                </option>
+                              ))}
+                          </select>
+                        </td>
+
+                        <td className="text-black text-sm">
+                          <select
+                            className="relative h-10 !w-80  rounded-md border p-2"
+                            placeholder="select"
+                            name="warehouse"
+                            value={warehouse[id]}
+                            onChange={(e) => handleInputChange_Warehouse(e, id)}
+                          >
+                            {" "}
+                            <option hidden>Select</option>
+                            {ListWarehouse &&
+                              ListWarehouse.map((st, index) => (
+                                <option value={st['warehouseid']} className="text-black">
+                                  {st['warehouseid']}
+                                </option>
+                              ))}
+                          </select>
+                        </td>
+                        <td className="text-black text-sm" onClick={() => handleRemoveClick_Dropdown_rows(id, Ac[id])}>{<Delete />}</td>
+                      </tr>
+                      <tr><td colSpan={4}><hr /></td></tr></>
+                    )
+                  })
+                }
+                {Ac.length != ACList.length && <button type="button" className="text-white bg-orange-600 p-1 text-2xl w-8 h-8 -mt-4 " style={{ borderRadius: "50%", marginLeft: "100%", marginTop: "1%" }} onClick={() => { Addrow() }}>+</button>}
+              </table>
+            </div>
+            {(Added.length > 0) && <button class={scheduleStyles.submitBtn} type='submit' style={{ marginBottom: "1%" }}> Submit </button>}
+          </div>
+        )
+        }
+      </form >
+    </>
+  );
+};
+
+
+const CountingDefective = ({ isVisible, UnitID, setUnitID }) => {
+
+
+
+
+  const handleFormSubmit = async () => {
+    try {
+      const response = await fetch(`${baseUrl}/countingDefective`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          "unitList": UnitID,
+          "remark": dataInput,
+          "warehouse": 'TSBDK119K01'
+        }
+        ),
+      });
+      const data = await response.json();
+      if (data.status === 200) {
+        alert(data.message);
+        setUnitID([])
+        setwarehouse([])
+      } else {
+        alert(data.message);
+      }
+    } catch (err) {
+      alert(`Error occured: ${err}`);
+    }
+
+  };
+
+  const [dataInput, setDataInput] = useState([""]);
+  const User_ID = sessionStorage.getItem("sessionToken");
+  const Role = User_ID.substring(8)
+  const [ListWarehouse, setListWarehouse] = useState([])
+  const [warehouse, setwarehouse] = useState('');
+  const [Ac, setAc] = useState([]);
+
+  async function getListK() {
+
+    try {
+      const response = await fetch(
+        `${process.env.REACT_APP_API_SERVER}/warehouse/listWarehouses`,
+        {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            "Type": 'K'
+          }),
+        })
+
+      const data = await response.json();
+      setListWarehouse(data["data"])
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+
+  useEffect(
+    () => {
+      let timer1 = setTimeout(() => getListK(), 1 * 1500);
+      return () => {
+        clearTimeout(timer1);
+      };
+    },
+    []
+  );
+
+  const onFormSubmit = async (e) => {
+    e.preventDefault();
+    handleFormSubmit()
+  };
+
+
+
+  const handleRemoveClick_unitid = (i) => {
+
+    const listUnitId = [...UnitID];
+    listUnitId.splice(i, 1);
+    setUnitID(listUnitId)
+  };
+
+  console.log({
+    "unitList": UnitID,
+    "remark": dataInput,
+    "warehouse": warehouse
+  })
+
+  return (
+    <>
+      <form onSubmit={onFormSubmit} className="w-full rounded-lg " styles={{ marginTop: "20%" }}>
+        {isVisible && (
+          <div styles={{ marginTop: "20%" }}>
+            <div className="w-full flex justify-around">
+              <div className="m-2 w-1/3 text-left">
+                <label className="mb-2 w-full text-base">
+                  Defective Warehouse<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-[#494A59]">
+                  <select
+                    className="relative h-10 w-full rounded-md border p-2"
+                    name="replacementlevel"
+                    placeholder="Select"
+                    value={warehouse}
+                    onChange={(e) => setwarehouse(e.target.value)}
+                  >
+                    {" "}
+                    <option hidden>Select</option>
+                    {ListWarehouse && ListWarehouse.map((val, index) => (
+                      <option value={val['warehouseid']}>{val['warehouseid']}</option>
+                    ))}
+                  </select>
+                  <ChevronDown className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1/2" />
+                </div>
+              </div>
+              <div className="m-2 w-1/3 text-left" >
+                <label className="mb-2 w-full text-base">
+                  Remarks<span className="text-red-600">*</span>
+                </label>
+                <div className="relative text-[#494A59]">
+                  <div className="w-full">
+                    <textarea name="" id="" cols="60" className='p-2' rows={10}
+                      style={{ width: '100%' }}
+                      onChange={(e) => {
+                        setDataInput(e.target.value)
+                      }}
+                      value={dataInput}
+                      placeholder='Remarks'
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="w-full flex justify-around">
+              <div className='flex flex-wrap w-full  items-center'>
+                {UnitID && UnitID.map((val, index) => (
+                  <div className='rounded-lg gap-1 m-1 p-2 flex align-middle shadow-md shadow-black'>{val}
+                    <AiOutlineClose className='cursor-pointer text-red-400' onClick={() => {
+                      handleRemoveClick_unitid(index)
+                    }} /></div>
+                ))}
+              </div>
+            </div>
+
+            {(UnitID.length > 0) && <button class={scheduleStyles.submitBtn} type='submit' style={{ marginBottom: "1%" }}> Submit </button>}
           </div>
         )
         }

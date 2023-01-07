@@ -664,21 +664,6 @@ const UnitListCard = ({ updateChecked, bgColor, ReplacedUnitID, data }) => {
             }
           </table>
         </div>
-
-
-
-        {/* <DynamicDataTable
-          // className={styles.unitListTable}
-          rows={tableData}
-          hoverable
-          buttons={[]}
-          fieldsToExclude={["Status_Hidden"]}
-          orderByField={sortMapping[sortBy]}
-          orderByDirection={sortOrder}
-          onClick={(_, { ID }) => {
-            updateChecked(ID)
-          }}
-        /> */}
       </div>
     </>
   );
