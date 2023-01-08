@@ -1,11 +1,15 @@
 import React from "react";
 import { useState, useEffect } from "react";
+
+import styles from './styles/Login.module.css'
+
 import Footer from "../../components/Footer";
 import Otp from "../../components/Otp";
 import Password from "../../components/Password";
 import SelectUser from "../../components/SelectUser";
 import jwt_decode from "jwt-decode";
 var sha256 = require("js-sha256");
+
 
 function getKeyByValue(object, value) {
 	return Object.keys(object).find(key => object[key] === value);
@@ -548,8 +552,10 @@ const Login = () => {
 						<img src="india.png" className=""></img>
 					</div>
 					<div
-						className="login rounded-lg w-1/3 ml-16 mb-16"
-						style={{ boxShadow: "-2px 0px 17px rgb(182, 182, 184)" }}
+						className={`${styles.login} rounded-lg w-1/3 ml-16 mb-16`}
+						style={{
+							 boxShadow: "-2px 0px 17px rgb(182, 182, 184)"
+						}}
 					>
 						<div className="flex m-4 mt-8 h-14 place-content-center">
 							<img src="logo.png" className=""></img>

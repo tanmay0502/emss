@@ -294,7 +294,7 @@ export default function AddWarehouse() {
 
 
   return (
-    <div className="flex-col justify-center align-middle">
+    <div className="create-warehouse flex-col justify-center align-middle">
       <form
         id="create-warehouse-form"
         className="myForm"

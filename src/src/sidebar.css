@@ -33,7 +33,7 @@
 
 button.nav-button {
 	padding: 0 10px;
-	font-size: 16px;
+	font-size: 1.2em;
 	height: 55px;
 	width: 95%;
 	display: flex;
@@ -126,4 +126,10 @@ button.nav-button .chevron {
 	text-transform: capitalize;
 	margin-right: 15px;
 	color: var(--foreground-primary);
+}
+
+@media only screen and (min-width: 600px) and (max-width: 1024px) {
+    .nav-button{
+        font-size: 0.8em;
+    }
 }

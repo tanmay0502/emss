@@ -18,7 +18,7 @@
 	overflow: hidden;
 }
 
-.createUserBtn{
+.createWHBtn{
 	padding: 5px 10px;
 	background: #F56A3F;
 	border-radius: 10px;
@@ -143,6 +143,7 @@
 
 .warehouseStats li.tableHeader{
 	font-weight: 600;
+	justify-self: left;
 }
 
 .warehouseStats li .icon{

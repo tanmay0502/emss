@@ -83,7 +83,7 @@ function Home1() {
 	// 					"notificationId": notificationId
 	// 				}
 	// 			)
-				
+
 	// 		}
 	// 		 )
 	// 	} catch (error) {
@@ -303,7 +303,7 @@ function Home1() {
 		setIssues(data)
 	}
 
-	
+
 
 
 	return (
@@ -344,7 +344,7 @@ function Home1() {
 					{stateID === "IN" ? <><label className="card_title">
 						Select State:
 					</label>
-						<select name="" id="statesDropdownHome" onChange={(e) => {setSTName(e.target.value);setIndiaMap(0); setShow(true); setShow2(false);setContent2(e.target.value) }}>
+						<select name="" id="statesDropdownHome" onChange={(e) => { setSTName(e.target.value); setIndiaMap(0); setShow(true); setShow2(false); setContent2(e.target.value) }}>
 							<option>{"None"}</option>
 							{statesCode.map((val, ind) => {
 								return (
@@ -353,8 +353,8 @@ function Home1() {
 							})}
 						</select></> : ""}
 
-					<div style={{ height: '75%', overflow: 'hidden' }}>
-						<span className="heading" style={{ maxWidth: "100%", display: "block", "textOverflow": "ellipsis", "whiteSpace": "nowrap" }}> {"India:" + content2}</span>
+					<div style={{ height: '75%', overflow: 'hidden', maxWidth: '300px', margin: '0 auto' }}>
+						<span className="heading" style={{ maxWidth: "100%", display: "block", "textOverflow": "ellipsis", "whiteSpace": "nowrap" }}> {"India: " + content2}</span>
 						<div className='map' >
 							{/* {console.log(STName)} */}
 							{indiaMap === 0 && <MapDialog show={show} StateName={STName} closeModal={handleClose} setTooltipContent={setContent2} />}
@@ -418,26 +418,22 @@ function Home1() {
 							<ul className='li_noti '>
 								{notifications &&
 									notifications.map((v) => (
-										<div className='mt-0'>
-											<div className='grid grid-cols-6 gap-4'>
+										<div className='mt-0 py-2 grid grid-cols-6 gap-4'>
+											<div className=''>
 												<div class="...">
 													<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
 												</div>
-												<div class="col-span-4 ..." style={{ fontSize: 14 }}>{v["message"]}</div>
-
 											</div>
-											<br></br>
-											<div className='grid grid-cols-6 gap-4'>
-												<div class="col-span-5 text-left ..." style={{ fontSize: 14 }}>{dateDiffInDays(v["creationTime"])}</div>
+											<div class="col-span-4 ..." style={{ fontSize: 14 }}>{v["message"]}</div>
+											<div className='flex flex-col items-end'>
 												<button type="button" class=" bg-white rounded-md p-0 inline-flex items-centre justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-red-500">
 													<svg class="h-6 w-auto" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /> </svg>
-													</button>
+												</button>
+												<div class="col-span-5 text-left ..." style={{ fontSize: 14 }}>{dateDiffInDays(v["creationTime"])}</div>
 											</div>
-											<br></br>
-											<hr />
-											<br></br>
+											<hr className='col-span-6' style={{ 'width': '100%' }} />
 										</div>
-										
+
 									))}
 							</ul>
 						</div>

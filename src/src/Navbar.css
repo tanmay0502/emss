@@ -82,3 +82,10 @@
 .navBarDropDownBtn:focus > .navBarDropDown, .navBarDropDownBtn:focus-within > .navBarDropDown{
     display: block;
 }
+
+
+@media only screen and (min-width: 600px) and (max-width: 1024px) {
+    .divnav{
+        font-size: 0.8em;
+    }
+}

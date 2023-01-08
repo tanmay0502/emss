@@ -11,37 +11,43 @@
 .parent2 {
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: repeat(3, 1fr);
-    grid-column-gap: 0px;
-    grid-row-gap: 0px;
-    height: calc(100vh - 120px);
-    padding-bottom: 2%;
-    overflow-y: scroll;
+    grid-template-rows: auto repeat(2, 1fr);
+    grid-column-gap: 1vw;
+    grid-row-gap: 1vw;
+    height: calc(100vh - 150px);
+    width: 100%;
+    padding-bottom: 2.5vh;
+    overflow-y: visible;
     overflow-x: visible;
-
+    justify-items: center;
 }   
+
+.parent2 > form{
+    width: 100%;
+    margin-right: 0;
+}
 
 .parent3 {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: repeat(4, 1fr);
-    grid-column-gap: 2%;
-    grid-row-gap: 2%;
-    height: 100%;
+    grid-template-rows: repeat(2, 1fr);
+    grid-column-gap: 1vw;
+    grid-row-gap: 1vw;
+    height: calc(100vh - 150px);
+    width: 100%;
     overflow-y: visible;
-    overflow-x: scroll;
+    overflow-x: visible;
 }    
 
-
 .myCardSample{
-    /* height: 385px; */
-    width: 458px !important;
+    height: 100%;
+    width: 100% !important;
     background-color: var(--background-secondary);
     box-shadow: 0px 7px 60px rgba(0, 0, 0, 0.05);
     border-radius: 10px;
     padding: 15px 30px;
     text-align: left !important;
-    margin-top: 25px;
+    overflow-x: visible;
 }
 
 .myCardSample .card_title{
@@ -52,7 +58,7 @@
 
 
 .myCardSample select{
-    width: 372px;
+    /* width: 372px; */
     height: 52px;
     font-size: 16px;
     margin-left: auto;
@@ -61,15 +67,15 @@
     border: 1px solid rgba(0, 0, 0, 0.28);
 }
 .myCardSampleHome{
-    height: 360px;
-    width: 75% !important;
+    height: 100%;
+    width: 100% !important;
     background-color: var(--background-secondary);
     box-shadow: 0px 7px 60px rgba(0, 0, 0, 0.05);
     border-radius: 10px;
-    padding: 15px 30px;
+    padding: 20px 30px;
     text-align: left !important;
-    margin-top: 25px;
     overflow: scroll;
+    overflow-x: visible;
 }
 
 .myCardSampleHome .card_title{
@@ -80,7 +86,7 @@
 
 
 .myCardSampleHome select{
-    width: 372px;
+    width: 70%;
     height: 50px;
     font-size: 16px;
     margin-left: auto;
@@ -92,15 +98,15 @@
 
 
 .myCardSampleHover{
-    height: 385px;
-    width: 458px !important;
+    height: 100%;
+    /* width: 458px !important; */
     background-color: var(--background-secondary);
     box-shadow: 0px 7px 60px rgba(0, 0, 0, 0.05);
     border-radius: 10px;
-    padding: 15px 30px;
+    padding: 20px;
     text-align: left !important;
-    margin-top: 25px;
     overflow: scroll;
+    overflow-x: visible;
     
 }
 .myCardSampleHover:hover{
@@ -131,7 +137,7 @@ margin: 0 10px;
     height: 80%;
     /* background-color: #FFFFFF; */
     /* margin-bottom: 200px; */
-    overflow: scroll;
+    overflow-y: scroll;
 }
 .table :hover{
     cursor: default;
@@ -249,3 +255,65 @@ margin: 0 10px;
     height: 70%;
 }
 
+
+@media only screen and (min-width: 600px) and (max-width: 1024px) {
+    .parent{
+        grid-template-columns: 1fr;
+        font-size: 0.9em;
+        grid-row-gap: 2.75vh;
+    }
+
+    .parent3{
+        max-width: 70vw;
+        height: max-content;
+        grid-template-rows: auto 1fr;
+    }
+
+    .parent3 select, .parent2 select{
+        font-size: 0.9em !important;
+        height: 3.25em;
+        padding: 0.5em 1.5em;
+        text-overflow: ellipsis;
+        margin-top: 0;
+    }
+
+    .parent2{
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto 1fr;
+        max-width: 70vw;
+        height: max-content;
+    }
+
+    .parent2 .card_title{
+        font-size: 1em;
+    }
+
+    .parent2 .card_title button{
+        font-size: 1.5em;
+    }
+
+    .parent2 > form{
+        width: 80%;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: center;
+        grid-area: 1 / 1 / 2 / 3;
+    }
+
+    .parent2 > form > div{
+        width: 100% !important;
+    }
+
+    .parent2 table{
+        text-align: center;
+    }
+
+    .parent2 table td:first-child, .parent2 table th:first-child{
+        padding-left: 0;
+    }
+
+    .parent2 table td:last-child, .parent2 table th:last-child{
+        padding-right: 0;
+    }
+}

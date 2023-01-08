@@ -50,8 +50,6 @@ import EditTna from './pages/unit_management/EditTna';
 import EditElection from './pages/unit_management/EditElection';
 import HomePageUnit from './pages/unit_management/Homepage';
 import Announce_Flc from './pages/unit_management/announce_flc'
-import FillDemand from './pages/order_management/FillDemand';
-import FillAvailability from './pages/order_management/FillAvailability';
 import Usermanual from './components/Usermanual';
 import ViewPermission from './components/adminUtilities/ViewPermission';
 import SetRoles from './components/adminUtilities/SetRoles';

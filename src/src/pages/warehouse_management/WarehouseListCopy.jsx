@@ -161,7 +161,7 @@ function WarehouseList() {
 						const DectivateWarehouse = async (myId) => {
 							if (window.confirm(`Are you sure you want to Deactivate Warehouse ${myId}? `)) {
 								try {
-					
+
 									const response = await fetch(
 										`${process.env.REACT_APP_API_SERVER}/warehouse/deactivateWarehouse/`,
 										{
@@ -175,7 +175,7 @@ function WarehouseList() {
 											})
 										}
 									)
-					
+
 									const status = response;
 									if (status.status === 200) {
 										alert("Warehouse Deactivated Successfully");
@@ -185,7 +185,7 @@ function WarehouseList() {
 									else {
 										alert("Deactivation Failed");
 									}
-					
+
 								} catch (error) {
 									console.log(error);
 								}
@@ -197,7 +197,7 @@ function WarehouseList() {
 						const ActivateWarehouse = async (myId) => {
 							if (window.confirm(`Are you sure you want to Activate Warehouse ${myId}? `)) {
 								try {
-					
+
 									const response = await fetch(
 										`${process.env.REACT_APP_API_SERVER}/warehouse/activateWarehouse`,
 										{
@@ -211,7 +211,7 @@ function WarehouseList() {
 											})
 										}
 									)
-					
+
 									const status = response;
 									if (status.status === 200) {
 										alert("Warehouse Activated Successfully");
@@ -221,7 +221,7 @@ function WarehouseList() {
 									else {
 										alert("Activation Failed");
 									}
-					
+
 								} catch (error) {
 									console.log(error);
 								}
@@ -261,12 +261,12 @@ function WarehouseList() {
 			data.sort(function (a, b) {
 				if (sortMapping[sortBy] !== null) {
 					// console.log(data)
-					
+
 					return (a[sortMapping[sortBy]].toString()).localeCompare(b[sortMapping[sortBy]].toString())
 				}
 				else return 0;
 			});
-			if (sortOrder === 'desc') {	
+			if (sortOrder === 'desc') {
 				data.reverse();
 			}
 		}
@@ -285,44 +285,47 @@ function WarehouseList() {
 		<div className="warehouse-list-grid">
 			{/* {console.log(tableData["Status"])} */}
 			<div className="myWrapper" style={{ position: "relative", height: "100%", gridArea: "1 / 1 / 6 / 2" }}>
-				<div className='label_list'>
-					<div className='label d-flex d-flex-center'><span><FaCircle className='PermaWarehouse' /></span> Goverment Building</div>
-					<div className='label d-flex d-flex-center'><span><FaCircle className='PrivateWarehouse' /></span> Private Building</div>
-					<div className='label d-flex d-flex-center'><span><FaCircle className='TempWarehouse' /></span> Dedicated Building</div>
 
-				</div>
-				{isDetail === 0 ? <div style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between" }}>
-					<h4>Associated Warehouses</h4>
-					<div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center" }}>
-						<button className='createUserBtn' onClick={() => {
-							navigate("/session/warehousemanagement/addwarehouse")
-						}}>Create New</button>
-						<div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center", background: "var(--lightGrayBG )", borderRadius: "10px", padding: "7.5px 15px 7.5px 0", fontSize: "0.8em" }}>
-							<SearchInputElement style={{ margin: "0 7.5px", width: "20px" }} />
-							<input className="w-24" type={'search'} defaultValue={tableFilter} onChange={(e) => { setTableFilter(e.target.value) }} placeholder='Search' style={{ outline: "none", background: "transparent" }} />
-						</div>
-						<div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center", marginLeft: "10px", background: "var(--lightGrayBG )", borderRadius: "10px", padding: "7.5px 15px 7.5px 0", fontSize: "0.8em" }}>
-							<span style={{ minWidth: "max-content", paddingInlineStart: "7.5px" }}>Sort by : &nbsp;</span>
-							<select
-								style={{ textAlign: "center", outline: "none", background: "transparent", padding: "0px", border: "none" }}
-								onChange={(e) => setSortBy(e.target.value)}>
-								<option value={"None"}>Default</option>
-								<option value={"Warehouse ID"}>Warehouse ID</option>
-								<option value={"Status"}>Status</option>
-								{/* <option value={"Type"}>Type</option> */}
-							</select>
-							<ChevronDown />
-							<button className='sortOrderButton' onClick={() => {
-								setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
-							}}>
-								{sortOrder === 'asc' ? <AiOutlineSortAscending /> : <AiOutlineSortDescending />}
-							</button>
-							<CSVLink filename={"wareHouseList.csv"} data={Details}><div className="text-gray-400 text-lg m-2 py-1 px-2" title="Export To CSV"><AiOutlineDownload /></div></CSVLink>
-
-						</div>
+				{isDetail === 0 ? <>
+					<div className='label_list'>
+						<div className='label d-flex d-flex-center'><span><FaCircle className='PermaWarehouse' /></span> Goverment Building</div>
+						<div className='label d-flex d-flex-center'><span><FaCircle className='PrivateWarehouse' /></span> Private Building</div>
+						<div className='label d-flex d-flex-center'><span><FaCircle className='TempWarehouse' /></span> Dedicated Building</div>
 					</div>
+					<div style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between" }}>
+						<h4>Associated Warehouses</h4>
+						<div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center" }}>
+							<button className='createWHBtn' onClick={() => {
+								navigate("/session/warehousemanagement/addwarehouse")
+							}}>Create New</button>
+							<div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center", background: "var(--lightGrayBG )", borderRadius: "10px", padding: "7.5px 15px 7.5px 0", fontSize: "0.8em" }}>
+								<SearchInputElement style={{ margin: "0 7.5px", width: "20px" }} />
+								<input className="w-24" type={'search'} defaultValue={tableFilter} onChange={(e) => { setTableFilter(e.target.value) }} placeholder='Search' style={{ outline: "none", background: "transparent" }} />
+							</div>
+							<div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center", marginLeft: "10px", background: "var(--lightGrayBG )", borderRadius: "10px", padding: "7.5px 15px 7.5px 0", fontSize: "0.8em" }}>
+								<span style={{ minWidth: "max-content", paddingInlineStart: "7.5px" }}>Sort by : &nbsp;</span>
+								<select
+									style={{ textAlign: "center", outline: "none", background: "transparent", padding: "0px", border: "none" }}
+									onChange={(e) => setSortBy(e.target.value)}>
+									<option value={"None"}>Default</option>
+									<option value={"Warehouse ID"}>Warehouse ID</option>
+									<option value={"Status"}>Status</option>
+									{/* <option value={"Type"}>Type</option> */}
+								</select>
+								<ChevronDown />
+								<button className='sortOrderButton' onClick={() => {
+									setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
+								}}>
+									{sortOrder === 'asc' ? <AiOutlineSortAscending /> : <AiOutlineSortDescending />}
+								</button>
+								<CSVLink filename={"wareHouseList.csv"} data={Details}><div className="text-gray-400 text-lg m-2 py-1 px-2" title="Export To CSV"><AiOutlineDownload /></div></CSVLink>
 
-				</div> : <></>}
+							</div>
+						</div>
+
+					</div>
+				</>
+					: <></>}
 				{/* {console.log(tableData)} */}
 				{isDetail === 0 ? <DynamicDataTable className="warehouses-table"
 
@@ -349,9 +352,9 @@ function WarehouseList() {
 				<h4>Warehouse Count</h4>
 				<ul className='warehouseStats'>
 					<li className='tableHeader'></li>
-					<li className='tableHeader'>Active</li>
-					<li className='tableHeader'>Inactive</li>
-					<li className='tableHeader'>Total</li>
+					<li className='tableHeader' style={{ justifySelf: 'center' }}>Active</li>
+					<li className='tableHeader' style={{ justifySelf: 'center' }}>Inactive</li>
+					<li className='tableHeader' style={{ justifySelf: 'center' }}>Total</li>
 					{/* Private Count */}
 					<li className='tableHeader' style={{ textAlign: 'left' }}><span><FaCircle className='PrivateWarehouse' /></span>Private</li>
 					<li>
@@ -404,7 +407,7 @@ function WarehouseList() {
 						}).length.toLocaleString()}
 					</li>
 					{/* All Count */}
-					<li className='tableHeader text-red-500'>All</li>
+					<li className='tableHeader text-red-500' style={{ justifySelf: 'center' }}>All</li>
 					<li className='text-red-500'>
 						{tableData.filter((elem) => {
 							return elem["Details"] && elem["Details"]["status"] === "A"

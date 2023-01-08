@@ -104,7 +104,7 @@ export default function FLCList() {
 
     return (
         <div className={`${styles.myWrapper1}`} style={{ position: "relative", height: "100%" }}>
-            {isDetail === 0 ? <div className='MainHeader pd-5 ' style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between", "alignItems": "center" }}>
+            {isDetail === 0 ? <div className={`${styles.MainHeader} pd-5`} style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between", "alignItems": "center" }}>
                 <h4 className='text-white'>Scheduled FLC List</h4>
 
                 <div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center" }}>
@@ -150,9 +150,9 @@ export default function FLCList() {
                     </div>
                 </div>
             </div> : <></>}
-            {<div class={styles.table}>
+            {<div className={styles.table}>
                 {IsLoading == 1 ?
-                    <div className='text-center text-6xl' colSpan={10} style={{ marginTop: '2%' }}>Loading ......</div>
+                    <div className='text-center text-3xl' colSpan={10} style={{ marginTop: '2%' }}>Loading...</div>
                     :
                     <DynamicDataTable
                         rows={tableData}

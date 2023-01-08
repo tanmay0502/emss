@@ -580,7 +580,7 @@ useEffect(()=>{
     <div className="flex-col justify-center align-middle">
       <form
         id="create-User-form"
-        className="myForm"
+        className="createUserForm"
         onSubmit={onFormSubmit}
       >
         <div className="PageTitle">
@@ -845,7 +845,7 @@ useEffect(()=>{
             </label>
           </div>
           
-          <div className="form_group">
+          <div className="form_group imageInput">
 
             <input
               id="formUserImage"
@@ -858,7 +858,7 @@ useEffect(()=>{
             }}
             />
             
-            <p style={{color:"red"}}>Only image files are supported. </p>
+            <p style={{color:"red", fontSize: '0.85em'}}>Only image files are supported. </p>
           </div>
         </div>
 

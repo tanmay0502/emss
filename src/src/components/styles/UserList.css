@@ -1,6 +1,6 @@
-.user-list-grid{
+.user-list-grid {
 	display: grid;
-	grid-template-columns: 3.5fr 1.5fr;
+	grid-template-columns: 1.75fr 1.75fr 1.5fr;
 	grid-template-rows: repeat(5, 1fr);
 	grid-column-gap: 20px;
 	grid-row-gap: 20px;
@@ -8,22 +8,22 @@
 	max-height: 100%;
 }
 
-.myWrapper > div:last-child{
+.myWrapper>div:last-child {
 	height: 100%;
 	max-height: 100%;
 	overflow: hidden;
 }
 
-.createUserBtn{
+.createUserBtn {
 	padding: 5px 10px;
 	background: #F56A3F;
 	border-radius: 10px;
-	margin-right: 10px;
 	font-weight: 600;
 	font-size: small;
+	color: white;
 }
 
-.sortOrderButton{
+.sortOrderButton {
 	padding: 5px;
 	border-radius: 2.5px;
 	font-size: 1.2em;
@@ -32,14 +32,14 @@
 	color: inherit;
 }
 
-.table-responsive{
+.user-list-grid .table-responsive {
 	height: 100%;
 	max-height: 100%;
 	overflow: auto;
 	padding-bottom: 50px;
 }
 
-.users-table{
+.users-table {
 	/* height: 100%; */
 	width: 100%;
 	/* table-layout:fixed; */
@@ -47,7 +47,7 @@
 	color: var(--foreground-primary) !important;
 }
 
-.users-table th{
+.users-table th {
 	font-family: 'Poppins';
 	font-weight: 400;
 	font-size: 0.85em !important;
@@ -57,27 +57,29 @@
 	padding: 15px 0;
 	border-bottom: 1px solid #EEEEEE;
 	position: sticky;
-  	top: 0;
+	top: 0;
 	background-color: var(--background-secondary);
 	z-index: 9;
 }
 
-.users-table th:first-child, .users-table th:nth-child(3){
+.users-table th:first-child,
+.users-table th:nth-child(3) {
 	text-align: center;
 }
-.user-table th:nth-child(5){
+
+.user-table th:nth-child(5) {
 	padding-bottom: 10px;
 }
 
-.users-table th:first-child{
+.users-table th:first-child {
 	padding-left: 10px;
 }
 
-.users-table td:first-child{
+.users-table td:first-child {
 	padding-left: 10px;
 }
 
-.users-table td{
+.users-table td {
 	padding: 20px 0;
 	border-bottom: 1px solid #EEEEEE;
 	font-family: 'Poppins';
@@ -88,12 +90,13 @@
 	color: var(--foreground-primary) !important;
 }
 
-.users-table td:first-child, .users-table td:nth-child(3){
+.users-table td:first-child,
+.users-table td:nth-child(3) {
 	/* text-align: left; */
 	width: max-content;
 }
 
-.user-details button{
+.user-details button {
 	flex-direction: column;
 	width: 40px;
 	height: 40px;
@@ -102,22 +105,28 @@
 	font-size: 1.2em;
 }
 
-.users-table tr:hover{
+.users-table tr:hover {
 	background-color: rgba(0, 0, 0, 0.15);
 	cursor: pointer;
 }
 
-.userStats{
+.userStats {
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
 	justify-content: center;
-	gap: 10px;
+	gap: 7.5px;
 	margin-bottom: 0 !important;
-	width: 90%;
+	width: 80%;
+	min-height: 100%;
 }
 
-.userStats li{
+.myWrapper:has( > .userStats){
+	padding-top: 0;
+	padding-bottom: 0;
+}
+
+.userStats li {
 	display: flex;
 	flex-direction: row;
 	align-items: center;
@@ -125,7 +134,7 @@
 	gap: 30px;
 }
 
-.userStats li .icon{
+.userStats li .icon {
 	width: 60px;
 	box-sizing: border-box;
 	padding: 15px;
@@ -134,44 +143,45 @@
 	border-radius: 50%;
 }
 
-.userStats li .icon svg{
+.userStats li .icon svg {
 	width: 30px;
 	height: 30px;
 }
 
-.userStats li .userStatsText{
+.userStats li .userStatsText {
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
 	justify-content: center;
 }
 
-.userStats li .userStatsText span{
+.userStats li .userStatsText span {
 	font-size: 0.8em;
 	color: #ACACAC;
 }
 
-.userStats li .userStatsText h3{
+.userStats li .userStatsText h3 {
 	color: #333333;
 }
 
 /* User Detail CSS from here */
 
-.user-details-grid{
+.user-details-grid {
 	display: grid;
 	grid-template-columns: auto 1fr auto 1fr;
-	width: 100%; 
-	height: 100%; 
+	width: 100%;
+	height: 100%;
 	grid-gap: 30px 10px;
 	grid-template-rows: max-content;
 	text-align: left;
 }
 
 
-.user-details-grid b{
+.user-details-grid b {
 	text-align: right;
 }
-.right_btn{
+
+.right_btn {
 	background-color: #F56A3F;
 	display: flex;
 	justify-content: center;
@@ -182,23 +192,115 @@
 	cursor: pointer;
 	color: #fff;
 }
-.thimage{
+
+.thimage {
 	border-radius: 50%;
 }
+
 .myparent {
 	display: grid;
-	grid-template-columns: 0.5fr repeat(2, 0.5fr);
+	grid-template-columns: repeat(3, 1fr);
 	grid-template-rows: 0.5fr repeat(2, 0.8fr);
-	grid-column-gap: 0px;
-	grid-row-gap: 0px;
+	grid-column-gap: 5px;
+	grid-row-gap: 5px;
+	width: 100%;
+	align-items:center;
+}
+
+.mydiv1 {
+	grid-area: 1 / 1 / 2 / 2;
+}
+
+.mydiv2 {
+	grid-area: 1 / 2 / 2 / 3;
+}
+
+.mydiv3 {
+	grid-area: 1 / 3 / 2 / 4;
+}
+
+.mydiv4 {
+	grid-area: 2 / 1 / 3 / 2;
+}
+
+.mydiv5 {
+	grid-area: 2 / 2 / 3 / 3;
+}
+
+.mydiv6 {
+	grid-area: 2 / 3 / 3 / 4;
+}
+
+.mydiv7 {
+	grid-area: 3 / 1 / 4 / 2;
+}
+
+.mydiv8 {
+	grid-area: 3 / 2 / 4 / 3;
+}
+
+.mydiv9 {
+	grid-area: 3 / 3 / 4 / 4;
+}
+
+@media only screen and (min-width: 600px) and (max-width: 1024px) {
+	.user-list-grid{
+		grid-template-columns: repeat(3, 1fr) !important;
+		grid-template-rows: 2fr repeat(5, 1fr) !important;
+
+		font-size: 0.75em !important;
 	}
-	
-	.mydiv1 { grid-area: 1 / 1 / 2 / 2; }
-	.mydiv2 { grid-area: 1 / 2 / 2 / 3; }
-	.mydiv3 { grid-area: 1 / 3 / 2 / 4; }
-	.mydiv4 { grid-area: 2 / 1 / 3 / 2; }
-	.mydiv5 { grid-area: 2 / 2 / 3 / 3; }
-	.mydiv6 { grid-area: 2 / 3 / 3 / 4; }
-	.mydiv7 { grid-area: 3 / 1 / 4 / 2; }
-	.mydiv8 { grid-area: 3 / 2 / 4 / 3; }
-	.mydiv9 { grid-area: 3 / 3 / 4 / 4; }
+
+	.createUserBtn{
+		font-size: 0.9em;
+		width: max-content;
+	}
+
+	.userList{
+		grid-area: 2 / 1 / 7 / 4 !important;
+	}
+
+	.users-table{
+		font-size: 1em;
+	}
+
+	.users-table td, .users-table th{
+		padding: 7.5px 0;
+		font-size: 0.95em !important;
+	}
+
+	.userCount{
+		grid-area: 1 / 1 / 2 / 2 !important;
+	}
+
+	.userStats{
+		padding-top: 5vh;
+		gap: 2.5px;
+		width: 100%;
+	}
+
+	.userStats li .icon{
+		width: 30px;
+		height: 30px;
+		padding: 7.5px;
+	}
+
+	.userStats li .icon svg{
+		width: 15px;
+		height: 15px;
+	}
+
+	.userStatsText h3{
+		margin-bottom: 0 !important;
+	}
+
+	.userSubCount{
+		grid-area: 1 / 2 / 2 / 3 !important;
+		font-size: 0.85em;
+	}
+
+	.userCountRoleWise{
+		grid-area: 1 / 3 / 2 / 4 !important;
+		font-size: 0.85em;
+	}
+}

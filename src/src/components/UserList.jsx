@@ -53,7 +53,7 @@ function UserList() {
 	const [iPUsers, setIPUsers] = useState(0);
 	const [iTUsers, setITUsers] = useState(0);
 
-	const [roles, setRoles]= useState({}) 
+	const [roles, setRoles] = useState({})
 
 	const sortMapping = {
 		"None": "status",
@@ -180,10 +180,10 @@ function UserList() {
 				setNoOfTotalUsers(tmp["data"]["total_users"]);
 				setUsers(tmp["data"]["users"]);
 
-				 
+
 				let tUsers = 0;
 				let pUsers = 0;
-				let ceo = 0; 
+				let ceo = 0;
 				let deo = 0;
 				let whm = 0;
 				let aPUsers = 0;
@@ -193,48 +193,48 @@ function UserList() {
 
 				let currRoles = {}
 
-				for( const i in tmp["data"]["users"]){
+				for (const i in tmp["data"]["users"]) {
 					let currId = tmp["data"]["users"][i]["userid"]
 					let active = tmp["data"]["users"][i]["active"]
 					let check = currId.substring(8)
 					console.log(check)
-					if(check[0] === "T" && check[1] === "M" && check[2] === "P" ){
+					if (check[0] === "T" && check[1] === "M" && check[2] === "P") {
 						tUsers = tUsers + 1
-						if(active === "A"){
-							aTUsers = aTUsers +1;
-						}else{
-							iTUsers = iTUsers +1;
+						if (active === "A") {
+							aTUsers = aTUsers + 1;
+						} else {
+							iTUsers = iTUsers + 1;
 						}
-					}else{
+					} else {
 						pUsers = pUsers + 1
-						if(check === "CEO"){
-							ceo = ceo +1;
-						}else if( check === "DEO"){
-							deo = deo +1;
-						}else if(check === "WHM"){
-							whm = whm +1;
+						if (check === "CEO") {
+							ceo = ceo + 1;
+						} else if (check === "DEO") {
+							deo = deo + 1;
+						} else if (check === "WHM") {
+							whm = whm + 1;
 						}
 
-						if(active === "A"){
-							aPUsers = aPUsers +1;
-						}else{
-							iPUsers = iPUsers +1;
+						if (active === "A") {
+							aPUsers = aPUsers + 1;
+						} else {
+							iPUsers = iPUsers + 1;
 						}
-						if (currRoles[check] === undefined){
-							currRoles[check]= [0, 0]
-							if(active === "A"){
-								currRoles[check]= [1, 0]
-							}else{
-								currRoles[check]= [0, 1]
+						if (currRoles[check] === undefined) {
+							currRoles[check] = [0, 0]
+							if (active === "A") {
+								currRoles[check] = [1, 0]
+							} else {
+								currRoles[check] = [0, 1]
 							}
-						}else{
-							if(active === "A"){
-							currRoles[check][0] = currRoles[check][0]+ 1
-							}else{
-							currRoles[check][1] = currRoles[check][1]+ 1		
-						 	}
+						} else {
+							if (active === "A") {
+								currRoles[check][0] = currRoles[check][0] + 1
+							} else {
+								currRoles[check][1] = currRoles[check][1] + 1
+							}
 						}
-						
+
 					}
 				}
 				console.log(currRoles)
@@ -333,24 +333,25 @@ function UserList() {
 	// console.log(users);
 	return (
 		<div className="user-list-grid">
-			<div className="myWrapper" style={{ position: "relative", height: "100%", gridArea: "1 / 1 / 6 / 2" }}>
-
+			<div className="myWrapper userList" style={{ position: "relative", height: "100%", gridArea: "1 / 1 / 6 / 3" }}>
 				{isDetail == 0 && isEdit == 0 ? <div style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between" }}>
-					<h4>Dependent Users</h4>
-					<div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center" }}>
-						<div className="userTemporaryToggle mr-7">
-							<span >Permanent </span>
+					<h4 style={{
+						maxWidth: 'min-content'
+					}}>Dependent Users</h4>
+					<div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center", gap: '10px' }}>
+						<div className="userTemporaryToggle">
+							<span >Perm. </span>
 							<Switch onClick={toggler} />
-							<span >Temporary </span>
+							<span >Temp. </span>
 						</div>
 						<button className='createUserBtn' onClick={() => {
 							navigate("/session/usermanagement/createUser")
-						}}>Create User</button>
-						<div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center", background: "var(--lightGrayBG )", borderRadius: "10px", padding: "7.5px 15px 7.5px 0", fontSize: "0.8em" }}>
+						}}>Add User</button>
+						<div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center", background: "var(--lightGrayBG )", borderRadius: "10px", padding: "7.5px 15px 7.5px 0", fontSize: "0.85em" }}>
 							<SearchInputElement style={{ margin: "0 7.5px", width: "20px" }} />
 							<input type={'search'} defaultValue={tableFilter} onChange={(e) => { setTableFilter(e.target.value) }} placeholder='Search' style={{ outline: "none", background: "transparent" }} />
 						</div>
-						<div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center", marginLeft: "10px", background: "var(--lightGrayBG )", borderRadius: "10px", padding: "7.5px 15px 7.5px 0", fontSize: "0.8em", height: "40px" }}>
+						<div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center", background: "var(--lightGrayBG )", borderRadius: "10px", padding: "7.5px 0 7.5px 7.5px", fontSize: "0.85em", height: "40px" }}>
 							<span className='SampleText' style={{ minWidth: "max-content", paddingInlineStart: "0 7.5px" }}>Sort by : &nbsp;</span>
 							<select
 								style={{ textAlign: "center", outline: "none", background: "transparent", padding: "0px", border: "none" }}
@@ -372,7 +373,7 @@ function UserList() {
 					</div>
 
 				</div> : <></>}
-				{isDetail == 0 && isEdit == 0 ?  <DynamicDataTable className="users-table"
+				{isDetail == 0 && isEdit == 0 ? <DynamicDataTable className="users-table"
 					rows={tableData}
 					fieldsToExclude={["Details", "Edit", "status", "newUserId"]}
 					orderByField={sortMapping[sortBy]}
@@ -385,15 +386,15 @@ function UserList() {
 						// console.log(row)
 					}}
 					fieldMap={{
-						"User ID": (<div className="cursor-pointer" onClick={() => { setSortBy("User ID"); if(sortOrder === 'desc'){setSortOrder("asc")}else{setSortOrder("desc")} }}>User ID</div>),
-						"User Name": (<div className="cursor-pointer" onClick={() => { setSortBy("Name"); if(sortOrder === 'desc'){setSortOrder("asc")}else{setSortOrder("desc")}  }}>User Name</div>),
-						"Role": (<div className="cursor-pointer" onClick={() => { setSortBy("Role"); if(sortOrder === 'desc'){setSortOrder("asc")}else{setSortOrder("desc")}  }}>Role</div>),
-						"Phone Number": (<div className="cursor-pointer" onClick={() => { setSortBy("Role"); if(sortOrder === 'desc'){setSortOrder("asc")}else{setSortOrder("desc")}  }}>Phone Number</div>),
-						"Status": (<div className="cursor-pointer" onClick={() => { setSortBy("None"); if(sortOrder === 'desc'){setSortOrder("asc")}else{setSortOrder("desc")}  }}>Status</div>)
+						"User ID": (<div className="cursor-pointer" onClick={() => { setSortBy("User ID"); if (sortOrder === 'desc') { setSortOrder("asc") } else { setSortOrder("desc") } }}>User ID</div>),
+						"User Name": (<div className="cursor-pointer" onClick={() => { setSortBy("Name"); if (sortOrder === 'desc') { setSortOrder("asc") } else { setSortOrder("desc") } }}>User Name</div>),
+						"Role": (<div className="cursor-pointer" onClick={() => { setSortBy("Role"); if (sortOrder === 'desc') { setSortOrder("asc") } else { setSortOrder("desc") } }}>Role</div>),
+						"Phone Number": (<div className="cursor-pointer" onClick={() => { setSortBy("Role"); if (sortOrder === 'desc') { setSortOrder("asc") } else { setSortOrder("desc") } }}>Phone Number</div>),
+						"Status": (<div className="cursor-pointer" onClick={() => { setSortBy("None"); if (sortOrder === 'desc') { setSortOrder("asc") } else { setSortOrder("desc") } }}>Status</div>)
 					}}
 					buttons={[]}
 					allowOrderingBy={[
-						'User ID', 'User Name', 'Role',"Status"
+						'User ID', 'User Name', 'Role', "Status"
 					]} />
 					:
 					<></>
@@ -412,8 +413,8 @@ function UserList() {
 
 				}
 			</div>
-			<div className='myWrapper !overflow-scroll' style={{ "gridArea": "1 / 2 / 3 / 3", display: "flex", flexDirection: "column", "alignItems": "center", "justifyContent": "center" }}>
-				<ul className='userStats p-2 !pt-32'>
+			<div className='myWrapper userCount !overflow-scroll' style={{ "gridArea": "1 / 3 / 3 / 4", display: "flex", flexDirection: "column", "alignItems": "center", "justifyContent": "center" }}>
+				<ul className='userStats'>
 					<li>
 						<div className="icon">
 							<TotalUsers />
@@ -458,67 +459,69 @@ function UserList() {
 					</li>
 				</ul>
 			</div>
-			<div className="myWrapperDetail overflow-y-scroll !pb-0 !mb-0 !px-8" style={{ "gridArea": "3 / 2 / 4 / 3" }}>
-			<div className=''>
-						<div className='myparent'>
-							<div className='mydiv1'>
-								<h5>Users</h5>
-							</div>
-							<div className='mydiv2'>
-								<div className='text-green-700 font-semibold'>Active</div>
-							</div>
-							<div className='mydiv3'>
+			<div className="myWrapperDetail userSubCount overflow-y-scroll !pb-0 !mb-0 !px-8" style={{ "gridArea": "3 / 3 / 4 / 4" }}>
+				<div className='' style={{height: '100%', width:'100%', display: 'flex', 'flexDirection': 'column', 'alignItems': 'center', 'justifyContent': 'center'}}>
+					<div className='myparent'>
+						<div className='mydiv1'>
+							<h5>Users</h5>
+						</div>
+						<div className='mydiv2'>
+							<div className='text-green-700 font-semibold'>Active</div>
+						</div>
+						<div className='mydiv3'>
 							<div className='text-red-700 font-semibold'>Inactive</div>
-							</div>
-							<div className='mydiv4'>
-								<h5>Permanent</h5>
-							</div>
-							<div className='mydiv5'>
-								<div className='text-lg text-green-700'>{aPUsers}</div>
-							</div>
-							<div className='mydiv6'>
+						</div>
+						<div className='mydiv4'>
+							<h5>Permanent</h5>
+						</div>
+						<div className='mydiv5'>
+							<div className='text-lg text-green-700'>{aPUsers}</div>
+						</div>
+						<div className='mydiv6'>
 							<div className='text-lg text-red-700'>{iPUsers}</div>
-							</div>
-							<div className='mydiv7'>
-								<h5>Temporary</h5> 
-							</div>
-							<div className='mydiv8'>
+						</div>
+						<div className='mydiv7'>
+							<h5>Temporary</h5>
+						</div>
+						<div className='mydiv8'>
 							<div className='text-lg text-green-700'>{aTUsers}</div>
-							</div>
-							<div className='mydiv9'>
+						</div>
+						<div className='mydiv9'>
 							<div className='text-lg text-red-700'>{iTUsers}</div>
-							</div>
-								
+						</div>
 
-						</div>
-						</div>
-						</div>
-						<div className="myWrapperDetail overflow-y-scroll !pb-0 !mb-0 !px-8" style={{ "gridArea": "4 / 2 / 6 / 3" }}>
 
-						<div className='!flex pt-2 pb-4'>
-						{/* <div className="icon">
+					</div>
+				</div>
+			</div>
+			<div className="myWrapperDetail userCountRoleWise overflow-y-scroll !pb-0 !mb-0 !px-8" style={{ "gridArea": "4 / 3 / 6 / 4" }}>
+
+				<div className='!flex pt-2 pb-4'>
+					{/* <div className="icon">
 							<TotalUsers />
 						</div> */}
-							<h4 className='flex items-center'>Role-wise (Permanent Users):</h4>
-						</div>
+					<h4 className='flex items-center'>Role-wise (Permanent Users):</h4>
+				</div>
 
-						<div className='grid grid-cols-3'> 
-							<div></div>
-							<div className='text-green-700 font-semibold'>Active</div>
-							<div className='text-red-700 font-semibold'>Inactive</div>
-						</div>
-							{Object.keys(roles).map((keyName,i)=> {return(
-								<div className=''>
-									<div className='grid grid-cols-3'>
-									<div className=''><h5>{keyName} </h5></div>
-									<div className='flex justify-center text-green-700 text-lg'>{roles[keyName][0]}</div>
-									<div className='flex justify-center text-red-700 text-lg'>{roles[keyName][1]}</div>
-									</div>
+				<div className='grid grid-cols-3'>
+					<div></div>
+					<div className='text-green-700 font-semibold'>Active</div>
+					<div className='text-red-700 font-semibold'>Inactive</div>
+				</div>
+				{Object.keys(roles).map((keyName, i) => {
+					return (
+						<div className=''>
+							<div className='grid grid-cols-3'>
+								<div className=''><h5>{keyName} </h5></div>
+								<div className='flex justify-center text-green-700 text-lg'>{roles[keyName][0]}</div>
+								<div className='flex justify-center text-red-700 text-lg'>{roles[keyName][1]}</div>
+							</div>
 
-								</div>
-							)})}
-				
-			
+						</div>
+					)
+				})}
+
+
 			</div>
 		</div>
 

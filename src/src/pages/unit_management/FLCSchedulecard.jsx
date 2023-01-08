@@ -37,9 +37,9 @@ export default function FLCSchedulecard({state, dist}) {
 	}, [state, dist]);
 
   return (
-	<table style={{fontSize: "15px", width: "100%", marginTop: "15px", textAlign: "center"}}>
+	<table style={{fontSize: "15px", width: "100%", marginTop: "15px", textAlign: "center", fontSize: '0.9em'}}>
 		<thead>
-			<tr style={{padding: "0px", width: "100%", display: "contents", paddingBottom: "20px" }}>
+			<tr style={{padding: "10px 0px", width: "100%", display: "contents"}}>
 				<th className="pr-2" style={{width: "5%", paddingLeft: "0px"}}>State</th>
 				<th className="px-3" style={{width: "5%"}}>FLC OK</th>
 				<th className="px-3" style={{width: "5%"}}>FLC NOK</th>

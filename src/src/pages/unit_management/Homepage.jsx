@@ -490,10 +490,8 @@ export default function HomePage() {
             
             <div className={styles.parent3}>
                 <div className={styles.myCardSampleHome +" col-span-2 m-auto"}>
-                    <div className={styles.s+""}>
-
-                        
-                        {upVisible?<div className=" absolute text-red-600 cursor-pointer text-lg" onClick={()=>{
+                    <div className="">
+                        {upVisible?<div className="absolute text-red-600 cursor-pointer text-lg" onClick={()=>{
                             if (district!=ID.slice(2,5)) {
                                 setDistrict(ID.slice(2,5));
                                 return
@@ -583,7 +581,7 @@ export default function HomePage() {
                 <form
                     onSubmit={(e)=>onFormSubmit(e)}
                 >
-                <div style={{ width: "90%", display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center", background: "var(--lightGrayBG )", borderRadius: "10px", padding: "7.5px 15px 7.5px 0", fontSize: "0.8em" }}>
+                <div style={{ width: "100%", display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center", background: "var(--lightGrayBG )", borderRadius: "10px", padding: "7.5px 15px 7.5px 0", fontSize: "0.8em" }}>
                     <SearchInputElement style={{ margin: "4px 8px", width: "20%" }} />
                     <input type={'search'} defaultValue={unitId} onChange={(e) => {setunitId(e.target.value)}} placeholder='View Unit' style={{ outline: "none", background: "transparent",width:"80%" }} />
                     <button className='viewunitButton' type="submit" style={{background:"orange"}} >

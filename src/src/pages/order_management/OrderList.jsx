@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom'
 
 import styles from './styles/order.module.css';
+import styles1 from './styles/order1.module.css';
 import { AiOutlineSortAscending, AiOutlineSortDescending } from "react-icons/ai";
 import { ReactComponent as SearchInputElement } from '../../assets/searchInputIcon.svg';
 import { ReactComponent as ChevronDown } from '../../assets/ChevronDown.svg';
@@ -388,10 +389,10 @@ export default function OrderList() {
                 </div>
             </Modal>
             <div className={`${styles.myWrapper1}`} style={{ position: "relative", height: "100%" }}>
-                {isDetail == 0 ? <div className='MainHeader pd-5 ' style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between", "alignItems": "center" }}>
+                {isDetail == 0 ? <div className={`${styles1.MainHeader} pd-5`} style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between", "alignItems": "center" }}>
                     <h4 className='text-white'>Order List</h4>
                     <div style={{ display: "flex", "flexDirection": "row", alignItems: "center", justifyContent: "center" }}>
-                        <button className='createRequestBtn' onClick={() => {
+                        <button className={`${styles1.createRequestBtn}`} onClick={() => {
                             window.location.pathname = "/session/ordermanagement/ordertypes";
                         }}>
                             Generate Order</button>
@@ -409,7 +410,7 @@ export default function OrderList() {
                                 <option value={"Time"}>Time</option>
                             </select>
                             <ChevronDown />
-                            <button className='sortOrderButton' onClick={() => {
+                            <button className={`${styles1.sortOrderButton}`} onClick={() => {
                                 setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')
                                 sortTableData("Reverse");
                             }}>

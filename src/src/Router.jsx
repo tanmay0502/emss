@@ -8,22 +8,15 @@ import { ReactComponent as UnitManagementIcon } from './assets/UnitManagement.sv
 import { ReactComponent as WarehouseManagementIcon } from './assets/WarehouseManagement.svg';
 import { ReactComponent as IssueRequestManagementIcon } from './assets/Issue-RequestManagement.svg';
 import { ReactComponent as OrderManagementIcon } from './assets/OrderManagement.svg';
-import { ReactComponent as OtherServicesIcon } from './assets/OtherServices.svg';
-import { ReactComponent as MessagesIcon } from './assets/jam_messages.svg';
-import { ReactComponent as DownloadsIcon } from './assets/Downloads.svg';
 import { ReactComponent as ChevronRight } from './assets/chevron-right.svg';
-import { ReactComponent as ServicesIcon } from './assets/ser.svg';
 import { ReactComponent as ReportIcon } from './assets/carbon_report.svg';
 import { ReactComponent as PermissionIcon } from './assets/permission.svg';
-import Switch from "react-switch";
 import { useState, useEffect } from 'react';
 import './sidebar.css';
 import './Navbar.css'
 import styles from './Router.module.css'
-// import Invent from './assets/invent.png'
 import { ReactComponent as Invent } from './assets/invent.svg'
 import { ReactComponent as Manuals } from './assets/manuals.svg'
-import AdminUtilities from './components/AdminUtilities';
 import { Validate_Permission } from './components/utils';
 
 function Routed(props) {
@@ -374,26 +367,9 @@ function Routed(props) {
 							<ChevronRight className="chevron" />
 						</button>
 
-
-						{/* <button className={window.location.pathname.startsWith("/session/services") ? 'nav-button active' : 'nav-button'} onClick={() => {
-							navigate("/session/services")
-						}}>
-							<div><ServicesIcon />Other Services</div>
-							<ChevronRight className="chevron" />
-						</button> */}
-
 						<div className="horz_line">
 
 						</div>
-
-						{/* <button className={window.location.pathname.startsWith("/session/messages") ? 'nav-button active' : 'nav-button'}>
-							<div className='filler'><MessagesIcon />Messages</div>
-							<ChevronRight className="chevron" />
-						</button> */}
-						{/* <button className={window.location.pathname.startsWith("/session/downloads") ? 'nav-button active' : 'nav-button'}>
-							<div><DownloadsIcon />Downloads</div>
-							<ChevronRight className="chevron" />
-						</button> */}
 
 						<button className={window.location.pathname.startsWith("/session/downloads") ? 'nav-button active' : 'nav-button'}>
 							<div><ReportIcon />Report</div>
@@ -418,16 +394,6 @@ function Routed(props) {
 
 						</div>
 
-
-
-						{/* {isAdmin == 1 && <button className={window.location.pathname.startsWith("/session/adminutilities") ? 'nav-button active' : 'nav-button'}
-							onClick={() => {
-								setIsShow(isShow ^ 1)
-							}
-							}>
-							<div><PermissionIcon />Admin Utilities</div>
-							<ChevronRight className="chevron" />
-						</button>} */}
 						<div className={styles.dropdown} >
 							<button className={window.location.pathname.startsWith("/session/adminutilities") ? 'nav-button active' : 'nav-button'}
 								onClick={() => {
@@ -501,69 +467,7 @@ function Routed(props) {
 								</button>
 							</div>
 						</div>
-						{/* {isShow == 1 && <button className={window.location.pathname.startsWith("/session/adminutilities/viewpermissions") ? 'nav-button active' : 'nav-button'}
-							onClick={() => {
-								navigate(`/session/adminutilities/viewpermissions`)
-							}
-							}>
 
-							<div><PermissionIcon />Permissions</div>
-							<ChevronRight className="chevron" />
-						</button>} */}
-						{/* {isShow == 1 && <button className={window.location.pathname.startsWith("/session/adminutilities/setstates") ? 'nav-button active' : 'nav-button'}
-							onClick={() => {
-								navigate(`/session/adminutilities/setstates`)
-							}
-							}>
-
-							<div><PermissionIcon />States</div>
-							<ChevronRight className="chevron" />
-						</button>} */}
-						{/* {isShow == 1 && <button className={window.location.pathname.startsWith("/session/adminutilities/setmodels") ? 'nav-button active' : 'nav-button'}
-							onClick={() => {
-								navigate(`/session/adminutilities/setmodels`)
-							}
-							}>
-
-							<div><PermissionIcon />Models</div>
-							<ChevronRight className="chevron" />
-						</button>} */}
-						{/* {isShow == 1 && <button className={window.location.pathname.startsWith("/session/adminutilities/setroles") ? 'nav-button active' : 'nav-button'}
-							onClick={() => {
-								navigate(`/session/adminutilities/setroles`)
-							}
-							}>
-
-							<div><PermissionIcon />Roles</div>
-							<ChevronRight className="chevron" />
-						</button>} */}
-						{/* {isShow == 1 && <button className={window.location.pathname.startsWith("/session/adminutilities/setdefects") ? 'nav-button active' : 'nav-button'}
-							onClick={() => {
-								navigate(`/session/adminutilities/setdefects`)
-							}
-							}>
-
-							<div><PermissionIcon />Defects</div>
-							<ChevronRight className="chevron" />
-						</button>} */}
-						{/* {isShow == 1 && <button className={window.location.pathname.startsWith("/session/adminutilities/setACs") ? 'nav-button active' : 'nav-button'}
-							onClick={() => {
-								navigate(`/session/adminutilities/setACs`)
-							}
-							}>
-
-							<div><PermissionIcon />ACs</div>
-							<ChevronRight className="chevron" />
-						</button>} */}
-						{/* {isShow == 1 && <button className={window.location.pathname.startsWith("/session/adminutilities/setdistricts") ? 'nav-button active' : 'nav-button'}
-							onClick={() => {
-								navigate(`/session/adminutilities/setdistricts`)
-							}
-							}>
-
-							<div><PermissionIcon />Districts</div>
-							<ChevronRight className="chevron" />
-						</button>} */}
 
 
 					</div>

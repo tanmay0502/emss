@@ -1,7 +1,6 @@
 import React from "react";
 import { ReactComponent as ChevronRight } from '../../assets/chevron-right.svg';
 import {useNavigate} from "react-router-dom";
-import './styles/order.css'
 
 export default function Navigator(props){
     const navigate = useNavigate();

@@ -2,6 +2,7 @@ import React, { ReactComponent } from 'react'
 import { useState, useEffect } from "react";
 import EditBtn from '../../assets/editBtn.png'
 import DeleleBtn from '../../assets/delete.jpg'
+import styles from './adminstyles.module.css'
 
 function ViewPermission(){
 
@@ -244,7 +245,7 @@ function ViewPermission(){
 
     return (
         <div className="shadow-lg mb-10 pb-10 bg-white" style={{borderRadius:"2%"}}>
-            <div className='MainHeader pd-5 ' style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between", "alignItems": "center" }}>
+            <div className={`${styles.MainHeader} pd-5`} style={{ display: "flex", "flexDirection": "row", "justifyContent": "space-between", "alignItems": "center" }}>
                     <h4 className='text-white'>Permissions</h4>
                 </div>
            

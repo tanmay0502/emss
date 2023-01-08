@@ -25,7 +25,7 @@
 }
 .gridCustom{
     display: grid;
-    grid-template-columns: repeat(3,1fr);
+    grid-template-columns: 1fr 1fr 1fr;
     gap: 25px;
 }
 .d-flex{
@@ -63,6 +63,7 @@ body{
 }
 .dashboard_container{
     padding: 0 20px;
+    width: 100%;
 }
 .edit_view_button{
     display: flex;
@@ -81,8 +82,10 @@ body{
 }
 .gross_box{
     position: relative;
-    height: 177px;
-    width: 458px;
+    /* height: 177px; */
+    padding: 2.5vh 0;
+    width: 100%;
+    min-width: 400px;
     background-color: var(--background-secondary);
     color: var(--foreground-primary);
     box-shadow: 0px 7px 60px rgba(0, 0, 0, 0.05);
@@ -90,22 +93,24 @@ body{
 }
 .right_sec p:first-child{
     font-weight: 300;
-    font-size: 64px;
-    line-height: 96px;
+    font-size: 4em;
+    line-height: 1.5em;
 }
 .right_sec p:last-child{
     font-weight: 500;
-font-size: 18px;
+font-size: 1.25em;
 /* color: rgba(0, 0, 0, 0.4); */
 }
 .transCard{
     background: var(--trans) !important;
 box-shadow: 0px 7px 60px rgba(0, 0, 0, 0.05) !important;
 border-radius: 10px !important;
+max-height: 45vh !important;
 }
 .myCardSample{
-    height: fit-content;
-    width: 458px !important;
+    /* height: fit-content; */
+    width: 100%;
+    min-width: 400px;
     background-color: var(--background-secondary);
     box-shadow: 0px 7px 60px rgba(0, 0, 0, 0.05);
     border-radius: 10px;
@@ -116,11 +121,11 @@ border-radius: 10px !important;
 .myCardSample .card_title{
     font-style: normal;
     font-weight: 500;
-    font-size: 17.2741px;
+    font-size: 1.5em;
 }
 .card_title span:last-child,.card_title span:first-child{
     font-weight: 500;
-    font-size: 24px;
+    font-size: 1.1em;
 line-height: 36px;
 text-transform: capitalize;
 color: var(--second);
@@ -158,9 +163,9 @@ table tbody td{
     color: var(--light);
 }
 .myCardSample select{
-    width: 372px;
+    /* width: 372px; */
 	height: 50px;
-	font-size: 16px;
+	font-size: 1.05em;
 	margin-left: auto;
 	margin-right: auto;
 	margin-top: 10px;
@@ -283,3 +288,14 @@ border-radius: 50%;
     overflow-y: auto;
     margin: 20px 0;
 }
+
+@media only screen and (min-width:321px) and (max-width:1024px){
+    /* For tablets: */
+    .gross_box{
+        font-size: 0.9em;
+    }
+
+    .myCardSample{
+        font-size: 0.85em;
+    }
+  }

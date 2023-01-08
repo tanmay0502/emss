@@ -127,3 +127,25 @@
     overflow-y: auto !important;
     overflow-x: hidden !important;
 }
+
+
+@media only screen and (min-width: 600px) and (max-width: 1024px) {
+    .myWrapper1{
+        font-size: 0.9em;
+    }
+
+    .myWrapper1 table tbody tr td:first-child{
+        max-width: 15vw;
+        word-wrap: break-word;
+    }
+
+    .myWrapper1 table tbody tr td:nth-child(3){
+        max-width: 10vw;
+        word-wrap: break-word;
+    }
+
+    .myWrapper1 table tbody tr td:last-child button{
+        padding: 0.75vw 0.6vw;
+    }
+
+}

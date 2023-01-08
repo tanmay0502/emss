@@ -89,8 +89,9 @@
   overflow-x: visible;
   list-style: outside !important;
   list-style-position: -15px;
-  padding-left: 25px;
-  padding-right: 10px;
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-top: 15px;
 }
 
 .li_noti li{

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import './styles/order.css';
+import styles from './styles/order1.module.css';
 import TypeComponent from "./TypeComponent";
 import Navigator from './Navigator';
 import { ReactComponent as GenOrderIcon } from '../../assets/GenOrder.svg';
@@ -52,7 +52,7 @@ export default function OrderTypes(){
        <>
         <Navigator navicon={<GenOrderIcon />}  navtext = {arr}/>
         <div className="d-flex d-flex-center mt-5">
-            <div className="wrapper d-flex d-flex-center d-flex-column">
+            <div className={`${styles.wrapper} d-flex d-flex-center d-flex-column`}>
                 <div className="d-flex d-flex-center d-flex-wrap">
                     <TypeComponent id='1' text={(<span className="text-lg  ">New Units Order from the Manufacturer</span>)} setSelected = {setSelected}  toggle={() => toggle('1')}/>
                     <TypeComponent id='2' text={(<span className="text-lg ">Repaired from the Manufacturer</span>)}  setSelected = {setSelected}  toggle={() => toggle('2')}/>
