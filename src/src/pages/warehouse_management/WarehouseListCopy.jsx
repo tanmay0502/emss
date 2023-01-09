@@ -148,7 +148,7 @@ function WarehouseList() {
 					</span>
 					</Fragment>,
 				"warehouseid": val['warehouseid'],
-				"Warehouse Type": warehouseMapping ? warehouseMapping["data"][val["type"]] : "",
+				"Warehouse Type": warehouseMapping ? warehouseMapping["data"][val["warehouseid"].slice(8,9)] : "",
 				"room_type": warehouseMapping ? warehouseMapping["data"][val["type"]] : "",
 				Details: val,
 				Edit: <button className="modifyBtn p-2 text-white" disabled={true}>
