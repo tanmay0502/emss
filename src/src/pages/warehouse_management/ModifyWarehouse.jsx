@@ -16,7 +16,7 @@ export default function ModifyWarehouse() {
   const navigate = useNavigate();
 
   const [Warehouseid, setWarehouseId] = useState("");
-  const [Whdetails, setWhdetails] = useState("");
+  const [Whdetails, setWhdetails] = useState([]);
 
   //Form filed states....
   const [BuildingType, setBuildingType] = useState("");
@@ -32,8 +32,6 @@ export default function ModifyWarehouse() {
   
   //Form filed states end....
 
-
-
   const onFormSubmit = async (e) => {
     e.preventDefault();
     const buildingType = document.getElementById("input_buildingtype").value;
@@ -41,7 +39,6 @@ export default function ModifyWarehouse() {
     const lon = document.getElementById("input_lng").value;
     const address = document.getElementById("input_address").value;
     let double_lock = doubleLockSystem
-    console.log(double_lock);
     const person2_ID = double_lock ? document.getElementById("input_personName_2").value : "";
     double_lock = double_lock == true ? "TRUE" : "FALSE";
     const person1_ID = document.getElementById("input_personName_1").value;
@@ -57,6 +54,7 @@ export default function ModifyWarehouse() {
         UIDKey1: person1_ID,
         UIDKey2: person2_ID,
         updatedByUID: window.sessionStorage.getItem("sessionToken"),
+        incharge: whIncharge==null?'':whIncharge
       };
     } else {
       reqBody = {
@@ -67,9 +65,9 @@ export default function ModifyWarehouse() {
         doubleLock: double_lock,
         UIDKey1: person1_ID,
         updatedByUID: window.sessionStorage.getItem("sessionToken"),
+        incharge: whIncharge==null?'':whIncharge
       };
     }
-    // console.log(reqBody);
 
     const response = await fetch(
       `${process.env.REACT_APP_API_SERVER}/warehouse/modifyWarehouse`,
@@ -83,8 +81,7 @@ export default function ModifyWarehouse() {
       }
     );
     const status = await response;
-    console.log(status);
-    console.log("Submitting: ",reqBody)
+
     alert(
       status.status == 200
         ? "Warehouse Updated Successfully"
@@ -119,7 +116,6 @@ export default function ModifyWarehouse() {
 
 
   async function getDetails(e) {
-    console.log(e)
 		try {
 			const response = await fetch(
 				`${process.env.REACT_APP_API_SERVER}/warehouse/warehouseDetails`,
@@ -135,15 +131,8 @@ export default function ModifyWarehouse() {
 				})
 
 			const data = await response.json();
-			console.log(data);
-			setWhdetails(data["data"])
-      const status = await response;
-      console.log(status.status);
-			// console.log(data["data"], "data")
-      if(status.status === 401){
-        // logOut();
-        // alert("Your session expired please login again")
-        
+      if(response.status==200){
+        setWhdetails(data["data"])
       }
 		} catch (error) {
 
@@ -151,7 +140,7 @@ export default function ModifyWarehouse() {
 		}
 
 	}
-  // console.log(Whdetails[0])
+
 
   useEffect(() => {
     
@@ -191,12 +180,10 @@ export default function ModifyWarehouse() {
     getDetails(Warehouseid);
   }, [Warehouseid]);
 
-  console.log(Whdetails)
   const [edit, setEdit] = useState(true);
-  console.log(doubleLockSystem)
+
   return (
-    // <div className="flex-col justify-center align-middle">
-    // <div className="myWrapper">
+
     <div>
       <div className="PageTitle" style={{ marginLeft: '1%' }}>
         <h4>
@@ -218,7 +205,7 @@ export default function ModifyWarehouse() {
           ><span>Modify Warehouse Details - {Warehouseid}</span></div>
         </h4>
       </div>
-      {Status === "A" || Status === "I"? 
+      {(Status === "A" || Status === "I")? 
       <form
         id="create-warehouse-form"
         className="myForm"
@@ -335,9 +322,7 @@ export default function ModifyWarehouse() {
                     onChange={(e) => setLat(e.target.value)}
                     value={Lat}
                   />
-                  {/* <div className="input_icon">
-                    <FaLaptopHouse size="1em" />
-                  </div> */}
+             
                 </div>
                 }
                   <div className="input_icon">
@@ -419,42 +404,7 @@ export default function ModifyWarehouse() {
                   <FaMapMarkedAlt size="1em" />
                   </div>
               </div>
-              {/* Uncomment the below once the Warehouse Incharge is added in backend */}
-              
-              {/* <div className="form_group">
-                <div className="form_label">
-                  <label htmlFor="">Warehouse Incharge</label>
-                </div>
-                {edit === false ?
-                <div className="form_input disabled">
-                    <input 
-                    id="input_buildingtype"
-                    disabled = {true}
-                    defaultValue={whIncharge}
-                    type = "text"
-                    className=" selectBox"                
-                    >            
-                    </input></div>:
-                    <>
-                <div className="form_input">
-                  <input
-                    required
-                    id="input_address"
-                    name=""
-                    className=""
-                    onChange={(e) => setWhIncharge(e.target.value)}
-                    value={whIncharge}
-                    placeholder="Warehouse Incharge"
-                  />
-                </div>
-                  </>
-                    }
-                
-                  <div className="input_icon">
-                    <BsFillPersonFill size="1em" />
-                  </div> 
-              </div> */}
-
+             
             </div>
           </div>
           <div class="warehouse-personnel">
@@ -467,31 +417,7 @@ export default function ModifyWarehouse() {
                   <label htmlFor="double_lock_yes">
                     Double Lock System:{" "}
                   </label>
-                  {/* <label htmlFor="double_lock_yes">Yes </label>
-                  <input
-                    type={"radio"}
-                    name="double_lock"
-                    id="double_lock_yes"
-                    // defaultChecked={true}
-                    disabled = {!edit}
-                    value="1"
-                    onChange={(e) => {
-                      setDoubleLockSystem(true);
-                    }}
-                    checked={doubleLockSystem}
-                  />
-                  <label htmlFor="double_lock_no">No </label>
-                  <input
-                    type={"radio"}
-                    name="double_lock"
-                    id="double_lock_no"
-                    disabled={!edit}
-                    value="0"
-                    onChange={(e) => {
-                      setDoubleLockSystem(false);
-                    }}
-                    checked={!doubleLockSystem}
-                  /> */}
+                
                   <div className="flex justify-around w-1/6">
                     <div><button type="button"  className={`${!doubleLockSystem?'bg-stone-200 text-black p-2 rounded-md':'bg-orange-500 text-white p-2 rounded-md'}`} onClick={()=>{
                       setDoubleLockSystem(1);
