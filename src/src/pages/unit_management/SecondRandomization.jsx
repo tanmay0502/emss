@@ -179,7 +179,7 @@ const SecondRandomisationForm = ({ isVisible }) => {
 
 
     const [pollingStationDataMessage, setPollingStationDataMessage] = useState("Fetching Polling Station Data...")
-    console.log(assemblyDetails, "assemblyDetails")
+    console.log(assemblyDetails, "assemblyDetailsOut")
     useEffect(() => {
         // Initial fetching of any previous available user inputsc
         if (isVisible && ACCode && ACCode !== '') {
@@ -203,6 +203,7 @@ const SecondRandomisationForm = ({ isVisible }) => {
                                 'ac_name': data['data'][ACCode]['ac_name'],
                                 'randomized': data['data'][ACCode]['randomized']
                             });
+			    console.log(assemblyDetails, "assemblyDetailsIn")
                             if (!suppl) {
                                 const tempdata = [];
                                 const keys = Object.keys(data['data'][ACCode]['ps']);
@@ -212,7 +213,7 @@ const SecondRandomisationForm = ({ isVisible }) => {
                                             ps_no: data['data'][ACCode]['ps'][keys[i]]['ps_no'],
                                             ps_name: data['data'][ACCode]['ps'][keys[i]]['ps_name'],
                                             cu_count: 1,
-                                            bu_count: assemblyDetails['bu_no'],
+                                            bu_count: data['data'][ACCode]['bu_no'],
                                             vt_count: 1
                                         }
                                     );
@@ -233,6 +234,7 @@ const SecondRandomisationForm = ({ isVisible }) => {
                     else {
                         setAssemblyData([]);
                         setAssemblyList([]);
+			setAssemblyDetails({});
                         setPollingStationDataMessage(data.error)
                     }
                 } catch (err) {
@@ -737,4 +739,3 @@ const SecondAssemblyTableRow = ({ row, unitData }) => {
         </>
     );
 };
-
