@@ -29,13 +29,13 @@ export default function StatusHistory() {
             let data = await response.json();
             if (response.status == 200) {
                 const sorted = data['data'].sort((a, b) => {
-                    if (b[1] > a[1]){
+                    if (b[1] > a[1]) {
                         return -1;
                     }
-                    else {  
+                    else {
                         return 1;
                     }
-                    
+
                 })
                 setdata(sorted.reverse());
             }
@@ -56,44 +56,46 @@ export default function StatusHistory() {
         },
         []
     );
-
+    console.log(data, 'data')
     useEffect(() => {
-        if (data){
-		var Data = data.map((val) => {
-			return {
-				"Unit ID": val[0],
-				"Status":val[2] ,
-				"Previous Status":val[3],
-				"Updated By": val[0],
-				"Location": val[4],
-				"Updated At": new Date(val[1]).toLocaleDateString('en-us', { year: "numeric", month: "short", day: "numeric", hour: 'numeric', minute: 'numeric' }),
-        }})
-        console.log(Data,"======")
-    setSortedTableData(Data)
+        if (data) {
+            var Data = data.map((val) => {
+                return {
+                    // "Unit ID": val[0],
+                    "Status": val[2],
+                    "Previous Status": val[3],
+                    "Updated By": val[6],
+                    "Location": val[4],
+                    "Updated At": new Date(val[1]).toLocaleDateString('en-us', { year: "numeric", month: "short", day: "numeric", hour: 'numeric', minute: 'numeric' }),
+                }
+            })
+            console.log(Data, "======")
+            setSortedTableData(Data)
         }
-    return () => {
+        return () => {
 
-    }},[data])
+        }
+    }, [data])
 
     return (
         <div className={styles.MyContainer}>
             <div className={`${styles.myCard}`} >
                 <div className={`${styles.myCardHeader} ${styles.myPadding}`} >
-                    Status History
+                    Status History - {UNITID}
                 </div>
                 <div className={`${styles.myPadding} `}>
-                {isDetail == 0 ?
-                    <div style={{width:"100%"}}>
-                        <DynamicDataTable
-                        styles={{
-                            width:"100%"
-                        }}
-                            rows={sortedTableData}    
-                            buttons = {[]}                   
-                        />
-                    </div>
-                    : ''
-                }
+                    {isDetail == 0 ?
+                        <div style={{ width: "100%" }}>
+                            <DynamicDataTable
+                                styles={{
+                                    width: "100%"
+                                }}
+                                rows={sortedTableData}
+                                buttons={[]}
+                            />
+                        </div>
+                        : ''
+                    }
                 </div>
             </div>
         </div>

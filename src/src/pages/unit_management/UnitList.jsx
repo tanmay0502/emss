@@ -75,59 +75,24 @@ export default function UnitList() {
   const [data4, setData4] = useState(expD);
 
 
-  const getcountinglist = async () => {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_API_SERVER}/unit/listUnits/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          "status": "Counting",
-          'electionType': ((Role == 'ARO') ? 'P' : ((Role == 'RO') ? 'A' : ''))
-        }),
-        credentials: "include",
-      });
-
-      let Input = await response.json();
-      if (response.status == 200) {
-        setData4(Input['data']);
-      }
-      else {
-        setData4([]);
-      }
-      // }
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
-
-  useEffect(
-    () => {
-      let timer1 = setTimeout(() => getcountinglist(), 1 * 2000);
-      return () => {
-        clearTimeout(timer1);
-      };
-    },
-    []
-  );
-
-  // const getData = async () => {
+  // const getcountinglist = async () => {
   //   try {
   //     const response = await fetch(`${process.env.REACT_APP_API_SERVER}/unit/listUnits/`, {
   //       method: "POST",
   //       headers: { "Content-Type": "application/json" },
   //       body: JSON.stringify({
-  //         "status": "In Poll"
+  //         "status": "Counting",
+  //         'electionType': ((Role == 'ARO') ? 'P' : ((Role == 'RO') ? 'A' : ''))
   //       }),
   //       credentials: "include",
   //     });
 
   //     let Input = await response.json();
   //     if (response.status == 200) {
-  //       setData(Input['data']);
+  //       setData4(Input['data']);
   //     }
   //     else {
-  //       setData([]);
+  //       setData4([]);
   //     }
   //     // }
   //   } catch (err) {
@@ -138,7 +103,7 @@ export default function UnitList() {
 
   // useEffect(
   //   () => {
-  //     let timer1 = setTimeout(() => getData(), 1 * 500);
+  //     let timer1 = setTimeout(() => getcountinglist(), 1 * 2000);
   //     return () => {
   //       clearTimeout(timer1);
   //     };
@@ -146,43 +111,78 @@ export default function UnitList() {
   //   []
   // );
 
+  const getData = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_SERVER}/unit/listUnits/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          // "status": "In Poll"
+        }),
+        credentials: "include",
+      });
+
+      let Input = await response.json();
+      if (response.status == 200) {
+        setData(Input['data']);
+      }
+      else {
+        setData([]);
+      }
+      // }
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
 
-  // const getData2 = async () => {
-  //   try {
-  //     const response = await fetch(`${process.env.REACT_APP_API_SERVER}/unit/listUnits/`, {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({
-  //         "status": "In Reserve"
-  //       }),
-  //       credentials: "include",
-  //     });
-
-  //     let Input = await response.json();
-  //     if (response.status == 200) {
-  //       setData2(Input['data']);
-  //     }
-  //     else {
-  //       setData2([]);
-  //     }
-
-  //   } catch (err) {
-  //     console.log(err)
-  //   }
-  // }
+  useEffect(
+    () => {
+      let timer1 = setTimeout(() => getData(), 1 * 500);
+      return () => {
+        clearTimeout(timer1);
+      };
+    },
+    []
+  );
 
 
 
-  // useEffect(
-  //   () => {
-  //     let timer1 = setTimeout(() => getData2(), 1 * 1000);
-  //     return () => {
-  //       clearTimeout(timer1);
-  //     };
-  //   },
-  //   []
-  // );
+  const getData2 = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_SERVER}/unit/listUnits/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          "status": "In Reserve"
+        }),
+        credentials: "include",
+      });
+
+      let Input = await response.json();
+      if (response.status == 200) {
+        setData2(Input['data']);
+      }
+      else {
+        setData2([]);
+      }
+
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+
+
+  useEffect(
+    () => {
+      let timer1 = setTimeout(() => getData2(), 1 * 1000);
+      return () => {
+        clearTimeout(timer1);
+      };
+    },
+    []
+  );
 
 
   // const getData3 = async () => {
@@ -367,9 +367,10 @@ export default function UnitList() {
   };
 
 
-  const handleRemoveClick_Dropdown_rows = (i) => {
+  const handleRemoveClick_Dropdown_rows = (i, val) => {
 
     if (window.confirm(`Are you sure ?`)) {
+      const prevvalue = val;
       const list_all = [...Added];
       list_all.splice(i, 1);
       const list_ReplacedUnitID = [...ReplacedUnitID];
@@ -379,6 +380,15 @@ export default function UnitList() {
       const list_Typeofdefect = [...Typeofdefect];
       list_Typeofdefect.splice(i, 1);
 
+      const list_flag = { ...flag }
+
+      if (prevvalue != '') {
+
+        list_flag[prevvalue]['id'] = -1;
+        list_flag[prevvalue]['flag'] = false;
+      }
+
+      setflag(list_flag)
       setAdded(list_all);
       setReplacedUnitID(list_ReplacedUnitID)
       setReplacingUnitID(list_ReplacingUnitID)
@@ -424,13 +434,15 @@ export default function UnitList() {
 
     const list2 = { ...flag };
     list2[value]['flag'] = true
-    list2[value]['id'] = index;
+    list2[value]['id'] = value;
 
     setAdded(list1);
     setReplacingUnitID(list);
     setflag(list2);
 
-    if (flag[value]['id'] == index) {
+
+
+    if (flag[value]['id'] != prevvalue) {
       const list2 = { ...flag };
       list2[prevvalue]['flag'] = false
       list2[prevvalue]['id'] = -1
@@ -1088,6 +1100,7 @@ const ReplacementForm = ({ flag, data2, initialInputValuesReplace, setInputValue
   const [data4, setData4] = useState();
   const [isPageLoaded1, setIsPageLoaded1] = useState(0)
 
+  console.log(flag, 'flag')
 
   const getData = async () => {
     try {
@@ -1225,6 +1238,8 @@ const ReplacementForm = ({ flag, data2, initialInputValuesReplace, setInputValue
     }
   };
 
+
+
   return (
     <>
       <form onSubmit={onFormSubmit} className="w-full rounded-lg " styles={{ marginTop: "20%" }}>
@@ -1323,7 +1338,7 @@ const ReplacementForm = ({ flag, data2, initialInputValuesReplace, setInputValue
                             <option hidden>Select</option>
                             {data2 &&
                               data2.map((st, index) => (
-                                val['replacedUnitId'].slice(1, 3) == st['unitid'].slice(1, 3) && (flag[st['unitid']]['id'] == id || flag[st['unitid']]['flag'] == false) &&
+                                val['replacedUnitId'].slice(1, 3) == st['unitid'].slice(1, 3) && (flag && flag[st['unitid']]['id'] == ReplacingUnitID[id] || flag[st['unitid']]['flag'] == false) &&
                                 <option value={st['unitid']} className="text-black">
                                   {st['unitid']}
                                 </option>
@@ -1351,7 +1366,7 @@ const ReplacementForm = ({ flag, data2, initialInputValuesReplace, setInputValue
                               ))}
                           </select>
                         </td>
-                        <td className="text-black text-sm" onClick={() => handleRemoveClick_Dropdown_rows(id)}>{<Delete />}</td>
+                        <td className="text-black text-sm" onClick={() => handleRemoveClick_Dropdown_rows(id, ReplacingUnitID[id])}>{<Delete />}</td>
                       </tr>
                       <tr><td colSpan={4}><hr /></td></tr></>
                     )
@@ -3508,6 +3523,8 @@ const CountingFinished = ({ isVisible }) => {
     }
   };
 
+
+
   return (
     <>
       <form onSubmit={onFormSubmit} className="w-full rounded-lg " styles={{ marginTop: "20%" }}>
@@ -3674,12 +3691,6 @@ const CountingDefective = ({ isVisible, UnitID, setUnitID }) => {
     setUnitID(listUnitId)
   };
 
-  console.log({
-    "unitList": UnitID,
-    "remark": dataInput,
-    "warehouse": warehouse
-  })
-
   return (
     <>
       <form onSubmit={onFormSubmit} className="w-full rounded-lg " styles={{ marginTop: "20%" }}>
@@ -3713,7 +3724,7 @@ const CountingDefective = ({ isVisible, UnitID, setUnitID }) => {
                 </label>
                 <div className="relative text-[#494A59]">
                   <div className="w-full">
-                    <textarea name="" id="" cols="60" className='p-2' rows={10}
+                    <textarea name="" id="" cols="60" className='p-2' rows={5}
                       style={{ width: '100%' }}
                       onChange={(e) => {
                         setDataInput(e.target.value)
