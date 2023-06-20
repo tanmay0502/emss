@@ -75,59 +75,24 @@ export default function UnitList() {
   const [data4, setData4] = useState(expD);
 
 
-  // const getcountinglist = async () => {
-  //   try {
-  //     const response = await fetch(`${process.env.REACT_APP_API_SERVER}/unit/listUnits/`, {
-  //       method: "POST",
-  //       headers: { "Content-Type": "application/json" },
-  //       body: JSON.stringify({
-  //         "status": "Counting",
-  //         'electionType': ((Role == 'ARO') ? 'P' : ((Role == 'RO') ? 'A' : ''))
-  //       }),
-  //       credentials: "include",
-  //     });
-
-  //     let Input = await response.json();
-  //     if (response.status == 200) {
-  //       setData4(Input['data']);
-  //     }
-  //     else {
-  //       setData4([]);
-  //     }
-  //     // }
-  //   } catch (err) {
-  //     console.log(err)
-  //   }
-  // }
-
-
-  // useEffect(
-  //   () => {
-  //     let timer1 = setTimeout(() => getcountinglist(), 1 * 2000);
-  //     return () => {
-  //       clearTimeout(timer1);
-  //     };
-  //   },
-  //   []
-  // );
-
-  const getData = async () => {
+  const getcountinglist = async () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_SERVER}/unit/listUnits/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          // "status": "In Poll"
+          "status": "Counting"
+          // 'electionType': ((Role == 'ARO') ? 'P' : ((Role == 'RO') ? 'A' : ''))
         }),
         credentials: "include",
       });
 
       let Input = await response.json();
       if (response.status == 200) {
-        setData(Input['data']);
+        setData4(Input['data']);
       }
       else {
-        setData([]);
+        setData4([]);
       }
       // }
     } catch (err) {
@@ -138,7 +103,7 @@ export default function UnitList() {
 
   useEffect(
     () => {
-      let timer1 = setTimeout(() => getData(), 1 * 500);
+      let timer1 = setTimeout(() => getcountinglist(), 1 * 2000);
       return () => {
         clearTimeout(timer1);
       };
@@ -146,43 +111,78 @@ export default function UnitList() {
     []
   );
 
+  // const getData = async () => {
+  //   try {
+  //     const response = await fetch(`${process.env.REACT_APP_API_SERVER}/unit/listUnits/`, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({
+  //         // "status": "In Poll"
+  //       }),
+  //       credentials: "include",
+  //     });
+
+  //     let Input = await response.json();
+  //     if (response.status == 200) {
+  //       setData(Input['data']);
+  //     }
+  //     else {
+  //       setData([]);
+  //     }
+  //     // }
+  //   } catch (err) {
+  //     console.log(err)
+  //   }
+  // }
 
 
-  const getData2 = async () => {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_API_SERVER}/unit/listUnits/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          "status": "In Reserve"
-        }),
-        credentials: "include",
-      });
-
-      let Input = await response.json();
-      if (response.status == 200) {
-        setData2(Input['data']);
-      }
-      else {
-        setData2([]);
-      }
-
-    } catch (err) {
-      console.log(err)
-    }
-  }
+  // useEffect(
+  //   () => {
+  //     let timer1 = setTimeout(() => getData(), 1 * 500);
+  //     return () => {
+  //       clearTimeout(timer1);
+  //     };
+  //   },
+  //   []
+  // );
 
 
 
-  useEffect(
-    () => {
-      let timer1 = setTimeout(() => getData2(), 1 * 1000);
-      return () => {
-        clearTimeout(timer1);
-      };
-    },
-    []
-  );
+  // const getData2 = async () => {
+  //   try {
+  //     const response = await fetch(`${process.env.REACT_APP_API_SERVER}/unit/listUnits/`, {
+  //       method: "POST",
+  //       headers: { "Content-Type": "application/json" },
+  //       body: JSON.stringify({
+  //         "status": "In Reserve"
+  //       }),
+  //       credentials: "include",
+  //     });
+
+  //     let Input = await response.json();
+  //     if (response.status == 200) {
+  //       setData2(Input['data']);
+  //     }
+  //     else {
+  //       setData2([]);
+  //     }
+
+  //   } catch (err) {
+  //     console.log(err)
+  //   }
+  // }
+
+
+
+  // useEffect(
+  //   () => {
+  //     let timer1 = setTimeout(() => getData2(), 1 * 1000);
+  //     return () => {
+  //       clearTimeout(timer1);
+  //     };
+  //   },
+  //   []
+  // );
 
 
   // const getData3 = async () => {

@@ -1,4 +1,4 @@
-import react, { useState } from "react";
+import react, { useEffect, useState } from "react";
 import { UnitCount } from "./Utils";
 
 export default function FillOrder({
@@ -12,6 +12,23 @@ export default function FillOrder({
   dcode,
   type
 }) {
+  // alert(type)
+  
+  const currID = () => {
+    const URL = window.location.href;
+    const arr = URL.split("/");
+    const param = arr[arr.length - 1];
+    // const arr1 = param.split("=");
+    // console.log(param)
+    return param;
+  }
+
+  const [currId,  setCurrID] = useState("")
+  useEffect(()=> {
+    setCurrID(currID())
+    // alert(currId)
+  },[])
+
   console.log(sources, destinations);
   const Template = {
     manufacturer: "select",
@@ -174,11 +191,11 @@ export default function FillOrder({
                 <div className="w-full flex ">
                   <div className="w-1/8 flex justify-center px-4">Manufacturer</div>
                   <div className="w-1/8 flex justify-center px-4">Model</div>
-                  <div className="justify-center w-2/8 px-6">
-                    Filled BU/Available BU
+                  <div className={ currId !== "NEW" ? "justify-center w-2/8 px-6" :"justify-center w-1/6" }>
+                    Filled BU{currId === "NEW" ? " " : "/Available BU"}
                   </div>
-                  <div className="w-2/8 px-6">Filled CU/Available CU</div>
-                  <div className="w-2/8 px-4">Filled VVPAT/Available VVPAT</div>
+                  <div className={ currId !== "NEW" ? "justify-center w-2/8 px-6" :"justify-center w-1/6" }>Filled CU{currId === "NEW" ? " " : "/Available CU"}</div>
+                  <div className={ currId !== "NEW" ? "justify-center w-2/8 px-4" :"justify-center w-1/6 pr-4" }>Filled VVPAT{currId === "NEW" ? " " : "/Available VVPAT"}</div>
                   <div className="w-1/8 opacity-0">.</div>
                 </div>
                 {val1["details"].map((val2, id2) => (
@@ -219,10 +236,10 @@ export default function FillOrder({
                       </select>
                     </div>
 
-                    <div className="w-2/8 m-2">
+                    <div className={currId !== "NEW" ? "w-2/8 m-2" : "w-1/8 m-2"}>
                       <input
                         type="text"
-                        className="border-1 border-black !border-b-0 !rounded-b-none text-center flex justify-center"
+                        className={currId !== "NEW" ? "border-1 border-black !border-b-0 !rounded-b-none text-center flex justify-center" :"border-1 border-black text-center flex justify-center"}
                         value={Order[id1]["details"][id2]["filledBU"]}
                         onChange={(e) => {
                           if (
@@ -264,7 +281,10 @@ export default function FillOrder({
                             });
                           }
                         }}
-                      ></input>
+                      >
+                      
+                      </input>
+                      {currId !== "NEW" ? 
                       <input
                         type="text"
                         className="border-1 border-black !border-t-0 !rounded-t-none text-center bg-gray-200"
@@ -296,12 +316,13 @@ export default function FillOrder({
                             : "-"
                         }
                       ></input>
+                      : " "}
                     </div>
 
-                    <div className="w-2/8 m-2">
+                    <div className={currId !== "NEW" ? "w-2/8 m-2" : "w-1/8 m-2"}>
                       <input
                         type="text"
-                        className="border-1 border-black !border-b-0 !rounded-b-none text-center flex justify-center"
+                        className={currId !== "NEW" ? "border-1 border-black !border-b-0 !rounded-b-none text-center flex justify-center" :"border-1 border-black text-center flex justify-center"}
                         value={Order[id1]["details"][id2]["filledCU"]}
                         onChange={(e) => {
                           if (
@@ -344,7 +365,7 @@ export default function FillOrder({
                           }
                         }}
                       ></input>
-                    
+                    {currId !== "NEW" ? 
                       <input
                         type="text"
                         className="border-1 border-black  !border-t-0 !rounded-t-none text-center flex justify-center bg-gray-200"
@@ -376,12 +397,13 @@ export default function FillOrder({
                             : "-"
                         }
                       ></input>
+                      : " "}
                     </div>
 
-                    <div className="w-2/8 m-2">
+                    <div className={currId !== "NEW" ? "w-2/8 m-2" : "w-1/8 m-2"}>
                       <input
                         type="text"
-                        className="border-1 border-black !border-b-0 !rounded-b-none text-center flex justify-center"
+                        className={currId !== "NEW" ? "border-1 border-black !border-b-0 !rounded-b-none text-center flex justify-center" :"border-1 border-black text-center flex justify-center"}
                         value={Order[id1]["details"][id2]["filledVVPAT"]}
                         onChange={(e) => {
                           if (
@@ -424,10 +446,10 @@ export default function FillOrder({
                           }
                         }}
                       ></input>
-                    
+                    {currId !== "NEW" ? 
                       <input
                         type="text"
-                        className="border-1 border-black  !border-t-0 !rounded-t-none text-center bg-gray-200"
+                        className="border-1 border-black !border-t-0 !rounded-t-none text-center bg-gray-200"  
                         value={
                           (scode == "dtCode"
                             ? Units[
@@ -456,6 +478,7 @@ export default function FillOrder({
                             : "-"
                         }
                       ></input>
+                      : " "}
                     </div>
 
                     <div className="w-1/8 m-2 flex pt-14">
